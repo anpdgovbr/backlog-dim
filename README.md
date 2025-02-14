@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏛 Backlog DIM - Gestão de Processamentos
 
-## Getting Started
+Este projeto é uma **aplicação CRUD** para gerenciar **processamentos administrativos**.  
+Os dados são carregados via **formulário** ou **importação de CSV**, e armazenados no **Supabase**.
 
-First, run the development server:
+## 🚀 Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 📌 **Cadastro de Processamentos**
+- 📄 **Listagem com Filtros e Busca (MUI DataGrid)**
+- 🔄 **Edição e Exclusão Direta na Tabela**
+- 📂 **Importação de Processamentos via CSV**
+- 📊 **Página de Detalhes de Processamento**
+- 🗄 **Versionamento do Banco de Dados com Supabase**
+
+## 🏗 Tecnologias Utilizadas
+
+- **Next.js 15 (App Router)**
+- **React + MUI (Material UI)**
+- **Supabase (PostgreSQL + Autenticação)**
+- **PapaParse (Manipulação de CSV)**
+- **Tailwind CSS**
+- **Padrão Digital de Governo (GovBR DS)**
+
+## 📂 Estrutura do Projeto
+
+```
+📂 app/
+ ├── 📂 processamentos/
+ │   ├── 📜 page.tsx            # Formulário de cadastro de Processamentos
+ │   ├── 📂 lista/
+ │   │   ├── 📜 page.tsx        # Listagem dos Processamentos (MUI DataGrid)
+ │   ├── 📂 importar/
+ │   │   ├── 📜 page.tsx        # Importação de Processamentos via CSV
+ │   ├── 📂 [id]/
+ │   │   ├── 📜 page.tsx        # Página de Detalhes do Processamento
+ ├── 📂 styles/
+ ├── 📂 lib/
+ │   ├── 📜 supabase.ts         # Configuração do Supabase
+ ├── 📜 package.json            # Dependências do projeto
+ ├── 📜 tsconfig.json           # Configuração do TypeScript
+ ├── 📜 README.md               # Documentação do Projeto
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔧 Configuração do Banco de Dados (Supabase)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1️⃣ **Instalar o Supabase CLI**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sh
+npm install -g supabase
+```
 
-## Learn More
+2️⃣ **Criar um projeto Supabase localmente**
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+npx supabase init
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3️⃣ **Configurar o banco de dados**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sh
+npx supabase db push
+```
 
-## Deploy on Vercel
+## 📤 Importação de CSV
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Formato do CSV esperado:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+Responsável pelo atendimento;Nº do protocolo;Data da criação (Dia);Status;Tipo de solicitação;Denúncia anônima?;Ticket > Solicitante
+Dagoberto Heg;2025011370273;13/02/2025;Solicitação;Denúncia;Não;MARIA TEREZA DA LUZ LACERDA
+```
+
+- **Para importar:**
+  - Acesse `/processamentos/importar`
+  - Faça upload do arquivo CSV
+  - Confirme os dados antes de importar
+
+## 🏛 Design System do Governo (GovBR DS)
+
+O projeto utiliza o **Padrão Digital de Governo (GovBR DS)** para garantir **acessibilidade e identidade visual governamental**.
+
+## 📜 Licença
+
+Este projeto é open-source e segue a licença **MIT**.
+
+---
+
+🚀 **Desenvolvido para otimizar a gestão de processamentos administrativos!**
