@@ -1,7 +1,8 @@
 import ClientRootLayout from './client-layout'
 import { globalMetadata } from './metadata'
 
-const metadata = globalMetadata
+export const metadata = globalMetadata
+
 export default function RootLayout({
   children
 }: {
