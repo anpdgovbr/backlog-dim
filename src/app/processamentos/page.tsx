@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 
+import { ProcessamentosInput } from '@/types/Requerimentos'
 import {
   Box,
   Button,
@@ -17,7 +18,6 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import { ProcessamentosInput } from '@/types/Processamentos'
 
 export default function ProcessamentoForm() {
   const [formData, setFormData] = useState<ProcessamentosInput>({
@@ -68,6 +68,7 @@ export default function ProcessamentoForm() {
         }))
       }
     } catch (error) {
+      console.error('Erro ao salvar:', error)
       alert('Erro inesperado ao salvar.')
     } finally {
       setIsLoading(false) // Desativa o loading

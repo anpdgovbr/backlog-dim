@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Papa from 'papaparse'
-import { ProcessamentosInput } from '@/types/Processamentos'
+import { ProcessamentosInput } from '@/types/Requerimentos'
 import {
   Container,
   Typography,

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import '@/styles/mui-overrides.css'
+import '../../public/govbr-ds/core.min.css'
 
 export default function ClientRootLayout({
   children
@@ -9,16 +10,12 @@ export default function ClientRootLayout({
   children: React.ReactNode
 }) {
   useEffect(() => {
-    // Aguarda o carregamento do JavaScript do GovBR DS para evitar conflitos na hidratação
     import('../../public/govbr-ds/core.min.js')
   }, [])
 
   return (
     <html lang="pt-BR">
-      <head>
-        {/* Importando o CSS do GovBR DS */}
-        <link rel="stylesheet" href="/govbr-ds/core.min.css" />
-      </head>
+      <head>{/* Importando o CSS do GovBR DS */}</head>
       <body className="br-body">{children}</body>
     </html>
   )

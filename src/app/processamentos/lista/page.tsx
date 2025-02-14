@@ -1,8 +1,9 @@
 'use client'
 
 import { supabase } from '@/lib/supabase'
-import { ProcessamentosOutput } from '@/types/Processamentos'
+import { ProcessamentosOutput } from '@/types/Requerimentos'
 
+import SettingsIcon from '@mui/icons-material/Settings'
 import {
   Box,
   Container,
@@ -14,13 +15,10 @@ import {
   DataGrid,
   GridColDef,
   GridDeleteIcon,
-  GridRenderCellParams,
-  GridToolbar,
-  GridVisibilityOffIcon
+  GridRenderCellParams
 } from '@mui/x-data-grid'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import SettingsIcon from '@mui/icons-material/Settings'
 
 export default function ListaProcessamentos() {
   const [processamentos, setProcessamentos] = useState<ProcessamentosOutput[]>(
