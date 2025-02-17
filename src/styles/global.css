@@ -1,0 +1,6 @@
+.br-avatar-img {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover; /* Garante que a imagem preencha corretamente */
+  border-radius: 50%; /* Mantém o formato circular */
+}

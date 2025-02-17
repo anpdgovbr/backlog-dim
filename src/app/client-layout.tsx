@@ -1,22 +1,23 @@
 'use client'
 
-import { useEffect } from 'react'
 import '@/styles/mui-overrides.css'
-import '../../public/govbr-ds/core.min.css'
+import '@govbr-ds/core/dist/core.css'
+import { useEffect } from 'react'
 
 export default function ClientRootLayout({
   children
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   useEffect(() => {
-    import('../../public/govbr-ds/core.min.js')
-  }, [])
+    const script = document.createElement('script')
+    script.src = '/govbr-ds/core-init.js'
+    script.defer = true
+    document.body.appendChild(script)
 
-  return (
-    <html lang="pt-BR">
-      <head>{/* Importando o CSS do GovBR DS */}</head>
-      <body className="br-body">{children}</body>
-    </html>
-  )
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
+  return <div className="br-body">{children}</div>
 }
