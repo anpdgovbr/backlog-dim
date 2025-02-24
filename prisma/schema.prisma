@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  seed     = "npx tsx prisma/seed.ts"
 }
 
 datasource db {
@@ -8,92 +9,104 @@ datasource db {
 }
 
 model Processo {
-  id                 Int    @id @default(autoincrement())
-  numero             String @unique
-  dataCriacao        DateTime
-  requerente         String?
-  
-  formaEntradaId     Int
-  formaEntrada       FormaEntrada @relation(fields: [formaEntradaId], references: [id])
-
-  responsavelId      Int
-  responsavel        Responsavel @relation(fields: [responsavelId], references: [id])
-
-  requeridoId        Int?
-  requerido         Requerido? @relation(fields: [requeridoId], references: [id])
-
-  situacaoId         Int
-  situacao          Situacao @relation(fields: [situacaoId], references: [id])
-
-  encaminhamentoId   Int
-  encaminhamento    Encaminhamento @relation(fields: [encaminhamentoId], references: [id])
-
+  id                   Int                 @id @default(autoincrement())
+  numero               String              @unique
+  dataCriacao          DateTime
+  requerente           String?
+  formaEntradaId       Int
+  responsavelId        Int
+  requeridoId          Int?
+  situacaoId           Int
+  encaminhamentoId     Int
   pedidoManifestacaoId Int?
-  pedidoManifestacao PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
+  contatoPrevioId      Int?
+  evidenciaId          Int?
+  contatoPrevio        ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
+  encaminhamento       Encaminhamento      @relation(fields: [encaminhamentoId], references: [id])
+  evidencia            Evidencia?          @relation(fields: [evidenciaId], references: [id])
+  formaEntrada         FormaEntrada        @relation(fields: [formaEntradaId], references: [id])
+  pedidoManifestacao   PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
+  requerido            Requerido?          @relation(fields: [requeridoId], references: [id])
+  responsavel          Responsavel         @relation(fields: [responsavelId], references: [id])
+  situacao             Situacao            @relation(fields: [situacaoId], references: [id])
 
-  contatoPrevioId    Int?
-  contatoPrevio     ContatoPrevio? @relation(fields: [contatoPrevioId], references: [id])
-
-  evidenciaId        Int?
-  evidencia         Evidencia? @relation(fields: [evidenciaId], references: [id])
+  @@map("Processo")
 }
 
 model FormaEntrada {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("FormaEntrada")
 }
 
 model Responsavel {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("Responsavel")
 }
 
 model Requerido {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   cnpj      String?
   cnae      String?
   site      String?
   email     String?
   setorId   Int?
-  setor     Setor? @relation(fields: [setorId], references: [id])
   processos Processo[]
+  setor     Setor?     @relation(fields: [setorId], references: [id])
+
+  @@map("Requerido")
 }
 
 model Setor {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id         Int         @id @default(autoincrement())
+  nome       String      @unique
   requeridos Requerido[]
+
+  @@map("Setor")
 }
 
 model Situacao {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("Situacao")
 }
 
 model Encaminhamento {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("Encaminhamento")
 }
 
 model PedidoManifestacao {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("PedidoManifestacao")
 }
 
 model ContatoPrevio {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("ContatoPrevio")
 }
 
 model Evidencia {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
   processos Processo[]
+
+  @@map("Evidencia")
 }

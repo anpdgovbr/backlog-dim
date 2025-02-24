@@ -1,75 +1,81 @@
-import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { ProcessoInput, ProcessoOutput } from '@/types/Processo'
+import { NextResponse } from 'next/server'
 
+// 🔹 Criar um novo processo
 export async function POST(req: Request) {
-  const data: ProcessoInput = await req.json()
-  const { data: processo, error } = await supabase
-    .from('processos')
-    .insert([data])
-    .select('*')
+  try {
+    const data = await req.json()
+    console.log('Recebendo dados:', data)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    const { data: processo, error } = await supabase
+      .from('Processo')
+      .insert([data])
+      .select('*')
 
-  return NextResponse.json(processo as ProcessoOutput[])
+    if (error) {
+      console.error('Erro ao inserir processo:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    console.log('Processo criado:', processo)
+    return NextResponse.json(processo, { status: 201 }) // HTTP 201 Created
+  } catch (err) {
+    console.error('Erro geral no POST:', err)
+    return NextResponse.json({ error: err }, { status: 500 })
+  }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { data, error } = await supabase
-    .from('processos')
-    .select(
-      `
-        id, numero, dataCriacao, requerente,
-        formaEntrada:formaEntrada ( id, nome ),
-        responsavel:responsavel ( id, nome ),
-        requerido:requerido ( id, nome, cnpj, cnae, site, email, setor:setor ( id, nome ) ),
-        situacao:situacao ( id, nome ),
-        encaminhamento:encaminhamento ( id, nome ),
-        pedidoManifestacao:pedidoManifestacao ( id, nome ),
-        contatoPrevio:contatoPrevio ( id, nome ),
-        evidencia:evidencia ( id, nome )
-      `
-    )
-    .eq('id', params.id)
-    .single() // Garante que retorna um único objeto
+// 🔹 Listar todos os processos com paginação e ordenação
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const page = Number(searchParams.get('page')) || 1
+    const pageSize = Number(searchParams.get('pageSize')) || 10
+    const orderBy = searchParams.get('orderBy') || 'dataCriacao'
+    const ascending = searchParams.get('ascending') === 'true'
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    const from = (page - 1) * pageSize
+    const to = from + pageSize - 1
+
+    // 🔹 Buscar total de registros
+    const { data: processos, error: countError } = await supabase
+      .from('Processo')
+      .select('id') // Pegamos os IDs sem count
+      .limit(1) // Pegamos apenas um para testar
+
+    if (countError) {
+      console.error('Erro ao contar registros:', countError)
+      return NextResponse.json(
+        {
+          error: `Erro ao contar registros: ${countError.message || 'Falha desconhecida'}`
+        },
+        { status: 500 }
+      )
+    }
+
+    // Se processos não for null, pegamos a contagem correta
+    const count = processos ? processos.length : 0
+
+    // 🔹 Buscar dados paginados
+    const { data, error } = await supabase
+      .from('Processo')
+      .select(
+        `
+    id, numero, dataCriacao, requerente,
+    formaEntrada: "FormaEntrada"!inner ( id, nome ),
+    responsavel: "Responsavel"!inner ( id, nome ),
+    situacao: "Situacao"!inner ( id, nome ),
+    encaminhamento: "Encaminhamento"!inner ( id, nome )
+  `
+      )
+      .order(orderBy, { ascending })
+      .range(from, to)
+
+    if (error) throw new Error(`Erro ao buscar processos: ${error.message}`)
+
+    return NextResponse.json({ data, total: count || 0 })
+  } catch (err) {
+    console.error('Erro na API /api/processos:', err)
+    return NextResponse.json({ error: err }, { status: 500 })
   }
-
-  const processos = Array.isArray(data) ? data : [data]
-
-  // Formata os relacionamentos para garantir que sejam objetos únicos
-  const formattedData = processos.map((processo) => ({
-    ...processo,
-    formaEntrada: Array.isArray(processo.formaEntrada)
-      ? processo.formaEntrada[0]
-      : processo.formaEntrada,
-    responsavel: Array.isArray(processo.responsavel)
-      ? processo.responsavel[0]
-      : processo.responsavel,
-    requerido: Array.isArray(processo.requerido)
-      ? processo.requerido[0]
-      : processo.requerido,
-    situacao: Array.isArray(processo.situacao)
-      ? processo.situacao[0]
-      : processo.situacao,
-    encaminhamento: Array.isArray(processo.encaminhamento)
-      ? processo.encaminhamento[0]
-      : processo.encaminhamento,
-    pedidoManifestacao: Array.isArray(processo.pedidoManifestacao)
-      ? processo.pedidoManifestacao[0]
-      : processo.pedidoManifestacao,
-    contatoPrevio: Array.isArray(processo.contatoPrevio)
-      ? processo.contatoPrevio[0]
-      : processo.contatoPrevio,
-    evidencia: Array.isArray(processo.evidencia)
-      ? processo.evidencia[0]
-      : processo.evidencia
-  }))
-
-  return NextResponse.json(formattedData as ProcessoOutput[])
 }

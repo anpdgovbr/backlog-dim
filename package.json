@@ -17,10 +17,11 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:studio": "npx prisma studio",
-    "db:reset": "npm run supabase:stop && npm run prisma:reset && npm run supabase:start && npm run prisma:seed"
+    "db:reset": "npx prisma migrate reset --force",
+    "db:seed": "npx tsx prisma/seed.ts"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -29,7 +30,7 @@
     "@mui/icons-material": "^6.4.4",
     "@mui/material": "^6.4.4",
     "@mui/x-data-grid": "^7.26.0",
-    "@prisma/client": "^6.3.1",
+    "@prisma/client": "^6.4.1",
     "@supabase/supabase-js": "^2.48.1",
     "multer": "^1.4.5-lts.1",
     "next": "15.1.7",
@@ -50,7 +51,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "postcss": "^8",
     "prettier": "^3.5.1",
-    "prisma": "^6.3.1",
+    "prisma": "^6.4.1",
     "purgecss": "^7.0.2",
     "supabase": "^2.12.1",
     "tailwindcss": "^3.4.1",
