@@ -16,7 +16,6 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          integrity="sha384-o5b8ui/mW5SzMPDU/a8Jz3D4NyhC9A4gAB84vlM7Gq9C4Iy1b3uX6OymN4l5sZ4B"
           crossOrigin="anonymous"
         />
       </head>

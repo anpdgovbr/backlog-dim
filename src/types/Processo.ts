@@ -18,7 +18,7 @@ export interface ProcessoInput {
 export interface ProcessoOutput {
   id: number
   numero: string
-  dataCriacao: string
+  dataCriacao: Date
   requerente?: string
   formaEntrada: EnumData
   responsavel: EnumData
