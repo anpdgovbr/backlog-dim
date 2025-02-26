@@ -160,7 +160,7 @@ export default function ListaProcessos() {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ mt: 4, mb: 2 }}>
+      <Box>
         <Typography variant="h4" component="h1" gutterBottom>
           Lista de Processos
         </Typography>
