@@ -1,32 +1,20 @@
 'use client'
 
-import { useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
-import Papa from 'papaparse'
 import { ProcessoInput } from '@/types/Processo'
 import {
-  Container,
-  Typography,
+  Alert,
   Box,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  CircularProgress,
   Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemText,
-  Alert,
-  Grid,
   Chip,
-  LinearProgress
+  Container,
+  Grid,
+  LinearProgress,
+  Typography
 } from '@mui/material'
+import Papa from 'papaparse'
+import { useState } from 'react'
 
 export default function ImportarProcessos() {
   const [csvData, setCsvData] = useState<string[][]>([])
@@ -78,6 +66,7 @@ export default function ImportarProcessos() {
 
     let responsaveisImportados: Record<string, number> = {}
     let formasEntradaImportadas: Record<string, number> = {}
+    let totalAnonimosImportados = 0
 
     for (const [index, row] of csvData.entries()) {
       try {
@@ -107,6 +96,9 @@ export default function ImportarProcessos() {
         }
 
         sucesso++
+        if (anonimo) {
+          totalAnonimosImportados++
+        }
         responsaveisImportados[row[0]] =
           (responsaveisImportados[row[0]] || 0) + 1
         formasEntradaImportadas[row[4]] =
@@ -121,8 +113,7 @@ export default function ImportarProcessos() {
     setRelatorio({ sucesso, falhas })
     setResumoImportado({
       totalRegistros: sucesso,
-      totalAnonimos: csvData.filter((row) => row[5]?.toLowerCase() === 'sim')
-        .length,
+      totalAnonimos: totalAnonimosImportados, // ✅ Agora mostra apenas os importados
       responsaveis: responsaveisImportados,
       formasEntrada: formasEntradaImportadas
     })
@@ -185,7 +176,7 @@ export default function ImportarProcessos() {
                 <Typography variant="h6">Registros Anônimos</Typography>
                 <Typography variant="h4" color="secondary">
                   {importado
-                    ? resumoImportado.totalAnonimos
+                    ? resumoImportado.totalAnonimos // ✅ Agora mostra apenas os importados
                     : csvData.filter((row) => row[5]?.toLowerCase() === 'sim')
                         .length}
                 </Typography>
@@ -252,7 +243,6 @@ export default function ImportarProcessos() {
     </Container>
   )
 }
-
 const formatarData = (dataStr: string): string => {
   const partes = dataStr.split('/')
   return partes.length === 3 ? `${partes[2]}-${partes[1]}-${partes[0]}` : ''
