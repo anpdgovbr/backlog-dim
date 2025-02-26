@@ -1,103 +1,114 @@
 'use client'
 
-import { Box } from '@mui/material'
+import ContatoPrevioPage from '@/app/admin/contato-previo/page'
+import EncaminhamentoPage from '@/app/admin/encaminhamento/page'
+import EvidenciaPage from '@/app/admin/evidencia/page'
+import FormaEntradaPage from '@/app/admin/forma-entrada/page'
+import PedidoManifestacaoPage from '@/app/admin/pedido-manifestacao/page'
+import GerenciarProcessos from '@/app/admin/processo/page'
+import GerenciarRequeridos from '@/app/admin/requeridos/page'
+import ResponsaveisPage from '@/app/admin/responsaveis/page'
+import SituacaoPage from '@/app/admin/situacao/page'
+import ImportarProcessos from '@/app/processos/importar/page'
 import Dashboard25Wrapper, {
   ISectionConfig
 } from '@/components/Dashboard25Wrapper'
+
 import {
-  Group,
-  Person,
-  List,
-  Work,
-  Assignment,
-  Folder,
-  Category,
-  Business,
-  EngineeringOutlined
+  EngineeringOutlined, // Processos
+  UploadFile, // Importação de processos
+  Business, // Requeridos (empresas)
+  Person, // Responsáveis
+  PermContactCalendar, // Contato Prévio
+  Send, // Encaminhamentos
+  Visibility, // Evidências
+  Input, // Formas de Entrada
+  Forum, // Pedidos de Manifestação
+  AssignmentTurnedIn // Situação
 } from '@mui/icons-material'
-import ImportarProcessos from '@/app/processos/importar/page'
+
+import { Box } from '@mui/material'
 
 const sectionsConfig: [ISectionConfig, ...ISectionConfig[]] = [
-  {
-    id: 'importar',
-    title: 'Importar',
-    description: 'Importe dados de processos',
-    icon: <Person />,
-    baseColor: '#1976d2',
-    component: () => <ImportarProcessos />
-  },
   {
     id: 'processos',
     title: 'Processos',
     description: 'Gerencie os processos',
     icon: <EngineeringOutlined />,
-    baseColor: '#1976d2',
-    component: () => <div>Processos - Conteúdo aqui</div>
-  },
-
-  {
-    id: 'responsaveis',
-    title: 'Responsáveis',
-    description: 'Gerencie os responsáveis pelo atendimento',
-    icon: <Person />,
-    baseColor: '#1976d2',
-    component: () => <div>Responsáveis - Conteúdo aqui</div>
+    baseColor: '#1976d2', // Azul forte
+    component: () => <GerenciarProcessos />
   },
   {
-    id: 'contato_previo',
-    title: 'Contato Prévio',
-    description: 'Gerencie os tipos de contato prévio',
-    icon: <Group />,
-    baseColor: '#ff9800',
-    component: () => <div>Contato Prévio - Conteúdo aqui</div>
-  },
-  {
-    id: 'encaminhamento',
-    title: 'Encaminhamentos',
-    description: 'Gerencie os encaminhamentos disponíveis',
-    icon: <Assignment />,
-    baseColor: '#4caf50',
-    component: () => <div>Encaminhamentos - Conteúdo aqui</div>
-  },
-  {
-    id: 'evidencia',
-    title: 'Evidências',
-    description: 'Gerencie as evidências registradas',
-    icon: <Folder />,
-    baseColor: '#f44336',
-    component: () => <div>Evidências - Conteúdo aqui</div>
-  },
-  {
-    id: 'forma_entrada',
-    title: 'Formas de Entrada',
-    description: 'Gerencie as formas de entrada de processos',
-    icon: <Category />,
-    baseColor: '#9c27b0',
-    component: () => <div>Formas de Entrada - Conteúdo aqui</div>
-  },
-  {
-    id: 'pedido_manifestacao',
-    title: 'Pedidos de Manifestação',
-    description: 'Gerencie os pedidos de manifestação',
-    icon: <List />,
-    baseColor: '#00bcd4',
-    component: () => <div>Pedidos de Manifestação - Conteúdo aqui</div>
+    id: 'importar',
+    title: 'Importar',
+    description: 'Importe dados de processos',
+    icon: <UploadFile />,
+    baseColor: '#ff9800', // Laranja
+    component: () => <ImportarProcessos />
   },
   {
     id: 'requeridos',
     title: 'Requeridos',
     description: 'Gerencie os requeridos',
     icon: <Business />,
-    baseColor: '#3f51b5',
-    component: () => <div>Requeridos - Conteúdo aqui</div>
+    baseColor: '#673ab7', // Roxo escuro
+    component: () => <GerenciarRequeridos />
+  },
+  {
+    id: 'contato_previo',
+    title: 'Contato Prévio',
+    description: 'Gerencie os tipos de contato prévio',
+    icon: <PermContactCalendar />,
+    baseColor: '#4caf50', // Verde
+    component: () => <ContatoPrevioPage />
+  },
+  {
+    id: 'encaminhamento',
+    title: 'Encaminhamentos',
+    description: 'Gerencie os encaminhamentos disponíveis',
+    icon: <Send />,
+    baseColor: '#f44336', // Vermelho
+    component: () => <EncaminhamentoPage />
+  },
+  {
+    id: 'evidencia',
+    title: 'Evidências',
+    description: 'Gerencie as evidências registradas',
+    icon: <Visibility />,
+    baseColor: '#03a9f4', // Azul claro
+    component: () => <EvidenciaPage />
+  },
+  {
+    id: 'forma_entrada',
+    title: 'Formas de Entrada',
+    description: 'Gerencie as formas de entrada de processos',
+    icon: <Input />,
+    baseColor: '#ff5722', // Laranja queimado
+    component: () => <FormaEntradaPage />
+  },
+  {
+    id: 'pedido_manifestacao',
+    title: 'Pedidos de Manifestação',
+    description: 'Gerencie os pedidos de manifestação',
+    icon: <Forum />,
+    baseColor: '#9c27b0', // Roxo
+    component: () => <PedidoManifestacaoPage />
+  },
+  {
+    id: 'responsaveis',
+    title: 'Responsáveis',
+    description: 'Gerencie os responsáveis pelo atendimento',
+    icon: <Person />,
+    baseColor: '#009688', // Verde água
+    component: () => <ResponsaveisPage />
   },
   {
     id: 'situacao',
     title: 'Situação',
     description: 'Gerencie as situações de processos',
-    icon: <Work />,
-    baseColor: '#8bc34a',
-    component: () => <div>Situação - Conteúdo aqui</div>
+    icon: <AssignmentTurnedIn />,
+    baseColor: '#ffeb3b', // Amarelo
+    component: () => <SituacaoPage />
   }
 ]
 
@@ -106,7 +117,7 @@ export default function DashboardAdmin() {
     <Box>
       <Dashboard25Wrapper
         sectionsConfig={sectionsConfig}
-        defaultSectionId="responsaveis"
+        defaultSectionId="processos"
       />
     </Box>
   )
