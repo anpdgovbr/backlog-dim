@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { ProcessoOutput } from '@/types/Processo'
+import GridDeleteIcon from '@mui/icons-material/Delete'
+import SettingsIcon from '@mui/icons-material/Settings'
 import {
   Box,
   Container,
@@ -12,12 +13,11 @@ import {
 import {
   DataGrid,
   GridColDef,
-  GridRenderCellParams,
-  GridPaginationModel
+  GridPaginationModel,
+  GridRenderCellParams
 } from '@mui/x-data-grid'
-import SettingsIcon from '@mui/icons-material/Settings'
-import GridDeleteIcon from '@mui/icons-material/Delete'
-import { ProcessoOutput } from '@/types/Processo'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ListaProcessos() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])

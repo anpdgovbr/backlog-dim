@@ -9,10 +9,10 @@ export interface ProcessoInput {
   responsavelId: number
   requeridoId?: number
   situacaoId: number
-  encaminhamentoId: number
   pedidoManifestacaoId?: number
   contatoPrevioId?: number
   evidenciaId?: number
+  anonimo?: boolean
 }
 
 export interface ProcessoOutput {

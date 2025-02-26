@@ -37,11 +37,10 @@ export async function GET(req: Request) {
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
 
-    // 🔹 Buscar total de registros
-    const { data: processos, error: countError } = await supabase
+    // 🔹 Buscar total de registros corretamente
+    const { count, error: countError } = await supabase
       .from('Processo')
-      .select('id') // Pegamos os IDs sem count
-      .limit(1) // Pegamos apenas um para testar
+      .select('*', { count: 'exact', head: true }) // ✅ Obtém total correto
 
     if (countError) {
       console.error('Erro ao contar registros:', countError)
@@ -53,27 +52,24 @@ export async function GET(req: Request) {
       )
     }
 
-    // Se processos não for null, pegamos a contagem correta
-    const count = processos ? processos.length : 0
-
-    // 🔹 Buscar dados paginados
+    // 🔹 Buscar dados paginados corretamente
     const { data, error } = await supabase
       .from('Processo')
       .select(
         `
-    id, numero, dataCriacao, requerente,
-    formaEntrada: "FormaEntrada"!inner ( id, nome ),
-    responsavel: "Responsavel"!inner ( id, nome ),
-    situacao: "Situacao"!inner ( id, nome ),
-    encaminhamento: "Encaminhamento"!inner ( id, nome )
-  `
+        id, numero, dataCriacao, requerente,
+        formaEntrada: FormaEntrada ( id, nome ),
+        responsavel: Responsavel ( id, nome ),
+        situacao: Situacao ( id, nome ),
+        encaminhamento: Encaminhamento ( id, nome )
+      `
       )
       .order(orderBy, { ascending })
       .range(from, to)
 
     if (error) throw new Error(`Erro ao buscar processos: ${error.message}`)
 
-    return NextResponse.json({ data, total: count || 0 })
+    return NextResponse.json({ data, total: count || 0 }) // ✅ Retorna o total correto
   } catch (err) {
     console.error('Erro na API /api/processos:', err)
     return NextResponse.json({ error: err }, { status: 500 })

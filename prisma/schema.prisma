@@ -10,19 +10,22 @@ datasource db {
 
 model Processo {
   id                   Int                 @id @default(autoincrement())
-  numero               String              @unique
+  numero               String              @unique // Alterado para String (VARCHAR)
   dataCriacao          DateTime
   requerente           String?
   formaEntradaId       Int
   responsavelId        Int
   requeridoId          Int?
   situacaoId           Int
-  encaminhamentoId     Int
+  encaminhamentoId     Int?
   pedidoManifestacaoId Int?
   contatoPrevioId      Int?
   evidenciaId          Int?
+  anonimo              Boolean             @default(false) // Novo campo
+  observacoes          String?             // Novo campo para anotações
+  
   contatoPrevio        ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
-  encaminhamento       Encaminhamento      @relation(fields: [encaminhamentoId], references: [id])
+  encaminhamento       Encaminhamento?     @relation(fields: [encaminhamentoId], references: [id])
   evidencia            Evidencia?          @relation(fields: [evidenciaId], references: [id])
   formaEntrada         FormaEntrada        @relation(fields: [formaEntradaId], references: [id])
   pedidoManifestacao   PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
@@ -32,6 +35,7 @@ model Processo {
 
   @@map("Processo")
 }
+
 
 model FormaEntrada {
   id        Int        @id @default(autoincrement())
