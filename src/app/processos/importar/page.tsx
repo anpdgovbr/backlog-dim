@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { ProcessoInput } from '@/types/Processo'
+import { NavigateBefore, NavigateNext } from '@mui/icons-material'
 import {
   Alert,
   Box,
@@ -10,35 +11,48 @@ import {
   Chip,
   Container,
   Grid,
+  IconButton,
   LinearProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
   Typography
 } from '@mui/material'
 import Papa from 'papaparse'
 import { useState } from 'react'
 
+type CsvRow = string[]
+type Relatorio = { sucesso: number; falhas: string[] }
+type ResumoImportacao = {
+  totalRegistros: number
+  totalAnonimos: number
+  responsaveis: Record<string, number>
+  formasEntrada: Record<string, number>
+}
+
 export default function ImportarProcessos() {
-  const [csvData, setCsvData] = useState<string[][]>([])
+  const [cabecalho, setCabecalho] = useState<string[]>([])
+  const [dados, setDados] = useState<CsvRow[]>([])
   const [loading, setLoading] = useState(false)
-  const [progress, setProgress] = useState(0)
+  const [progresso, setProgresso] = useState(0)
   const [importado, setImportado] = useState(false)
-  const [relatorio, setRelatorio] = useState<{
-    sucesso: number
-    falhas: string[]
-  }>({
+  const [relatorio, setRelatorio] = useState<Relatorio>({
     sucesso: 0,
     falhas: []
   })
-  const [resumoImportado, setResumoImportado] = useState<{
-    totalRegistros: number
-    totalAnonimos: number
-    responsaveis: Record<string, number>
-    formasEntrada: Record<string, number>
-  }>({
+  const [resumoImportacao, setResumoImportacao] = useState<ResumoImportacao>({
     totalRegistros: 0,
     totalAnonimos: 0,
     responsaveis: {},
     formasEntrada: {}
   })
+  const [pagina, setPagina] = useState(0)
+  const [linhasPorPagina, setLinhasPorPagina] = useState(10)
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -50,191 +64,303 @@ export default function ImportarProcessos() {
       delimiter: ';',
       encoding: 'ISO-8859-1',
       complete: (result) => {
-        const dataSemCabecalho = (result.data as string[][]).slice(1)
-        setCsvData(dataSemCabecalho)
+        const data = result.data as CsvRow[]
+        setCabecalho(data[0])
+        setDados(data.slice(1))
+        setImportado(false)
+        setPagina(0)
       }
     })
   }
 
   const handleImport = async () => {
-    if (csvData.length === 0) return
+    if (!dados.length) return
 
     setLoading(true)
-    setProgress(0)
+    setProgresso(0)
     let sucesso = 0
-    let falhas: string[] = []
-
-    let responsaveisImportados: Record<string, number> = {}
-    let formasEntradaImportadas: Record<string, number> = {}
-    let totalAnonimosImportados = 0
-
-    for (const [index, row] of csvData.entries()) {
-      try {
-        const numeroProcesso = row[1]
-        const anonimo = row[5] ? row[5].toLowerCase() === 'sim' : false
-        const requerente = anonimo
-          ? numeroProcesso
-          : row[6]?.trim() || undefined
-
-        const responsavelId = await buscarOuCriarId('Responsavel', row[0])
-        const formaEntradaId = await buscarOuCriarId('FormaEntrada', row[4])
-
-        const processo: ProcessoInput = {
-          responsavelId,
-          numero: numeroProcesso,
-          dataCriacao: row[2] ? formatarData(row[2]) : '',
-          situacaoId: await buscarOuCriarId('Situacao', row[3]),
-          formaEntradaId,
-          anonimo,
-          requerente
-        }
-
-        const { error } = await supabase.from('Processo').insert(processo)
-
-        if (error) {
-          throw new Error(traduzirErro(error.message, numeroProcesso))
-        }
-
-        sucesso++
-        if (anonimo) {
-          totalAnonimosImportados++
-        }
-        responsaveisImportados[row[0]] =
-          (responsaveisImportados[row[0]] || 0) + 1
-        formasEntradaImportadas[row[4]] =
-          (formasEntradaImportadas[row[4]] || 0) + 1
-      } catch (error: any) {
-        falhas.push(error.message)
-      }
-
-      setProgress(Math.round(((index + 1) / csvData.length) * 100))
+    const falhas: string[] = []
+    const contadores = {
+      responsaveis: {} as Record<string, number>,
+      formasEntrada: {} as Record<string, number>,
+      anonimos: 0
     }
 
-    setRelatorio({ sucesso, falhas })
-    setResumoImportado({
-      totalRegistros: sucesso,
-      totalAnonimos: totalAnonimosImportados, // ✅ Agora mostra apenas os importados
-      responsaveis: responsaveisImportados,
-      formasEntrada: formasEntradaImportadas
-    })
-    setLoading(false)
-    setImportado(true)
+    try {
+      for (const [index, linha] of dados.entries()) {
+        try {
+          const [
+            responsavel,
+            numeroProcesso,
+            dataCriacao,
+            situacao,
+            formaEntrada,
+            anonimoStr,
+            requerente
+          ] = linha
+
+          if (!numeroProcesso) throw new Error('Número do processo ausente')
+
+          const anonimo = anonimoStr?.toLowerCase() === 'sim'
+          const processo: ProcessoInput = {
+            numero: numeroProcesso,
+            dataCriacao: formatarData(dataCriacao),
+            anonimo,
+            requerente: anonimo ? numeroProcesso : requerente?.trim(),
+            responsavelId: await obterOuCriarEntidade(
+              'Responsavel',
+              responsavel
+            ),
+            situacaoId: await obterOuCriarEntidade('Situacao', situacao),
+            formaEntradaId: await obterOuCriarEntidade(
+              'FormaEntrada',
+              formaEntrada
+            )
+          }
+
+          const { error } = await supabase.from('Processo').insert(processo)
+          if (error) throw error
+
+          sucesso++
+          contadores.anonimos += anonimo ? 1 : 0
+          contadores.responsaveis[responsavel] =
+            (contadores.responsaveis[responsavel] || 0) + 1
+          contadores.formasEntrada[formaEntrada] =
+            (contadores.formasEntrada[formaEntrada] || 0) + 1
+        } catch (error) {
+          falhas.push(tratarErro(error, linha[1]))
+        }
+        setProgresso(Math.round(((index + 1) / dados.length) * 100))
+      }
+    } finally {
+      setResumoImportacao({
+        totalRegistros: sucesso,
+        totalAnonimos: contadores.anonimos,
+        responsaveis: contadores.responsaveis,
+        formasEntrada: contadores.formasEntrada
+      })
+      setRelatorio({ sucesso, falhas })
+      setLoading(false)
+      setImportado(true)
+    }
   }
 
-  const traduzirErro = (mensagem: string, numero: string) => {
-    if (mensagem.includes('duplicate key value violates unique constraint')) {
-      return `O processo ${numero} já está cadastrado.`
+  const tratarErro = (error: unknown, numeroProcesso: string): string => {
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        return `Processo ${numeroProcesso} já existe`
+      }
+      return `Erro em ${numeroProcesso}: ${error.message}`
     }
-    return `Erro ao inserir processo ${numero}: ${mensagem}`
+    return `Erro desconhecido no processo ${numeroProcesso}`
+  }
+
+  const handleMudarPagina = (_: unknown, novaPagina: number) => {
+    setPagina(novaPagina)
+  }
+
+  const handleMudarLinhasPorPagina = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLinhasPorPagina(parseInt(event.target.value, 10))
+    setPagina(0)
   }
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4 }}>
+    <Container maxWidth="lg">
+      <Box sx={{ mt: 4, mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Importar Processos via CSV
+          Importação de Processos
         </Typography>
 
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <input type="file" accept=".csv" onChange={handleFileUpload} />
+        <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+          <Button variant="contained" component="label">
+            Selecionar CSV
+            <input
+              type="file"
+              hidden
+              accept=".csv"
+              onChange={handleFileUpload}
+            />
+          </Button>
+
           <Button
             variant="contained"
             color="primary"
             onClick={handleImport}
-            disabled={loading}
+            disabled={loading || !dados.length}
           >
-            {loading ? `${progress}%` : 'Importar Dados'}
+            {loading ? `Importando... ${progresso}%` : 'Iniciar Importação'}
           </Button>
         </Box>
 
         {loading && (
           <LinearProgress
             variant="determinate"
-            value={progress}
-            sx={{ mb: 2 }}
+            value={progresso}
+            sx={{ mb: 3 }}
           />
         )}
 
-        {/* 🟢 RESUMO DINÂMICO */}
-        <Card sx={{ mb: 2, p: 2, bgcolor: '#f5f5f5' }}>
+        <Card sx={{ p: 3, mb: 4, bgcolor: 'background.paper' }}>
           <Typography variant="h6" gutterBottom>
-            {importado
-              ? 'Resumo dos Dados Importados'
-              : 'Resumo dos Dados Lidos'}
+            {importado ? 'Resultado da Importação' : 'Análise do Arquivo'}
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Card sx={{ p: 2, textAlign: 'center', bgcolor: '#e3f2fd' }}>
-                <Typography variant="h6">Total de Registros</Typography>
-                <Typography variant="h4" color="primary">
-                  {importado ? resumoImportado.totalRegistros : csvData.length}
-                </Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card sx={{ p: 2, textAlign: 'center', bgcolor: '#ffecb3' }}>
-                <Typography variant="h6">Registros Anônimos</Typography>
-                <Typography variant="h4" color="secondary">
-                  {importado
-                    ? resumoImportado.totalAnonimos // ✅ Agora mostra apenas os importados
-                    : csvData.filter((row) => row[5]?.toLowerCase() === 'sim')
-                        .length}
-                </Typography>
-              </Card>
+
+          <Grid container spacing={3}>
+            <Grid item xs={6} md={3}>
+              <Estatistica
+                titulo="Total"
+                valor={
+                  importado ? resumoImportacao.totalRegistros : dados.length
+                }
+                cor="primary"
+              />
             </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6">Responsáveis Encontrados</Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {Object.entries(
+            <Grid item xs={6} md={3}>
+              <Estatistica
+                titulo="Anônimos"
+                valor={
                   importado
-                    ? resumoImportado.responsaveis
-                    : contarItens(csvData, 0)
-                ).map(([nome, count]) => (
-                  <Chip
-                    key={nome}
-                    label={`${nome} (${count})`}
-                    color="primary"
-                  />
-                ))}
-              </Box>
+                    ? resumoImportacao.totalAnonimos
+                    : dados.filter((l) => l[5]?.toLowerCase() === 'sim').length
+                }
+                cor="secondary"
+              />
             </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6">Formas de Entrada</Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {Object.entries(
+            <Grid item xs={12} md={6}>
+              <CategoriaResumo
+                titulo={
                   importado
-                    ? resumoImportado.formasEntrada
-                    : contarItens(csvData, 4)
-                ).map(([nome, count]) => (
-                  <Chip
-                    key={nome}
-                    label={`${nome} (${count})`}
-                    color="secondary"
-                  />
-                ))}
-              </Box>
+                    ? 'Responsáveis Importados'
+                    : 'Responsáveis no Arquivo'
+                }
+                dados={
+                  importado
+                    ? resumoImportacao.responsaveis
+                    : contarOcorrencias(dados, 0)
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <CategoriaResumo
+                titulo={
+                  importado
+                    ? 'Formas de Entrada'
+                    : 'Formas de Entrada no Arquivo'
+                }
+                dados={
+                  importado
+                    ? resumoImportacao.formasEntrada
+                    : contarOcorrencias(dados, 4)
+                }
+                cor="secondary"
+              />
             </Grid>
           </Grid>
         </Card>
 
+        {!!dados.length && (
+          <Card sx={{ mb: 4 }}>
+            <TableContainer>
+              <Typography variant="h6" sx={{ p: 2 }}>
+                Pré-visualização dos Dados ({dados.length} registros)
+              </Typography>
+
+              <Table size="small" stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    {cabecalho.map((coluna, i) => (
+                      <TableCell key={i} sx={{ fontWeight: 'bold' }}>
+                        {coluna}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {dados
+                    .slice(
+                      pagina * linhasPorPagina,
+                      pagina * linhasPorPagina + linhasPorPagina
+                    )
+                    .map((linha, i) => (
+                      <TableRow key={i}>
+                        {linha.map((celula, j) => (
+                          <TableCell key={j}>
+                            {celula || <em>vazio</em>}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                </TableBody>
+
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: 'Todos', value: -1 }
+                      ]}
+                      count={dados.length}
+                      rowsPerPage={linhasPorPagina}
+                      page={pagina}
+                      onPageChange={handleMudarPagina}
+                      onRowsPerPageChange={handleMudarLinhasPorPagina}
+                      ActionsComponent={({
+                        count,
+                        page,
+                        rowsPerPage,
+                        onPageChange
+                      }) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <IconButton
+                            onClick={() => onPageChange(null, page - 1)}
+                            disabled={page === 0}
+                          >
+                            <NavigateBefore />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => onPageChange(null, page + 1)}
+                            disabled={
+                              page >= Math.ceil(count / rowsPerPage) - 1
+                            }
+                          >
+                            <NavigateNext />
+                          </IconButton>
+                        </Box>
+                      )}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Card>
+        )}
+
         {importado && (
-          <Box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 2 }}>
             {relatorio.sucesso > 0 && (
-              <Alert severity="success">
-                Importação concluída! {relatorio.sucesso} registros inseridos
-                com sucesso.
+              <Alert severity="success" sx={{ mb: 2 }}>
+                {relatorio.sucesso} processos importados com sucesso
               </Alert>
             )}
+
             {relatorio.falhas.length > 0 && (
-              <Alert severity="error" sx={{ mt: 1 }}>
-                {relatorio.falhas.length} falhas ocorreram:
-                <ul>
-                  {relatorio.falhas.map((falha, index) => (
-                    <li key={index}>{falha}</li>
+              <Alert severity="error">
+                <Typography variant="subtitle1" gutterBottom>
+                  {relatorio.falhas.length} erros encontrados:
+                </Typography>
+                <Box component="ul" sx={{ maxHeight: 200, overflow: 'auto' }}>
+                  {relatorio.falhas.map((falha, i) => (
+                    <li key={i}>{falha}</li>
                   ))}
-                </ul>
+                </Box>
               </Alert>
             )}
           </Box>
@@ -243,36 +369,87 @@ export default function ImportarProcessos() {
     </Container>
   )
 }
-const formatarData = (dataStr: string): string => {
-  const partes = dataStr.split('/')
-  return partes.length === 3 ? `${partes[2]}-${partes[1]}-${partes[0]}` : ''
+
+// Componentes Auxiliares
+const Estatistica = ({
+  titulo,
+  valor,
+  cor
+}: {
+  titulo: string
+  valor: number
+  cor: 'primary' | 'secondary'
+}) => (
+  <Card sx={{ textAlign: 'center', p: 2, bgcolor: `${cor}.light` }}>
+    <Typography variant="subtitle1">{titulo}</Typography>
+    <Typography variant="h3" color={`${cor}.main`}>
+      {valor}
+    </Typography>
+  </Card>
+)
+
+const CategoriaResumo = ({
+  titulo,
+  dados,
+  cor = 'primary'
+}: {
+  titulo: string
+  dados: Record<string, number>
+  cor?: 'primary' | 'secondary'
+}) => (
+  <Card sx={{ p: 2 }}>
+    <Typography variant="subtitle2" gutterBottom>
+      {titulo}
+    </Typography>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      {Object.entries(dados).map(([nome, total]) => (
+        <Chip
+          key={nome}
+          label={`${nome} (${total})`}
+          color={cor}
+          variant="outlined"
+        />
+      ))}
+    </Box>
+  </Card>
+)
+
+// Funções utilitárias
+const formatarData = (data: string): string => {
+  const [dia, mes, ano] = data.split('/')
+  return ano ? `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}` : ''
 }
 
-const corrigirNumero = (valor: any): string => {
-  if (!valor) return 'Não informado'
-  return typeof valor === 'number' ? valor.toFixed(0) : String(valor).trim()
-}
-
-const buscarOuCriarId = async (
+const obterOuCriarEntidade = async (
   tabela: string,
   nome: string
 ): Promise<number> => {
-  const { data } = await supabase
+  const { data: existente } = await supabase
     .from(tabela)
     .select('id')
     .eq('nome', nome)
     .single()
-  return data ? data.id : 0
+
+  if (existente) return existente.id
+
+  const { data: novo, error } = await supabase
+    .from(tabela)
+    .insert([{ nome }])
+    .select('id')
+    .single()
+
+  if (error || !novo) throw new Error(`Falha ao criar ${tabela}: ${nome}`)
+  return novo.id
 }
 
-const contarItens = (
-  dados: string[][],
-  coluna: number
-): Record<string, number> => {
-  return dados.reduce<Record<string, number>>((acc, row) => {
-    if (row[coluna]) {
-      acc[row[coluna]] = (acc[row[coluna]] || 0) + 1
-    }
-    return acc
-  }, {})
-}
+const contarOcorrencias = (
+  dados: CsvRow[],
+  indice: number
+): Record<string, number> =>
+  dados.reduce(
+    (acc, linha) => {
+      const valor = linha[indice]?.trim()
+      return valor ? { ...acc, [valor]: (acc[valor] || 0) + 1 } : acc
+    },
+    {} as Record<string, number>
+  )
