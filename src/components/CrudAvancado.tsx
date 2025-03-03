@@ -118,7 +118,7 @@ export default function CrudAvancado({
   }
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
+    //{ field: 'id', headerName: 'ID', width: 80 },
     ...fields.map((field) => ({
       field: field.key,
       headerName: field.label,
