@@ -1,9 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { NextResponse } from 'next/server'
 
 // 🔹 Buscar um processo específico
-export async function GET(req: Request, context: { params: { id: string } }) {
-  const { id } = context.params
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const { id } = await context.params
 
   const { data, error } = await supabase
     .from('Processo')
@@ -23,33 +26,42 @@ export async function GET(req: Request, context: { params: { id: string } }) {
     .eq('id', id)
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json(data)
 }
 
 // 🔹 Atualizar um processo específico
-export async function PUT(req: Request, context: { params: { id: string } }) {
-  const { id } = context.params
-  const data = await req.json()
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const { id } = await context.params
+  const data = await request.json()
 
   const { error } = await supabase.from('Processo').update(data).eq('id', id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json({ message: 'Processo atualizado com sucesso' })
 }
 
 // 🔹 Deletar um processo específico
 export async function DELETE(
-  req: Request,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const { id } = await context.params
 
   const { error } = await supabase.from('Processo').delete().eq('id', id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json({ message: 'Processo deletado com sucesso' })
 }

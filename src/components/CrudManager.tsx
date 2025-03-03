@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   Container,
@@ -34,12 +34,7 @@ export default function CrudManager({
     nome: ''
   })
 
-  // 🟢 Buscar dados ao carregar
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     const { data, error } = await supabase.from(tableName).select('*')
 
@@ -49,7 +44,12 @@ export default function CrudManager({
       setItems(data)
     }
     setLoading(false)
-  }
+  }, [tableName, entityName])
+
+  // 🟢 Buscar dados ao carregar
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   // 🟢 Criar ou Atualizar Registro
   async function handleSave() {
