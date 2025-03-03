@@ -1,33 +1,44 @@
 import NextAuth, { AuthOptions } from 'next-auth'
 import AzureADProvider from 'next-auth/providers/azure-ad'
 
-const AZURE_AD_CLIENT_ID =
-  process.env.AZURE_AD_CLIENT_ID ??
-  (() => {
-    throw new Error('AZURE_AD_CLIENT_ID não definido')
-  })()
-const AZURE_AD_CLIENT_SECRET =
-  process.env.AZURE_AD_CLIENT_SECRET ??
-  (() => {
-    throw new Error('AZURE_AD_CLIENT_SECRET não definido')
-  })()
-const AZURE_AD_TENANT_ID =
-  process.env.AZURE_AD_TENANT_ID ??
-  (() => {
-    throw new Error('AZURE_AD_TENANT_ID não definido')
-  })()
-
 export const authOptions: AuthOptions = {
   providers: [
     AzureADProvider({
-      clientId: AZURE_AD_CLIENT_ID,
-      clientSecret: AZURE_AD_CLIENT_SECRET,
-      tenantId: AZURE_AD_TENANT_ID
+      clientId: process.env.AZURE_AD_CLIENT_ID!,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+      tenantId: process.env.AZURE_AD_TENANT_ID!,
+      authorization: {
+        params: {
+          scope: 'openid email profile'
+        }
+      }
     })
   ],
   session: {
-    strategy: 'jwt'
-  }
+    strategy: 'jwt',
+    maxAge: 4 * 60 * 60 // 4 horas
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    async session({ session, token }) {
+      session.user.id = token.id
+      return session
+    },
+    async redirect({ url, baseUrl }) {
+      // Redirecionamento customizado
+      return url.startsWith(baseUrl) ? url : baseUrl + '/dashboard'
+    }
+  },
+  pages: {
+    signIn: '/auth/login',
+    error: '/auth/login'
+  },
+  secret: process.env.NEXTAUTH_SECRET
 }
 
 const handler = NextAuth(authOptions)

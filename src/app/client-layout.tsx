@@ -1,9 +1,9 @@
-'use client' // 🔥 Agora, esse é o único "use client" necessário
+'use client'
 
 import '@/styles/mui-overrides.css'
 import '@govbr-ds/core/dist/core.css'
 import { useEffect, useState } from 'react'
-import ThemeRegistry from '@/context/ThemeRegistry' // 🔹 Importamos o ThemeProvider corrigido
+import ThemeRegistry from '@/context/ThemeRegistry'
 import AuthProvider from '@/context/SessionProvider'
 import GovBRAvatar from '@/components/GovBRAvatar'
 import { Box, Typography } from '@mui/material'
@@ -26,7 +26,7 @@ export default function ClientRootLayout({
   }, [])
 
   if (!isClient) {
-    return <p>Carregando...</p> // 🔥 Evita erro de Hydration Failed
+    return <p>Carregando...</p>
   }
 
   return (
@@ -36,10 +36,10 @@ export default function ClientRootLayout({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '100vh'
+            minHeight: '100vh',
+            position: 'relative'
           }}
         >
-          {/* 🔹 Header fixo no topo */}
           <Box
             component="header"
             sx={{
@@ -50,7 +50,9 @@ export default function ClientRootLayout({
               py: 1,
               bgcolor: 'primary.main',
               color: 'white',
-              boxShadow: 2
+              boxShadow: 2,
+              position: 'relative',
+              zIndex: 1200
             }}
           >
             <Typography
@@ -62,26 +64,23 @@ export default function ClientRootLayout({
               Processamento Backlog DIM
             </Typography>
 
-            <GovBRAvatar
-              userName="Fulano"
-              userImage="/govbr-ds/images/avatar.png"
-              menuItems={[
-                { label: 'Meu Perfil', href: '/perfil' },
-                { label: 'Configurações do Perfil', href: '/configuracoes' },
-                { label: 'Sair', href: '/logout' }
-              ]}
-            />
+            <Box sx={{ position: 'relative', display: 'inline-block' }}>
+              <GovBRAvatar />
+            </Box>
           </Box>
 
-          {/* 🔹 Conteúdo principal */}
           <Box
             component="main"
-            sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative'
+            }}
           >
             {children}
           </Box>
 
-          {/* 🔹 Footer fixado no final */}
           <Box
             component="footer"
             sx={{
