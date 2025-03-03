@@ -7,6 +7,7 @@ import ThemeRegistry from '@/context/ThemeRegistry'
 import AuthProvider from '@/context/SessionProvider'
 import GovBRAvatar from '@/components/GovBRAvatar'
 import { Box, Typography } from '@mui/material'
+import Link from 'next/link'
 
 export default function ClientRootLayout({
   children
@@ -61,7 +62,12 @@ export default function ClientRootLayout({
               color="white"
               letterSpacing={1}
             >
-              Processamento Backlog DIM
+              <Link
+                href="/"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                Processamento Backlog DIM
+              </Link>
             </Typography>
 
             <Box sx={{ position: 'relative', display: 'inline-block' }}>

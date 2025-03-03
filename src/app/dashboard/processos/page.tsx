@@ -10,12 +10,14 @@ import {
   TextField,
   Typography
 } from '@mui/material'
+
 import {
   DataGrid,
   GridColDef,
   GridPaginationModel,
   GridRenderCellParams
 } from '@mui/x-data-grid'
+import { ptBR } from '@mui/x-data-grid/locales'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -159,7 +161,7 @@ export default function ListaProcessos() {
   console.log('processos:', filteredData)
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Box>
         <Typography variant="h4" component="h1" gutterBottom>
           Lista de Processos
@@ -184,6 +186,7 @@ export default function ListaProcessos() {
             rowCount={totalRows} // 🔹 Agora passamos `rowCount`
             paginationModel={paginationModel} // 🔹 Define modelo correto de paginação
             onPaginationModelChange={setPaginationModel} // 🔹 Atualiza o estado da paginação
+            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
           />
         </div>
       </Box>
