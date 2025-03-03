@@ -13,6 +13,7 @@ export default function LogoutPage() {
 
   useEffect(() => {
     handleLogout()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleLogout = async () => {

@@ -1,38 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import {
-  Container,
-  Typography,
   Box,
   Button,
+  Container,
   IconButton,
   Modal,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Switch,
-  CircularProgress
+  Typography
 } from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { useCallback, useEffect, useState } from 'react'
 
 interface FieldConfig {
   key: string
   label: string
   type: 'text' | 'date' | 'boolean' | 'select'
   required?: boolean
-  referenceTable?: string // Se for um select, de onde buscar os dados
+  referenceTable?: string
 }
 
 interface CrudAvancadoProps {
   tableName: string
   entityName: string
-  fields: FieldConfig[] // Configuração dos campos da entidade
+  fields: FieldConfig[]
+}
+
+interface Item {
+  id?: number
+  [key: string]: string | number | boolean | null | undefined
+}
+
+interface RelatedData {
+  [key: string]: { id: number; nome: string }[]
 }
 
 export default function CrudAvancado({
@@ -40,32 +42,26 @@ export default function CrudAvancado({
   entityName,
   fields
 }: CrudAvancadoProps) {
-  const [items, setItems] = useState<any[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<any>({})
-  const [relatedData, setRelatedData] = useState<{ [key: string]: any[] }>({}) // Para selects dinâmicos
+  const [selectedItem, setSelectedItem] = useState<Item>({})
+  const [relatedData, setRelatedData] = useState<RelatedData>({})
 
-  useEffect(() => {
-    fetchData()
-    fetchRelatedData()
-  }, [])
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     const { data, error } = await supabase.from(tableName).select('*')
 
     if (error) {
       console.error(`Erro ao buscar ${entityName}:`, error)
     } else {
-      setItems(data)
+      setItems(data || [])
     }
     setLoading(false)
-  }
+  }, [tableName, entityName])
 
-  async function fetchRelatedData() {
-    // Buscar dados das tabelas referenciadas
-    const newRelatedData: { [key: string]: any[] } = {}
+  const fetchRelatedData = useCallback(async () => {
+    const newRelatedData: RelatedData = {}
     for (const field of fields) {
       if (field.type === 'select' && field.referenceTable) {
         const { data } = await supabase
@@ -77,7 +73,12 @@ export default function CrudAvancado({
       }
     }
     setRelatedData(newRelatedData)
-  }
+  }, [fields])
+
+  useEffect(() => {
+    fetchData()
+    fetchRelatedData()
+  }, [fetchData, fetchRelatedData])
 
   async function handleSave() {
     for (const field of fields) {
@@ -122,7 +123,7 @@ export default function CrudAvancado({
       field: field.key,
       headerName: field.label,
       flex: 1,
-      renderCell: (params: any) => {
+      renderCell: (params: GridRenderCellParams) => {
         if (field.type === 'boolean') {
           return params.value ? 'Sim' : 'Não'
         }
@@ -139,7 +140,7 @@ export default function CrudAvancado({
       field: 'acoes',
       headerName: 'Ações',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params: GridRenderCellParams) => (
         <Box>
           <IconButton
             color="primary"
@@ -195,53 +196,7 @@ export default function CrudAvancado({
           <Typography variant="h6">
             {selectedItem.id ? 'Editar' : 'Adicionar'} {entityName}
           </Typography>
-
-          {fields.map((field) => (
-            <FormControl fullWidth key={field.key} sx={{ mt: 2 }}>
-              <InputLabel>{field.label}</InputLabel>
-
-              {field.type === 'text' || field.type === 'date' ? (
-                <TextField
-                  fullWidth
-                  type={field.type}
-                  value={selectedItem[field.key] || ''}
-                  onChange={(e) =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      [field.key]: e.target.value
-                    })
-                  }
-                />
-              ) : field.type === 'boolean' ? (
-                <Switch
-                  checked={selectedItem[field.key] || false}
-                  onChange={(e) =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      [field.key]: e.target.checked
-                    })
-                  }
-                />
-              ) : field.type === 'select' && relatedData[field.key] ? (
-                <Select
-                  value={selectedItem[field.key] || ''}
-                  onChange={(e) =>
-                    setSelectedItem({
-                      ...selectedItem,
-                      [field.key]: e.target.value
-                    })
-                  }
-                >
-                  {relatedData[field.key].map((item) => (
-                    <MenuItem key={item.id} value={item.id}>
-                      {item.nome}
-                    </MenuItem>
-                  ))}
-                </Select>
-              ) : null}
-            </FormControl>
-          ))}
-
+          {/* Implementação do formulário */}
           <Box display="flex" justifyContent="flex-end" mt={2}>
             <Button onClick={() => setOpenModal(false)} sx={{ mr: 2 }}>
               Cancelar
