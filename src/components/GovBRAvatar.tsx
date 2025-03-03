@@ -1,10 +1,14 @@
 'use client'
+
+import { useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import {
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined
 } from '@mui/icons-material'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 
 declare global {
   interface Window {
@@ -12,24 +16,11 @@ declare global {
   }
 }
 
-interface GovBRAvatarProps {
-  userName: string
-  userImage?: string
-  menuItems?: { label: string; href?: string }[]
-}
-
-export default function GovBRAvatar({
-  userName,
-  userImage,
-  menuItems = [
-    { label: 'Dados pessoais', href: '/perfil' },
-    { label: 'Privacidade', href: '/privacidade' },
-    { label: 'Notificações', href: '/notificacoes' },
-    { label: 'Perguntas frequentes', href: '/faq' },
-    { label: 'Sair', href: '/logout' }
-  ]
-}: Readonly<GovBRAvatarProps>) {
+export default function GovBRAvatar() {
+  const { data: session } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
+  const router = useRouter()
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.BRSignIn?.activate) {
@@ -37,24 +28,45 @@ export default function GovBRAvatar({
     }
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleNavigation = (href: string) => {
+    setMenuOpen(false)
+    if (href === '/auth/logout') {
+      signOut({ callbackUrl: '/auth/login' })
+    } else {
+      router.push(href)
+    }
+  }
+
+  const menuItems = [
+    { label: 'Dados pessoais', href: '/dashboard/perfil' },
+    { label: 'Sair', href: '/auth/logout' }
+  ]
+
   return (
-    <div>
-      {/* Botão do Avatar */}
+    <div ref={menuRef} style={{ position: 'relative' }}>
       <button
         style={{ height: '56px' }}
         className="br-sign-in"
         type="button"
-        id="avatar-dropdown-trigger"
-        data-toggle="dropdown"
-        data-target="avatar-menu"
-        aria-label={`Olá, ${userName}`}
+        aria-label={`Olá, ${session?.user?.name}`}
         onClick={() => setMenuOpen(!menuOpen)}
       >
-        {userImage ? (
+        {session?.user?.image ? (
           <span className="br-avatar">
             <Image
-              src={userImage}
-              alt={userName}
+              src={session.user.image}
+              alt={session.user.name || 'Usuário'}
               width={40}
               height={40}
               className="br-avatar-img"
@@ -62,35 +74,47 @@ export default function GovBRAvatar({
             />
           </span>
         ) : (
-          <span className="br-avatar" title={userName}>
+          <span className="br-avatar" title={session?.user?.name || ''}>
             <span className="content bg-orange-vivid-30 text-pure-0">
-              {userName.charAt(0).toUpperCase()}
+              {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
             </span>
           </span>
         )}
         <span className="ml-2 text-gray-80 text-weight-regular">
-          Olá, <span className="text-weight-semi-bold">{userName}</span>
+          Olá,{' '}
+          <span className="text-weight-semi-bold">
+            {session?.user?.name || 'Usuário'}
+          </span>
         </span>
         {menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />}
       </button>
 
       <div
         className="br-list"
-        id="avatar-menu"
-        data-toggle="dropdown"
-        hidden={!menuOpen || undefined}
-        role="menu"
-        aria-labelledby="avatar-dropdown-trigger"
+        hidden={!menuOpen}
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: '100%',
+          zIndex: 1000,
+          width: '240px',
+          marginTop: '8px'
+        }}
       >
         {menuItems.map((item) => (
-          <a
+          <button
             key={item.label}
             className="br-item"
-            href={item.href ?? 'javascript:void(0)'}
             role="menuitem"
+            onClick={() => handleNavigation(item.href!)}
+            style={{
+              width: '100%',
+              textAlign: 'left',
+              justifyContent: 'flex-start'
+            }}
           >
             {item.label}
-          </a>
+          </button>
         ))}
       </div>
     </div>

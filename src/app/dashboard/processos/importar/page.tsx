@@ -168,12 +168,12 @@ export default function ImportarProcessos() {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ mt: 4, mb: 4 }}>
+      <Box>
         <Typography variant="h4" component="h1" gutterBottom>
           Importação de Processos
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+        <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
           <Button variant="contained" component="label">
             Selecionar CSV
             <input
@@ -198,16 +198,16 @@ export default function ImportarProcessos() {
           <LinearProgress
             variant="determinate"
             value={progresso}
-            sx={{ mb: 3 }}
+            sx={{ mb: 1 }}
           />
         )}
 
-        <Card sx={{ p: 3, mb: 4, bgcolor: 'background.paper' }}>
+        <Card sx={{ p: 1, mb: 1, bgcolor: 'background.paper' }}>
           <Typography variant="h6" gutterBottom>
             {importado ? 'Resultado da Importação' : 'Análise do Arquivo'}
           </Typography>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             <Grid item xs={6} md={3}>
               <Estatistica
                 titulo="Total"
@@ -264,9 +264,9 @@ export default function ImportarProcessos() {
         </Card>
 
         {!!dados.length && (
-          <Card sx={{ mb: 4 }}>
+          <Card sx={{ mb: 1 }}>
             <TableContainer>
-              <Typography variant="h6" sx={{ p: 2 }}>
+              <Typography variant="h6" sx={{ p: 1 }}>
                 Pré-visualização dos Dados ({dados.length} registros)
               </Typography>
 

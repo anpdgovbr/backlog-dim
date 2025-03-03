@@ -4,3 +4,34 @@
   object-fit: cover; /* Garante que a imagem preencha corretamente */
   border-radius: 50%; /* Mantém o formato circular */
 }
+/* Ajustes para o dropdown do GovBR-DS */
+.br-sign-in {
+  position: relative;
+  display: inline-block;
+}
+
+.br-list {
+  width: 240px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.br-sign-in .br-list {
+  top: 100% !important;
+  left: auto !important;
+  right: 0 !important;
+}
+
+.br-item {
+  padding: 0.75rem 1rem;
+  color: #1351b4;
+}
+
+.br-item:hover {
+  background-color: #f0f5ff;
+}
+
+.divider {
+  border-top: 1px solid #ccc;
+  margin: 0.5rem 0;
+}
