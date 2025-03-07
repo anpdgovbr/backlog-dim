@@ -127,7 +127,10 @@
   margin-bottom: var(--spacing-scale-2x);
 }
 .br-menu .menu-footer .menu-links a:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-menu .menu-footer .social-network,
 .br-menu .menu-footer .menu-social {
@@ -215,10 +218,10 @@
   .br-menu.push .menu-footer {
     display: none;
   }
-  .br-menu.push .menu-header[data-visible=true] {
+  .br-menu.push .menu-header[data-visible="true"] {
     display: flex;
   }
-  .br-menu.push .menu-footer[data-visible=true] {
+  .br-menu.push .menu-footer[data-visible="true"] {
     display: block;
   }
   .br-menu.push .menu-panel {
@@ -319,7 +322,10 @@
   outline-color: var(--focus-color-dark);
 }
 .br-menu a.menu-item:not(:disabled):not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 
 /*# sourceMappingURL=menu.css.map*/

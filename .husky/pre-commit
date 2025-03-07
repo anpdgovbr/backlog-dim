@@ -1,0 +1,4 @@
+# Runs formatter before commit
+node_modules/.bin/lint-staged
+
+npm run pre-commit

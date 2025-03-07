@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { calcIconCircleBg, parseThemeColor } from '@/utils/colorUtils'
-import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material'
-import { Box, Typography } from '@mui/material'
-import { Theme } from '@mui/material/styles'
-import React from 'react'
+import { calcIconCircleBg, parseThemeColor } from "@/utils/colorUtils"
+import { KeyboardArrowDown, KeyboardArrowRight } from "@mui/icons-material"
+import { Box, Typography } from "@mui/material"
+import { Theme } from "@mui/material/styles"
+import React from "react"
 
 interface IMenu25BaseProps {
   readonly id: string
@@ -43,8 +43,8 @@ export function Menu25Base(props: IMenu25BaseProps) {
     icon,
     baseColor,
     expanded,
-    collapsedBgColor = '#eaf3fc',
-    expandedBgColor = '#ffffff',
+    collapsedBgColor = "#eaf3fc",
+    expandedBgColor = "#ffffff",
     extraContent,
     onToggle
   } = props
@@ -66,57 +66,57 @@ export function Menu25Base(props: IMenu25BaseProps) {
           borderRadius: 1,
           bgcolor: bgColor,
           border: `1px solid ${iconCircleBg}`,
-          cursor: 'pointer', // 🔥 Indica que o card é clicável
-          transition: 'background 0.3s ease',
-          '&:hover': {
+          cursor: "pointer", // 🔥 Indica que o card é clicável
+          transition: "background 0.3s ease",
+          "&:hover": {
             backgroundColor: theme.palette.action.hover
           },
 
           // 🔹 Linha principal do card
-          '& .menu-header': {
-            display: 'flex',
-            alignItems: 'center', // 🔥 Centraliza verticalmente os elementos
-            justifyContent: 'space-between',
+          "& .menu-header": {
+            display: "flex",
+            alignItems: "center", // 🔥 Centraliza verticalmente os elementos
+            justifyContent: "space-between",
             gap: 1, // 🔹 Adiciona espaço uniforme entre os elementos
-            flexWrap: 'wrap', // 🔹 Permite que o título quebre linha se necessário
+            flexWrap: "wrap", // 🔹 Permite que o título quebre linha se necessário
             minHeight: 48 // 🔥 Garante altura mínima uniforme da linha
           },
 
-          '& .iconCircle': {
+          "& .iconCircle": {
             minWidth: 40, // 🔥 Garante tamanho mínimo para evitar que quebre
             width: 40,
             height: 40,
-            borderRadius: '50%',
+            borderRadius: "50%",
             backgroundColor: iconCircleBg,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff"
           },
 
-          '& .titleText': {
-            textTransform: 'uppercase',
+          "& .titleText": {
+            textTransform: "uppercase",
             color: actualBaseColor,
             fontWeight: 700,
-            letterSpacing: '0.02em',
-            wordBreak: 'break-word', // 🔥 Permite quebra de palavra longa
+            letterSpacing: "0.02em",
+            wordBreak: "break-word", // 🔥 Permite quebra de palavra longa
             flex: 1, // 🔹 Faz o título ocupar o espaço disponível sem quebrar layout
             minWidth: 0, // 🔹 Impede que o título force o card a ficar muito largo
             lineHeight: 1.2
           },
 
-          '& .iconExpand': {
+          "& .iconExpand": {
             flexShrink: 0, // 🔹 Garante que o ícone de expansão não quebre linha
-            display: 'flex', // 🔹 Para garantir que ele fique alinhado verticalmente
-            alignItems: 'center'
+            display: "flex", // 🔹 Para garantir que ele fique alinhado verticalmente
+            alignItems: "center"
           },
 
-          '& .description': {
+          "& .description": {
             mt: 1,
             color: theme.palette.text.secondary
           },
 
-          '& .extraContent': {
+          "& .extraContent": {
             mt: 1
           }
         }
@@ -146,9 +146,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
       )}
 
       {/* Conteúdo extra só aparece se estiver expandido */}
-      {expanded && extraContent && (
-        <Box className="extraContent">{extraContent}</Box>
-      )}
+      {expanded && extraContent && <Box className="extraContent">{extraContent}</Box>}
     </Box>
   )
 }

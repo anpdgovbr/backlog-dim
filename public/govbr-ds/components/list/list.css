@@ -37,7 +37,8 @@
 .br-list.horizontal > .group.three-lines > .content {
   height: 6em;
 }
-.br-list.horizontal[data-toggle] > .br-item, .br-list.horizontal.toggle > .br-item {
+.br-list.horizontal[data-toggle] > .br-item,
+.br-list.horizontal.toggle > .br-item {
   display: block;
 }
 .br-list .br-item {
@@ -61,7 +62,10 @@
   flex: 1;
 }
 .br-list .br-item .content:hover button.br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-list .br-item[data-toggle] {
   cursor: pointer;
@@ -81,30 +85,36 @@
   justify-content: space-between;
   padding: var(--spacing-scale-base) var(--spacing-scale-2x);
 }
-.br-list[data-one-line] .br-item, .br-list[data-one-line] .br-list .br-item {
+.br-list[data-one-line] .br-item,
+.br-list[data-one-line] .br-list .br-item {
   height: 2em;
 }
-.br-list[data-one-line] .br-item .content, .br-list[data-one-line] .br-list .br-item .content {
+.br-list[data-one-line] .br-item .content,
+.br-list[data-one-line] .br-list .br-item .content {
   height: auto;
   overflow: hidden;
   padding: 0 var(--spacing-scale-2x);
   text-overflow: unset;
   white-space: initial;
 }
-.br-list[data-two-lines] .br-item, .br-list[data-two-lines] .br-list .br-item {
+.br-list[data-two-lines] .br-item,
+.br-list[data-two-lines] .br-list .br-item {
   height: 4em;
 }
-.br-list[data-two-lines] .br-item .content, .br-list[data-two-lines] .br-list .br-item .content {
+.br-list[data-two-lines] .br-item .content,
+.br-list[data-two-lines] .br-list .br-item .content {
   height: auto;
   overflow: hidden;
   padding: 0 var(--spacing-scale-2x);
   text-overflow: unset;
   white-space: initial;
 }
-.br-list[data-three-lines] .br-item, .br-list[data-three-lines] .br-list .br-item {
+.br-list[data-three-lines] .br-item,
+.br-list[data-three-lines] .br-list .br-item {
   height: 6em;
 }
-.br-list[data-three-lines] .br-item .content, .br-list[data-three-lines] .br-list .br-item .content {
+.br-list[data-three-lines] .br-item .content,
+.br-list[data-three-lines] .br-list .br-item .content {
   height: auto;
   overflow: hidden;
   padding: 0 var(--spacing-scale-2x);

@@ -1,5 +1,5 @@
-import { EnumData } from './EnumData'
-import { RequeridoOutput } from './Requerido'
+import { EnumData } from "./EnumData"
+import { RequeridoOutput } from "./Requerido"
 
 export interface ProcessoInput {
   numero: string

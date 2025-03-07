@@ -1,17 +1,17 @@
-import { Folder, Group, List } from '@mui/icons-material'
+import { Folder, Group, List } from "@mui/icons-material"
 import {
   Container,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography
-} from '@mui/material'
-import Link from 'next/link'
+} from "@mui/material"
+import Link from "next/link"
 
 const links = [
-  { href: '/admin/contato-previo', text: 'Contato Prévio', icon: <Group /> },
-  { href: '/admin/encaminhamento', text: 'Encaminhamentos', icon: <List /> },
-  { href: '/admin/evidencia', text: 'Evidências', icon: <Folder /> }
+  { href: "/admin/contato-previo", text: "Contato Prévio", icon: <Group /> },
+  { href: "/admin/encaminhamento", text: "Encaminhamentos", icon: <List /> },
+  { href: "/admin/evidencia", text: "Evidências", icon: <Folder /> }
 ]
 
 export default function AdminDashboard() {

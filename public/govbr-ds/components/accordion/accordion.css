@@ -41,14 +41,18 @@
 .br-accordion .header:focus {
   outline: none;
 }
-.br-accordion .header.focus-visible, .br-accordion .header:focus-visible {
+.br-accordion .header.focus-visible,
+.br-accordion .header:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 .br-accordion .header:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-accordion .content {
   color: var(--text-color);

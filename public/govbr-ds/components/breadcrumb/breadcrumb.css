@@ -37,10 +37,17 @@
   margin: 0 var(--spacing-scale-2x) 0 var(--spacing-scale-base);
   white-space: nowrap;
 }
-.br-breadcrumb .crumb[data-active=active] span:focus:focus, .br-breadcrumb .crumb[data-active=active] span:focus-visible:focus, .br-breadcrumb .crumb[data-active=active] span.focus-visible:focus {
+.br-breadcrumb .crumb[data-active="active"] span:focus:focus,
+.br-breadcrumb .crumb[data-active="active"] span:focus-visible:focus,
+.br-breadcrumb .crumb[data-active="active"] span.focus-visible:focus {
   outline: none;
 }
-.br-breadcrumb .crumb[data-active=active] span:focus.focus-visible, .br-breadcrumb .crumb[data-active=active] span:focus:focus-visible, .br-breadcrumb .crumb[data-active=active] span:focus-visible.focus-visible, .br-breadcrumb .crumb[data-active=active] span:focus-visible:focus-visible, .br-breadcrumb .crumb[data-active=active] span.focus-visible.focus-visible, .br-breadcrumb .crumb[data-active=active] span.focus-visible:focus-visible {
+.br-breadcrumb .crumb[data-active="active"] span:focus.focus-visible,
+.br-breadcrumb .crumb[data-active="active"] span:focus:focus-visible,
+.br-breadcrumb .crumb[data-active="active"] span:focus-visible.focus-visible,
+.br-breadcrumb .crumb[data-active="active"] span:focus-visible:focus-visible,
+.br-breadcrumb .crumb[data-active="active"] span.focus-visible.focus-visible,
+.br-breadcrumb .crumb[data-active="active"] span.focus-visible:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);

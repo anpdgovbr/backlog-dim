@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { supabase } from '@/lib/supabase'
-import { ProcessoInput } from '@/types/Processo'
-import { NavigateBefore, NavigateNext } from '@mui/icons-material'
+import { supabase } from "@/lib/supabase"
+import { ProcessoInput } from "@/types/Processo"
+import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,
   Box,
@@ -22,9 +22,9 @@ import {
   TablePagination,
   TableRow,
   Typography
-} from '@mui/material'
-import Papa from 'papaparse'
-import { useState } from 'react'
+} from "@mui/material"
+import Papa from "papaparse"
+import { useState } from "react"
 
 type CsvRow = string[]
 type Relatorio = { sucesso: number; falhas: string[] }
@@ -61,8 +61,8 @@ export default function ImportarProcessos() {
     Papa.parse(file, {
       header: false,
       skipEmptyLines: true,
-      delimiter: ';',
-      encoding: 'ISO-8859-1',
+      delimiter: ";",
+      encoding: "ISO-8859-1",
       complete: (result) => {
         const data = result.data as CsvRow[]
         setCabecalho(data[0])
@@ -99,26 +99,20 @@ export default function ImportarProcessos() {
             requerente
           ] = linha
 
-          if (!numeroProcesso) throw new Error('Número do processo ausente')
+          if (!numeroProcesso) throw new Error("Número do processo ausente")
 
-          const anonimo = anonimoStr?.toLowerCase() === 'sim'
+          const anonimo = anonimoStr?.toLowerCase() === "sim"
           const processo: ProcessoInput = {
             numero: numeroProcesso,
             dataCriacao: formatarData(dataCriacao),
             anonimo,
             requerente: anonimo ? numeroProcesso : requerente?.trim(),
-            responsavelId: await obterOuCriarEntidade(
-              'Responsavel',
-              responsavel
-            ),
-            situacaoId: await obterOuCriarEntidade('Situacao', situacao),
-            formaEntradaId: await obterOuCriarEntidade(
-              'FormaEntrada',
-              formaEntrada
-            )
+            responsavelId: await obterOuCriarEntidade("Responsavel", responsavel),
+            situacaoId: await obterOuCriarEntidade("Situacao", situacao),
+            formaEntradaId: await obterOuCriarEntidade("FormaEntrada", formaEntrada)
           }
 
-          const { error } = await supabase.from('Processo').insert(processo)
+          const { error } = await supabase.from("Processo").insert(processo)
           if (error) throw error
 
           sucesso++
@@ -147,7 +141,7 @@ export default function ImportarProcessos() {
 
   const tratarErro = (error: unknown, numeroProcesso: string): string => {
     if (error instanceof Error) {
-      if (error.message.includes('duplicate key')) {
+      if (error.message.includes("duplicate key")) {
         return `Processo ${numeroProcesso} já existe`
       }
       return `Erro em ${numeroProcesso}: ${error.message}`
@@ -159,9 +153,7 @@ export default function ImportarProcessos() {
     setPagina(novaPagina)
   }
 
-  const handleMudarLinhasPorPagina = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleMudarLinhasPorPagina = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLinhasPorPagina(parseInt(event.target.value, 10))
     setPagina(0)
   }
@@ -173,15 +165,10 @@ export default function ImportarProcessos() {
           Importação de Processos
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+        <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
           <Button variant="contained" component="label">
             Selecionar CSV
-            <input
-              type="file"
-              hidden
-              accept=".csv"
-              onChange={handleFileUpload}
-            />
+            <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
           </Button>
 
           <Button
@@ -190,30 +177,24 @@ export default function ImportarProcessos() {
             onClick={handleImport}
             disabled={loading || !dados.length}
           >
-            {loading ? `Importando... ${progresso}%` : 'Iniciar Importação'}
+            {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
           </Button>
         </Box>
 
         {loading && (
-          <LinearProgress
-            variant="determinate"
-            value={progresso}
-            sx={{ mb: 1 }}
-          />
+          <LinearProgress variant="determinate" value={progresso} sx={{ mb: 1 }} />
         )}
 
-        <Card sx={{ p: 1, mb: 1, bgcolor: 'background.paper' }}>
+        <Card sx={{ p: 1, mb: 1, bgcolor: "background.paper" }}>
           <Typography variant="h6" gutterBottom>
-            {importado ? 'Resultado da Importação' : 'Análise do Arquivo'}
+            {importado ? "Resultado da Importação" : "Análise do Arquivo"}
           </Typography>
 
           <Grid container spacing={1}>
             <Grid item xs={6} md={3}>
               <Estatistica
                 titulo="Total"
-                valor={
-                  importado ? resumoImportacao.totalRegistros : dados.length
-                }
+                valor={importado ? resumoImportacao.totalRegistros : dados.length}
                 cor="primary"
               />
             </Grid>
@@ -224,7 +205,7 @@ export default function ImportarProcessos() {
                 valor={
                   importado
                     ? resumoImportacao.totalAnonimos
-                    : dados.filter((l) => l[5]?.toLowerCase() === 'sim').length
+                    : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
                 }
                 cor="secondary"
               />
@@ -232,30 +213,18 @@ export default function ImportarProcessos() {
 
             <Grid item xs={12} md={6}>
               <CategoriaResumo
-                titulo={
-                  importado
-                    ? 'Responsáveis Importados'
-                    : 'Responsáveis no Arquivo'
-                }
+                titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
                 dados={
-                  importado
-                    ? resumoImportacao.responsaveis
-                    : contarOcorrencias(dados, 0)
+                  importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
                 }
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <CategoriaResumo
-                titulo={
-                  importado
-                    ? 'Formas de Entrada'
-                    : 'Formas de Entrada no Arquivo'
-                }
+                titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
                 dados={
-                  importado
-                    ? resumoImportacao.formasEntrada
-                    : contarOcorrencias(dados, 4)
+                  importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
                 }
                 cor="secondary"
               />
@@ -274,7 +243,7 @@ export default function ImportarProcessos() {
                 <TableHead>
                   <TableRow>
                     {cabecalho.map((coluna, i) => (
-                      <TableCell key={i} sx={{ fontWeight: 'bold' }}>
+                      <TableCell key={i} sx={{ fontWeight: "bold" }}>
                         {coluna}
                       </TableCell>
                     ))}
@@ -290,9 +259,7 @@ export default function ImportarProcessos() {
                     .map((linha, i) => (
                       <TableRow key={i}>
                         {linha.map((celula, j) => (
-                          <TableCell key={j}>
-                            {celula || <em>vazio</em>}
-                          </TableCell>
+                          <TableCell key={j}>{celula || <em>vazio</em>}</TableCell>
                         ))}
                       </TableRow>
                     ))}
@@ -301,24 +268,14 @@ export default function ImportarProcessos() {
                 <TableFooter>
                   <TableRow>
                     <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        25,
-                        { label: 'Todos', value: -1 }
-                      ]}
+                      rowsPerPageOptions={[5, 10, 25, { label: "Todos", value: -1 }]}
                       count={dados.length}
                       rowsPerPage={linhasPorPagina}
                       page={pagina}
                       onPageChange={handleMudarPagina}
                       onRowsPerPageChange={handleMudarLinhasPorPagina}
-                      ActionsComponent={({
-                        count,
-                        page,
-                        rowsPerPage,
-                        onPageChange
-                      }) => (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => (
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
                           <IconButton
                             onClick={() => onPageChange(null, page - 1)}
                             disabled={page === 0}
@@ -327,9 +284,7 @@ export default function ImportarProcessos() {
                           </IconButton>
                           <IconButton
                             onClick={() => onPageChange(null, page + 1)}
-                            disabled={
-                              page >= Math.ceil(count / rowsPerPage) - 1
-                            }
+                            disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                           >
                             <NavigateNext />
                           </IconButton>
@@ -356,7 +311,7 @@ export default function ImportarProcessos() {
                 <Typography variant="subtitle1" gutterBottom>
                   {relatorio.falhas.length} erros encontrados:
                 </Typography>
-                <Box component="ul" sx={{ maxHeight: 200, overflow: 'auto' }}>
+                <Box component="ul" sx={{ maxHeight: 200, overflow: "auto" }}>
                   {relatorio.falhas.map((falha, i) => (
                     <li key={i}>{falha}</li>
                   ))}
@@ -378,9 +333,9 @@ const Estatistica = ({
 }: {
   titulo: string
   valor: number
-  cor: 'primary' | 'secondary'
+  cor: "primary" | "secondary"
 }) => (
-  <Card sx={{ textAlign: 'center', p: 2, bgcolor: `${cor}.light` }}>
+  <Card sx={{ textAlign: "center", p: 2, bgcolor: `${cor}.light` }}>
     <Typography variant="subtitle1">{titulo}</Typography>
     <Typography variant="h3" color={`${cor}.main`}>
       {valor}
@@ -391,24 +346,19 @@ const Estatistica = ({
 const CategoriaResumo = ({
   titulo,
   dados,
-  cor = 'primary'
+  cor = "primary"
 }: {
   titulo: string
   dados: Record<string, number>
-  cor?: 'primary' | 'secondary'
+  cor?: "primary" | "secondary"
 }) => (
   <Card sx={{ p: 2 }}>
     <Typography variant="subtitle2" gutterBottom>
       {titulo}
     </Typography>
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
       {Object.entries(dados).map(([nome, total]) => (
-        <Chip
-          key={nome}
-          label={`${nome} (${total})`}
-          color={cor}
-          variant="outlined"
-        />
+        <Chip key={nome} label={`${nome} (${total})`} color={cor} variant="outlined" />
       ))}
     </Box>
   </Card>
@@ -416,18 +366,15 @@ const CategoriaResumo = ({
 
 // Funções utilitárias
 const formatarData = (data: string): string => {
-  const [dia, mes, ano] = data.split('/')
-  return ano ? `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}` : ''
+  const [dia, mes, ano] = data.split("/")
+  return ano ? `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : ""
 }
 
-const obterOuCriarEntidade = async (
-  tabela: string,
-  nome: string
-): Promise<number> => {
+const obterOuCriarEntidade = async (tabela: string, nome: string): Promise<number> => {
   const { data: existente } = await supabase
     .from(tabela)
-    .select('id')
-    .eq('nome', nome)
+    .select("id")
+    .eq("nome", nome)
     .single()
 
   if (existente) return existente.id
@@ -435,17 +382,14 @@ const obterOuCriarEntidade = async (
   const { data: novo, error } = await supabase
     .from(tabela)
     .insert([{ nome }])
-    .select('id')
+    .select("id")
     .single()
 
   if (error || !novo) throw new Error(`Falha ao criar ${tabela}: ${nome}`)
   return novo.id
 }
 
-const contarOcorrencias = (
-  dados: CsvRow[],
-  indice: number
-): Record<string, number> =>
+const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, number> =>
   dados.reduce(
     (acc, linha) => {
       const valor = linha[indice]?.trim()
