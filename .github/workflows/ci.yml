@@ -3,8 +3,8 @@ name: CI - Validação do Código
 on:
   pull_request:
     branches:
-      - main
-#      - stable
+#      - main
+      - stable
 #      - develop
 
 jobs:
