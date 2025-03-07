@@ -21,7 +21,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Setores (Corrigido para usar "nome")
+  // Setores
   await prisma.setor.createMany({
     data: [
       { nome: "Bancos, Financeiras e Administradoras de Cartão" },
@@ -33,7 +33,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Formas de Entrada (Corrigido para usar "nome")
+  // Formas de Entrada
   await prisma.formaEntrada.createMany({
     data: [
       { nome: "Ouvidoria" },
@@ -44,7 +44,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Encaminhamentos (Corrigido para usar "nome")
+  // Encaminhamentos
   await prisma.encaminhamento.createMany({
     data: [
       { nome: "Aguardando análise" },
@@ -56,7 +56,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Situações do Processamento (Corrigido para usar "nome")
+  // Situações do Processamento
   await prisma.situacao.createMany({
     data: [
       { nome: "Em trâmite - aguardando análise" },
@@ -66,7 +66,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Pedidos de Manifestação (Corrigido para usar "nome")
+  // Pedidos de Manifestação
   await prisma.pedidoManifestacao.createMany({
     data: [
       { nome: "Sim - Controlador Respondeu" },
@@ -76,7 +76,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Contatos Prévios (Corrigido para usar "nome")
+  // Contatos Prévios
   await prisma.contatoPrevio.createMany({
     data: [
       { nome: "Correio Eletrônico (e-mail)" },
@@ -87,7 +87,7 @@ async function main() {
     skipDuplicates: true
   })
 
-  // Evidências (Corrigido para usar "nome")
+  // Evidências
   await prisma.evidencia.createMany({
     data: [
       { nome: "Boletim de Ocorrência" },
@@ -96,6 +96,60 @@ async function main() {
     ],
     skipDuplicates: true
   })
+
+  // ================================
+  // 🌟 Adicionando Perfis e Permissões
+  // ================================
+  
+  console.log("🔹 Criando Perfis...")
+
+  const leitor = await prisma.perfil.upsert({
+    where: { nome: 'Leitor' },
+    update: {},
+    create: { nome: 'Leitor' }
+  });
+
+  const atendente = await prisma.perfil.upsert({
+    where: { nome: 'Atendente' },
+    update: {},
+    create: { nome: 'Atendente' }
+  });
+
+  const supervisor = await prisma.perfil.upsert({
+    where: { nome: 'Supervisor' },
+    update: {},
+    create: { nome: 'Supervisor' }
+  });
+
+  const administrador = await prisma.perfil.upsert({
+    where: { nome: 'Administrador' },
+    update: {},
+    create: { nome: 'Administrador' }
+  });
+
+  console.log("🔹 Criando Permissões...")
+
+  const permissoes = [
+    // Permissões de Processo
+    { acao: 'Exibir', recurso: 'Processo', permitido: true, perfilId: leitor.id },
+    { acao: 'Exibir', recurso: 'Processo', permitido: true, perfilId: atendente.id },
+    { acao: 'Inserir', recurso: 'Processo', permitido: false, perfilId: leitor.id },
+    { acao: 'Inserir', recurso: 'Processo', permitido: true, perfilId: atendente.id },
+    { acao: 'Editar Geral', recurso: 'Processo', permitido: false, perfilId: leitor.id },
+    { acao: 'Editar Geral', recurso: 'Processo', permitido: true, perfilId: supervisor.id },
+    { acao: 'Excluir', recurso: 'Processo', permitido: false, perfilId: atendente.id },
+    { acao: 'Excluir', recurso: 'Processo', permitido: true, perfilId: administrador.id },
+    // Permissões de Relatórios
+    { acao: 'Exibir Relatórios', recurso: 'Relatorios', permitido: true, perfilId: leitor.id },
+    { acao: 'Criar Relatórios', recurso: 'Relatorios', permitido: false, perfilId: leitor.id },
+    { acao: 'Criar Relatórios', recurso: 'Relatorios', permitido: true, perfilId: supervisor.id },
+    { acao: 'Editar Relatórios', recurso: 'Relatorios', permitido: false, perfilId: atendente.id },
+    { acao: 'Editar Relatórios', recurso: 'Relatorios', permitido: true, perfilId: supervisor.id },
+    { acao: 'Desabilitar Relatórios', recurso: 'Relatorios', permitido: false, perfilId: supervisor.id },
+    { acao: 'Desabilitar Relatórios', recurso: 'Relatorios', permitido: true, perfilId: administrador.id },
+  ];
+
+  await prisma.permissao.createMany({ data: permissoes });
 
   console.log("✅ Seed aplicado com sucesso!")
 }

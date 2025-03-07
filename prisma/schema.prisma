@@ -112,3 +112,33 @@ model Evidencia {
 
   @@map("Evidencia")
 }
+
+
+model Perfil {
+  id        Int          @id @default(autoincrement())
+  nome      String       @unique
+  usuarios  User[]
+  permissoes Permissao[]
+
+  @@map("Perfil")
+}
+
+model Permissao {
+  id        Int          @id @default(autoincrement())
+  acao      String
+  recurso   String
+  permitido Boolean      @default(false)
+  perfilId  Int
+  perfil    Perfil       @relation(fields: [perfilId], references: [id])
+
+  @@map("Permissao")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  perfilId Int?
+  perfil   Perfil? @relation(fields: [perfilId], references: [id])
+
+  @@map("User")
+}
