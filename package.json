@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx,css,json}\"",
+    "pre-commit": "lint-staged",
+    "lint-staged": "lint-staged",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:reset": "npx supabase stop && npx supabase start",
@@ -20,6 +22,15 @@
     "prisma:studio": "npx prisma studio",
     "db:reset": "npx prisma migrate reset --force",
     "db:seed": "npx tsx prisma/seed.ts"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "next lint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json}": [
+      "prettier --write"
+    ]
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -52,9 +63,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9.21.0",
-    "eslint-config-next": "15.2.1",
+    "eslint-config-next": "^15.2.1",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
+    "lint-staged": "^15.4.3",
     "postcss": "^8",
     "prettier": "^3.5.3",
     "prisma": "^6.4.1",
