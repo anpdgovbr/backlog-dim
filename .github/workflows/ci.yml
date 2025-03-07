@@ -1,0 +1,34 @@
+name: CI - Validação do Código
+
+on:
+  pull_request:
+    branches:
+      - main
+#      - stable
+#      - develop
+
+jobs:
+  lint-build-test:
+    name: 🛠️ Lint, Build e Testes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Instalar Dependências
+        run: npm install
+
+      - name: 🧹 Rodar ESLint e Prettier
+        run: npm run lint && npm run format
+
+      - name: 🔨 Construir o Projeto
+        run: npm run build
+
+#      - name: ✅ Executar Testes Automatizados
+#        run: npm test
