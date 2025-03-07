@@ -34,7 +34,8 @@
   text-align: center;
   width: var(--loading-size);
 }
-.loading[data-progress].loading-mask, .loading[data-progress].loading-fill,
+.loading[data-progress].loading-mask,
+.loading[data-progress].loading-fill,
 .loading[data-progress] .br-loading-mask,
 .loading[data-progress] .br-loading-fill,
 .br-loading[data-progress].loading-mask,
@@ -43,7 +44,12 @@
 .br-loading[data-progress] .br-loading-fill {
   backface-visibility: hidden;
   border-radius: 50%;
-  clip: rect(0, var(--loading-diameter), var(--loading-diameter), calc(var(--loading-diameter) * 0.5));
+  clip: rect(
+    0,
+    var(--loading-diameter),
+    var(--loading-diameter),
+    calc(var(--loading-diameter) * 0.5)
+  );
   height: var(--loading-diameter);
   overflow: hidden;
   position: absolute;

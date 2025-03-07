@@ -1,31 +1,24 @@
-'use client'
+"use client"
 
-import { ProcessoOutput } from '@/types/Processo'
-import GridDeleteIcon from '@mui/icons-material/Delete'
-import SettingsIcon from '@mui/icons-material/Settings'
-import {
-  Box,
-  Container,
-  IconButton,
-  TextField,
-  Typography
-} from '@mui/material'
-
+import { ProcessoOutput } from "@/types/Processo"
+import GridDeleteIcon from "@mui/icons-material/Delete"
+import SettingsIcon from "@mui/icons-material/Settings"
+import { Box, Container, IconButton, TextField, Typography } from "@mui/material"
 import {
   DataGrid,
   GridColDef,
   GridPaginationModel,
   GridRenderCellParams
-} from '@mui/x-data-grid'
-import { ptBR } from '@mui/x-data-grid/locales'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+} from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function ListaProcessos() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])
   const [filteredData, setFilteredData] = useState<ProcessoOutput[]>([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10
@@ -48,12 +41,12 @@ export default function ListaProcessos() {
           setFilteredData(data)
           setTotalRows(total) // 🔹 Atualiza o total de registros
         } else {
-          console.error('Resposta inesperada da API:', data)
+          console.error("Resposta inesperada da API:", data)
           setProcessos([])
           setFilteredData([])
         }
       } catch (error) {
-        console.error('Erro ao buscar processos:', error)
+        console.error("Erro ao buscar processos:", error)
         setProcessos([])
         setFilteredData([])
       }
@@ -76,10 +69,10 @@ export default function ListaProcessos() {
 
   // Função para excluir um processo
   const handleDelete = async (id: number) => {
-    if (confirm('Tem certeza que deseja excluir este processo?')) {
+    if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
         const response = await fetch(`/api/processos/${id}`, {
-          method: 'DELETE'
+          method: "DELETE"
         })
         const data = await response.json()
 
@@ -87,60 +80,58 @@ export default function ListaProcessos() {
           setProcessos((prev) => prev.filter((item) => item.id !== id))
           setTotalRows((prev) => prev - 1) // 🔹 Atualiza total ao excluir
         } else {
-          alert('Erro ao excluir: ' + data.error)
+          alert("Erro ao excluir: " + data.error)
         }
       } catch (error) {
-        alert('Erro ao excluir: ' + error)
+        alert("Erro ao excluir: " + error)
       }
     }
   }
 
   // Definição das colunas da tabela
   const columns: GridColDef<ProcessoOutput>[] = [
-    { field: 'numero', headerName: 'Número', width: 130 },
+    { field: "numero", headerName: "Número", width: 130 },
     {
-      field: 'dataCriacao',
-      headerName: 'Data Criação',
+      field: "dataCriacao",
+      headerName: "Data Criação",
       width: 130,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) => {
         // Converter a string ISO para um objeto Date e formatar corretamente
-        const data = params.row.dataCriacao
-          ? new Date(params.row.dataCriacao)
-          : null
-        return data ? data.toLocaleDateString('pt-BR') : 'Indefinida'
+        const data = params.row.dataCriacao ? new Date(params.row.dataCriacao) : null
+        return data ? data.toLocaleDateString("pt-BR") : "Indefinida"
       }
     },
     {
-      field: 'requerente',
-      headerName: 'Requerente',
+      field: "requerente",
+      headerName: "Requerente",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.requerente || 'Anônimo'
+        params.row.requerente || "Anônimo"
     },
     {
-      field: 'responsavel',
-      headerName: 'Responsável',
+      field: "responsavel",
+      headerName: "Responsável",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.responsavel?.nome || 'Não atribuído'
+        params.row.responsavel?.nome || "Não atribuído"
     },
     {
-      field: 'situacao',
-      headerName: 'Situação',
+      field: "situacao",
+      headerName: "Situação",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.situacao?.nome || 'Indefinida'
+        params.row.situacao?.nome || "Indefinida"
     },
     {
-      field: 'encaminhamento',
-      headerName: 'Encaminhamento',
+      field: "encaminhamento",
+      headerName: "Encaminhamento",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.encaminhamento?.nome || 'Não definido'
+        params.row.encaminhamento?.nome || "Não definido"
     },
     {
-      field: 'acoes',
-      headerName: 'Ações',
+      field: "acoes",
+      headerName: "Ações",
       width: 180,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) => (
         <Box display="flex" gap={1}>
@@ -158,7 +149,7 @@ export default function ListaProcessos() {
     }
   ]
 
-  console.log('processos:', filteredData)
+  console.log("processos:", filteredData)
 
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
@@ -176,7 +167,7 @@ export default function ListaProcessos() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div style={{ display: 'flex', height: '100%', width: '100%' }}>
+        <div style={{ display: "flex", height: "100%", width: "100%" }}>
           <DataGrid
             rows={filteredData}
             columns={columns}

@@ -43,7 +43,8 @@
   white-space: nowrap;
   width: 0;
 }
-.br-checkbox input:checked + label::after, .br-checkbox input:indeterminate + label::after {
+.br-checkbox input:checked + label::after,
+.br-checkbox input:indeterminate + label::after {
   border: solid var(--selected);
   border-width: 0 3px 3px 0;
   content: "";
@@ -73,52 +74,81 @@
   top: 2px;
   transform: none;
 }
-.br-checkbox.is-invalid input + label::before, .br-checkbox.invalid input + label::before, .br-checkbox[invalid] input + label::before {
+.br-checkbox.is-invalid input + label::before,
+.br-checkbox.invalid input + label::before,
+.br-checkbox[invalid] input + label::before {
   --border-color: var(--danger);
 }
 .br-checkbox.is-invalid input:focus-visible:checked + label::before,
-.br-checkbox.is-invalid input:focus-visible + label::before, .br-checkbox.is-invalid input.focus-visible:checked + label::before,
-.br-checkbox.is-invalid input.focus-visible + label::before, .br-checkbox.invalid input:focus-visible:checked + label::before,
-.br-checkbox.invalid input:focus-visible + label::before, .br-checkbox.invalid input.focus-visible:checked + label::before,
-.br-checkbox.invalid input.focus-visible + label::before, .br-checkbox[invalid] input:focus-visible:checked + label::before,
-.br-checkbox[invalid] input:focus-visible + label::before, .br-checkbox[invalid] input.focus-visible:checked + label::before,
+.br-checkbox.is-invalid input:focus-visible + label::before,
+.br-checkbox.is-invalid input.focus-visible:checked + label::before,
+.br-checkbox.is-invalid input.focus-visible + label::before,
+.br-checkbox.invalid input:focus-visible:checked + label::before,
+.br-checkbox.invalid input:focus-visible + label::before,
+.br-checkbox.invalid input.focus-visible:checked + label::before,
+.br-checkbox.invalid input.focus-visible + label::before,
+.br-checkbox[invalid] input:focus-visible:checked + label::before,
+.br-checkbox[invalid] input:focus-visible + label::before,
+.br-checkbox[invalid] input.focus-visible:checked + label::before,
 .br-checkbox[invalid] input.focus-visible + label::before {
   --border-color: var(--focus-color);
 }
-.br-checkbox.is-invalid input:checked + label::before, .br-checkbox.invalid input:checked + label::before, .br-checkbox[invalid] input:checked + label::before {
+.br-checkbox.is-invalid input:checked + label::before,
+.br-checkbox.invalid input:checked + label::before,
+.br-checkbox[invalid] input:checked + label::before {
   --border-color: var(--danger);
 }
-.br-checkbox.is-valid input + label::before, .br-checkbox.valid input + label::before, .br-checkbox[valid] input + label::before {
+.br-checkbox.is-valid input + label::before,
+.br-checkbox.valid input + label::before,
+.br-checkbox[valid] input + label::before {
   --border-color: var(--success);
 }
 .br-checkbox.is-valid input:focus-visible:checked + label::before,
-.br-checkbox.is-valid input:focus-visible + label::before, .br-checkbox.is-valid input.focus-visible:checked + label::before,
-.br-checkbox.is-valid input.focus-visible + label::before, .br-checkbox.valid input:focus-visible:checked + label::before,
-.br-checkbox.valid input:focus-visible + label::before, .br-checkbox.valid input.focus-visible:checked + label::before,
-.br-checkbox.valid input.focus-visible + label::before, .br-checkbox[valid] input:focus-visible:checked + label::before,
-.br-checkbox[valid] input:focus-visible + label::before, .br-checkbox[valid] input.focus-visible:checked + label::before,
+.br-checkbox.is-valid input:focus-visible + label::before,
+.br-checkbox.is-valid input.focus-visible:checked + label::before,
+.br-checkbox.is-valid input.focus-visible + label::before,
+.br-checkbox.valid input:focus-visible:checked + label::before,
+.br-checkbox.valid input:focus-visible + label::before,
+.br-checkbox.valid input.focus-visible:checked + label::before,
+.br-checkbox.valid input.focus-visible + label::before,
+.br-checkbox[valid] input:focus-visible:checked + label::before,
+.br-checkbox[valid] input:focus-visible + label::before,
+.br-checkbox[valid] input.focus-visible:checked + label::before,
 .br-checkbox[valid] input.focus-visible + label::before {
   --border-color: var(--focus-color);
 }
-.br-checkbox.is-valid input:checked + label::before, .br-checkbox.valid input:checked + label::before, .br-checkbox[valid] input:checked + label::before {
+.br-checkbox.is-valid input:checked + label::before,
+.br-checkbox.valid input:checked + label::before,
+.br-checkbox[valid] input:checked + label::before {
   --border-color: var(--success);
 }
-.br-checkbox.is-small input + label, .br-checkbox.small input + label, .br-checkbox[small] input + label {
+.br-checkbox.is-small input + label,
+.br-checkbox.small input + label,
+.br-checkbox[small] input + label {
   line-height: var(--spacing-scale-2xh);
   min-height: var(--spacing-scale-2xh);
 }
-.br-checkbox.is-small input + label::before, .br-checkbox.small input + label::before, .br-checkbox[small] input + label::before {
+.br-checkbox.is-small input + label::before,
+.br-checkbox.small input + label::before,
+.br-checkbox[small] input + label::before {
   height: var(--spacing-scale-2xh);
   width: var(--spacing-scale-2xh);
 }
-.br-checkbox.is-small input:checked + label::after, .br-checkbox.small input:checked + label::after, .br-checkbox[small] input:checked + label::after {
+.br-checkbox.is-small input:checked + label::after,
+.br-checkbox.small input:checked + label::after,
+.br-checkbox[small] input:checked + label::after {
   border-width: 0 2px 2px 0;
   height: var(--icon-size-sm);
   left: 7px;
   top: 4px;
   width: 6px;
 }
-.br-checkbox.is-small input[indeterminate] + label::after, .br-checkbox.is-small input:indeterminate + label::after, .br-checkbox.small input[indeterminate] + label::after, .br-checkbox.small input:indeterminate + label::after, .br-checkbox[small] input[indeterminate] + label::after, .br-checkbox[small] input:indeterminate + label::after {
+.br-checkbox.is-small input[indeterminate] + label::after,
+.br-checkbox.is-small input:indeterminate + label::after,
+.br-checkbox.small input[indeterminate] + label::after,
+.br-checkbox.small input:indeterminate + label::after,
+.br-checkbox[small] input[indeterminate] + label::after,
+.br-checkbox[small] input:indeterminate + label::after {
   border-color: var(--background-light);
   border-width: 0 0 3px;
   left: 7px;
@@ -130,7 +160,8 @@
   --border-color: var(--danger);
 }
 .br-checkbox input:focus-visible:checked + label::before,
-.br-checkbox input:focus-visible + label::before, .br-checkbox input.focus-visible:checked + label::before,
+.br-checkbox input:focus-visible + label::before,
+.br-checkbox input.focus-visible:checked + label::before,
 .br-checkbox input.focus-visible + label::before {
   border-color: var(--focus) !important;
   box-shadow: 0 0 0 var(--surface-width-md) var(--focus);
@@ -138,7 +169,10 @@
 }
 .br-checkbox input:hover:not(:disabled) + label::before {
   --interactive-rgb: var(--interactive-light-rgb);
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-checkbox:not(.disabled) input:disabled + label {
   cursor: not-allowed;
@@ -148,7 +182,8 @@
   pointer-events: none;
 }
 .br-checkbox.inverted,
-.br-checkbox.inverted label, .br-checkbox.dark-mode,
+.br-checkbox.inverted label,
+.br-checkbox.dark-mode,
 .br-checkbox.dark-mode label {
   color: var(--color-dark);
 }

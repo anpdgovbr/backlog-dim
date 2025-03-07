@@ -1,7 +1,8 @@
-import ClientRootLayout from './client-layout'
-import { globalMetadata } from './metadata'
-import '@/styles/style.css'
-import '@/styles/global.css'
+import "@/styles/global.css"
+import "@/styles/style.css"
+
+import ClientRootLayout from "./client-layout"
+import { globalMetadata } from "./metadata"
 
 export const metadata = globalMetadata
 

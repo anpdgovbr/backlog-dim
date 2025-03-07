@@ -1,10 +1,7 @@
-import CrudManager from '@/components/CrudManager'
+import CrudManager from "@/components/CrudManager"
 
 export default function PedidoManifestacaoPage() {
   return (
-    <CrudManager
-      tableName="PedidoManifestacao"
-      entityName="Pedidos de Manifestação"
-    />
+    <CrudManager tableName="PedidoManifestacao" entityName="Pedidos de Manifestação" />
   )
 }

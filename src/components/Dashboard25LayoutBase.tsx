@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
   Box,
@@ -10,9 +10,10 @@ import {
   SelectChangeEvent,
   Theme,
   useMediaQuery
-} from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { Menu25Base } from './Menu25Base'
+} from "@mui/material"
+import React, { useEffect, useState } from "react"
+
+import { Menu25Base } from "./Menu25Base"
 
 /**
  * Exige ao menos 1 item no array, impedindo arrays vazios em tempo de compilação.
@@ -81,17 +82,14 @@ export interface IDashboard25LayoutBaseProps {
  * - `<Select>` em telas pequenas,
  * - Conteúdo principal (`md=8`) conforme a seção selecionada.
  */
-export default function Dashboard25LayoutBase(
-  props: IDashboard25LayoutBaseProps
-) {
+export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps) {
   const { sections, defaultSectionId, fallback } = props
 
   // Verifica se a tela está acima do breakpoint "md"
-  const isUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
+  const isUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"))
 
   // Armazena a seção selecionada
-  const [selectedSection, setSelectedSection] =
-    useState<string>(defaultSectionId)
+  const [selectedSection, setSelectedSection] = useState<string>(defaultSectionId)
 
   useEffect(() => {
     setSelectedSection(defaultSectionId)
@@ -119,11 +117,8 @@ export default function Dashboard25LayoutBase(
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Grid
-        container
-        spacing={1} /* espaçamento de 2 entre o menu e o conteúdo */
-      >
+    <Box sx={{ display: "flex" }}>
+      <Grid container spacing={1} /* espaçamento de 2 entre o menu e o conteúdo */>
         {/* Menu lateral (ou Select) */}
         <Grid item xs={12} md={3}>
           {isUpMd ? (

@@ -1,14 +1,11 @@
-'use client'
+"use client"
 
-import { useSession } from 'next-auth/react'
-import { signOut } from 'next-auth/react'
-import {
-  KeyboardArrowDownOutlined,
-  KeyboardArrowUpOutlined
-} from '@mui/icons-material'
-import Image from 'next/image'
-import { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { KeyboardArrowDownOutlined, KeyboardArrowUpOutlined } from "@mui/icons-material"
+import { useSession } from "next-auth/react"
+import { signOut } from "next-auth/react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
 declare global {
   interface Window {
@@ -23,7 +20,7 @@ export default function GovBRAvatar() {
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.BRSignIn?.activate) {
+    if (typeof window !== "undefined" && window.BRSignIn?.activate) {
       window.BRSignIn.activate()
     }
   }, [])
@@ -35,28 +32,28 @@ export default function GovBRAvatar() {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
   const handleNavigation = (href: string) => {
     setMenuOpen(false)
-    if (href === '/auth/logout') {
-      signOut({ callbackUrl: '/auth/login' })
+    if (href === "/auth/logout") {
+      signOut({ callbackUrl: "/auth/login" })
     } else {
       router.push(href)
     }
   }
 
   const menuItems = [
-    { label: 'Dados pessoais', href: '/dashboard/perfil' },
-    { label: 'Sair', href: '/auth/logout' }
+    { label: "Dados pessoais", href: "/dashboard/perfil" },
+    { label: "Sair", href: "/auth/logout" }
   ]
 
   return (
-    <div ref={menuRef} style={{ position: 'relative' }}>
+    <div ref={menuRef} style={{ position: "relative" }}>
       <button
-        style={{ height: '56px' }}
+        style={{ height: "56px" }}
         className="br-sign-in"
         type="button"
         aria-label={`Olá, ${session?.user?.name}`}
@@ -66,24 +63,24 @@ export default function GovBRAvatar() {
           <span className="br-avatar">
             <Image
               src={session.user.image}
-              alt={session.user.name || 'Usuário'}
+              alt={session.user.name || "Usuário"}
               width={40}
               height={40}
               className="br-avatar-img"
-              style={{ '--sign-in-img': '40px' } as React.CSSProperties}
+              style={{ "--sign-in-img": "40px" } as React.CSSProperties}
             />
           </span>
         ) : (
-          <span className="br-avatar" title={session?.user?.name || ''}>
+          <span className="br-avatar" title={session?.user?.name || ""}>
             <span className="content bg-orange-vivid-30 text-pure-0">
-              {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
+              {session?.user?.name?.charAt(0).toUpperCase() || "U"}
             </span>
           </span>
         )}
         <span className="ml-2 text-gray-80 text-weight-regular">
-          Olá,{' '}
+          Olá,{" "}
           <span className="text-weight-semi-bold">
-            {session?.user?.name || 'Usuário'}
+            {session?.user?.name || "Usuário"}
           </span>
         </span>
         {menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />}
@@ -93,12 +90,12 @@ export default function GovBRAvatar() {
         className="br-list"
         hidden={!menuOpen}
         style={{
-          position: 'absolute',
+          position: "absolute",
           right: 0,
-          top: '100%',
+          top: "100%",
           zIndex: 1000,
-          width: '240px',
-          marginTop: '8px'
+          width: "240px",
+          marginTop: "8px"
         }}
       >
         {menuItems.map((item) => (
@@ -108,9 +105,9 @@ export default function GovBRAvatar() {
             role="menuitem"
             onClick={() => handleNavigation(item.href!)}
             style={{
-              width: '100%',
-              textAlign: 'left',
-              justifyContent: 'flex-start'
+              width: "100%",
+              textAlign: "left",
+              justifyContent: "flex-start"
             }}
           >
             {item.label}

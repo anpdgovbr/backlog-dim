@@ -4,7 +4,8 @@
   --datetimepicker-arrows: 32px;
   box-shadow: var(--surface-shadow-md);
 }
-.flatpickr-calendar.arrowTop::before, .flatpickr-calendar.arrowTop::after {
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after {
   border-color: transparent;
 }
 .flatpickr-calendar.open {
@@ -51,7 +52,10 @@
   margin: 0;
   padding: 0;
 }
-.flatpickr-calendar .flatpickr-months .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+.flatpickr-calendar
+  .flatpickr-months
+  .flatpickr-monthDropdown-months
+  .flatpickr-monthDropdown-month {
   color: var(--color);
 }
 .flatpickr-calendar .flatpickr-months .flatpickr-monthDropdown-months:hover {
@@ -101,7 +105,8 @@
 .flatpickr-calendar .flatpickr-day:focus {
   outline: none;
 }
-.flatpickr-calendar .flatpickr-day.focus-visible, .flatpickr-calendar .flatpickr-day:focus-visible {
+.flatpickr-calendar .flatpickr-day.focus-visible,
+.flatpickr-calendar .flatpickr-day:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
@@ -115,7 +120,8 @@
 .flatpickr-calendar .flatpickr-day:hover {
   background: var(--hover-effect);
 }
-.flatpickr-calendar .flatpickr-day.prevMonthDay, .flatpickr-calendar .flatpickr-day.nextMonthDay {
+.flatpickr-calendar .flatpickr-day.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.nextMonthDay {
   font-weight: var(--font-weight-medium);
   opacity: 0.6;
 }
@@ -138,13 +144,18 @@
 .flatpickr-calendar .flatpickr-day.inRange {
   --interactive-rgb: var(--blue-warm-vivid-50-rgb);
   --hover: var(--hover-dark);
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
   border-color: transparent;
   box-shadow: none;
   color: var(--color-dark);
   opacity: 1;
 }
-.flatpickr-calendar .flatpickr-day.selected, .flatpickr-calendar .flatpickr-day.startRange, .flatpickr-calendar .flatpickr-day.endRange {
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange {
   background: var(--selected);
   border-color: transparent;
   color: var(--color-dark);
@@ -176,9 +187,14 @@
   margin: calc(var(--flatpicker-padding) * 0.25) 0;
 }
 .flatpickr-calendar .flatpickr-time input:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.flatpickr-calendar .flatpickr-time input:focus, .flatpickr-calendar .flatpickr-time input:focus-visible, .flatpickr-calendar .flatpickr-time input.focus-visible {
+.flatpickr-calendar .flatpickr-time input:focus,
+.flatpickr-calendar .flatpickr-time input:focus-visible,
+.flatpickr-calendar .flatpickr-time input.focus-visible {
   border-color: var(--focus) !important;
   box-shadow: 0 0 0 var(--surface-width-md) var(--focus);
   outline: none;
@@ -186,7 +202,8 @@
 .flatpickr-calendar .flatpickr-time input.has-icon {
   padding-right: var(--spacing-scale-5x);
 }
-.flatpickr-calendar .flatpickr-time input[type=password]::-ms-reveal, .flatpickr-calendar .flatpickr-time input[type=password]::-ms-clear {
+.flatpickr-calendar .flatpickr-time input[type="password"]::-ms-reveal,
+.flatpickr-calendar .flatpickr-time input[type="password"]::-ms-clear {
   display: none;
 }
 .flatpickr-calendar .flatpickr-time .numInputWrapper {
@@ -214,7 +231,10 @@
   width: var(--datetimepicker-arrows);
 }
 .flatpickr-calendar .flatpickr-time .numInputWrapper span:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .flatpickr-calendar .flatpickr-time .numInputWrapper span::after {
   border: none;
@@ -235,7 +255,8 @@
 }
 
 .br-datetimepicker.inverted .br-input,
-.br-datetimepicker.inverted .br-input label, .br-datetimepicker.dark-mode .br-input,
+.br-datetimepicker.inverted .br-input label,
+.br-datetimepicker.dark-mode .br-input,
 .br-datetimepicker.dark-mode .br-input label {
   --color: var(--color-dark);
   --focus-color: var(--focus-color-dark);

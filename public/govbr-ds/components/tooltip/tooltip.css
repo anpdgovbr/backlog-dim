@@ -62,10 +62,12 @@
 .br-tooltip[warning] .arrow {
   border-color: var(--color-warning, #ffcd07);
 }
-.br-tooltip[info], .br-tooltip {
+.br-tooltip[info],
+.br-tooltip {
   background: var(--color-info, #155bcb);
 }
-.br-tooltip[info] .arrow, .br-tooltip .arrow {
+.br-tooltip[info] .arrow,
+.br-tooltip .arrow {
   border-color: var(--color-info, #155bcb);
 }
 .br-tooltip .arrow {
@@ -74,7 +76,7 @@
   width: 0 !important;
   z-index: -1 !important;
 }
-.br-tooltip[data-popper-placement^=top] > .arrow {
+.br-tooltip[data-popper-placement^="top"] > .arrow {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top-style: solid;
@@ -82,7 +84,7 @@
   bottom: -7px;
   margin-left: 0;
 }
-.br-tooltip[data-popper-placement^=bottom] > .arrow {
+.br-tooltip[data-popper-placement^="bottom"] > .arrow {
   border-bottom-style: solid;
   border-bottom-width: 8px;
   border-left: 8px solid transparent;
@@ -90,14 +92,14 @@
   margin-left: 0;
   top: -8px;
 }
-.br-tooltip[data-popper-placement^=left] > .arrow {
+.br-tooltip[data-popper-placement^="left"] > .arrow {
   border-bottom: 8px solid transparent;
   border-left-style: solid;
   border-left-width: 8px;
   border-top: 8px solid transparent;
   right: calc(var(--spacing-scale-base) * -1);
 }
-.br-tooltip[data-popper-placement^=right] > .arrow {
+.br-tooltip[data-popper-placement^="right"] > .arrow {
   border-bottom: 8px solid transparent;
   border-right-style: solid;
   border-right-width: 8px;
