@@ -38,7 +38,8 @@
 .br-tag > .fas:first-child {
   margin-right: var(--spacing-scale-baseh);
 }
-.br-tag.interaction, .br-tag.interaction-select {
+.br-tag.interaction,
+.br-tag.interaction-select {
   --tag-small: var(--spacing-scale-4x);
   --tag-medium: var(--spacing-scale-5x);
   --tag-large: var(--spacing-scale-5xh);
@@ -60,10 +61,16 @@
   width: var(--button-size);
 }
 .br-tag.interaction:hover .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction:active .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 .br-tag.interaction-select {
   background: transparent;
@@ -122,10 +129,16 @@
   outline-width: var(--focus-width);
 }
 .br-tag.interaction-select input:hover + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction-select input:active + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
   color: var(--color-dark);
 }
 .br-tag.interaction-select.selected label {
@@ -181,7 +194,8 @@
 .br-tag.large {
   --tag-size: var(--tag-large);
 }
-.br-tag.interaction, .br-tag.interaction-select {
+.br-tag.interaction,
+.br-tag.interaction-select {
   --tag-small: var(--spacing-scale-4x);
   --tag-medium: var(--spacing-scale-5x);
   --tag-large: var(--spacing-scale-5xh);
@@ -203,10 +217,16 @@
   width: var(--button-size);
 }
 .br-tag.interaction:hover .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction:active .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 .br-tag.interaction-select {
   background: transparent;
@@ -265,10 +285,16 @@
   outline-width: var(--focus-width);
 }
 .br-tag.interaction-select input:hover + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction-select input:active + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
   color: var(--color-dark);
 }
 .br-tag.interaction-select.selected label {
@@ -278,7 +304,8 @@
 .br-tag.disabled input {
   cursor: not-allowed;
 }
-.br-tag.interaction, .br-tag.interaction-select {
+.br-tag.interaction,
+.br-tag.interaction-select {
   --tag-small: var(--spacing-scale-4x);
   --tag-medium: var(--spacing-scale-5x);
   --tag-large: var(--spacing-scale-5xh);
@@ -300,10 +327,16 @@
   width: var(--button-size);
 }
 .br-tag.interaction:hover .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction:active .br-button {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 .br-tag.interaction-select {
   background: transparent;
@@ -362,10 +395,16 @@
   outline-width: var(--focus-width);
 }
 .br-tag.interaction-select input:hover + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-tag.interaction-select input:active + label {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
   color: var(--color-dark);
 }
 .br-tag.interaction-select.selected label {
@@ -429,100 +468,164 @@
 .br-tag.support-11 {
   --tag-background: var(--color-support-11);
 }
-.br-tag.is-primary-pastel-01, .br-tag.primary-pastel-01, .br-tag[primary-pastel-01] {
+.br-tag.is-primary-pastel-01,
+.br-tag.primary-pastel-01,
+.br-tag[primary-pastel-01] {
   background-color: #c5d4eb;
 }
-.br-tag.is-primary-pastel-02, .br-tag.primary-pastel-02, .br-tag[primary-pastel-02] {
+.br-tag.is-primary-pastel-02,
+.br-tag.primary-pastel-02,
+.br-tag[primary-pastel-02] {
   background-color: #dbe8fb;
 }
-.br-tag.is-primary-lighten-01, .br-tag.primary-lighten-01, .br-tag[primary-lighten-01] {
+.br-tag.is-primary-lighten-01,
+.br-tag.primary-lighten-01,
+.br-tag[primary-lighten-01] {
   background-color: #2670e8;
 }
-.br-tag.is-primary-lighten-02, .br-tag.primary-lighten-02, .br-tag[primary-lighten-02] {
+.br-tag.is-primary-lighten-02,
+.br-tag.primary-lighten-02,
+.br-tag[primary-lighten-02] {
   background-color: #5992ed;
 }
-.br-tag.is-primary-default, .br-tag.primary-default, .br-tag[primary-default] {
+.br-tag.is-primary-default,
+.br-tag.primary-default,
+.br-tag[primary-default] {
   background-color: #1351b4;
 }
-.br-tag.is-primary-darken-01, .br-tag.primary-darken-01, .br-tag[primary-darken-01] {
+.br-tag.is-primary-darken-01,
+.br-tag.primary-darken-01,
+.br-tag[primary-darken-01] {
   background-color: #0c326f;
 }
-.br-tag.is-primary-darken-02, .br-tag.primary-darken-02, .br-tag[primary-darken-02] {
+.br-tag.is-primary-darken-02,
+.br-tag.primary-darken-02,
+.br-tag[primary-darken-02] {
   background-color: #071d41;
 }
-.br-tag.is-secondary-01, .br-tag.secondary-01, .br-tag[secondary-01] {
+.br-tag.is-secondary-01,
+.br-tag.secondary-01,
+.br-tag[secondary-01] {
   background-color: #fff;
 }
-.br-tag.is-secondary-02, .br-tag.secondary-02, .br-tag[secondary-02] {
+.br-tag.is-secondary-02,
+.br-tag.secondary-02,
+.br-tag[secondary-02] {
   background-color: #f8f8f8;
 }
-.br-tag.is-secondary-03, .br-tag.secondary-03, .br-tag[secondary-03] {
+.br-tag.is-secondary-03,
+.br-tag.secondary-03,
+.br-tag[secondary-03] {
   background-color: #ededed;
 }
-.br-tag.is-secondary-04, .br-tag.secondary-04, .br-tag[secondary-04] {
+.br-tag.is-secondary-04,
+.br-tag.secondary-04,
+.br-tag[secondary-04] {
   background-color: #ccc;
 }
-.br-tag.is-secondary-05, .br-tag.secondary-05, .br-tag[secondary-05] {
+.br-tag.is-secondary-05,
+.br-tag.secondary-05,
+.br-tag[secondary-05] {
   background-color: #9e9d9d;
 }
-.br-tag.is-secondary-06, .br-tag.secondary-06, .br-tag[secondary-06] {
+.br-tag.is-secondary-06,
+.br-tag.secondary-06,
+.br-tag[secondary-06] {
   background-color: #888;
 }
-.br-tag.is-secondary-07, .br-tag.secondary-07, .br-tag[secondary-07] {
+.br-tag.is-secondary-07,
+.br-tag.secondary-07,
+.br-tag[secondary-07] {
   background-color: #555;
 }
-.br-tag.is-secondary-08, .br-tag.secondary-08, .br-tag[secondary-08] {
+.br-tag.is-secondary-08,
+.br-tag.secondary-08,
+.br-tag[secondary-08] {
   background-color: #333;
 }
-.br-tag.is-secondary-09, .br-tag.secondary-09, .br-tag[secondary-09] {
+.br-tag.is-secondary-09,
+.br-tag.secondary-09,
+.br-tag[secondary-09] {
   background-color: #000;
 }
-.br-tag.is-highlight, .br-tag.highlight, .br-tag[highlight] {
+.br-tag.is-highlight,
+.br-tag.highlight,
+.br-tag[highlight] {
   background-color: #268744;
 }
-.br-tag.is-support-01, .br-tag.support-01, .br-tag[support-01] {
+.br-tag.is-support-01,
+.br-tag.support-01,
+.br-tag[support-01] {
   background-color: #36a191;
 }
-.br-tag.is-support-02, .br-tag.support-02, .br-tag[support-02] {
+.br-tag.is-support-02,
+.br-tag.support-02,
+.br-tag[support-02] {
   background-color: #f2e317;
 }
-.br-tag.is-support-03, .br-tag.support-03, .br-tag[support-03] {
+.br-tag.is-support-03,
+.br-tag.support-03,
+.br-tag[support-03] {
   background-color: #db4800;
 }
-.br-tag.is-support-04, .br-tag.support-04, .br-tag[support-04] {
+.br-tag.is-support-04,
+.br-tag.support-04,
+.br-tag[support-04] {
   background-color: #a26739;
 }
-.br-tag.is-support-05, .br-tag.support-05, .br-tag[support-05] {
+.br-tag.is-support-05,
+.br-tag.support-05,
+.br-tag[support-05] {
   background-color: #40e0d0;
 }
-.br-tag.is-support-06, .br-tag.support-06, .br-tag[support-06] {
+.br-tag.is-support-06,
+.br-tag.support-06,
+.br-tag[support-06] {
   background-color: #48cbeb;
 }
-.br-tag.is-support-07, .br-tag.support-07, .br-tag[support-07] {
+.br-tag.is-support-07,
+.br-tag.support-07,
+.br-tag[support-07] {
   background-color: #c72487;
 }
-.br-tag.is-support-08, .br-tag.support-08, .br-tag[support-08] {
+.br-tag.is-support-08,
+.br-tag.support-08,
+.br-tag[support-08] {
   background-color: #63007f;
 }
-.br-tag.is-support-09, .br-tag.support-09, .br-tag[support-09] {
+.br-tag.is-support-09,
+.br-tag.support-09,
+.br-tag[support-09] {
   background-color: #f08080;
 }
-.br-tag.is-support-10, .br-tag.support-10, .br-tag[support-10] {
+.br-tag.is-support-10,
+.br-tag.support-10,
+.br-tag[support-10] {
   background-color: #ff8c00;
 }
-.br-tag.is-support-11, .br-tag.support-11, .br-tag[support-11] {
+.br-tag.is-support-11,
+.br-tag.support-11,
+.br-tag[support-11] {
   background-color: #fdf5e6;
 }
-.br-tag.is-success, .br-tag.success, .br-tag[success] {
+.br-tag.is-success,
+.br-tag.success,
+.br-tag[success] {
   background-color: var(--success);
 }
-.br-tag.is-danger, .br-tag.danger, .br-tag[danger] {
+.br-tag.is-danger,
+.br-tag.danger,
+.br-tag[danger] {
   background-color: var(--danger);
 }
-.br-tag.is-warning, .br-tag.warning, .br-tag[warning] {
+.br-tag.is-warning,
+.br-tag.warning,
+.br-tag[warning] {
   background-color: var(--warning);
 }
-.br-tag.is-info, .br-tag.info, .br-tag[info] {
+.br-tag.is-info,
+.br-tag.info,
+.br-tag[info] {
   background-color: var(--info);
 }
 
@@ -547,9 +650,14 @@
   flex-wrap: wrap;
 }
 .br-tag-input:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-tag-input:focus, .br-tag-input:focus-visible, .br-tag-input.focus-visible {
+.br-tag-input:focus,
+.br-tag-input:focus-visible,
+.br-tag-input.focus-visible {
   border-color: var(--focus) !important;
   box-shadow: 0 0 0 var(--surface-width-md) var(--focus);
   outline: none;
@@ -557,7 +665,8 @@
 .br-tag-input.has-icon {
   padding-right: var(--spacing-scale-5x);
 }
-.br-tag-input[type=password]::-ms-reveal, .br-tag-input[type=password]::-ms-clear {
+.br-tag-input[type="password"]::-ms-reveal,
+.br-tag-input[type="password"]::-ms-clear {
   display: none;
 }
 .br-tag-input input {

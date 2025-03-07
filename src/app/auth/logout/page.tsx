@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import GovBrLoading from '@/components/GovBrLoading'
-import { Box, Button, Typography } from '@mui/material'
-import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import GovBrLoading from "@/components/GovBrLoading"
+import { Box, Button, Typography } from "@mui/material"
+import { signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function LogoutPage() {
   const router = useRouter()
@@ -22,21 +22,21 @@ export default function LogoutPage() {
       setError(null)
 
       // Forçar limpeza completa da sessão
-      await fetch('/api/auth/session', {
-        method: 'DELETE'
+      await fetch("/api/auth/session", {
+        method: "DELETE"
       })
 
       // Redirecionamento imediato
-      router.push('/')
+      router.push("/")
 
       // Efetuar logout após redirecionamento
       await signOut({
         redirect: false,
-        callbackUrl: '/'
+        callbackUrl: "/"
       })
     } catch (err) {
       console.error(err)
-      setError('Falha ao sair do sistema. Tente novamente.')
+      setError("Falha ao sair do sistema. Tente novamente.")
     } finally {
       setIsLoading(false)
     }
@@ -50,12 +50,12 @@ export default function LogoutPage() {
     return (
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '75vh',
-          textAlign: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "75vh",
+          textAlign: "center",
           p: 3
         }}
       >
@@ -63,20 +63,11 @@ export default function LogoutPage() {
           {error}
         </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleLogout}
-          sx={{ mt: 2 }}
-        >
+        <Button variant="contained" color="primary" onClick={handleLogout} sx={{ mt: 2 }}>
           Tentar novamente
         </Button>
 
-        <Button
-          variant="outlined"
-          sx={{ mt: 2 }}
-          onClick={() => router.push('/')}
-        >
+        <Button variant="outlined" sx={{ mt: 2 }} onClick={() => router.push("/")}>
           Ir para página inicial
         </Button>
       </Box>

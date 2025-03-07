@@ -24,7 +24,8 @@
   white-space: nowrap;
   width: auto;
 }
-.br-skiplink a:focus, .br-skiplink a:focus-visible {
+.br-skiplink a:focus,
+.br-skiplink a:focus-visible {
   top: 0;
 }
 .br-skiplink .br-tag {

@@ -1,29 +1,26 @@
-'use client'
+"use client"
 
-import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from "@/lib/supabase"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
 import {
-  Container,
-  Typography,
   Box,
   Button,
+  Container,
   IconButton,
   Modal,
-  TextField
-} from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+  TextField,
+  Typography
+} from "@mui/material"
+import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { useCallback, useEffect, useState } from "react"
 
 interface CrudManagerProps {
   tableName: string
   entityName: string
 }
 
-export default function CrudManager({
-  tableName,
-  entityName
-}: CrudManagerProps) {
+export default function CrudManager({ tableName, entityName }: CrudManagerProps) {
   const [items, setItems] = useState<{ id: number; nome: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
@@ -31,12 +28,12 @@ export default function CrudManager({
     id?: number
     nome: string
   }>({
-    nome: ''
+    nome: ""
   })
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase.from(tableName).select('*')
+    const { data, error } = await supabase.from(tableName).select("*")
 
     if (error) {
       console.error(`Erro ao buscar ${entityName}:`, error)
@@ -53,13 +50,13 @@ export default function CrudManager({
 
   // 🟢 Criar ou Atualizar Registro
   async function handleSave() {
-    if (!selectedItem.nome.trim()) return alert('Nome não pode estar vazio.')
+    if (!selectedItem.nome.trim()) return alert("Nome não pode estar vazio.")
 
     const { id, nome } = selectedItem
     let response
 
     if (id) {
-      response = await supabase.from(tableName).update({ nome }).eq('id', id)
+      response = await supabase.from(tableName).update({ nome }).eq("id", id)
     } else {
       response = await supabase.from(tableName).insert({ nome })
     }
@@ -69,7 +66,7 @@ export default function CrudManager({
     } else {
       fetchData()
       setOpenModal(false)
-      setSelectedItem({ nome: '' })
+      setSelectedItem({ nome: "" })
     }
   }
 
@@ -77,7 +74,7 @@ export default function CrudManager({
   async function handleDelete(id: number) {
     if (!confirm(`Tem certeza que deseja excluir este ${entityName}?`)) return
 
-    const { error } = await supabase.from(tableName).delete().eq('id', id)
+    const { error } = await supabase.from(tableName).delete().eq("id", id)
 
     if (error) {
       console.error(`Erro ao excluir ${entityName}:`, error)
@@ -87,11 +84,11 @@ export default function CrudManager({
   }
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'nome', headerName: 'Nome', flex: 1 },
+    { field: "id", headerName: "ID", width: 80 },
+    { field: "nome", headerName: "Nome", flex: 1 },
     {
-      field: 'acoes',
-      headerName: 'Ações',
+      field: "acoes",
+      headerName: "Ações",
       width: 150,
       renderCell: (params) => (
         <Box>
@@ -114,23 +111,14 @@ export default function CrudManager({
 
   return (
     <Container>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h4">{entityName}</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenModal(true)}
-        >
+        <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
           Adicionar
         </Button>
       </Box>
 
-      <Box display={'flex'} height={'100%'}>
+      <Box display={"flex"} height={"100%"}>
         <DataGrid
           rows={items}
           columns={columns}
@@ -143,26 +131,24 @@ export default function CrudManager({
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             p: 3,
             borderRadius: 2
           }}
         >
           <Typography variant="h6">
-            {selectedItem.id ? 'Editar' : 'Adicionar'} {entityName}
+            {selectedItem.id ? "Editar" : "Adicionar"} {entityName}
           </Typography>
           <TextField
             fullWidth
             label="Nome"
             value={selectedItem.nome}
-            onChange={(e) =>
-              setSelectedItem({ ...selectedItem, nome: e.target.value })
-            }
+            onChange={(e) => setSelectedItem({ ...selectedItem, nome: e.target.value })}
             sx={{ mt: 2 }}
           />
           <Box display="flex" justifyContent="flex-end" mt={2}>

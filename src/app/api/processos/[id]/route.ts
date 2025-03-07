@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase } from "@/lib/supabase"
+import { NextRequest, NextResponse } from "next/server"
 
 // 🔹 Buscar um processo específico
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await context.params
 
   const { data, error } = await supabase
-    .from('Processo')
+    .from("Processo")
     .select(
       `
       id, numero, dataCriacao, requerente,
@@ -23,7 +23,7 @@ export async function GET(
       evidencia:evidencia ( id, nome )
     `
     )
-    .eq('id', id)
+    .eq("id", id)
     .single()
 
   if (error) {
@@ -41,13 +41,13 @@ export async function PUT(
   const { id } = await context.params
   const data = await request.json()
 
-  const { error } = await supabase.from('Processo').update(data).eq('id', id)
+  const { error } = await supabase.from("Processo").update(data).eq("id", id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ message: 'Processo atualizado com sucesso' })
+  return NextResponse.json({ message: "Processo atualizado com sucesso" })
 }
 
 // 🔹 Deletar um processo específico
@@ -57,11 +57,11 @@ export async function DELETE(
 ): Promise<NextResponse> {
   const { id } = await context.params
 
-  const { error } = await supabase.from('Processo').delete().eq('id', id)
+  const { error } = await supabase.from("Processo").delete().eq("id", id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ message: 'Processo deletado com sucesso' })
+  return NextResponse.json({ message: "Processo deletado com sucesso" })
 }

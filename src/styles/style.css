@@ -976,7 +976,10 @@
   --danger-alternative-rgb: var(--red-vivid-20-rgb);
   --font-family-base: Rawline, Raleway, sans-serif;
   --surface-overlay-scrim: rgba(var(--rgb-secondary-09), var(--surface-opacity-md));
-  --surface-overlay-text: linear-gradient(rgba(var(--rgb-secondary-01), var(--surface-opacity-none)), rgba(var(--rgb-secondary-09), var(--surface-opacity-default)));
+  --surface-overlay-text: linear-gradient(
+    rgba(var(--rgb-secondary-01), var(--surface-opacity-none)),
+    rgba(var(--rgb-secondary-09), var(--surface-opacity-default))
+  );
   --visited: var(--visited-light);
   --visited-light: var(--blue-warm-vivid-80);
   --visited-dark: var(--gray-20);
@@ -1114,38 +1117,86 @@
   --surface-offset-xl-n: -9px;
   --surface-shadow-color: var(--rgb-secondary-09);
   --surface-shadow-none: none;
-  --surface-shadow-sm: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-inset: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-inset: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-inset: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-inset: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-up: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-up: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-up: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-up: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-inset-up: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-inset-up: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-inset-up: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-inset-up: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-right: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-right: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-right: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-right: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-inset-right: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-inset-right: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-inset-right: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-inset-right: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-left: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-left: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-left: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-left: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-sm-inset-left: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-md-inset-left: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-lg-inset-left: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
-  --surface-shadow-xl-inset-left: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm: var(--surface-offset-none) var(--surface-offset-sm)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md: var(--surface-offset-none) var(--surface-offset-md)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg: var(--surface-offset-none) var(--surface-offset-lg)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl: var(--surface-offset-none) var(--surface-offset-xl)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-inset: var(--surface-offset-none) var(--surface-offset-sm-n)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-inset: var(--surface-offset-none) var(--surface-offset-md-n)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-inset: var(--surface-offset-none) var(--surface-offset-lg-n)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-inset: var(--surface-offset-none) var(--surface-offset-xl-n)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-up: var(--surface-offset-none) var(--surface-offset-sm-n)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-up: var(--surface-offset-none) var(--surface-offset-md-n)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-up: var(--surface-offset-none) var(--surface-offset-lg-n)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-up: var(--surface-offset-none) var(--surface-offset-xl-n)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-inset-up: var(--surface-offset-none) var(--surface-offset-sm)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-inset-up: var(--surface-offset-none) var(--surface-offset-md)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-inset-up: var(--surface-offset-none) var(--surface-offset-lg)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-inset-up: var(--surface-offset-none) var(--surface-offset-xl)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-right: var(--surface-offset-sm) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-right: var(--surface-offset-md) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-right: var(--surface-offset-lg) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-right: var(--surface-offset-xl) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-inset-right: var(--surface-offset-sm-n) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-inset-right: var(--surface-offset-md-n) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-inset-right: var(--surface-offset-lg-n) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-inset-right: var(--surface-offset-xl-n) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-left: var(--surface-offset-sm-n) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-left: var(--surface-offset-md-n) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-left: var(--surface-offset-lg-n) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-left: var(--surface-offset-xl-n) var(--surface-offset-none)
+    var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-sm-inset-left: var(--surface-offset-sm) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-md-inset-left: var(--surface-offset-md) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-lg-inset-left: var(--surface-offset-lg) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  --surface-shadow-xl-inset-left: var(--surface-offset-xl) var(--surface-offset-none)
+    var(--surface-blur-lg) inset
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
   --animation-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --animation-ease-in: cubic-bezier(0.42, 0, 1, 1);
   --animation-ease-out: cubic-bezier(0, 0, 0.58, 1);
@@ -1365,24 +1416,24 @@ select {
 }
 
 button,
-[type=button],
-[type=reset],
-[type=submit] {
+[type="button"],
+[type="reset"],
+[type="submit"] {
   appearance: button;
 }
 
 button::-moz-focus-inner,
-[type=button]::-moz-focus-inner,
-[type=reset]::-moz-focus-inner,
-[type=submit]::-moz-focus-inner {
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
 
 button:-moz-focusring,
-[type=button]:-moz-focusring,
-[type=reset]:-moz-focusring,
-[type=submit]:-moz-focusring {
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -1407,23 +1458,23 @@ textarea {
   overflow: auto;
 }
 
-[type=checkbox],
-[type=radio] {
+[type="checkbox"],
+[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-[type=number]::-webkit-inner-spin-button,
-[type=number]::-webkit-outer-spin-button {
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-[type=search] {
+[type="search"] {
   appearance: textfield;
   outline-offset: -2px;
 }
 
-[type=search]::-webkit-search-decoration {
+[type="search"]::-webkit-search-decoration {
   appearance: none;
 }
 
@@ -2329,7 +2380,7 @@ template {
   }
 }
 .col,
-[class*=col-] {
+[class*="col-"] {
   padding-left: calc(var(--grid-gutter) * 0.5);
   padding-right: calc(var(--grid-gutter) * 0.5);
   width: 100%;
@@ -16363,17 +16414,24 @@ a {
 a:focus {
   outline: none;
 }
-a.focus-visible, a:focus-visible {
+a.focus-visible,
+a:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 a:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 a:not(:disabled):active {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 
 .main-content a {
@@ -16556,7 +16614,8 @@ td:not([align]) {
   text-align: left;
 }
 
-tr.selected, tr.is-selected {
+tr.selected,
+tr.is-selected {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -16569,17 +16628,22 @@ tr.selected, tr.is-selected {
   --focus: var(--focus-color-dark);
 }
 tr.selected th,
-tr.selected td, tr.is-selected th,
+tr.selected td,
+tr.is-selected th,
 tr.is-selected td {
   background-color: var(--selected);
 }
 tr:hover td {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
 
 tbody th,
 tbody td {
-  border-bottom: var(--table-border-width) var(--table-border-style) var(--table-border-color);
+  border-bottom: var(--table-border-width) var(--table-border-style)
+    var(--table-border-color);
 }
 
 label,
@@ -16773,131 +16837,163 @@ mark,
 }
 
 .shadow-sm {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-right {
-  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-right {
-  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-right {
-  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-right {
-  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-right {
-  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-right {
-  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-right {
-  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-right {
-  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-left {
-  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-left {
-  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-left {
-  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-left {
-  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-left {
-  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-left {
-  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-left {
-  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-left {
-  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .overlay-scrim {
@@ -16905,7 +17001,10 @@ mark,
 }
 
 .overlay-text {
-  background: linear-gradient(rgba(var(--rgb-secondary-01), var(--surface-opacity-none)), rgba(var(--rgb-secondary-09), var(--surface-opacity-default)));
+  background: linear-gradient(
+    rgba(var(--rgb-secondary-01), var(--surface-opacity-none)),
+    rgba(var(--rgb-secondary-09), var(--surface-opacity-default))
+  );
 }
 
 .bg-blue-90 {
@@ -24128,131 +24227,163 @@ mark,
 }
 
 .shadow-sm {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl-n) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-sm) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-md) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-lg) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-up {
-  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-none) var(--surface-offset-xl) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-right {
-  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-right {
-  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-right {
-  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-right {
-  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-right {
-  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-right {
-  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-right {
-  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-right {
-  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-left {
-  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-left {
-  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-left {
-  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-left {
-  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg) rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl-n) var(--surface-offset-none) var(--surface-blur-lg)
+    rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-sm-inset-left {
-  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-sm) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-md-inset-left {
-  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-md) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-lg-inset-left {
-  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-lg) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .shadow-xl-inset-left {
-  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg) inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
+  box-shadow: var(--surface-offset-xl) var(--surface-offset-none) var(--surface-blur-lg)
+    inset rgba(var(--surface-shadow-color), var(--surface-opacity-xs));
 }
 
 .layer-0 {
@@ -24329,7 +24460,26 @@ mark,
   width: calc(var(--icon-size) + 8px);
 }
 
-.svg-inline--fa.fa-w-20, .svg-inline--fa.fa-w-19, .svg-inline--fa.fa-w-18, .svg-inline--fa.fa-w-17, .svg-inline--fa.fa-w-16, .svg-inline--fa.fa-w-15, .svg-inline--fa.fa-w-14, .svg-inline--fa.fa-w-13, .svg-inline--fa.fa-w-12, .svg-inline--fa.fa-w-11, .svg-inline--fa.fa-w-10, .svg-inline--fa.fa-w-9, .svg-inline--fa.fa-w-8, .svg-inline--fa.fa-w-7, .svg-inline--fa.fa-w-6, .svg-inline--fa.fa-w-5, .svg-inline--fa.fa-w-4, .svg-inline--fa.fa-w-3, .svg-inline--fa.fa-w-2, .svg-inline--fa.fa-w-1 {
+.svg-inline--fa.fa-w-20,
+.svg-inline--fa.fa-w-19,
+.svg-inline--fa.fa-w-18,
+.svg-inline--fa.fa-w-17,
+.svg-inline--fa.fa-w-16,
+.svg-inline--fa.fa-w-15,
+.svg-inline--fa.fa-w-14,
+.svg-inline--fa.fa-w-13,
+.svg-inline--fa.fa-w-12,
+.svg-inline--fa.fa-w-11,
+.svg-inline--fa.fa-w-10,
+.svg-inline--fa.fa-w-9,
+.svg-inline--fa.fa-w-8,
+.svg-inline--fa.fa-w-7,
+.svg-inline--fa.fa-w-6,
+.svg-inline--fa.fa-w-5,
+.svg-inline--fa.fa-w-4,
+.svg-inline--fa.fa-w-3,
+.svg-inline--fa.fa-w-2,
+.svg-inline--fa.fa-w-1 {
   width: calc(var(--icon-size) + 8px);
 }
 
@@ -24395,7 +24545,8 @@ mark,
 }
 
 .highlight {
-  background: var(--status-highlight-background) linear-gradient(var(--status-highlight-overlay), var(--status-highlight-overlay));
+  background: var(--status-highlight-background)
+    linear-gradient(var(--status-highlight-overlay), var(--status-highlight-overlay));
   color: var(--status-highlight-text);
   padding: 0 var(--spacing-scale-half);
 }
@@ -24416,15 +24567,15 @@ mark,
   color: var(--status-dragged-text);
 }
 
-[data-toggle=dropdown] + * {
+[data-toggle="dropdown"] + * {
   position: absolute;
 }
 
 .dropdown {
   position: relative;
 }
-.dropdown [data-toggle=dropdown] + *,
-.dropdown [data-toggle=dropdown-legacy] + * {
+.dropdown [data-toggle="dropdown"] + *,
+.dropdown [data-toggle="dropdown-legacy"] + * {
   box-shadow: var(--surface-shadow-sm);
   left: 0;
   position: absolute;
@@ -24465,13 +24616,17 @@ mark,
   --focus: var(--focus-color-dark);
 }
 
-*[data-toggle=collapse]:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+*[data-toggle="collapse"]:not(:disabled):hover {
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
-*[data-toggle=collapse]:focus {
+*[data-toggle="collapse"]:focus {
   outline: none;
 }
-*[data-toggle=collapse].focus-visible, *[data-toggle=collapse]:focus-visible {
+*[data-toggle="collapse"].focus-visible,
+*[data-toggle="collapse"]:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
@@ -24545,48 +24700,70 @@ mark,
     width: auto;
   }
 }
-.br-button.circle, .br-button[circle], .br-button.is-circle {
+.br-button.circle,
+.br-button[circle],
+.br-button.is-circle {
   border-radius: 50%;
   padding: 0;
   width: var(--button-size);
 }
-.br-button.xsmall, .br-button[xsmall], .br-button.is-xsmall {
+.br-button.xsmall,
+.br-button[xsmall],
+.br-button.is-xsmall {
   --button-size: var(--button-xsmall);
 }
-.br-button.small, .br-button[small], .br-button.is-small {
+.br-button.small,
+.br-button[small],
+.br-button.is-small {
   --button-size: var(--button-small);
 }
-.br-button.medium, .br-button[medium], .br-button.is-medium {
+.br-button.medium,
+.br-button[medium],
+.br-button.is-medium {
   --button-size: var(--button-medium);
 }
-.br-button.large, .br-button[large], .br-button.is-large {
+.br-button.large,
+.br-button[large],
+.br-button.is-large {
   --button-size: var(--button-large);
 }
-.br-button.primary, .br-button[primary], .br-button.is-primary {
+.br-button.primary,
+.br-button[primary],
+.br-button.is-primary {
   --interactive-rgb: var(--color-dark-rgb);
   background-color: var(--interactive-light);
   color: var(--color-dark);
 }
-.br-button.secondary, .br-button[secondary], .br-button.is-secondary {
+.br-button.secondary,
+.br-button[secondary],
+.br-button.is-secondary {
   background-color: var(--background-light);
   border: 1px solid var(--interactive);
 }
-.br-button.danger, .br-button[danger], .br-button.is-danger {
+.br-button.danger,
+.br-button[danger],
+.br-button.is-danger {
   background-color: var(--danger);
   --interactive-rgb: var(--color-dark-rgb);
   color: var(--color-dark);
 }
-.br-button.success, .br-button[success], .br-button.is-success {
+.br-button.success,
+.br-button[success],
+.br-button.is-success {
   background-color: var(--success);
   --interactive-rgb: var(--color-dark-rgb);
   color: var(--color-dark);
 }
-.br-button.warning, .br-button[warning], .br-button.is-warning {
+.br-button.warning,
+.br-button[warning],
+.br-button.is-warning {
   background-color: var(--warning);
   --interactive-rgb: var(--color-light-rgb);
   color: var(--color-light);
 }
-.br-button.info, .br-button[info], .br-button.is-info {
+.br-button.info,
+.br-button[info],
+.br-button.is-info {
   background-color: var(--info);
   --interactive-rgb: var(--color-dark-rgb);
   color: var(--color-dark);
@@ -24600,19 +24777,28 @@ mark,
 .br-button:not(:disabled):focus {
   outline: none;
 }
-.br-button:not(:disabled).focus-visible, .br-button:not(:disabled):focus-visible {
+.br-button:not(:disabled).focus-visible,
+.br-button:not(:disabled):focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 .br-button:not(:disabled):not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-button:not(:disabled):not(:disabled):active {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
-.br-button.active, .br-button.is-active, .br-button[active] {
+.br-button.active,
+.br-button.is-active,
+.br-button[active] {
   --hover: var(--hover-dark);
   background-color: var(--active);
   color: var(--color-dark);
@@ -24628,10 +24814,16 @@ mark,
   border-color: var(--interactive) var(--interactive) transparent;
   border-style: solid;
 }
-.br-button.loading.primary::before, .br-button.loading.danger::before, .br-button.loading.success::before, .br-button.loading.info::before {
+.br-button.loading.primary::before,
+.br-button.loading.danger::before,
+.br-button.loading.success::before,
+.br-button.loading.info::before {
   border-color: var(--background) var(--background) transparent;
 }
-.br-button.inverted, .br-button.is-inverted, .br-button[inverted], .br-button.dark-mode {
+.br-button.inverted,
+.br-button.is-inverted,
+.br-button[inverted],
+.br-button.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -24644,15 +24836,40 @@ mark,
   --focus: var(--focus-color-dark);
   color: var(--interactive-dark);
 }
-.br-button.inverted.primary, .br-button.inverted[primary], .br-button.inverted.is-primary, .br-button.is-inverted.primary, .br-button.is-inverted[primary], .br-button.is-inverted.is-primary, .br-button[inverted].primary, .br-button[inverted][primary], .br-button[inverted].is-primary, .br-button.dark-mode.primary, .br-button.dark-mode[primary], .br-button.dark-mode.is-primary {
+.br-button.inverted.primary,
+.br-button.inverted[primary],
+.br-button.inverted.is-primary,
+.br-button.is-inverted.primary,
+.br-button.is-inverted[primary],
+.br-button.is-inverted.is-primary,
+.br-button[inverted].primary,
+.br-button[inverted][primary],
+.br-button[inverted].is-primary,
+.br-button.dark-mode.primary,
+.br-button.dark-mode[primary],
+.br-button.dark-mode.is-primary {
   --interactive-rgb: var(--background-dark-rgb);
   background-color: var(--interactive-dark);
   color: var(--background-dark);
 }
-.br-button.inverted.secondary, .br-button.inverted[secondary], .br-button.inverted.is-secondary, .br-button.is-inverted.secondary, .br-button.is-inverted[secondary], .br-button.is-inverted.is-secondary, .br-button[inverted].secondary, .br-button[inverted][secondary], .br-button[inverted].is-secondary, .br-button.dark-mode.secondary, .br-button.dark-mode[secondary], .br-button.dark-mode.is-secondary {
+.br-button.inverted.secondary,
+.br-button.inverted[secondary],
+.br-button.inverted.is-secondary,
+.br-button.is-inverted.secondary,
+.br-button.is-inverted[secondary],
+.br-button.is-inverted.is-secondary,
+.br-button[inverted].secondary,
+.br-button[inverted][secondary],
+.br-button[inverted].is-secondary,
+.br-button.dark-mode.secondary,
+.br-button.dark-mode[secondary],
+.br-button.dark-mode.is-secondary {
   background-color: var(--background-dark);
 }
-.br-button.inverted.active, .br-button.is-inverted.active, .br-button[inverted].active, .br-button.dark-mode.active {
+.br-button.inverted.active,
+.br-button.is-inverted.active,
+.br-button[inverted].active,
+.br-button.dark-mode.active {
   --hover: var(--hover-light);
   --interactive-rgb: var(--active-rgb);
   background-color: var(--background-light);
@@ -24717,17 +24934,23 @@ a.br-button {
   --icon-size: var(--avatar-icon-size);
   margin-top: 0.25em;
 }
-.br-avatar.is-small, .br-avatar.small, .br-avatar[small] {
+.br-avatar.is-small,
+.br-avatar.small,
+.br-avatar[small] {
   --avatar-size: var(--avatar-small);
   --avatar-icon-size: var(--avatar-icon-small);
   --avatar-text-size: var(--avatar-text-small);
 }
-.br-avatar.is-medium, .br-avatar.medium, .br-avatar[medium] {
+.br-avatar.is-medium,
+.br-avatar.medium,
+.br-avatar[medium] {
   --avatar-size: var(--avatar-medium);
   --avatar-icon-size: var(--avatar-icon-medium);
   --avatar-text-size: var(--avatar-text-medium);
 }
-.br-avatar.is-large, .br-avatar.large, .br-avatar[large] {
+.br-avatar.is-large,
+.br-avatar.large,
+.br-avatar[large] {
   --avatar-size: var(--avatar-large);
   --avatar-icon-size: var(--avatar-icon-large);
   --avatar-text-size: var(--avatar-text-large);
@@ -24737,21 +24960,26 @@ a.br-button {
   border: 0;
 }
 .br-avatar-action:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-avatar-action:focus {
   outline: none;
 }
-.br-avatar-action.focus-visible, .br-avatar-action:focus-visible {
+.br-avatar-action.focus-visible,
+.br-avatar-action:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
-.br-avatar[data-toggle=dropdown]:focus {
+.br-avatar[data-toggle="dropdown"]:focus {
   outline: none;
 }
-.br-avatar[data-toggle=dropdown].focus-visible, .br-avatar[data-toggle=dropdown]:focus-visible {
+.br-avatar[data-toggle="dropdown"].focus-visible,
+.br-avatar[data-toggle="dropdown"]:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
@@ -24842,9 +25070,13 @@ a.br-button {
   padding-top: var(--card-padding);
 }
 .br-card.hover:hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-card.inverted, .br-card.dark-mode {
+.br-card.inverted,
+.br-card.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);

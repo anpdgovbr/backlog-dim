@@ -1,23 +1,16 @@
-'use client'
+"use client"
 
-import { supabase } from '@/lib/supabase'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Modal,
-  Typography
-} from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useCallback, useEffect, useState } from 'react'
+import { supabase } from "@/lib/supabase"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+import { Box, Button, Container, IconButton, Modal, Typography } from "@mui/material"
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
+import { useCallback, useEffect, useState } from "react"
 
 interface FieldConfig {
   key: string
   label: string
-  type: 'text' | 'date' | 'boolean' | 'select'
+  type: "text" | "date" | "boolean" | "select"
   required?: boolean
   referenceTable?: string
 }
@@ -50,7 +43,7 @@ export default function CrudAvancado({
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase.from(tableName).select('*')
+    const { data, error } = await supabase.from(tableName).select("*")
 
     if (error) {
       console.error(`Erro ao buscar ${entityName}:`, error)
@@ -63,10 +56,8 @@ export default function CrudAvancado({
   const fetchRelatedData = useCallback(async () => {
     const newRelatedData: RelatedData = {}
     for (const field of fields) {
-      if (field.type === 'select' && field.referenceTable) {
-        const { data } = await supabase
-          .from(field.referenceTable)
-          .select('id, nome')
+      if (field.type === "select" && field.referenceTable) {
+        const { data } = await supabase.from(field.referenceTable).select("id, nome")
         if (data) {
           newRelatedData[field.key] = data
         }
@@ -92,7 +83,7 @@ export default function CrudAvancado({
       response = await supabase
         .from(tableName)
         .update(selectedItem)
-        .eq('id', selectedItem.id)
+        .eq("id", selectedItem.id)
     } else {
       response = await supabase.from(tableName).insert(selectedItem)
     }
@@ -109,7 +100,7 @@ export default function CrudAvancado({
   async function handleDelete(id: number) {
     if (!confirm(`Tem certeza que deseja excluir este ${entityName}?`)) return
 
-    const { error } = await supabase.from(tableName).delete().eq('id', id)
+    const { error } = await supabase.from(tableName).delete().eq("id", id)
     if (error) {
       console.error(`Erro ao excluir ${entityName}:`, error)
     } else {
@@ -124,21 +115,21 @@ export default function CrudAvancado({
       headerName: field.label,
       flex: 1,
       renderCell: (params: GridRenderCellParams) => {
-        if (field.type === 'boolean') {
-          return params.value ? 'Sim' : 'Não'
+        if (field.type === "boolean") {
+          return params.value ? "Sim" : "Não"
         }
-        if (field.type === 'select' && relatedData[field.key]) {
+        if (field.type === "select" && relatedData[field.key]) {
           return (
-            relatedData[field.key].find((item) => item.id === params.value)
-              ?.nome || 'Não definido'
+            relatedData[field.key].find((item) => item.id === params.value)?.nome ||
+            "Não definido"
           )
         }
         return params.value
       }
     })),
     {
-      field: 'acoes',
-      headerName: 'Ações',
+      field: "acoes",
+      headerName: "Ações",
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Box>
@@ -163,11 +154,7 @@ export default function CrudAvancado({
     <Container maxWidth="md">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h4">{entityName}</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenModal(true)}
-        >
+        <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
           Adicionar
         </Button>
       </Box>
@@ -183,18 +170,18 @@ export default function CrudAvancado({
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 500,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             p: 3,
             borderRadius: 2
           }}
         >
           <Typography variant="h6">
-            {selectedItem.id ? 'Editar' : 'Adicionar'} {entityName}
+            {selectedItem.id ? "Editar" : "Adicionar"} {entityName}
           </Typography>
           {/* Implementação do formulário */}
           <Box display="flex" justifyContent="flex-end" mt={2}>

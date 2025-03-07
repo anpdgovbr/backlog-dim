@@ -1,4 +1,4 @@
-import { EnumData } from './EnumData'
+import { EnumData } from "./EnumData"
 
 export interface RequeridoInput {
   nome: string

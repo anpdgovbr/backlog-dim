@@ -59,19 +59,24 @@
   flex-wrap: wrap;
   padding: var(--spacing-scale-2x);
 }
-.br-modal.is-xsmall, .br-modal.xsmall {
+.br-modal.is-xsmall,
+.br-modal.xsmall {
   --modal-size: var(--modal-xsmall);
 }
-.br-modal.is-small, .br-modal.small {
+.br-modal.is-small,
+.br-modal.small {
   --modal-size: var(--modal-small);
 }
-.br-modal.is-medium, .br-modal.medium {
+.br-modal.is-medium,
+.br-modal.medium {
   --modal-size: var(--modal-medium);
 }
-.br-modal.is-large, .br-modal.large {
+.br-modal.is-large,
+.br-modal.large {
   --modal-size: var(--modal-large);
 }
-.br-modal.is-auto, .br-modal.auto {
+.br-modal.is-auto,
+.br-modal.auto {
   --modal-size: var(--modal-auto);
 }
 .br-modal .loading.medium {

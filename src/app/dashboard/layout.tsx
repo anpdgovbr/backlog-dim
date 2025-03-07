@@ -1,24 +1,20 @@
-'use client'
+"use client"
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
-export default function DashboardLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { status } = useSession()
   const router = useRouter()
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/login')
+    if (status === "unauthenticated") {
+      router.push("/auth/login")
     }
   }, [status, router])
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="br-loading active">
         <div className="br-spinner">Carregando...</div>

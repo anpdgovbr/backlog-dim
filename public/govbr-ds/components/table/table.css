@@ -34,7 +34,8 @@
 .br-table .top-bar {
   align-items: center;
   display: flex;
-  padding: var(--spacing-scale-base) var(--spacing-scale-2x) var(--spacing-scale-base) var(--table-padding);
+  padding: var(--spacing-scale-base) var(--spacing-scale-2x) var(--spacing-scale-base)
+    var(--table-padding);
 }
 .br-table .top-bar .title,
 .br-table .top-bar .table-title {
@@ -46,8 +47,8 @@
 .br-table .top-bar .actions-trigger {
   margin-right: var(--spacing-scale-base);
 }
-.br-table .top-bar .dropdown [data-toggle=dropdown] + *,
-.br-table .top-bar .dropdown [data-toggle=dropdown-legacy] + * {
+.br-table .top-bar .dropdown [data-toggle="dropdown"] + *,
+.br-table .top-bar .dropdown [data-toggle="dropdown-legacy"] + * {
   left: auto;
   right: 0;
 }
@@ -126,9 +127,9 @@
   flex-grow: 1;
   white-space: nowrap;
 }
-.br-table .selected-bar .info [data-toggle=check-all],
+.br-table .selected-bar .info [data-toggle="check-all"],
 .br-table .selected-bar .info .select-all,
-.br-table .selection-bar .info [data-toggle=check-all],
+.br-table .selection-bar .info [data-toggle="check-all"],
 .br-table .selection-bar .info .select-all {
   font-size: var(--font-size-scale-up-03);
   margin-right: var(--spacing-scale-half);
@@ -141,7 +142,8 @@
   line-height: var(--font-line-height-low);
   padding-right: var(--spacing-scale-half);
 }
-.br-table .selected-bar.is-active, .br-table .selected-bar.active,
+.br-table .selected-bar.is-active,
+.br-table .selected-bar.active,
 .br-table .selection-bar.is-active,
 .br-table .selection-bar.active {
   opacity: 1;
@@ -149,7 +151,8 @@
 }
 .br-table .footer,
 .br-table .table-footer {
-  padding: var(--spacing-scale-base) var(--spacing-scale-2x) var(--spacing-scale-base) var(--table-padding);
+  padding: var(--spacing-scale-base) var(--spacing-scale-2x) var(--spacing-scale-base)
+    var(--table-padding);
 }
 .br-table .footer .br-input .br-button,
 .br-table .table-footer .br-input .br-button {
@@ -174,7 +177,8 @@
 .br-table.large .clone-headers .item {
   --table-row-size: var(--table-row-large);
 }
-.br-table.inverted, .br-table.dark-mode {
+.br-table.inverted,
+.br-table.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -186,7 +190,10 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-table.inverted.inverted, .br-table.inverted.dark-mode, .br-table.dark-mode.inverted, .br-table.dark-mode.dark-mode {
+.br-table.inverted.inverted,
+.br-table.inverted.dark-mode,
+.br-table.dark-mode.inverted,
+.br-table.dark-mode.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -199,25 +206,36 @@
   --focus: var(--focus-color-dark);
 }
 .br-table.inverted.inverted.inverted .br-input,
-.br-table.inverted.inverted.inverted .br-input label, .br-table.inverted.inverted.dark-mode .br-input,
-.br-table.inverted.inverted.dark-mode .br-input label, .br-table.inverted.dark-mode.inverted .br-input,
-.br-table.inverted.dark-mode.inverted .br-input label, .br-table.inverted.dark-mode.dark-mode .br-input,
-.br-table.inverted.dark-mode.dark-mode .br-input label, .br-table.dark-mode.inverted.inverted .br-input,
-.br-table.dark-mode.inverted.inverted .br-input label, .br-table.dark-mode.inverted.dark-mode .br-input,
-.br-table.dark-mode.inverted.dark-mode .br-input label, .br-table.dark-mode.dark-mode.inverted .br-input,
-.br-table.dark-mode.dark-mode.inverted .br-input label, .br-table.dark-mode.dark-mode.dark-mode .br-input,
+.br-table.inverted.inverted.inverted .br-input label,
+.br-table.inverted.inverted.dark-mode .br-input,
+.br-table.inverted.inverted.dark-mode .br-input label,
+.br-table.inverted.dark-mode.inverted .br-input,
+.br-table.inverted.dark-mode.inverted .br-input label,
+.br-table.inverted.dark-mode.dark-mode .br-input,
+.br-table.inverted.dark-mode.dark-mode .br-input label,
+.br-table.dark-mode.inverted.inverted .br-input,
+.br-table.dark-mode.inverted.inverted .br-input label,
+.br-table.dark-mode.inverted.dark-mode .br-input,
+.br-table.dark-mode.inverted.dark-mode .br-input label,
+.br-table.dark-mode.dark-mode.inverted .br-input,
+.br-table.dark-mode.dark-mode.inverted .br-input label,
+.br-table.dark-mode.dark-mode.dark-mode .br-input,
 .br-table.dark-mode.dark-mode.dark-mode .br-input label {
   --color: var(--color-dark);
   --focus-color: var(--focus-color-dark);
 }
-.br-table.inverted.inverted .page.active, .br-table.inverted.dark-mode .page.active, .br-table.dark-mode.inverted .page.active, .br-table.dark-mode.dark-mode .page.active {
+.br-table.inverted.inverted .page.active,
+.br-table.inverted.dark-mode .page.active,
+.br-table.dark-mode.inverted .page.active,
+.br-table.dark-mode.dark-mode .page.active {
   --interactive-rgb: var(--active-rgb);
   background-color: var(--background-light);
   color: var(--active);
 }
 .br-table.inverted th,
 .br-table.inverted td.column-collapse,
-.br-table.inverted tr:hover td.column-collapse, .br-table.dark-mode th,
+.br-table.inverted tr:hover td.column-collapse,
+.br-table.dark-mode th,
 .br-table.dark-mode td.column-collapse,
 .br-table.dark-mode tr:hover td.column-collapse {
   background-color: var(--background-dark);

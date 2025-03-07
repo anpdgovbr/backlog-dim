@@ -154,19 +154,32 @@
   outline: none;
 }
 .br-switch input:hover:not([disabled]):checked + label::before {
-  background-image: linear-gradient(rgba(var(--on-rgb), var(--hover)), rgba(var(--on-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--on-rgb), var(--hover)),
+    rgba(var(--on-rgb), var(--hover))
+  );
 }
 .br-switch input:hover:not([disabled]):not(:checked) + label::before {
-  background-image: linear-gradient(rgba(var(--off-rgb), var(--hover)), rgba(var(--off-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--off-rgb), var(--hover)),
+    rgba(var(--off-rgb), var(--hover))
+  );
 }
 .br-switch input:active:not([disabled]):checked + label::before {
-  background-image: linear-gradient(rgba(var(--on-rgb), var(--pressed)), rgba(var(--on-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--on-rgb), var(--pressed)),
+    rgba(var(--on-rgb), var(--pressed))
+  );
 }
 .br-switch input:active:not([disabled]):not(:checked) + label::before {
-  background-image: linear-gradient(rgba(var(--off-rgb), var(--pressed)), rgba(var(--off-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--off-rgb), var(--pressed)),
+    rgba(var(--off-rgb), var(--pressed))
+  );
 }
 .br-switch.inverted,
-.br-switch.inverted label, .br-switch.dark-mode,
+.br-switch.inverted label,
+.br-switch.dark-mode,
 .br-switch.dark-mode label {
   color: var(--color-dark);
 }
