@@ -10,74 +10,125 @@ Os dados são carregados via **formulário** ou **importação de CSV**, e armaz
 - 🔄 **Edição e Exclusão Direta na Tabela**
 - 📂 **Importação de Processamentos via CSV**
 - 📊 **Página de Detalhes de Processamento**
-- 🗄 **Versionamento do Banco de Dados com Supabase**
+- 🔐 **Autenticação com Entra ID via NextAuth**
+- 🗄 **Banco de Dados com Prisma + Supabase**
 
 ## 🏗 Tecnologias Utilizadas
 
 - **Next.js 15 (App Router)**
-- **React + MUI (Material UI)**
+- **React 19 + MUI (Material UI)**
 - **Supabase (PostgreSQL + Autenticação)**
+- **Prisma ORM**
 - **PapaParse (Manipulação de CSV)**
-- **Tailwind CSS**
-- **Padrão Digital de Governo (GovBR DS)**
+- **GovBR Design System (Versão 3.6.1)**
 
 ## 📂 Estrutura do Projeto
 
 ```
-📂 app/
- ├── 📂 processamentos/
- │   ├── 📜 page.tsx            # Formulário de cadastro de Processamentos
- │   ├── 📂 lista/
- │   │   ├── 📜 page.tsx        # Listagem dos Processamentos (MUI DataGrid)
- │   ├── 📂 importar/
- │   │   ├── 📜 page.tsx        # Importação de Processamentos via CSV
- │   ├── 📂 [id]/
- │   │   ├── 📜 page.tsx        # Página de Detalhes do Processamento
- ├── 📂 styles/
+📂 src/
+ ├── 📂 app/
+ │   ├── 📂 api/
+ │   │   ├── auth/
+ │   │   │   └── [...nextauth]/route.ts
+ │   │   ├── processos/
+ │   │   │   ├── route.ts
+ │   │   │   ├── [id]/route.ts
+ │   ├── auth/
+ │   │   ├── login/page.tsx
+ │   │   ├── logout/page.tsx
+ │   ├── dashboard/
+ │   │   ├── admin/
+ │   │   │   ├── processo/page.tsx
+ │   │   │   ├── responsaveis/page.tsx
+ │   │   │   ├── setores/page.tsx
+ │   │   ├── perfil/page.tsx
+ │   │   ├── processos/page.tsx
+ │   │   ├── importar/page.tsx
+ ├── 📂 components/
+ ├── 📂 config/
+ ├── 📂 context/
  ├── 📂 lib/
- │   ├── 📜 supabase.ts         # Configuração do Supabase
- ├── 📜 package.json            # Dependências do projeto
- ├── 📜 tsconfig.json           # Configuração do TypeScript
- ├── 📜 README.md               # Documentação do Projeto
+ ├── 📂 styles/
+ ├── 📂 types/
+ ├── 📂 utils/
+ ├── package.json
+ ├── tsconfig.json
+ ├── README.md
 ```
 
-## 🔧 Configuração do Banco de Dados (Supabase)
+## 🛠️ Instalação e Configuração
 
-1️⃣ **Instalar o Supabase CLI**
+### 1️⃣ Clonando o Repositório
 
 ```sh
-npm install -g supabase
+git clone https://github.com/anpdgovbr/backlog-dim.git
+cd backlog-dim
 ```
 
-2️⃣ **Criar um projeto Supabase localmente**
+### 2️⃣ Instalando Dependências
 
 ```sh
-npx supabase init
+npm install
 ```
 
-3️⃣ **Configurar o banco de dados**
+### 3️⃣ Configurando o Banco de Dados
+
+Se estiver utilizando o **Supabase**, copie o arquivo de exemplo `.env.example` para `.env` e configure a **DATABASE_URL**:
 
 ```sh
-npx supabase db push
+cp .env.example .env
 ```
+
+No arquivo `.env`, adicione:
+
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/nome_do_banco"
+NEXTAUTH_SECRET="sua-chave-secreta"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+Se estiver utilizando o **Supabase**, pegue as credenciais do painel do Supabase.
+
+### 4️⃣ Inicializando o Prisma e o Banco
+
+```sh
+npx prisma migrate dev --name init
+npx prisma db seed  # Popula o banco de dados com informações iniciais
+```
+
+### 5️⃣ Rodando o Projeto
+
+```sh
+npm run dev
+```
+
+Acesse em: [http://localhost:3000](http://localhost:3000)
 
 ## 📤 Importação de CSV
 
-- **Formato do CSV esperado:**
+O formato do CSV esperado:
 
 ```
 Responsável pelo atendimento;Nº do protocolo;Data da criação (Dia);Status;Tipo de solicitação;Denúncia anônima?;Ticket > Solicitante
 Dagoberto Heg;2025011370273;13/02/2025;Solicitação;Denúncia;Não;MARIA TEREZA DA LUZ LACERDA
 ```
 
-- **Para importar:**
-  - Acesse `/processamentos/importar`
-  - Faça upload do arquivo CSV
-  - Confirme os dados antes de importar
+Para importar:
 
-## 🏛 Design System do Governo (GovBR DS)
+1. Acesse `/dashboard/processos/importar`
+2. Faça upload do arquivo CSV
+3. Confirme os dados antes de importar
 
-O projeto utiliza o **Padrão Digital de Governo (GovBR DS)** para garantir **acessibilidade e identidade visual governamental**.
+## 🔧 Prisma - Gerenciamento do Banco
+
+| Comando                                  | Descrição                                       |
+|-----------------------------------------|-----------------------------------------------|
+| `npx prisma migrate dev --name init`   | Cria e aplica migrações no banco             |
+| `npx prisma db push`                    | Atualiza o esquema do banco                  |
+| `npx prisma db seed`                     | Popula o banco com dados iniciais            |
+| `npx prisma generate`                    | Gera o cliente Prisma                        |
+| `npx prisma studio`                      | Abre o Prisma Studio (interface gráfica)    |
+| `npx prisma migrate reset --force`       | Reseta completamente o banco de dados       |
 
 ## 📜 Licença
 
@@ -85,4 +136,4 @@ Este projeto é open-source e segue a licença **MIT**.
 
 ---
 
-🚀 **Desenvolvido para otimizar a gestão de processamentos administrativos!**
+🚀 **Desenvolvido para otimizar a gestão de processamentos administrativos de requerimentos da DIM!**  
