@@ -17,7 +17,7 @@
   margin-right: calc(-1 * var(--spacing-scale-base));
 }
 .br-item .row .col,
-.br-item .row [class*=col-] {
+.br-item .row [class*="col-"] {
   padding-left: var(--spacing-scale-base);
   padding-right: var(--spacing-scale-base);
 }
@@ -29,37 +29,47 @@
 .br-item[data-toggle] {
   cursor: pointer;
 }
-.br-item[data-toggle=selection]:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+.br-item[data-toggle="selection"]:not(:disabled):hover {
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-item > .br-checkbox:not(.hidden-label), .br-item > .br-radio:not(.hidden-label) {
+.br-item > .br-checkbox:not(.hidden-label),
+.br-item > .br-radio:not(.hidden-label) {
   margin-bottom: calc(var(--item-padding-y) * -1);
   margin-left: calc(var(--item-padding-x) * -1);
   margin-right: calc(var(--item-padding-x) * -1);
   margin-top: calc(var(--item-padding-y) * -1);
 }
-.br-item > .br-checkbox:not(.hidden-label) input + label, .br-item > .br-radio:not(.hidden-label) input + label {
+.br-item > .br-checkbox:not(.hidden-label) input + label,
+.br-item > .br-radio:not(.hidden-label) input + label {
   padding-bottom: var(--item-padding-y);
   padding-top: var(--item-padding-y);
   top: 1px;
   width: 100%;
 }
-.br-item > .br-checkbox:not(.hidden-label) input + label::before, .br-item > .br-radio:not(.hidden-label) input + label::before {
+.br-item > .br-checkbox:not(.hidden-label) input + label::before,
+.br-item > .br-radio:not(.hidden-label) input + label::before {
   left: var(--item-padding-x);
   top: calc(var(--item-padding-y) - 1px);
 }
-.br-item > .br-checkbox:not(.hidden-label) input + label:empty, .br-item > .br-radio:not(.hidden-label) input + label:empty {
+.br-item > .br-checkbox:not(.hidden-label) input + label:empty,
+.br-item > .br-radio:not(.hidden-label) input + label:empty {
   left: 0;
   top: 1px;
 }
-.br-item > .br-checkbox:not(.hidden-label) input:hover:not(:disabled) + label::before, .br-item > .br-radio:not(.hidden-label) input:hover:not(:disabled) + label::before {
+.br-item > .br-checkbox:not(.hidden-label) input:hover:not(:disabled) + label::before,
+.br-item > .br-radio:not(.hidden-label) input:hover:not(:disabled) + label::before {
   background-image: none;
 }
 .br-item > .br-checkbox input:not(:indeterminate) + label {
   min-height: calc(var(--checkbox-size) + var(--item-padding-y) * 2);
 }
 .br-item > .br-checkbox input:not(:indeterminate) + label:not(:empty) {
-  padding-left: calc(var(--checkbox-padding) + var(--checkbox-size) + var(--item-padding-x));
+  padding-left: calc(
+    var(--checkbox-padding) + var(--checkbox-size) + var(--item-padding-x)
+  );
 }
 .br-item > .br-checkbox input:not(:indeterminate) + label::after {
   left: calc(var(--item-padding-x) + 8px);
@@ -74,7 +84,9 @@
 }
 .br-item .br-radio input + label {
   min-height: calc(var(--radio-size) + var(--item-padding-y) * 2);
-  padding-left: calc(var(--spacing-scale-base) + var(--radio-size) + var(--item-padding-x));
+  padding-left: calc(
+    var(--spacing-scale-base) + var(--radio-size) + var(--item-padding-x)
+  );
 }
 .br-item .br-radio input + label::after {
   left: calc(var(--item-padding-x) + var(--radio-bullet-position));
@@ -294,7 +306,8 @@
   background-color: var(--active);
   color: var(--color);
 }
-.br-item.inverted, .br-item.dark-mode {
+.br-item.inverted,
+.br-item.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -306,7 +319,8 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-item.inverted.active, .br-item.dark-mode.active {
+.br-item.inverted.active,
+.br-item.dark-mode.active {
   --color: var(--color-light);
   --color-rgb: var(--color-light-rgb);
   --text-color: var(--color-light);
@@ -321,7 +335,10 @@
   color: var(--active);
 }
 .br-item[data-toggle]:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
 .br-item[data-toggle] .content i {
   color: var(--interactive);
@@ -330,7 +347,7 @@
   align-items: center;
   display: flex;
 }
-.br-item [class*=fa-] {
+.br-item [class*="fa-"] {
   height: 16px;
   width: 14px !important;
 }
@@ -342,10 +359,16 @@ a.br-item {
   color: var(--interactive);
 }
 a.br-item:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 a.br-item:not(:disabled):active {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 
 button.br-item {
@@ -355,17 +378,24 @@ button.br-item {
 button.br-item:focus {
   outline: none;
 }
-button.br-item.focus-visible, button.br-item:focus-visible {
+button.br-item.focus-visible,
+button.br-item:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 button.br-item:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
 button.br-item:not(:disabled):active {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--pressed)), rgba(var(--color-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--pressed)),
+    rgba(var(--color-rgb), var(--pressed))
+  );
 }
 
 /*# sourceMappingURL=item.css.map*/

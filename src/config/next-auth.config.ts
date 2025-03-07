@@ -1,6 +1,6 @@
 // src/config/next-auth.config.ts
-import type { AuthOptions } from 'next-auth'
-import AzureADProvider from 'next-auth/providers/azure-ad'
+import type { AuthOptions } from "next-auth"
+import AzureADProvider from "next-auth/providers/azure-ad"
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -10,13 +10,13 @@ export const authOptions: AuthOptions = {
       tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          scope: 'openid email profile'
+          scope: "openid email profile"
         }
       }
     })
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 4 * 60 * 60 // 4 horas
   },
   callbacks: {
@@ -40,8 +40,8 @@ export const authOptions: AuthOptions = {
     }
   },
   pages: {
-    signIn: '/auth/login',
-    error: '/auth/login'
+    signIn: "/auth/login",
+    error: "/auth/login"
   },
   secret: process.env.NEXTAUTH_SECRET
 }

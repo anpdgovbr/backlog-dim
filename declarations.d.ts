@@ -1,7 +1,7 @@
 declare namespace JSX {
   interface IntrinsicElements {
-    'br-footer': any
-    'br-header': any
-    'br-menu': any
+    "br-footer": any
+    "br-header": any
+    "br-menu": any
   }
 }

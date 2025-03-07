@@ -70,24 +70,40 @@
   position: absolute;
   width: var(--carousel-full-size);
 }
-.br-carousel .carousel-step .br-step[data-type=simple] .step-progress,
-.br-carousel .carousel-step .br-step[data-type=text] .step-progress {
+.br-carousel .carousel-step .br-step[data-type="simple"] .step-progress,
+.br-carousel .carousel-step .br-step[data-type="text"] .step-progress {
   background: var(--carousel-step-progress-background);
   min-height: var(--carousel-step-progress-min-height);
 }
-.br-carousel .carousel-step .br-step[data-type=simple] .step-progress .step-progress-btn,
-.br-carousel .carousel-step .br-step[data-type=text] .step-progress .step-progress-btn {
+.br-carousel
+  .carousel-step
+  .br-step[data-type="simple"]
+  .step-progress
+  .step-progress-btn,
+.br-carousel .carousel-step .br-step[data-type="text"] .step-progress .step-progress-btn {
   top: 0;
 }
-.br-carousel .carousel-step .br-step[data-type=simple] .step-progress .step-progress-btn:hover:not([disabled])::before,
-.br-carousel .carousel-step .br-step[data-type=text] .step-progress .step-progress-btn:hover:not([disabled])::before {
+.br-carousel
+  .carousel-step
+  .br-step[data-type="simple"]
+  .step-progress
+  .step-progress-btn:hover:not([disabled])::before,
+.br-carousel
+  .carousel-step
+  .br-step[data-type="text"]
+  .step-progress
+  .step-progress-btn:hover:not([disabled])::before {
   background-image: none;
 }
-.br-carousel .carousel-step .br-step[data-type=text] .step-progress .step-progress-btn {
+.br-carousel .carousel-step .br-step[data-type="text"] .step-progress .step-progress-btn {
   cursor: default;
   margin: 0;
 }
-.br-carousel .carousel-step .br-step[data-type=text] .step-progress .step-progress-btn.focus-visible::before {
+.br-carousel
+  .carousel-step
+  .br-step[data-type="text"]
+  .step-progress
+  .step-progress-btn.focus-visible::before {
   outline-color: transparent !important;
 }
 .br-carousel .carousel-button {
@@ -113,48 +129,50 @@
 .br-carousel .carousel-button .carousel-btn-prev i.fas {
   font-size: var(--carousel-buton-icon-size);
 }
-.br-carousel[data-stage=in] .carousel-button {
+.br-carousel[data-stage="in"] .carousel-button {
   height: var(--carousel-full-size);
 }
-.br-carousel[data-stage=in] .carousel-button .carousel-btn-next,
-.br-carousel[data-stage=in] .carousel-button .carousel-btn-prev {
+.br-carousel[data-stage="in"] .carousel-button .carousel-btn-next,
+.br-carousel[data-stage="in"] .carousel-button .carousel-btn-prev {
   border-radius: 0;
   height: var(--carousel-full-size);
   margin: 0;
   padding: 0 var(--spacing-scale-default);
 }
-.br-carousel[data-stage=in] .carousel-stage {
+.br-carousel[data-stage="in"] .carousel-stage {
   height: var(--carousel-full-size);
   left: 0;
   width: var(--carousel-full-size);
 }
-.br-carousel[data-stage=out] .carousel-button, .br-carousel .carousel-button {
+.br-carousel[data-stage="out"] .carousel-button,
+.br-carousel .carousel-button {
   height: calc(var(--carousel-full-size) - var(--carousel-button-fix-height));
 }
-.br-carousel[data-stage=out] .carousel-stage, .br-carousel .carousel-stage {
+.br-carousel[data-stage="out"] .carousel-stage,
+.br-carousel .carousel-stage {
   height: calc(var(--carousel-full-size) - var(--carousel-button-fix-height));
   left: 50px;
   width: calc(var(--carousel-full-size) - var(--carousel-button-fix-width));
 }
-.br-carousel[data-stage=hibh] .carousel-button {
+.br-carousel[data-stage="hibh"] .carousel-button {
   height: var(--carousel-full-size);
 }
-.br-carousel[data-stage=hibh] .carousel-stage {
+.br-carousel[data-stage="hibh"] .carousel-stage {
   height: var(--carousel-full-size);
   left: 50px;
   width: calc(var(--carousel-full-size) - var(--carousel-button-fix-width));
 }
-.br-carousel[data-stage=hibw] .carousel-button {
+.br-carousel[data-stage="hibw"] .carousel-button {
   height: calc(var(--carousel-full-size) - var(--carousel-button-fix-height));
 }
-.br-carousel[data-stage=hibw] .carousel-button .carousel-btn-next,
-.br-carousel[data-stage=hibw] .carousel-button .carousel-btn-prev {
+.br-carousel[data-stage="hibw"] .carousel-button .carousel-btn-next,
+.br-carousel[data-stage="hibw"] .carousel-button .carousel-btn-prev {
   border-radius: 0;
   height: var(--carousel-full-size);
   margin: 0;
   padding: 0 var(--spacing-scale-default);
 }
-.br-carousel[data-stage=hibw] .carousel-stage {
+.br-carousel[data-stage="hibw"] .carousel-stage {
   height: calc(var(--carousel-full-size) - var(--carousel-button-fix-height));
   left: 0;
   width: var(--carousel-full-size);
@@ -184,12 +202,13 @@
     left: 0;
     width: var(--carousel-full-size);
   }
-  .br-carousel .carousel-step .br-step[data-type=simple] .step-progress,
-  .br-carousel .carousel-step .br-step[data-type=text] .step-progress {
+  .br-carousel .carousel-step .br-step[data-type="simple"] .step-progress,
+  .br-carousel .carousel-step .br-step[data-type="text"] .step-progress {
     padding-top: 0 !important;
   }
 }
-.br-carousel.inverted, .br-carousel.dark-mode {
+.br-carousel.inverted,
+.br-carousel.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -201,7 +220,8 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-carousel.inverted .br-step, .br-carousel.dark-mode .br-step {
+.br-carousel.inverted .br-step,
+.br-carousel.dark-mode .br-step {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -213,51 +233,89 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=success], .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=success] {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="success"],
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="success"] {
   color: var(--success-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=success] .step-info, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=success] .step-info {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="success"] .step-info,
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="success"] .step-info {
   color: var(--success-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=success] .step-alert::after, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=success] .step-alert::after {
+.br-carousel.inverted
+  .br-step
+  .step-progress-btn[data-alert="success"]
+  .step-alert::after,
+.br-carousel.dark-mode
+  .br-step
+  .step-progress-btn[data-alert="success"]
+  .step-alert::after {
   content: var(--step-alert-success-icon);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=info], .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=info] {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="info"],
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="info"] {
   color: var(--info-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=info] .step-info, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=info] .step-info {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="info"] .step-info,
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="info"] .step-info {
   color: var(--info-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=info] .step-alert::after, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=info] .step-alert::after {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="info"] .step-alert::after,
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="info"] .step-alert::after {
   content: var(--step-alert-info-icon);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=warning] .step-alert::after, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=warning] .step-alert::after {
+.br-carousel.inverted
+  .br-step
+  .step-progress-btn[data-alert="warning"]
+  .step-alert::after,
+.br-carousel.dark-mode
+  .br-step
+  .step-progress-btn[data-alert="warning"]
+  .step-alert::after {
   content: var(--step-alert-warning-icon);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=danger], .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=danger] {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="danger"],
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="danger"] {
   color: var(--danger-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=danger] .step-info, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=danger] .step-info {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="danger"] .step-info,
+.br-carousel.dark-mode .br-step .step-progress-btn[data-alert="danger"] .step-info {
   color: var(--danger-alternative);
 }
-.br-carousel.inverted .br-step .step-progress-btn[data-alert=danger] .step-alert::after, .br-carousel.dark-mode .br-step .step-progress-btn[data-alert=danger] .step-alert::after {
+.br-carousel.inverted .br-step .step-progress-btn[data-alert="danger"] .step-alert::after,
+.br-carousel.dark-mode
+  .br-step
+  .step-progress-btn[data-alert="danger"]
+  .step-alert::after {
   content: var(--step-alert-danger-icon);
 }
-.br-carousel.inverted .br-step .step-progress-btn.active, .br-carousel.inverted .br-step .step-progress-btn[active], .br-carousel.dark-mode .br-step .step-progress-btn.active, .br-carousel.dark-mode .br-step .step-progress-btn[active] {
+.br-carousel.inverted .br-step .step-progress-btn.active,
+.br-carousel.inverted .br-step .step-progress-btn[active],
+.br-carousel.dark-mode .br-step .step-progress-btn.active,
+.br-carousel.dark-mode .br-step .step-progress-btn[active] {
   color: var(--color-dark);
 }
-.br-carousel.inverted .br-step .step-progress-btn.active::before, .br-carousel.inverted .br-step .step-progress-btn[active]::before, .br-carousel.dark-mode .br-step .step-progress-btn.active::before, .br-carousel.dark-mode .br-step .step-progress-btn[active]::before {
+.br-carousel.inverted .br-step .step-progress-btn.active::before,
+.br-carousel.inverted .br-step .step-progress-btn[active]::before,
+.br-carousel.dark-mode .br-step .step-progress-btn.active::before,
+.br-carousel.dark-mode .br-step .step-progress-btn[active]::before {
   background-color: var(--background-light);
   border-color: var(--background-light);
   color: var(--active);
 }
-.br-carousel.inverted .br-step .step-progress-btn.active .step-icon, .br-carousel.inverted .br-step .step-progress-btn[active] .step-icon, .br-carousel.dark-mode .br-step .step-progress-btn.active .step-icon, .br-carousel.dark-mode .br-step .step-progress-btn[active] .step-icon {
+.br-carousel.inverted .br-step .step-progress-btn.active .step-icon,
+.br-carousel.inverted .br-step .step-progress-btn[active] .step-icon,
+.br-carousel.dark-mode .br-step .step-progress-btn.active .step-icon,
+.br-carousel.dark-mode .br-step .step-progress-btn[active] .step-icon {
   color: var(--active);
 }
-.br-carousel.inverted .br-step[data-type=void] .step-progress-btn.active .step-alert, .br-carousel.inverted .br-step[data-type=void] .step-progress-btn[active] .step-alert, .br-carousel.dark-mode .br-step[data-type=void] .step-progress-btn.active .step-alert, .br-carousel.dark-mode .br-step[data-type=void] .step-progress-btn[active] .step-alert {
+.br-carousel.inverted .br-step[data-type="void"] .step-progress-btn.active .step-alert,
+.br-carousel.inverted .br-step[data-type="void"] .step-progress-btn[active] .step-alert,
+.br-carousel.dark-mode .br-step[data-type="void"] .step-progress-btn.active .step-alert,
+.br-carousel.dark-mode .br-step[data-type="void"] .step-progress-btn[active] .step-alert {
   border-color: var(--color-dark);
 }
-.br-carousel.inverted .br-step[data-type=text] .step-progress-btn::before, .br-carousel.dark-mode .br-step[data-type=text] .step-progress-btn::before {
+.br-carousel.inverted .br-step[data-type="text"] .step-progress-btn::before,
+.br-carousel.dark-mode .br-step[data-type="text"] .step-progress-btn::before {
   background-color: transparent;
   color: var(--color);
 }

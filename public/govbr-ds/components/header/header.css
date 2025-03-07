@@ -190,8 +190,8 @@
   }
 }
 @media (min-width: 1280px) {
-  .br-header .header-actions .header-links [data-toggle=dropdown],
-  .br-header .header-actions .header-functions [data-toggle=dropdown] {
+  .br-header .header-actions .header-links [data-toggle="dropdown"],
+  .br-header .header-actions .header-functions [data-toggle="dropdown"] {
     display: none;
   }
   .br-header .header-actions .header-links .br-list,
@@ -291,7 +291,8 @@
     padding-top: 0;
   }
 }
-.br-header .header-search, .br-header.compact .header-search {
+.br-header .header-search,
+.br-header.compact .header-search {
   align-items: center;
   background: var(--background);
   bottom: 0;
@@ -302,36 +303,44 @@
   right: 0;
   top: 0;
 }
-.br-header .header-search .br-input, .br-header.compact .header-search .br-input {
+.br-header .header-search .br-input,
+.br-header.compact .header-search .br-input {
   align-items: center;
   display: flex;
   flex: 1;
 }
-.br-header .header-search .br-input label, .br-header.compact .header-search .br-input label {
+.br-header .header-search .br-input label,
+.br-header.compact .header-search .br-input label {
   display: none;
 }
-.br-header .header-search .br-input input, .br-header.compact .header-search .br-input input {
+.br-header .header-search .br-input input,
+.br-header.compact .header-search .br-input input {
   border-color: transparent;
 }
-.br-header .header-search .br-input input:not(:focus), .br-header.compact .header-search .br-input input:not(:focus) {
+.br-header .header-search .br-input input:not(:focus),
+.br-header.compact .header-search .br-input input:not(:focus) {
   background: var(--gray-2);
 }
 .br-header .header-search .br-input .icon,
-.br-header .header-search .br-input .br-button, .br-header.compact .header-search .br-input .icon,
+.br-header .header-search .br-input .br-button,
+.br-header.compact .header-search .br-input .icon,
 .br-header.compact .header-search .br-input .br-button {
   --focus-offset: 0;
   bottom: auto;
   right: 4px;
   top: auto;
 }
-.br-header .header-search .search-close, .br-header.compact .header-search .search-close {
+.br-header .header-search .search-close,
+.br-header.compact .header-search .search-close {
   --focus-offset: calc(var(--spacing-scale-half) * -1);
   display: none;
 }
-.br-header .header-search.active, .br-header.compact .header-search.active {
+.br-header .header-search.active,
+.br-header.compact .header-search.active {
   display: flex;
 }
-.br-header .header-search.active .search-close, .br-header.compact .header-search.active .search-close {
+.br-header .header-search.active .search-close,
+.br-header.compact .header-search.active .search-close {
   display: inline-flex;
 }
 .br-header[data-no-search] .header-search {

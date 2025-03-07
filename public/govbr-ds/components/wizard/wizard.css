@@ -80,17 +80,24 @@
 .br-wizard .wizard-progress-btn:focus {
   outline: none;
 }
-.br-wizard .wizard-progress-btn.focus-visible:not([disabled]):not(.disabled)::before, .br-wizard .wizard-progress-btn:focus-visible:not([disabled]):not(.disabled)::before {
+.br-wizard .wizard-progress-btn.focus-visible:not([disabled]):not(.disabled)::before,
+.br-wizard .wizard-progress-btn:focus-visible:not([disabled]):not(.disabled)::before {
   outline-color: var(--focus-color);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 .br-wizard .wizard-progress-btn:hover:not([disabled])::before {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-wizard .wizard-progress-btn:active:not([disabled])::before {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--pressed)), rgba(var(--interactive-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--pressed)),
+    rgba(var(--interactive-rgb), var(--pressed))
+  );
 }
 .br-wizard .wizard-progress-btn::before {
   background-color: var(--background);
@@ -109,7 +116,9 @@
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+  transition:
+    all 0.15s linear 0s,
+    transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
   width: 36px;
   z-index: 3;
 }
@@ -239,7 +248,9 @@
 .br-wizard .wizard-panel-content:hover::-webkit-scrollbar-thumb {
   background: var(--gray-40);
 }
-.br-wizard .wizard-panel-content:focus, .br-wizard .wizard-panel-content:focus-visible, .br-wizard .wizard-panel-content.focus-visible {
+.br-wizard .wizard-panel-content:focus,
+.br-wizard .wizard-panel-content:focus-visible,
+.br-wizard .wizard-panel-content.focus-visible {
   border-color: var(--focus) !important;
   box-shadow: 0 0 0 var(--surface-width-md) var(--focus);
   outline: none;
@@ -432,7 +443,8 @@
     min-width: calc(100% - 60px);
   }
 }
-.br-wizard.inverted, .br-wizard.dark-mode {
+.br-wizard.inverted,
+.br-wizard.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -444,7 +456,12 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-wizard.inverted .br-button.primary, .br-wizard.inverted .br-button[primary], .br-wizard.inverted .br-button.is-primary, .br-wizard.dark-mode .br-button.primary, .br-wizard.dark-mode .br-button[primary], .br-wizard.dark-mode .br-button.is-primary {
+.br-wizard.inverted .br-button.primary,
+.br-wizard.inverted .br-button[primary],
+.br-wizard.inverted .br-button.is-primary,
+.br-wizard.dark-mode .br-button.primary,
+.br-wizard.dark-mode .br-button[primary],
+.br-wizard.dark-mode .br-button.is-primary {
   --color: var(--color-light);
   --color-rgb: var(--color-light-rgb);
   --text-color: var(--color-light);
@@ -458,21 +475,30 @@
   background-color: var(--interactive-dark);
   color: var(--background-dark);
 }
-.br-wizard.inverted .br-button.secondary, .br-wizard.inverted .br-button[secondary], .br-wizard.inverted .br-button.is-secondary, .br-wizard.dark-mode .br-button.secondary, .br-wizard.dark-mode .br-button[secondary], .br-wizard.dark-mode .br-button.is-secondary {
+.br-wizard.inverted .br-button.secondary,
+.br-wizard.inverted .br-button[secondary],
+.br-wizard.inverted .br-button.is-secondary,
+.br-wizard.dark-mode .br-button.secondary,
+.br-wizard.dark-mode .br-button[secondary],
+.br-wizard.dark-mode .br-button.is-secondary {
   background-color: var(--background-dark);
 }
-.br-wizard.inverted .wizard-progress, .br-wizard.dark-mode .wizard-progress {
+.br-wizard.inverted .wizard-progress,
+.br-wizard.dark-mode .wizard-progress {
   background-color: transparent;
 }
-.br-wizard.inverted .wizard-progress-btn[active], .br-wizard.dark-mode .wizard-progress-btn[active] {
+.br-wizard.inverted .wizard-progress-btn[active],
+.br-wizard.dark-mode .wizard-progress-btn[active] {
   color: var(--color);
 }
-.br-wizard.inverted .wizard-progress-btn[active]::before, .br-wizard.dark-mode .wizard-progress-btn[active]::before {
+.br-wizard.inverted .wizard-progress-btn[active]::before,
+.br-wizard.dark-mode .wizard-progress-btn[active]::before {
   --interactive-rgb: var(--active-rgb);
   background-color: var(--color);
   color: var(--active);
 }
-.br-wizard.inverted .wizard-panel .wizard-panel-btn, .br-wizard.dark-mode .wizard-panel .wizard-panel-btn {
+.br-wizard.inverted .wizard-panel .wizard-panel-btn,
+.br-wizard.dark-mode .wizard-panel .wizard-panel-btn {
   background-color: transparent;
 }
 

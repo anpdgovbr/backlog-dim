@@ -39,10 +39,15 @@
   padding-top: 0;
   width: 100%;
 }
-.br-input input::-ms-reveal, .br-input input::-ms-clear, .br-input input::-webkit-calendar-picker-indicator {
+.br-input input::-ms-reveal,
+.br-input input::-ms-clear,
+.br-input input::-webkit-calendar-picker-indicator {
   display: none;
 }
-.br-input input[type=search]::-webkit-search-decoration, .br-input input[type=search]::-webkit-search-cancel-button, .br-input input[type=search]::-webkit-search-results-button, .br-input input[type=search]::-webkit-search-results-decoration {
+.br-input input[type="search"]::-webkit-search-decoration,
+.br-input input[type="search"]::-webkit-search-cancel-button,
+.br-input input[type="search"]::-webkit-search-results-button,
+.br-input input[type="search"]::-webkit-search-results-decoration {
   appearance: none;
 }
 .br-input.input-inline {
@@ -99,7 +104,9 @@
 .br-input.has-icon .br-button.circle {
   float: right;
   margin-right: var(--spacing-scale-half);
-  margin-top: calc((var(--button-size) + var(--spacing-scale-half) + var(--spacing-scale-half)) * -1);
+  margin-top: calc(
+    (var(--button-size) + var(--spacing-scale-half) + var(--spacing-scale-half)) * -1
+  );
   transform: translateY(0);
 }
 .br-input.has-icon.small .br-button.circle {
@@ -152,31 +159,43 @@
   --item-padding-y: var(--spacing-scale-2x);
 }
 .br-input .br-list .br-item:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
 .br-input .br-list .br-item:not(:first-child) {
   border-top: var(--surface-width-sm) solid var(--border-color);
 }
-.br-input.success input, .br-input[data-success] input {
+.br-input.success input,
+.br-input[data-success] input {
   border-color: var(--success);
   border-width: 2px;
 }
-.br-input.danger input, .br-input[data-danger] input {
+.br-input.danger input,
+.br-input[data-danger] input {
   border-color: var(--danger);
   border-width: 2px;
 }
-.br-input.warning input, .br-input[data-warning] input {
+.br-input.warning input,
+.br-input[data-warning] input {
   border-color: var(--warning);
   border-width: 2px;
 }
-.br-input.info input, .br-input[data-info] input {
+.br-input.info input,
+.br-input[data-info] input {
   border-color: var(--info);
   border-width: 2px;
 }
 .br-input input:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-input input:focus, .br-input input:focus-visible, .br-input input.focus-visible {
+.br-input input:focus,
+.br-input input:focus-visible,
+.br-input input.focus-visible {
   border-color: var(--focus) !important;
   box-shadow: 0 0 0 var(--surface-width-md) var(--focus);
   outline: none;
@@ -184,17 +203,21 @@
 .br-input .feedback {
   margin-bottom: var(--spacing-scale-half);
 }
-.br-input.small, .br-input[data-small] {
+.br-input.small,
+.br-input[data-small] {
   --input-size: var(--input-small);
 }
-.br-input.medium, .br-input[data-medium] {
+.br-input.medium,
+.br-input[data-medium] {
   --input-size: var(--input-medium);
 }
-.br-input.large, .br-input[data-large] {
+.br-input.large,
+.br-input[data-large] {
   --input-size: var(--input-large);
 }
 .br-input.inverted,
-.br-input.inverted label, .br-input.dark-mode,
+.br-input.inverted label,
+.br-input.dark-mode,
 .br-input.dark-mode label {
   --color: var(--color-dark);
   --focus-color: var(--focus-color-dark);

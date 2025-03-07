@@ -43,9 +43,13 @@
   padding-top: var(--card-padding);
 }
 .br-card.hover:hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-card.inverted, .br-card.dark-mode {
+.br-card.inverted,
+.br-card.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);

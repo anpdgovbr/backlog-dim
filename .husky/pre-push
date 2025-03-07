@@ -1,0 +1,2 @@
+# Runs build (lint) before push
+npm run build

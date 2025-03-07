@@ -217,7 +217,7 @@
 .br-cookiebar .complementary-content {
   padding: var(--spacing-scale-base) 0;
 }
-.br-cookiebar [class^=container] {
+.br-cookiebar [class^="container"] {
   --grid-margin: 0;
 }
 .br-cookiebar .br-checkbox:not(.hidden-label) {

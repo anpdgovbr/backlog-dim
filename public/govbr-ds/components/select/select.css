@@ -40,7 +40,8 @@
 .br-select .br-list:hover::-webkit-scrollbar-thumb {
   background: var(--gray-40);
 }
-.br-select .br-list:focus, .br-select .br-list:active {
+.br-select .br-list:focus,
+.br-select .br-list:active {
   color: var(--color-secondary-09);
   outline: none;
 }
@@ -77,7 +78,9 @@
 }
 .br-select .br-item .br-checkbox input + label,
 .br-select .br-item .br-radio input + label {
-  padding-left: calc(var(--checkbox-padding) + var(--checkbox-size) + var(--item-padding-x));
+  padding-left: calc(
+    var(--checkbox-padding) + var(--checkbox-size) + var(--item-padding-x)
+  );
 }
 .br-select .br-item .br-radio input + label {
   color: var(--text-color);
@@ -86,7 +89,8 @@
   min-height: 0;
   padding: var(--item-padding);
 }
-.br-select .br-item .br-radio input + label::before, .br-select .br-item .br-radio input + label::after {
+.br-select .br-item .br-radio input + label::before,
+.br-select .br-item .br-radio input + label::after {
   content: none;
 }
 .br-select .br-item:not(:last-child) {
@@ -98,16 +102,21 @@
 .br-select .br-item:not([disabled]):focus {
   outline: none;
 }
-.br-select .br-item:not([disabled]).focus-visible, .br-select .br-item:not([disabled]):focus-visible {
+.br-select .br-item:not([disabled]).focus-visible,
+.br-select .br-item:not([disabled]):focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
 .br-select .br-item:not([disabled]):not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
-.br-select .br-item.selected, .br-select .br-item[selected] {
+.br-select .br-item.selected,
+.br-select .br-item[selected] {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -119,47 +128,66 @@
   --focus-color: var(--focus-color-dark);
   --focus: var(--focus-color-dark);
 }
-.br-select .br-item.selected:focus, .br-select .br-item[selected]:focus {
+.br-select .br-item.selected:focus,
+.br-select .br-item[selected]:focus {
   outline: none;
 }
-.br-select .br-item.selected.focus-visible, .br-select .br-item.selected:focus-visible, .br-select .br-item[selected].focus-visible, .br-select .br-item[selected]:focus-visible {
+.br-select .br-item.selected.focus-visible,
+.br-select .br-item.selected:focus-visible,
+.br-select .br-item[selected].focus-visible,
+.br-select .br-item[selected]:focus-visible {
   outline-color: var(--focus);
   outline-offset: var(--focus-offset);
   outline-style: var(--focus-style);
   outline-width: var(--focus-width);
 }
-.br-select .br-item.selected:not(:disabled):hover, .br-select .br-item[selected]:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-rgb), var(--hover)), rgba(var(--color-rgb), var(--hover)));
+.br-select .br-item.selected:not(:disabled):hover,
+.br-select .br-item[selected]:not(:disabled):hover {
+  background-image: linear-gradient(
+    rgba(var(--color-rgb), var(--hover)),
+    rgba(var(--color-rgb), var(--hover))
+  );
 }
 .br-select .br-item.disabled {
   line-height: calc(var(--font-line-height-high) * 2);
   padding-left: calc(var(--item-padding) + var(--spacing-scale-base));
 }
-.br-select .br-item.highlighted, .br-select .br-item[highlighted] {
+.br-select .br-item.highlighted,
+.br-select .br-item[highlighted] {
   background-color: var(--gray-2);
   padding-bottom: var(--spacing-scale-base);
   padding-top: var(--spacing-scale-base);
 }
 .br-select .br-item.highlighted .br-checkbox label,
-.br-select .br-item.highlighted .br-radio label, .br-select .br-item[highlighted] .br-checkbox label,
+.br-select .br-item.highlighted .br-radio label,
+.br-select .br-item[highlighted] .br-checkbox label,
 .br-select .br-item[highlighted] .br-radio label {
   font-weight: var(--font-weight-semi-bold);
 }
 .br-select .br-item.highlighted .br-checkbox:hover,
-.br-select .br-item.highlighted .br-radio:hover, .br-select .br-item[highlighted] .br-checkbox:hover,
+.br-select .br-item.highlighted .br-radio:hover,
+.br-select .br-item[highlighted] .br-checkbox:hover,
 .br-select .br-item[highlighted] .br-radio:hover {
-  background: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-select .br-item.highlighted .br-checkbox:hover label,
-.br-select .br-item.highlighted .br-radio:hover label, .br-select .br-item[highlighted] .br-checkbox:hover label,
+.br-select .br-item.highlighted .br-radio:hover label,
+.br-select .br-item[highlighted] .br-checkbox:hover label,
 .br-select .br-item[highlighted] .br-radio:hover label {
   color: var(--text-color);
 }
-.br-select .br-item.highlighted.selected, .br-select .br-item.highlighted[selected], .br-select .br-item[highlighted].selected, .br-select .br-item[highlighted][selected] {
+.br-select .br-item.highlighted.selected,
+.br-select .br-item.highlighted[selected],
+.br-select .br-item[highlighted].selected,
+.br-select .br-item[highlighted][selected] {
   background-color: var(--selected);
 }
 .br-select.inverted .br-input,
-.br-select.inverted .br-input label, .br-select.dark-mode .br-input,
+.br-select.inverted .br-input label,
+.br-select.dark-mode .br-input,
 .br-select.dark-mode .br-input label {
   --color: var(--color-dark);
   --focus-color: var(--focus-color-dark);

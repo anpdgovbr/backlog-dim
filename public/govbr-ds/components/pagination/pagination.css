@@ -41,7 +41,10 @@
   white-space: nowrap;
 }
 .br-pagination .page:not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--interactive-rgb), var(--hover)), rgba(var(--interactive-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--interactive-rgb), var(--hover)),
+    rgba(var(--interactive-rgb), var(--hover))
+  );
 }
 .br-pagination .page.active {
   background: var(--active);
@@ -138,7 +141,8 @@
   border-right-width: var(--divider-size);
   border-top: 0;
 }
-.br-pagination.inverted, .br-pagination.dark-mode {
+.br-pagination.inverted,
+.br-pagination.dark-mode {
   --color: var(--color-dark);
   --color-rgb: var(--color-dark-rgb);
   --text-color: var(--color-dark);
@@ -151,14 +155,18 @@
   --focus: var(--focus-color-dark);
 }
 .br-pagination.inverted.inverted .br-input,
-.br-pagination.inverted.inverted .br-input label, .br-pagination.inverted.dark-mode .br-input,
-.br-pagination.inverted.dark-mode .br-input label, .br-pagination.dark-mode.inverted .br-input,
-.br-pagination.dark-mode.inverted .br-input label, .br-pagination.dark-mode.dark-mode .br-input,
+.br-pagination.inverted.inverted .br-input label,
+.br-pagination.inverted.dark-mode .br-input,
+.br-pagination.inverted.dark-mode .br-input label,
+.br-pagination.dark-mode.inverted .br-input,
+.br-pagination.dark-mode.inverted .br-input label,
+.br-pagination.dark-mode.dark-mode .br-input,
 .br-pagination.dark-mode.dark-mode .br-input label {
   --color: var(--color-dark);
   --focus-color: var(--focus-color-dark);
 }
-.br-pagination.inverted .page.active, .br-pagination.dark-mode .page.active {
+.br-pagination.inverted .page.active,
+.br-pagination.dark-mode .page.active {
   --interactive-rgb: var(--active-rgb);
   background-color: var(--background-light);
   color: var(--active);

@@ -46,10 +46,16 @@
   font-weight: var(--font-weight-semi-bold);
 }
 .br-magic-button .br-button:not(:disabled):not(:disabled):hover {
-  background-image: linear-gradient(rgba(var(--color-dark-rgb), var(--hover)), rgba(var(--color-dark-rgb), var(--hover)));
+  background-image: linear-gradient(
+    rgba(var(--color-dark-rgb), var(--hover)),
+    rgba(var(--color-dark-rgb), var(--hover))
+  );
 }
 .br-magic-button .br-button:not(:disabled):not(:disabled):active {
-  background-image: linear-gradient(rgba(var(--color-dark-rgb), var(--pressed)), rgba(var(--color-dark-rgb), var(--pressed)));
+  background-image: linear-gradient(
+    rgba(var(--color-dark-rgb), var(--pressed)),
+    rgba(var(--color-dark-rgb), var(--pressed))
+  );
 }
 
 /*# sourceMappingURL=magicbutton.css.map*/

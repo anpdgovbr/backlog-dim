@@ -1,24 +1,24 @@
-'use client'
+"use client"
 
-import { Box, Typography, CircularProgress } from '@mui/material'
+import { Box, CircularProgress, Typography } from "@mui/material"
 
-export default function GovBrLoading({ message = 'Carregando...' }) {
+export default function GovBrLoading({ message = "Carregando..." }) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        bgcolor: 'background.default'
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        bgcolor: "background.default"
       }}
     >
       <CircularProgress
         size={60}
         thickness={4}
         sx={{
-          color: 'primary.main',
+          color: "primary.main",
           mb: 2
         }}
       />

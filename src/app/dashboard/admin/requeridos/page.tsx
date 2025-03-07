@@ -1,4 +1,4 @@
-import CrudAvancado from '@/components/CrudAvancado'
+import CrudAvancado from "@/components/CrudAvancado"
 
 export default function GerenciarRequeridos() {
   return (
@@ -6,13 +6,13 @@ export default function GerenciarRequeridos() {
       tableName="Requerido"
       entityName="Requerido"
       fields={[
-        { key: 'nome', label: 'Nome', type: 'text', required: true },
-        { key: 'cnpj', label: 'CNPJ', type: 'text' },
+        { key: "nome", label: "Nome", type: "text", required: true },
+        { key: "cnpj", label: "CNPJ", type: "text" },
         {
-          key: 'setorId',
-          label: 'Setor',
-          type: 'select',
-          referenceTable: 'Setor'
+          key: "setorId",
+          label: "Setor",
+          type: "select",
+          referenceTable: "Setor"
         }
       ]}
     />
