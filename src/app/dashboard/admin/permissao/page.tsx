@@ -1,59 +1,61 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Perfil } from "@/types/Perfil";
-import { Permissao } from "@/types/Permissao";
+import { Perfil } from "@/types/Perfil"
+import { Permissao } from "@/types/Permissao"
+import { useEffect, useState } from "react"
 
 export default function GerenciarPermissoes() {
-  const [perfis, setPerfis] = useState<Perfil[]>([]);
-  const [permissoes, setPermissoes] = useState<Permissao[]>([]);
-  const [perfilSelecionado, setPerfilSelecionado] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [perfis, setPerfis] = useState<Perfil[]>([])
+  const [permissoes, setPermissoes] = useState<Permissao[]>([])
+  const [perfilSelecionado, setPerfilSelecionado] = useState<number | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     fetch("/api/perfis")
       .then((res) => res.json())
-      .then((data: Perfil[]) => setPerfis(data));
-  }, []);
+      .then((data: Perfil[]) => setPerfis(data))
+  }, [])
 
   useEffect(() => {
     if (perfilSelecionado !== null) {
-      setLoading(true);
+      setLoading(true)
       fetch(`/api/permissoes?perfilId=${perfilSelecionado}`)
         .then((res) => res.json())
         .then((data: Permissao[]) => {
           // 🔹 Garante que cada permissão seja única, removendo duplicatas
           const permissoesUnicas = Array.from(
-            new Map(data.map((p: Permissao) => [`${p.acao}_${p.recurso}_${perfilSelecionado}`, p])).values()
-          );
-          setPermissoes(permissoesUnicas);
-          setLoading(false);
+            new Map(
+              data.map((p: Permissao) => [
+                `${p.acao}_${p.recurso}_${perfilSelecionado}`,
+                p
+              ])
+            ).values()
+          )
+          setPermissoes(permissoesUnicas)
+          setLoading(false)
         })
         .catch((err) => {
-          console.error("Erro ao carregar permissões:", err);
-          setLoading(false);
-        });
+          console.error("Erro ao carregar permissões:", err)
+          setLoading(false)
+        })
     }
-  }, [perfilSelecionado]);
+  }, [perfilSelecionado])
 
   const handleTogglePermissao = async (permissao: Permissao) => {
-    const novaPermissao = { ...permissao, permitido: !permissao.permitido };
-  
+    const novaPermissao = { ...permissao, permitido: !permissao.permitido }
+
     // 🔹 Atualiza SOMENTE a permissão específica no estado
     setPermissoes((prev) =>
-      prev.map((p: Permissao) =>
-        p.id === permissao.id ? novaPermissao : p
-      )
-    );
-  
+      prev.map((p: Permissao) => (p.id === permissao.id ? novaPermissao : p))
+    )
+
     // 🔹 Atualiza a permissão na API (garante que só afeta o perfil correto)
     await fetch(`/api/permissoes/${permissao.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ permitido: novaPermissao.permitido }),
-    });
-  };
-  
+      body: JSON.stringify({ permitido: novaPermissao.permitido })
+    })
+  }
 
   return (
     <div className="container">
@@ -102,5 +104,5 @@ export default function GerenciarPermissoes() {
         <p>Não há permissões disponíveis para este perfil.</p>
       )}
     </div>
-  );
+  )
 }

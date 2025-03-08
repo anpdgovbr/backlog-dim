@@ -1,21 +1,17 @@
-"use client";
+"use client"
 
-import Dashboard25Wrapper, { ISectionConfig } from "@/components/Dashboard25Wrapper";
-import { Box, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
-
-import ContatoPrevioPage from "@/app/dashboard/admin/contato-previo/page";
-import EncaminhamentoPage from "@/app/dashboard/admin/encaminhamento/page";
-import EvidenciaPage from "@/app/dashboard/admin/evidencia/page";
-import FormaEntradaPage from "@/app/dashboard/admin/forma-entrada/page";
-import PedidoManifestacaoPage from "@/app/dashboard/admin/pedido-manifestacao/page";
-import GerenciarProcessos from "@/app/dashboard/admin/processo/page";
-import GerenciarRequeridos from "@/app/dashboard/admin/requeridos/page";
-import ResponsaveisPage from "@/app/dashboard/admin/responsaveis/page";
-import SituacaoPage from "@/app/dashboard/admin/situacao/page";
-import ImportarProcessos from "@/app/dashboard/processos/importar/page";
-
-import usePermissoes from "@/hooks/usePermissoes";
+import ContatoPrevioPage from "@/app/dashboard/admin/contato-previo/page"
+import EncaminhamentoPage from "@/app/dashboard/admin/encaminhamento/page"
+import EvidenciaPage from "@/app/dashboard/admin/evidencia/page"
+import FormaEntradaPage from "@/app/dashboard/admin/forma-entrada/page"
+import PedidoManifestacaoPage from "@/app/dashboard/admin/pedido-manifestacao/page"
+import GerenciarProcessos from "@/app/dashboard/admin/processo/page"
+import GerenciarRequeridos from "@/app/dashboard/admin/requeridos/page"
+import ResponsaveisPage from "@/app/dashboard/admin/responsaveis/page"
+import SituacaoPage from "@/app/dashboard/admin/situacao/page"
+import ImportarProcessos from "@/app/dashboard/processos/importar/page"
+import Dashboard25Wrapper, { ISectionConfig } from "@/components/Dashboard25Wrapper"
+import usePermissoes from "@/hooks/usePermissoes"
 import {
   AssignmentTurnedIn,
   Business,
@@ -27,7 +23,9 @@ import {
   Send,
   UploadFile,
   Visibility
-} from "@mui/icons-material";
+} from "@mui/icons-material"
+import { Box, CircularProgress } from "@mui/material"
+import { useEffect, useState } from "react"
 
 const allSections: ISectionConfig[] = [
   {
@@ -120,33 +118,36 @@ const allSections: ISectionConfig[] = [
     component: () => <SituacaoPage />,
     requiredPermissions: ["Exibir_Metadados"]
   }
-];
+]
 
 export default function DashboardAdmin() {
-  const { permissoes, loading } = usePermissoes();
-  const [sections, setSections] = useState<ISectionConfig[]>([]);
+  const { permissoes, loading } = usePermissoes()
+  const [sections, setSections] = useState<ISectionConfig[]>([])
 
   useEffect(() => {
     if (!loading) {
       const filteredSections = allSections.filter((section) =>
         section.requiredPermissions?.some((perm) => permissoes[perm])
-      );
+      )
 
-      setSections(filteredSections.length > 0 ? filteredSections : []);
+      setSections(filteredSections.length > 0 ? filteredSections : [])
     }
-  }, [permissoes, loading]);
+  }, [permissoes, loading])
 
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
         <CircularProgress />
       </Box>
-    );
+    )
   }
 
   return (
     <Box>
-      <Dashboard25Wrapper sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]} defaultSectionId="processos" />
+      <Dashboard25Wrapper
+        sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]}
+        defaultSectionId="processos"
+      />
     </Box>
-  );
+  )
 }

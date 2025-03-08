@@ -1,8 +1,7 @@
 export interface Permissao {
-    id: number;
-    acao: string;
-    recurso: string;
-    permitido: boolean;
-    perfilId?: number;
-  }
-  
+  id: number
+  acao: string
+  recurso: string
+  permitido: boolean
+  perfilId?: number
+}

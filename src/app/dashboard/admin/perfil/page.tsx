@@ -1,39 +1,37 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { User } from "@/types/User";
-import { Perfil } from "@/types/Perfil";
+import { Perfil } from "@/types/Perfil"
+import { User } from "@/types/User"
+import { useEffect, useState } from "react"
 
 export default function GerenciarPerfis() {
-  const [usuarios, setUsuarios] = useState<User[]>([]);
-  const [perfis, setPerfis] = useState<Perfil[]>([]);
+  const [usuarios, setUsuarios] = useState<User[]>([])
+  const [perfis, setPerfis] = useState<Perfil[]>([])
 
   useEffect(() => {
     fetch("/api/usuarios")
       .then((res) => res.json())
       .then((data: User[]) => setUsuarios(data))
-      .catch((err) => console.error("Erro ao buscar usuários:", err));
+      .catch((err) => console.error("Erro ao buscar usuários:", err))
 
     fetch("/api/perfis")
       .then((res) => res.json())
       .then((data: Perfil[]) => setPerfis(data))
-      .catch((err) => console.error("Erro ao buscar perfis:", err));
-  }, []);
+      .catch((err) => console.error("Erro ao buscar perfis:", err))
+  }, [])
 
   const handlePerfilChange = async (userId: string, perfilId: number) => {
     await fetch(`/api/usuarios/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ perfilId }),
-    });
+      body: JSON.stringify({ perfilId })
+    })
 
     // Atualiza a lista após alteração
     setUsuarios((prev) =>
-      prev.map((user) =>
-        user.id === userId ? { ...user, perfilId } : user
-      )
-    );
-  };
+      prev.map((user) => (user.id === userId ? { ...user, perfilId } : user))
+    )
+  }
 
   return (
     <div>
@@ -55,5 +53,5 @@ export default function GerenciarPerfis() {
         </div>
       ))}
     </div>
-  );
+  )
 }
