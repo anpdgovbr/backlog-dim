@@ -1,10 +1,30 @@
-"use client"
+"use client";
 
-import { Avatar, Box, Container, Paper, Typography } from "@mui/material"
-import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react";
+import { Avatar, Box, Container, Paper, Typography, CircularProgress } from "@mui/material";
+import { useSession } from "next-auth/react";
+
+interface Perfil {
+  id: number;
+  nome: string;
+}
 
 export default function PerfilPage() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
+  const [perfil, setPerfil] = useState<Perfil | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch(`/api/perfil?email=${session.user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPerfil(data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [session?.user?.email]);
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -23,14 +43,20 @@ export default function PerfilPage() {
             <Typography variant="body1" color="text.secondary">
               {session?.user?.email}
             </Typography>
+            {loading ? (
+              <CircularProgress size={20} sx={{ mt: 1 }} />
+            ) : (
+              <Typography variant="body1" color="primary" sx={{ mt: 1 }}>
+                Perfil: {perfil ? perfil.nome : "Não definido"}
+              </Typography>
+            )}
           </Box>
         </Box>
 
         <Box component="form" sx={{ mt: 3 }}>
-          {/* Adicione aqui os campos do formulário de perfil */}
           <Typography variant="body1">Formulário de edição de perfil...</Typography>
         </Box>
       </Paper>
     </Container>
-  )
+  );
 }

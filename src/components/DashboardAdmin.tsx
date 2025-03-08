@@ -1,126 +1,152 @@
-"use client"
+"use client";
 
-import ContatoPrevioPage from "@/app/dashboard/admin/contato-previo/page"
-import EncaminhamentoPage from "@/app/dashboard/admin/encaminhamento/page"
-import EvidenciaPage from "@/app/dashboard/admin/evidencia/page"
-import FormaEntradaPage from "@/app/dashboard/admin/forma-entrada/page"
-import PedidoManifestacaoPage from "@/app/dashboard/admin/pedido-manifestacao/page"
-import GerenciarProcessos from "@/app/dashboard/admin/processo/page"
-import GerenciarRequeridos from "@/app/dashboard/admin/requeridos/page"
-import ResponsaveisPage from "@/app/dashboard/admin/responsaveis/page"
-import SituacaoPage from "@/app/dashboard/admin/situacao/page"
-import ImportarProcessos from "@/app/dashboard/processos/importar/page"
-import Dashboard25Wrapper, { ISectionConfig } from "@/components/Dashboard25Wrapper"
+import Dashboard25Wrapper, { ISectionConfig } from "@/components/Dashboard25Wrapper";
+import { Box, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
+
+import ContatoPrevioPage from "@/app/dashboard/admin/contato-previo/page";
+import EncaminhamentoPage from "@/app/dashboard/admin/encaminhamento/page";
+import EvidenciaPage from "@/app/dashboard/admin/evidencia/page";
+import FormaEntradaPage from "@/app/dashboard/admin/forma-entrada/page";
+import PedidoManifestacaoPage from "@/app/dashboard/admin/pedido-manifestacao/page";
+import GerenciarProcessos from "@/app/dashboard/admin/processo/page";
+import GerenciarRequeridos from "@/app/dashboard/admin/requeridos/page";
+import ResponsaveisPage from "@/app/dashboard/admin/responsaveis/page";
+import SituacaoPage from "@/app/dashboard/admin/situacao/page";
+import ImportarProcessos from "@/app/dashboard/processos/importar/page";
+
+import usePermissoes from "@/hooks/usePermissoes";
 import {
-  // Pedidos de Manifestação
-  AssignmentTurnedIn, // Situação
-  // Importação de processos
+  AssignmentTurnedIn,
   Business,
   EngineeringOutlined,
-  // Formas de Entrada
   Forum,
-  // Evidências
   Input,
-  // Responsáveis
   PermContactCalendar,
-  // Requeridos (empresas)
   Person,
-  // Contato Prévio
   Send,
-  // Processos
   UploadFile,
-  // Encaminhamentos
   Visibility
-} from "@mui/icons-material"
-import { Box } from "@mui/material"
+} from "@mui/icons-material";
 
-const sectionsConfig: [ISectionConfig, ...ISectionConfig[]] = [
+const allSections: ISectionConfig[] = [
   {
     id: "processos",
     title: "Processos",
     description: "Gerencie os processos",
     icon: <EngineeringOutlined />,
-    baseColor: "#1976d2", // Azul forte
-    component: () => <GerenciarProcessos />
+    baseColor: "#1976d2",
+    component: () => <GerenciarProcessos />,
+    requiredPermissions: ["Exibir_Processo"]
   },
   {
     id: "importar",
     title: "Importar",
     description: "Importe dados de processos",
     icon: <UploadFile />,
-    baseColor: "#ff9800", // Laranja
-    component: () => <ImportarProcessos />
+    baseColor: "#ff9800",
+    component: () => <ImportarProcessos />,
+    requiredPermissions: ["Inserir_Processo"]
   },
   {
     id: "requeridos",
     title: "Requeridos",
     description: "Gerencie os requeridos",
     icon: <Business />,
-    baseColor: "#673ab7", // Roxo escuro
-    component: () => <GerenciarRequeridos />
+    baseColor: "#673ab7",
+    component: () => <GerenciarRequeridos />,
+    requiredPermissions: ["Exibir_Requeridos"]
   },
   {
     id: "contato_previo",
     title: "Contato Prévio",
     description: "Gerencie os tipos de contato prévio",
     icon: <PermContactCalendar />,
-    baseColor: "#4caf50", // Verde
-    component: () => <ContatoPrevioPage />
+    baseColor: "#4caf50",
+    component: () => <ContatoPrevioPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   },
   {
     id: "encaminhamento",
     title: "Encaminhamentos",
     description: "Gerencie os encaminhamentos disponíveis",
     icon: <Send />,
-    baseColor: "#f44336", // Vermelho
-    component: () => <EncaminhamentoPage />
+    baseColor: "#f44336",
+    component: () => <EncaminhamentoPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   },
   {
     id: "evidencia",
     title: "Evidências",
     description: "Gerencie as evidências registradas",
     icon: <Visibility />,
-    baseColor: "#03a9f4", // Azul claro
-    component: () => <EvidenciaPage />
+    baseColor: "#03a9f4",
+    component: () => <EvidenciaPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   },
   {
     id: "forma_entrada",
     title: "Formas de Entrada",
     description: "Gerencie as formas de entrada de processos",
     icon: <Input />,
-    baseColor: "#ff5722", // Laranja queimado
-    component: () => <FormaEntradaPage />
+    baseColor: "#ff5722",
+    component: () => <FormaEntradaPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   },
   {
     id: "pedido_manifestacao",
     title: "Pedidos de Manifestação",
     description: "Gerencie os pedidos de manifestação",
     icon: <Forum />,
-    baseColor: "#9c27b0", // Roxo
-    component: () => <PedidoManifestacaoPage />
+    baseColor: "#9c27b0",
+    component: () => <PedidoManifestacaoPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   },
   {
     id: "responsaveis",
     title: "Responsáveis",
     description: "Gerencie os responsáveis pelo atendimento",
     icon: <Person />,
-    baseColor: "#009688", // Verde água
-    component: () => <ResponsaveisPage />
+    baseColor: "#009688",
+    component: () => <ResponsaveisPage />,
+    requiredPermissions: ["Exibir_Responsavel"]
   },
   {
     id: "situacao",
     title: "Situação",
     description: "Gerencie as situações de processos",
     icon: <AssignmentTurnedIn />,
-    baseColor: "#ffeb3b", // Amarelo
-    component: () => <SituacaoPage />
+    baseColor: "#ffeb3b",
+    component: () => <SituacaoPage />,
+    requiredPermissions: ["Exibir_Metadados"]
   }
-]
+];
 
 export default function DashboardAdmin() {
+  const { permissoes, loading } = usePermissoes();
+  const [sections, setSections] = useState<ISectionConfig[]>([]);
+
+  useEffect(() => {
+    if (!loading) {
+      const filteredSections = allSections.filter((section) =>
+        section.requiredPermissions?.some((perm) => permissoes[perm])
+      );
+
+      setSections(filteredSections.length > 0 ? filteredSections : []);
+    }
+  }, [permissoes, loading]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box>
-      <Dashboard25Wrapper sectionsConfig={sectionsConfig} defaultSectionId="processos" />
+      <Dashboard25Wrapper sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]} defaultSectionId="processos" />
     </Box>
-  )
+  );
 }
