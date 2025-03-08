@@ -115,23 +115,24 @@ model Evidencia {
 
 
 model Perfil {
-  id        Int          @id @default(autoincrement())
-  nome      String       @unique
-  usuarios  User[]
+  id         Int          @id @default(autoincrement())
+  nome       String       @unique
+  usuarios   User[]
   permissoes Permissao[]
 
   @@map("Perfil")
 }
 
 model Permissao {
-  id        Int          @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
+  perfilId  Int
   acao      String
   recurso   String
-  permitido Boolean      @default(false)
-  perfilId  Int
-  perfil    Perfil       @relation(fields: [perfilId], references: [id])
+  permitido Boolean
 
-  @@map("Permissao")
+  perfil    Perfil  @relation(fields: [perfilId], references: [id])
+
+  @@unique([perfilId, acao, recurso]) // 🔹 Evita duplicação de permissões
 }
 
 model User {

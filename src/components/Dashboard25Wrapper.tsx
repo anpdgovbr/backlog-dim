@@ -20,6 +20,7 @@ export interface ISectionConfig {
   readonly baseColor: string
   readonly component: React.ComponentType<unknown> // <-- Componente estático
   readonly extraContent?: React.ReactNode
+  readonly requiredPermissions?: string[]
 }
 
 /**
