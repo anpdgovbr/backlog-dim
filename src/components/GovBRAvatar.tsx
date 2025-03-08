@@ -47,7 +47,7 @@ export default function GovBRAvatar() {
 
   const menuItems = [
     { label: "Dados pessoais", href: "/dashboard/perfil" },
-    { label: "Sair", href: "/auth/logout" }
+    { label: "Sair", href: "/auth/logout" },
   ]
 
   return (
@@ -95,7 +95,7 @@ export default function GovBRAvatar() {
           top: "100%",
           zIndex: 1000,
           width: "240px",
-          marginTop: "8px"
+          marginTop: "8px",
         }}
       >
         {menuItems.map((item) => (
@@ -107,7 +107,7 @@ export default function GovBRAvatar() {
             style={{
               width: "100%",
               textAlign: "left",
-              justifyContent: "flex-start"
+              justifyContent: "flex-start",
             }}
           >
             {item.label}

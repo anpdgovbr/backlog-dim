@@ -16,11 +16,11 @@ export async function PATCH(req: NextRequest) {
       perfilId_acao_recurso: {
         perfilId,
         acao,
-        recurso
-      }
+        recurso,
+      },
     },
     update: { permitido },
-    create: { perfilId, acao, recurso, permitido }
+    create: { perfilId, acao, recurso, permitido },
   })
 
   return NextResponse.json(novaPermissao)

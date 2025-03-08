@@ -20,9 +20,9 @@ async function main() {
       { nome: "Jean Frederick" },
       { nome: "Kelly Resqueti Paz" },
       { nome: "Tatiana Silva" },
-      { nome: "Vanessa Mendes" }
+      { nome: "Vanessa Mendes" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Setores...")
@@ -32,9 +32,9 @@ async function main() {
       { nome: "Tecnologia" },
       { nome: "Saúde" },
       { nome: "Serviços" },
-      { nome: "Varejo" }
+      { nome: "Varejo" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Formas de Entrada...")
@@ -43,9 +43,9 @@ async function main() {
       { nome: "Ouvidoria" },
       { nome: "SEI" },
       { nome: "SEI - CIS" },
-      { nome: "Sistema de Requerimentos" }
+      { nome: "Sistema de Requerimentos" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Encaminhamentos...")
@@ -55,9 +55,9 @@ async function main() {
       { nome: "Cancelado pelo titular/denunciante" },
       { nome: "Encaminhado para FIS" },
       { nome: "Encaminhado para TIS" },
-      { nome: "Requerimento Individualizado" }
+      { nome: "Requerimento Individualizado" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Situações do Processamento...")
@@ -65,9 +65,9 @@ async function main() {
     data: [
       { nome: "Em trâmite - aguardando análise" },
       { nome: "Em trâmite - aguardando FIS/TIS" },
-      { nome: "Encaminhado para fiscalização" }
+      { nome: "Encaminhado para fiscalização" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Pedidos de Manifestação...")
@@ -75,9 +75,9 @@ async function main() {
     data: [
       { nome: "Sim - Controlador Respondeu" },
       { nome: "Sim - Controlador não Respondeu" },
-      { nome: "Não se aplica" }
+      { nome: "Não se aplica" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Contatos Prévios...")
@@ -86,9 +86,9 @@ async function main() {
       { nome: "Correio Eletrônico (e-mail)" },
       { nome: "Ligação telefônica" },
       { nome: "Reclame Aqui/Procon" },
-      { nome: "N/A" }
+      { nome: "N/A" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   console.log("🔹 Criando Evidências...")
@@ -96,9 +96,9 @@ async function main() {
     data: [
       { nome: "Boletim de Ocorrência" },
       { nome: "Print de e-mail" },
-      { nome: "Processo Judicial" }
+      { nome: "Processo Judicial" },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   })
 
   // ==============================
@@ -110,28 +110,28 @@ async function main() {
     leitor: await prisma.perfil.upsert({
       where: { nome: "Leitor" },
       update: {},
-      create: { nome: "Leitor" }
+      create: { nome: "Leitor" },
     }),
     atendente: await prisma.perfil.upsert({
       where: { nome: "Atendente" },
       update: {},
-      create: { nome: "Atendente" }
+      create: { nome: "Atendente" },
     }),
     supervisor: await prisma.perfil.upsert({
       where: { nome: "Supervisor" },
       update: {},
-      create: { nome: "Supervisor" }
+      create: { nome: "Supervisor" },
     }),
     administrador: await prisma.perfil.upsert({
       where: { nome: "Administrador" },
       update: {},
-      create: { nome: "Administrador" }
+      create: { nome: "Administrador" },
     }),
     superAdmin: await prisma.perfil.upsert({
       where: { nome: "SuperAdmin" },
       update: {},
-      create: { nome: "SuperAdmin" }
-    })
+      create: { nome: "SuperAdmin" },
+    }),
   }
 
   // ==============================
@@ -146,169 +146,169 @@ async function main() {
       acao: "Exibir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Exibir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Exibir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Inserir",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Inserir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Inserir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Inserir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Ver Histórico",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Ver Histórico",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Ver Histórico",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Ver Histórico",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Editar Próprio",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Editar Próprio",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Editar Próprio",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Editar Próprio",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Editar Geral",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Editar Geral",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Editar Geral",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Editar Geral",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Excluir",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Excluir",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Excluir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Excluir",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Alterar Responsável",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Alterar Responsável",
       recurso: "Processo",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Alterar Responsável",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Alterar Responsável",
       recurso: "Processo",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     // 🔹 Permissões da entidade Responsável
@@ -316,100 +316,100 @@ async function main() {
       acao: "Exibir",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Exibir",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Exibir",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Exibir",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Cadastrar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Editar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Editar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Editar",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Editar",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Desabilitar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Responsavel",
       permitido: false,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Responsavel",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     // 🔹 Permissões de Metadados
@@ -418,94 +418,94 @@ async function main() {
       acao: "Exibir",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Exibir",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Exibir",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Cadastrar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Cadastrar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Editar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Editar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Editar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Editar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Desabilitar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Metadados",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Metadados",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     // 🔹 Permissões de Relatórios
@@ -513,101 +513,101 @@ async function main() {
       acao: "Exibir",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Exibir",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Exibir",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Exibir",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Criar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Criar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Criar",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Criar",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Editar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Editar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Editar",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Editar",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.administrador.id
+      perfilId: perfis.administrador.id,
     },
 
     {
       acao: "Desabilitar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.leitor.id
+      perfilId: perfis.leitor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.atendente.id
+      perfilId: perfis.atendente.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Relatorios",
       permitido: false,
-      perfilId: perfis.supervisor.id
+      perfilId: perfis.supervisor.id,
     },
     {
       acao: "Desabilitar",
       recurso: "Relatorios",
       permitido: true,
-      perfilId: perfis.administrador.id
-    }
+      perfilId: perfis.administrador.id,
+    },
   ]
 
   // 🔹 Atualiza as permissões corretamente no banco
@@ -617,11 +617,11 @@ async function main() {
         perfilId_acao_recurso: {
           perfilId: permissao.perfilId,
           acao: permissao.acao,
-          recurso: permissao.recurso
-        }
+          recurso: permissao.recurso,
+        },
       },
       update: { permitido: permissao.permitido },
-      create: permissao
+      create: permissao,
     })
   }
 
@@ -635,8 +635,8 @@ async function main() {
     update: {},
     create: {
       email: "luciano.psilva@anpd.gov.br",
-      perfilId: perfis.superAdmin.id
-    }
+      perfilId: perfis.superAdmin.id,
+    },
   })
 
   console.log("✅ Seed aplicado com sucesso!")

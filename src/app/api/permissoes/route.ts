@@ -12,7 +12,7 @@ const HIERARQUIA_PERFIS: Record<string, string[]> = {
   Administrador: ["Supervisor", "Atendente", "Leitor"],
   Supervisor: ["Atendente", "Leitor"],
   Atendente: ["Leitor"],
-  Leitor: []
+  Leitor: [],
 }
 
 export async function GET(req: NextRequest) {
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   if (perfilId) {
     const perfil = await prisma.perfil.findUnique({
       where: { id: Number(perfilId) },
-      select: { nome: true }
+      select: { nome: true },
     })
 
     if (!perfil) {
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
   // Se não, buscar as permissões do usuário autenticado
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { perfil: true }
+    include: { perfil: true },
   })
 
   if (!user || !user.perfil) {
@@ -58,7 +58,7 @@ async function getPermissoesPorPerfil(perfilNome: string) {
 
   // Buscar todas as permissões desses perfis
   const permissoes = await prisma.permissao.findMany({
-    where: { perfil: { nome: { in: perfisHerdados } } }
+    where: { perfil: { nome: { in: perfisHerdados } } },
   })
 
   // 🔹 Consolidar permissões corretamente

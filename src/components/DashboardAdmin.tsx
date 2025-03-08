@@ -22,7 +22,7 @@ import {
   Person,
   Send,
   UploadFile,
-  Visibility
+  Visibility,
 } from "@mui/icons-material"
 import { Box, CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -35,7 +35,7 @@ const allSections: ISectionConfig[] = [
     icon: <EngineeringOutlined />,
     baseColor: "#1976d2",
     component: () => <GerenciarProcessos />,
-    requiredPermissions: ["Exibir_Processo"]
+    requiredPermissions: ["Exibir_Processo"],
   },
   {
     id: "importar",
@@ -44,7 +44,7 @@ const allSections: ISectionConfig[] = [
     icon: <UploadFile />,
     baseColor: "#ff9800",
     component: () => <ImportarProcessos />,
-    requiredPermissions: ["Inserir_Processo"]
+    requiredPermissions: ["Inserir_Processo"],
   },
   {
     id: "requeridos",
@@ -53,7 +53,7 @@ const allSections: ISectionConfig[] = [
     icon: <Business />,
     baseColor: "#673ab7",
     component: () => <GerenciarRequeridos />,
-    requiredPermissions: ["Exibir_Requeridos"]
+    requiredPermissions: ["Exibir_Requeridos"],
   },
   {
     id: "contato_previo",
@@ -62,7 +62,7 @@ const allSections: ISectionConfig[] = [
     icon: <PermContactCalendar />,
     baseColor: "#4caf50",
     component: () => <ContatoPrevioPage />,
-    requiredPermissions: ["Exibir_Metadados"]
+    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "encaminhamento",
@@ -71,7 +71,7 @@ const allSections: ISectionConfig[] = [
     icon: <Send />,
     baseColor: "#f44336",
     component: () => <EncaminhamentoPage />,
-    requiredPermissions: ["Exibir_Metadados"]
+    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "evidencia",
@@ -80,7 +80,7 @@ const allSections: ISectionConfig[] = [
     icon: <Visibility />,
     baseColor: "#03a9f4",
     component: () => <EvidenciaPage />,
-    requiredPermissions: ["Exibir_Metadados"]
+    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "forma_entrada",
@@ -89,7 +89,7 @@ const allSections: ISectionConfig[] = [
     icon: <Input />,
     baseColor: "#ff5722",
     component: () => <FormaEntradaPage />,
-    requiredPermissions: ["Exibir_Metadados"]
+    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "pedido_manifestacao",
@@ -98,7 +98,7 @@ const allSections: ISectionConfig[] = [
     icon: <Forum />,
     baseColor: "#9c27b0",
     component: () => <PedidoManifestacaoPage />,
-    requiredPermissions: ["Exibir_Metadados"]
+    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "responsaveis",
@@ -107,7 +107,7 @@ const allSections: ISectionConfig[] = [
     icon: <Person />,
     baseColor: "#009688",
     component: () => <ResponsaveisPage />,
-    requiredPermissions: ["Exibir_Responsavel"]
+    requiredPermissions: ["Exibir_Responsavel"],
   },
   {
     id: "situacao",
@@ -116,8 +116,8 @@ const allSections: ISectionConfig[] = [
     icon: <AssignmentTurnedIn />,
     baseColor: "#ffeb3b",
     component: () => <SituacaoPage />,
-    requiredPermissions: ["Exibir_Metadados"]
-  }
+    requiredPermissions: ["Exibir_Metadados"],
+  },
 ]
 
 export default function DashboardAdmin() {

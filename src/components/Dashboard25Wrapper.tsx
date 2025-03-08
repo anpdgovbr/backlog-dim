@@ -4,7 +4,7 @@ import React from "react"
 
 import Dashboard25LayoutBase, {
   ILayoutSection,
-  NonEmptyArray
+  NonEmptyArray,
 } from "./Dashboard25LayoutBase"
 
 /**
@@ -48,7 +48,7 @@ export default function Dashboard25Wrapper(props: IDashboard25WrapperProps) {
     icon: config.icon,
     baseColor: config.baseColor,
     component: config.component,
-    extraContent: config.extraContent
+    extraContent: config.extraContent,
   }))
 
   return (

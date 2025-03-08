@@ -28,7 +28,7 @@ export async function PATCH(
     // Operação no Prisma
     const permissaoAtualizada = await prisma.permissao.update({
       where: { id: permissaoId },
-      data: { permitido }
+      data: { permitido },
     })
 
     return NextResponse.json(permissaoAtualizada)

@@ -10,7 +10,7 @@ import {
   IconButton,
   Modal,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { useCallback, useEffect, useState } from "react"
@@ -28,7 +28,7 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
     id?: number
     nome: string
   }>({
-    nome: ""
+    nome: "",
   })
 
   const fetchData = useCallback(async () => {
@@ -105,8 +105,8 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
             <DeleteIcon />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ]
 
   return (
@@ -138,7 +138,7 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
             width: 400,
             bgcolor: "background.paper",
             p: 3,
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           <Typography variant="h6">

@@ -4,14 +4,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from "@mui/material"
 import Link from "next/link"
 
 const links = [
   { href: "/admin/contato-previo", text: "Contato Prévio", icon: <Group /> },
   { href: "/admin/encaminhamento", text: "Encaminhamentos", icon: <List /> },
-  { href: "/admin/evidencia", text: "Evidências", icon: <Folder /> }
+  { href: "/admin/evidencia", text: "Evidências", icon: <Folder /> },
 ]
 
 export default function AdminDashboard() {

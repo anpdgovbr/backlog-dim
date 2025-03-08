@@ -9,5 +9,5 @@
   "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "trailingComma": "none"
+  "trailingComma": "es5"
 }
