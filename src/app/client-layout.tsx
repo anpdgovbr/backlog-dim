@@ -57,7 +57,10 @@ export default function ClientRootLayout({
             }}
           >
             <Typography variant="h6" component="h1" color="white" letterSpacing={1}>
-              <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+              <Link
+                href="/dashboard"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 Processamento Backlog DIM
               </Link>
             </Typography>
