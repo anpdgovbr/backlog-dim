@@ -6,7 +6,7 @@ import {
   CircularProgress,
   Container,
   Paper,
-  Typography
+  Typography,
 } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"

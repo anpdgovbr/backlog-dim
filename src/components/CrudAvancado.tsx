@@ -33,7 +33,7 @@ interface RelatedData {
 export default function CrudAvancado({
   tableName,
   entityName,
-  fields
+  fields,
 }: CrudAvancadoProps) {
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(false)
@@ -125,7 +125,7 @@ export default function CrudAvancado({
           )
         }
         return params.value
-      }
+      },
     })),
     {
       field: "acoes",
@@ -146,8 +146,8 @@ export default function CrudAvancado({
             <DeleteIcon />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ]
 
   return (
@@ -177,7 +177,7 @@ export default function CrudAvancado({
             width: 500,
             bgcolor: "background.paper",
             p: 3,
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           <Typography variant="h6">

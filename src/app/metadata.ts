@@ -15,9 +15,9 @@ export const globalMetadata: Metadata = {
         url: "https://seusite.com/imagem.jpg",
         width: 800,
         height: 600,
-        alt: "Imagem de Exemplo"
-      }
+        alt: "Imagem de Exemplo",
+      },
     ],
-    type: "website"
-  }
+    type: "website",
+  },
 }

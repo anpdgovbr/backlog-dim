@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { perfil: true }
+    include: { perfil: true },
   })
 
   if (!user || !user.perfil) {

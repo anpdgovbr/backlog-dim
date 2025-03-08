@@ -12,7 +12,7 @@ export async function PATCH(
 
   await prisma.user.update({
     where: { id: id },
-    data: { perfilId: Number(perfilId) }
+    data: { perfilId: Number(perfilId) },
   })
 
   return NextResponse.json({ success: true })

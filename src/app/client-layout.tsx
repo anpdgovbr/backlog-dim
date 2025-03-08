@@ -10,7 +10,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 
 export default function ClientRootLayout({
-  children
+  children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [isClient, setIsClient] = useState(false)
 
@@ -38,7 +38,7 @@ export default function ClientRootLayout({
             display: "flex",
             flexDirection: "column",
             minHeight: "100vh",
-            position: "relative"
+            position: "relative",
           }}
         >
           <Box
@@ -53,7 +53,7 @@ export default function ClientRootLayout({
               color: "white",
               boxShadow: 2,
               position: "relative",
-              zIndex: 1200
+              zIndex: 1200,
             }}
           >
             <Typography variant="h6" component="h1" color="white" letterSpacing={1}>
@@ -73,7 +73,7 @@ export default function ClientRootLayout({
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              position: "relative"
+              position: "relative",
             }}
           >
             {children}
@@ -86,7 +86,7 @@ export default function ClientRootLayout({
               textAlign: "center",
               py: 2,
               bgcolor: "grey.200",
-              borderTop: "1px solid #ccc"
+              borderTop: "1px solid #ccc",
             }}
           >
             <Typography variant="body2" color="textSecondary">

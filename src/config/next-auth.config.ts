@@ -10,14 +10,14 @@ export const authOptions: AuthOptions = {
       tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          scope: "openid email profile"
-        }
-      }
-    })
+          scope: "openid email profile",
+        },
+      },
+    }),
   ],
   session: {
     strategy: "jwt",
-    maxAge: 4 * 60 * 60 // 4 horas
+    maxAge: 4 * 60 * 60, // 4 horas
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -31,18 +31,18 @@ export const authOptions: AuthOptions = {
         ...session,
         user: {
           ...session.user,
-          id: token.id
-        }
+          id: token.id,
+        },
       }
     },
     redirect({ url, baseUrl }) {
       return url.startsWith(baseUrl) ? url : baseUrl
-    }
+    },
   },
   pages: {
     signIn: "/auth/login",
-    error: "/auth/login"
+    error: "/auth/login",
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 }
 export default authOptions

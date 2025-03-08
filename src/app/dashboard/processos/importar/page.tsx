@@ -21,7 +21,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material"
 import Papa from "papaparse"
 import { useState } from "react"
@@ -43,13 +43,13 @@ export default function ImportarProcessos() {
   const [importado, setImportado] = useState(false)
   const [relatorio, setRelatorio] = useState<Relatorio>({
     sucesso: 0,
-    falhas: []
+    falhas: [],
   })
   const [resumoImportacao, setResumoImportacao] = useState<ResumoImportacao>({
     totalRegistros: 0,
     totalAnonimos: 0,
     responsaveis: {},
-    formasEntrada: {}
+    formasEntrada: {},
   })
   const [pagina, setPagina] = useState(0)
   const [linhasPorPagina, setLinhasPorPagina] = useState(10)
@@ -69,7 +69,7 @@ export default function ImportarProcessos() {
         setDados(data.slice(1))
         setImportado(false)
         setPagina(0)
-      }
+      },
     })
   }
 
@@ -83,7 +83,7 @@ export default function ImportarProcessos() {
     const contadores = {
       responsaveis: {} as Record<string, number>,
       formasEntrada: {} as Record<string, number>,
-      anonimos: 0
+      anonimos: 0,
     }
 
     try {
@@ -96,7 +96,7 @@ export default function ImportarProcessos() {
             situacao,
             formaEntrada,
             anonimoStr,
-            requerente
+            requerente,
           ] = linha
 
           if (!numeroProcesso) throw new Error("Número do processo ausente")
@@ -109,7 +109,7 @@ export default function ImportarProcessos() {
             requerente: anonimo ? numeroProcesso : requerente?.trim(),
             responsavelId: await obterOuCriarEntidade("Responsavel", responsavel),
             situacaoId: await obterOuCriarEntidade("Situacao", situacao),
-            formaEntradaId: await obterOuCriarEntidade("FormaEntrada", formaEntrada)
+            formaEntradaId: await obterOuCriarEntidade("FormaEntrada", formaEntrada),
           }
 
           const { error } = await supabase.from("Processo").insert(processo)
@@ -131,7 +131,7 @@ export default function ImportarProcessos() {
         totalRegistros: sucesso,
         totalAnonimos: contadores.anonimos,
         responsaveis: contadores.responsaveis,
-        formasEntrada: contadores.formasEntrada
+        formasEntrada: contadores.formasEntrada,
       })
       setRelatorio({ sucesso, falhas })
       setLoading(false)
@@ -329,7 +329,7 @@ export default function ImportarProcessos() {
 const Estatistica = ({
   titulo,
   valor,
-  cor
+  cor,
 }: {
   titulo: string
   valor: number
@@ -346,7 +346,7 @@ const Estatistica = ({
 const CategoriaResumo = ({
   titulo,
   dados,
-  cor = "primary"
+  cor = "primary",
 }: {
   titulo: string
   dados: Record<string, number>

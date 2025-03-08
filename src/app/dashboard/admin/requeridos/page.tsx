@@ -12,8 +12,8 @@ export default function GerenciarRequeridos() {
           key: "setorId",
           label: "Setor",
           type: "select",
-          referenceTable: "Setor"
-        }
+          referenceTable: "Setor",
+        },
       ]}
     />
   )

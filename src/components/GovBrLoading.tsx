@@ -11,7 +11,7 @@ export default function GovBrLoading({ message = "Carregando..." }) {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        bgcolor: "background.default"
+        bgcolor: "background.default",
       }}
     >
       <CircularProgress
@@ -19,7 +19,7 @@ export default function GovBrLoading({ message = "Carregando..." }) {
         thickness={4}
         sx={{
           color: "primary.main",
-          mb: 2
+          mb: 2,
         }}
       />
       <Typography variant="h6" color="text.primary">

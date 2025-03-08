@@ -31,7 +31,7 @@ export default function LoginPage() {
       setError(null)
       await signIn("azure-ad", {
         redirect: false,
-        callbackUrl: "/dashboard"
+        callbackUrl: "/dashboard",
       })
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
@@ -61,7 +61,7 @@ export default function LoginPage() {
         minHeight: "75vh",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
       }}
     >
       <Box
@@ -72,7 +72,7 @@ export default function LoginPage() {
           border: "1px solid #ddd",
           borderRadius: 2,
           boxShadow: 3,
-          backgroundColor: "background.paper"
+          backgroundColor: "background.paper",
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
@@ -97,8 +97,8 @@ export default function LoginPage() {
             fontSize: "1.1rem",
             backgroundColor: "primary.main",
             "&:hover": {
-              backgroundColor: "primary.dark"
-            }
+              backgroundColor: "primary.dark",
+            },
           }}
         >
           {isLoading ? (

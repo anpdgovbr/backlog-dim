@@ -10,7 +10,7 @@ import {
   ListItemText,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
@@ -32,7 +32,7 @@ export default function DashboardSuperAdmin() {
     await fetch("/api/admin/permissoes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: novoPerfil })
+      body: JSON.stringify({ nome: novoPerfil }),
     })
 
     setNovoPerfil("") // Limpa o campo

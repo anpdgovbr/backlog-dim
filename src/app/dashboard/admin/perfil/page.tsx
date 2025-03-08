@@ -24,7 +24,7 @@ export default function GerenciarPerfis() {
     await fetch(`/api/usuarios/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ perfilId })
+      body: JSON.stringify({ perfilId }),
     })
 
     // Atualiza a lista após alteração

@@ -27,7 +27,7 @@ export default function GerenciarPermissoes() {
             new Map(
               data.map((p: Permissao) => [
                 `${p.acao}_${p.recurso}_${perfilSelecionado}`,
-                p
+                p,
               ])
             ).values()
           )
@@ -53,7 +53,7 @@ export default function GerenciarPermissoes() {
     await fetch(`/api/permissoes/${permissao.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ permitido: novaPermissao.permitido })
+      body: JSON.stringify({ permitido: novaPermissao.permitido }),
     })
   }
 

@@ -12,7 +12,7 @@ export default function HomePage() {
           minHeight: "75vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <Typography variant="h2" gutterBottom>

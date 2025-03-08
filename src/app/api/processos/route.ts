@@ -46,7 +46,7 @@ export async function GET(req: Request) {
       console.error("Erro ao contar registros:", countError)
       return NextResponse.json(
         {
-          error: `Erro ao contar registros: ${countError.message || "Falha desconhecida"}`
+          error: `Erro ao contar registros: ${countError.message || "Falha desconhecida"}`,
         },
         { status: 500 }
       )

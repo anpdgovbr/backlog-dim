@@ -8,7 +8,7 @@ import {
   DataGrid,
   GridColDef,
   GridPaginationModel,
-  GridRenderCellParams
+  GridRenderCellParams,
 } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
@@ -21,7 +21,7 @@ export default function ListaProcessos() {
   const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
-    pageSize: 10
+    pageSize: 10,
   })
   const [totalRows, setTotalRows] = useState(0) // 🔹 Total de registros no backend
   const router = useRouter()
@@ -72,7 +72,7 @@ export default function ListaProcessos() {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
         const response = await fetch(`/api/processos/${id}`, {
-          method: "DELETE"
+          method: "DELETE",
         })
         const data = await response.json()
 
@@ -99,35 +99,35 @@ export default function ListaProcessos() {
         // Converter a string ISO para um objeto Date e formatar corretamente
         const data = params.row.dataCriacao ? new Date(params.row.dataCriacao) : null
         return data ? data.toLocaleDateString("pt-BR") : "Indefinida"
-      }
+      },
     },
     {
       field: "requerente",
       headerName: "Requerente",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.requerente || "Anônimo"
+        params.row.requerente || "Anônimo",
     },
     {
       field: "responsavel",
       headerName: "Responsável",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.responsavel?.nome || "Não atribuído"
+        params.row.responsavel?.nome || "Não atribuído",
     },
     {
       field: "situacao",
       headerName: "Situação",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.situacao?.nome || "Indefinida"
+        params.row.situacao?.nome || "Indefinida",
     },
     {
       field: "encaminhamento",
       headerName: "Encaminhamento",
       flex: 1,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) =>
-        params.row.encaminhamento?.nome || "Não definido"
+        params.row.encaminhamento?.nome || "Não definido",
     },
     {
       field: "acoes",
@@ -145,8 +145,8 @@ export default function ListaProcessos() {
             <GridDeleteIcon />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ]
 
   console.log("processos:", filteredData)

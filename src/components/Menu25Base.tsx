@@ -46,7 +46,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
     collapsedBgColor = "#eaf3fc",
     expandedBgColor = "#ffffff",
     extraContent,
-    onToggle
+    onToggle,
   } = props
 
   return (
@@ -69,7 +69,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
           cursor: "pointer", // 🔥 Indica que o card é clicável
           transition: "background 0.3s ease",
           "&:hover": {
-            backgroundColor: theme.palette.action.hover
+            backgroundColor: theme.palette.action.hover,
           },
 
           // 🔹 Linha principal do card
@@ -79,7 +79,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
             justifyContent: "space-between",
             gap: 1, // 🔹 Adiciona espaço uniforme entre os elementos
             flexWrap: "wrap", // 🔹 Permite que o título quebre linha se necessário
-            minHeight: 48 // 🔥 Garante altura mínima uniforme da linha
+            minHeight: 48, // 🔥 Garante altura mínima uniforme da linha
           },
 
           "& .iconCircle": {
@@ -91,7 +91,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#fff"
+            color: "#fff",
           },
 
           "& .titleText": {
@@ -102,23 +102,23 @@ export function Menu25Base(props: IMenu25BaseProps) {
             wordBreak: "break-word", // 🔥 Permite quebra de palavra longa
             flex: 1, // 🔹 Faz o título ocupar o espaço disponível sem quebrar layout
             minWidth: 0, // 🔹 Impede que o título force o card a ficar muito largo
-            lineHeight: 1.2
+            lineHeight: 1.2,
           },
 
           "& .iconExpand": {
             flexShrink: 0, // 🔹 Garante que o ícone de expansão não quebre linha
             display: "flex", // 🔹 Para garantir que ele fique alinhado verticalmente
-            alignItems: "center"
+            alignItems: "center",
           },
 
           "& .description": {
             mt: 1,
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
           },
 
           "& .extraContent": {
-            mt: 1
-          }
+            mt: 1,
+          },
         }
       }}
     >
