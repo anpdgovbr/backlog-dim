@@ -1,30 +1,37 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Avatar, Box, Container, Paper, Typography, CircularProgress } from "@mui/material";
-import { useSession } from "next-auth/react";
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  Container,
+  Paper,
+  Typography
+} from "@mui/material"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
 
 interface Perfil {
-  id: number;
-  nome: string;
+  id: number
+  nome: string
 }
 
 export default function PerfilPage() {
-  const { data: session } = useSession();
-  const [perfil, setPerfil] = useState<Perfil | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data: session } = useSession()
+  const [perfil, setPerfil] = useState<Perfil | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (session?.user?.email) {
       fetch(`/api/perfil?email=${session.user.email}`)
         .then((res) => res.json())
         .then((data) => {
-          setPerfil(data);
-          setLoading(false);
+          setPerfil(data)
+          setLoading(false)
         })
-        .catch(() => setLoading(false));
+        .catch(() => setLoading(false))
     }
-  }, [session?.user?.email]);
+  }, [session?.user?.email])
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -58,5 +65,5 @@ export default function PerfilPage() {
         </Box>
       </Paper>
     </Container>
-  );
+  )
 }
