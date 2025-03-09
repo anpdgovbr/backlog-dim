@@ -109,7 +109,7 @@ export default function CrudAvancado({
   }
 
   const columns: GridColDef[] = [
-    //{ field: 'id', headerName: 'ID', width: 80 },
+    { field: "id", headerName: "ID", width: 80 },
     ...fields.map((field) => ({
       field: field.key,
       headerName: field.label,
@@ -159,13 +159,14 @@ export default function CrudAvancado({
         </Button>
       </Box>
 
-      <DataGrid
-        rows={items}
-        columns={columns}
-        loading={loading}
-        autoHeight
-        pageSizeOptions={[5, 10, 20]}
-      />
+      <Box display={"flex"} width={"100%"} height={"100%"}>
+        <DataGrid
+          rows={items}
+          columns={columns}
+          loading={loading}
+          pageSizeOptions={[5, 10, 20]}
+        />
+      </Box>
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
