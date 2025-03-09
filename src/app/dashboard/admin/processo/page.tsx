@@ -1,6 +1,7 @@
 import CrudAvancado from "@/components/CrudAvancado"
+import withPermissao from "@/hoc/withPermissao"
 
-export default function GerenciarProcessos() {
+function GerenciarProcessosWP() {
   return (
     <CrudAvancado
       tableName="Processo"
@@ -37,3 +38,9 @@ export default function GerenciarProcessos() {
     />
   )
 }
+
+const GerenciarProcessos = withPermissao(GerenciarProcessosWP, "Exibir", "ProcessoS", {
+  redirecionar: false,
+})
+
+export default GerenciarProcessos

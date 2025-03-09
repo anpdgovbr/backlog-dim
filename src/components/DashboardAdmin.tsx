@@ -24,7 +24,7 @@ import {
   UploadFile,
   Visibility,
 } from "@mui/icons-material"
-import { Box, CircularProgress } from "@mui/material"
+import { Box, CircularProgress, Container, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 
 const allSections: ISectionConfig[] = [
@@ -45,6 +45,21 @@ const allSections: ISectionConfig[] = [
     baseColor: "#ff9800",
     component: () => <ImportarProcessos />,
     requiredPermissions: ["Inserir_Processo"],
+  },
+  {
+    id: "paineladmin",
+    title: "Painel Admin",
+    description: "Gerencie o painel administrativo",
+    icon: <Business />,
+    baseColor: "#673ab7",
+    component: () => {
+      return (
+        <Container maxWidth="lg" sx={{ minWidth: 600 }}>
+          <Typography variant="body1">Painel Admin</Typography>
+        </Container>
+      )
+    },
+    requiredPermissions: ["Gerenciar_Relatorios"],
   },
   {
     id: "requeridos",
