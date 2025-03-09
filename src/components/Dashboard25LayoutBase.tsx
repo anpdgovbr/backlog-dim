@@ -3,7 +3,6 @@
 import {
   Box,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -11,6 +10,7 @@ import {
   Theme,
   useMediaQuery,
 } from "@mui/material"
+import Grid from "@mui/material/Grid"
 import React, { useEffect, useState } from "react"
 
 import { Menu25Base } from "./Menu25Base"
