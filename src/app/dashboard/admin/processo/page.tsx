@@ -33,13 +33,12 @@ function GerenciarProcessosWP() {
           type: "select",
           referenceTable: "FormaEntrada",
         },
-        { key: "anonimo", label: "Anônimo?", type: "boolean" },
       ]}
     />
   )
 }
 
-const GerenciarProcessos = withPermissao(GerenciarProcessosWP, "Exibir", "ProcessoS", {
+const GerenciarProcessos = withPermissao(GerenciarProcessosWP, "Exibir", "Processo", {
   redirecionar: false,
 })
 
