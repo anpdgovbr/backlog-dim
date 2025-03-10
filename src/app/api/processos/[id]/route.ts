@@ -1,67 +1,112 @@
-import { supabase } from "@/lib/supabase"
+import authOptions from "@/config/next-auth.config"
+import { verificarPermissao } from "@/lib/permissoes"
+import { prisma } from "@/lib/prisma"
+import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
-// 🔹 Buscar um processo específico
 export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
-  const { id } = await context.params
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions)
 
-  const { data, error } = await supabase
-    .from("Processo")
-    .select(
-      `
-      id, numero, dataCriacao, requerente,
-      formaEntrada:formaEntrada ( id, nome ),
-      responsavel:responsavel ( id, nome ),
-      requerido:requerido ( id, nome, cnpj, cnae, site, email, setor:setor ( id, nome ) ),
-      situacao:situacao ( id, nome ),
-      encaminhamento:encaminhamento ( id, nome ),
-      pedidoManifestacao:pedidoManifestacao ( id, nome ),
-      contatoPrevio:contatoPrevio ( id, nome ),
-      evidencia:evidencia ( id, nome )
-    `
-    )
-    .eq("id", id)
-    .single()
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  return NextResponse.json(data)
+  const email = session.user.email
+
+  const temPermissao = await verificarPermissao(email, "Exibir", "Processo")
+  if (!temPermissao) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
+  const { id } = await params
+
+  try {
+    const processo = await prisma.processo.findUnique({
+      where: { id: Number(id) },
+      include: {
+        formaEntrada: true,
+        responsavel: true,
+        requerido: {
+          include: { setor: true, cnae: true },
+        },
+        situacao: true,
+        encaminhamento: true,
+        pedidoManifestacao: true,
+        contatoPrevio: true,
+        evidencia: true,
+      },
+    })
+
+    if (!processo) {
+      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+    }
+
+    return NextResponse.json(processo)
+  } catch (error) {
+    console.error("Erro ao buscar processo:", error)
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  }
 }
 
-// 🔹 Atualizar um processo específico
 export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
-  const { id } = await context.params
-  const data = await request.json()
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions)
 
-  const { error } = await supabase.from("Processo").update(data).eq("id", id)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  return NextResponse.json({ message: "Processo atualizado com sucesso" })
-}
+  const email = session.user.email
 
-// 🔹 Deletar um processo específico
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
-  const { id } = await context.params
-
-  const { error } = await supabase.from("Processo").delete().eq("id", id)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  const temPermissao = await verificarPermissao(email, "Editar Geral", "Processo") //@todo: ajustar permissão
+  if (!temPermissao) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
   }
 
-  return NextResponse.json({ message: "Processo deletado com sucesso" })
+  const { id } = await params
+
+  try {
+    const body = await req.json() // Recebe os dados do request
+    console.log("🔄 Dados recebidos para atualização:", body)
+
+    // Verifica se o processo existe
+    const processoExiste = await prisma.processo.findUnique({
+      where: { id: Number(id) },
+    })
+
+    if (!processoExiste) {
+      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+    }
+
+    // Atualiza o processo no banco de dados
+    const processoAtualizado = await prisma.processo.update({
+      where: { id: Number(id) },
+      data: {
+        numero: body.numero,
+        dataCriacao: body.dataCriacao ? new Date(body.dataCriacao) : undefined,
+        requerente: body.requerente,
+        formaEntradaId: body.formaEntradaId ?? null,
+        responsavelId: body.responsavelId ?? null,
+        requeridoId: body.requeridoId ?? null,
+        situacaoId: body.situacaoId ?? null,
+        encaminhamentoId: body.encaminhamentoId ?? null,
+        pedidoManifestacaoId: body.pedidoManifestacaoId ?? null,
+        contatoPrevioId: body.contatoPrevioId ?? null,
+        evidenciaId: body.evidenciaId ?? null,
+        anonimo: body.anonimo ?? false,
+      },
+    })
+
+    console.log("✅ Processo atualizado com sucesso:", processoAtualizado)
+
+    return NextResponse.json(processoAtualizado)
+  } catch (error) {
+    console.error("❌ Erro ao atualizar processo:", error)
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  }
 }

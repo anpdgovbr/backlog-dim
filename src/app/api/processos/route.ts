@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
 // 🔹 Criar um novo processo
@@ -7,21 +7,21 @@ export async function POST(req: Request) {
     const data = await req.json()
     console.log("Recebendo dados:", data)
 
-    const { data: processo, error } = await supabase
-      .from("Processo")
-      .insert([data])
-      .select("*")
-
-    if (error) {
-      console.error("Erro ao inserir processo:", error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
+    const processo = await prisma.processo.create({
+      data,
+      include: {
+        formaEntrada: true,
+        responsavel: true,
+        situacao: true,
+        encaminhamento: true,
+      },
+    })
 
     console.log("Processo criado:", processo)
     return NextResponse.json(processo, { status: 201 }) // HTTP 201 Created
   } catch (err) {
     console.error("Erro geral no POST:", err)
-    return NextResponse.json({ error: err }, { status: 500 })
+    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
   }
 }
 
@@ -34,44 +34,28 @@ export async function GET(req: Request) {
     const orderBy = searchParams.get("orderBy") || "dataCriacao"
     const ascending = searchParams.get("ascending") === "true"
 
-    const from = (page - 1) * pageSize
-    const to = from + pageSize - 1
+    const skip = (page - 1) * pageSize
+    const take = pageSize
 
-    // 🔹 Buscar total de registros corretamente
-    const { count, error: countError } = await supabase
-      .from("Processo")
-      .select("*", { count: "exact", head: true }) // ✅ Obtém total correto
-
-    if (countError) {
-      console.error("Erro ao contar registros:", countError)
-      return NextResponse.json(
-        {
-          error: `Erro ao contar registros: ${countError.message || "Falha desconhecida"}`,
-        },
-        { status: 500 }
-      )
-    }
+    // 🔹 Contagem total de registros
+    const total = await prisma.processo.count()
 
     // 🔹 Buscar dados paginados corretamente
-    const { data, error } = await supabase
-      .from("Processo")
-      .select(
-        `
-        id, numero, dataCriacao, requerente,
-        formaEntrada: FormaEntrada ( id, nome ),
-        responsavel: Responsavel ( id, nome ),
-        situacao: Situacao ( id, nome ),
-        encaminhamento: Encaminhamento ( id, nome )
-      `
-      )
-      .order(orderBy, { ascending })
-      .range(from, to)
+    const processos = await prisma.processo.findMany({
+      skip,
+      take,
+      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+      include: {
+        formaEntrada: { select: { id: true, nome: true } },
+        responsavel: { select: { id: true, nome: true } },
+        situacao: { select: { id: true, nome: true } },
+        encaminhamento: { select: { id: true, nome: true } },
+      },
+    })
 
-    if (error) throw new Error(`Erro ao buscar processos: ${error.message}`)
-
-    return NextResponse.json({ data, total: count || 0 }) // ✅ Retorna o total correto
+    return NextResponse.json({ data: processos, total })
   } catch (err) {
     console.error("Erro na API /api/processos:", err)
-    return NextResponse.json({ error: err }, { status: 500 })
+    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
   }
 }

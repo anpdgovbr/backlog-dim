@@ -1,19 +1,22 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
-
-const prisma = new PrismaClient()
 
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
-  const { perfilId } = await request.json()
-  const { id } = await context.params
+  try {
+    const { perfilId } = await request.json()
+    const { id } = await context.params
 
-  await prisma.user.update({
-    where: { id: id },
-    data: { perfilId: Number(perfilId) },
-  })
+    const usuarioAtualizado = await prisma.user.update({
+      where: { id: id },
+      data: { perfilId: Number(perfilId) },
+    })
 
-  return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, usuario: usuarioAtualizado })
+  } catch (error) {
+    console.error("Erro ao atualizar perfil do usuário:", error)
+    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
+  }
 }

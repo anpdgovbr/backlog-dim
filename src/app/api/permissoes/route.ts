@@ -1,10 +1,8 @@
 import authOptions from "@/config/next-auth.config"
+import { prisma } from "@/lib/prisma"
 import { Permissao } from "@/types/Permissao"
-import { PrismaClient } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
-
-const prisma = new PrismaClient()
 
 // 🔹 Definição da hierarquia de perfis (APENAS ADICIONA permissões)
 const HIERARQUIA_PERFIS: Record<string, string[]> = {
