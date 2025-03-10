@@ -104,7 +104,7 @@ export default function LoginPage() {
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            "Entrar com Gov.br"
+            "Entrar com Login Institucional"
           )}
         </Button>
 

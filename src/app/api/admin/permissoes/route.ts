@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
-
-const prisma = new PrismaClient()
 
 // 🔹 Criar ou atualizar uma permissão associada a um perfil
 export async function PATCH(req: NextRequest) {

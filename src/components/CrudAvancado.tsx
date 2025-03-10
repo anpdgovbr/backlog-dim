@@ -5,7 +5,10 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import { Box, Button, Container, IconButton, Modal, Typography } from "@mui/material"
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
 import { useCallback, useEffect, useState } from "react"
+
+import ProcessoForm from "./processo/ProcessoForm"
 
 interface FieldConfig {
   key: string
@@ -38,65 +41,71 @@ export default function CrudAvancado({
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<Item>({})
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [relatedData, setRelatedData] = useState<RelatedData>({})
+  const [totalCount, setTotalCount] = useState(0)
+  const [pageSize, setPageSize] = useState(20)
+  const [page, setPage] = useState(0)
+  const [relatedDataLoaded, setRelatedDataLoaded] = useState(false) // 🔹 Controla o carregamento
 
+  /** 🔹 Busca dados da tabela (paginação) */
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase.from(tableName).select("*")
+
+    const from = page * pageSize
+    const to = from + pageSize - 1
+
+    // 🔹 Buscar total de registros corretamente
+    const { count, error: countError } = await supabase
+      .from(tableName)
+      .select("*", { count: "exact", head: true })
+
+    if (countError) {
+      console.error("Erro ao contar registros:", countError)
+    } else {
+      setTotalCount(count || 0)
+    }
+
+    // 🔹 Buscar dados paginados corretamente
+    const { data, error } = await supabase.from(tableName).select("*").range(from, to)
 
     if (error) {
       console.error(`Erro ao buscar ${entityName}:`, error)
     } else {
       setItems(data || [])
     }
+
     setLoading(false)
-  }, [tableName, entityName])
+  }, [page, pageSize, tableName, entityName])
 
-  const fetchRelatedData = useCallback(async () => {
-    const newRelatedData: RelatedData = {}
-    for (const field of fields) {
-      if (field.type === "select" && field.referenceTable) {
-        const { data } = await supabase.from(field.referenceTable).select("id, nome")
-        if (data) {
-          newRelatedData[field.key] = data
-        }
-      }
-    }
-    setRelatedData(newRelatedData)
-  }, [fields])
-
+  /** 🔹 Busca dados da tabela sempre que mudar a página ou o tamanho da página */
   useEffect(() => {
     fetchData()
-    fetchRelatedData()
-  }, [fetchData, fetchRelatedData])
+  }, [fetchData, openModal]) //adicionado openModal para atualizar a tabela após fechar o modal
 
-  async function handleSave() {
-    for (const field of fields) {
-      if (field.required && !selectedItem[field.key]) {
-        return alert(`O campo "${field.label}" é obrigatório.`)
-      }
+  /** 🔹 Busca apenas uma vez os dados relacionados */
+  useEffect(() => {
+    async function fetchRelatedData() {
+      const newRelatedData: RelatedData = {}
+
+      const promises = fields
+        .filter((field) => field.type === "select" && field.referenceTable)
+        .map(async (field) => {
+          const { data } = await supabase.from(field.referenceTable!).select("id, nome")
+          if (data) newRelatedData[field.key] = data
+        })
+
+      await Promise.all(promises) // 🔹 Aguarda todas as requisições terminarem
+      setRelatedData(newRelatedData)
+      setRelatedDataLoaded(true) // 🔹 Marca como carregado
     }
 
-    let response
-    if (selectedItem.id) {
-      response = await supabase
-        .from(tableName)
-        .update(selectedItem)
-        .eq("id", selectedItem.id)
-    } else {
-      response = await supabase.from(tableName).insert(selectedItem)
+    if (!relatedDataLoaded) {
+      fetchRelatedData()
     }
+  }, [fields, relatedDataLoaded]) // 🔹 Só carrega uma vez
 
-    if (response.error) {
-      console.error(`Erro ao salvar ${entityName}:`, response.error)
-    } else {
-      fetchData()
-      setOpenModal(false)
-      setSelectedItem({})
-    }
-  }
-
+  /** 🔹 Função para deletar um item */
   async function handleDelete(id: number) {
     if (!confirm(`Tem certeza que deseja excluir este ${entityName}?`)) return
 
@@ -104,10 +113,11 @@ export default function CrudAvancado({
     if (error) {
       console.error(`Erro ao excluir ${entityName}:`, error)
     } else {
-      fetchData()
+      fetchData() // 🔹 Atualiza a tabela após exclusão
     }
   }
 
+  /** 🔹 Define as colunas do DataGrid */
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 80 },
     ...fields.map((field) => ({
@@ -115,9 +125,7 @@ export default function CrudAvancado({
       headerName: field.label,
       flex: 1,
       renderCell: (params: GridRenderCellParams) => {
-        if (field.type === "boolean") {
-          return params.value ? "Sim" : "Não"
-        }
+        if (field.type === "boolean") return params.value ? "Sim" : "Não"
         if (field.type === "select" && relatedData[field.key]) {
           return (
             relatedData[field.key].find((item) => item.id === params.value)?.nome ||
@@ -154,7 +162,14 @@ export default function CrudAvancado({
     <Container maxWidth="md">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h4">{entityName}</Typography>
-        <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setSelectedItem(null) // 🔹 Resetando ao abrir o modal para Adicionar
+            setOpenModal(true)
+          }}
+        >
           Adicionar
         </Button>
       </Box>
@@ -164,7 +179,22 @@ export default function CrudAvancado({
           rows={items}
           columns={columns}
           loading={loading}
-          pageSizeOptions={[5, 10, 20]}
+          rowCount={totalCount}
+          paginationMode="server"
+          pageSizeOptions={[5, 10, 20, 50, 100]}
+          paginationModel={{ page, pageSize }}
+          onPaginationModelChange={({ page: newPage, pageSize: newPageSize }) => {
+            setPage(newPage)
+            setPageSize(newPageSize)
+          }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 20,
+              },
+            },
+          }}
+          localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
         />
       </Box>
 
@@ -179,19 +209,16 @@ export default function CrudAvancado({
             bgcolor: "background.paper",
             p: 3,
             borderRadius: 2,
+            minWidth: 900,
+            maxHeight: "80vh",
+            overflowY: "auto",
           }}
         >
           <Typography variant="h6">
-            {selectedItem.id ? "Editar" : "Adicionar"} {entityName}
+            {selectedItem ? "Editar" : "Adicionar"} {entityName}
           </Typography>
-          {/* Implementação do formulário */}
-          <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button onClick={() => setOpenModal(false)} sx={{ mr: 2 }}>
-              Cancelar
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Salvar
-            </Button>
+          <Box>
+            {selectedItem?.id ? <ProcessoForm processoId={selectedItem.id} /> : "Add"}
           </Box>
         </Box>
       </Modal>

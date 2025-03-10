@@ -1,3 +1,5 @@
+"use client"
+
 import usePermissoes from "@/hooks/usePermissoes"
 import { Alert, AlertTitle, Button, Container, Typography } from "@mui/material"
 import { useRouter } from "next/navigation"

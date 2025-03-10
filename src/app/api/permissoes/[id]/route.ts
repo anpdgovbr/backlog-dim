@@ -1,23 +1,17 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
-
-const prisma = new PrismaClient()
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
   try {
-    // Obtendo o ID diretamente sem await
-    const { id } = params
-
-    // Validação do ID
     const permissaoId = parseInt(id, 10)
     if (isNaN(permissaoId)) {
       return NextResponse.json({ error: "ID inválido" }, { status: 400 })
     }
 
-    // Validação do corpo da requisição
     const body = await request.json()
     const { permitido } = body
 
@@ -25,7 +19,6 @@ export async function PATCH(
       return NextResponse.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
     }
 
-    // Atualizando a permissão no banco de dados
     const permissaoAtualizada = await prisma.permissao.update({
       where: { id: permissaoId },
       data: { permitido },

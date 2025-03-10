@@ -43,26 +43,29 @@ model FormaEntrada {
   @@map("FormaEntrada")
 }
 
-model Responsavel {
-  id        Int        @id @default(autoincrement())
-  nome      String     @unique
-  processos Processo[]
-
-  @@map("Responsavel")
-}
-
 model Requerido {
   id        Int        @id @default(autoincrement())
-  nome      String     @unique
-  cnpj      String?
-  cnae      String?
+  nome      String
+  cnpj      String?    @unique
   site      String?
   email     String?
   setorId   Int?
+  cnaeId    Int?
   processos Processo[]
+  cnae      CNAE?      @relation(fields: [cnaeId], references: [id])
   setor     Setor?     @relation(fields: [setorId], references: [id])
 
   @@map("Requerido")
+}
+
+model CNAE {
+  id         Int         @id @default(autoincrement())
+  active     Boolean     @default(true)
+  code       String      @unique @db.VarChar(10)
+  nome       String      @db.VarChar(255)
+  requeridos Requerido[]
+
+  @@map("CNAE")
 }
 
 model Setor {
@@ -113,33 +116,43 @@ model Evidencia {
   @@map("Evidencia")
 }
 
-
 model Perfil {
-  id         Int          @id @default(autoincrement())
-  nome       String       @unique
-  usuarios   User[]
+  id         Int         @id @default(autoincrement())
+  nome       String      @unique
   permissoes Permissao[]
+  usuarios   User[]
 
   @@map("Perfil")
 }
 
 model Permissao {
   id        Int     @id @default(autoincrement())
-  perfilId  Int
   acao      String
   recurso   String
   permitido Boolean
-
+  perfilId  Int
   perfil    Perfil  @relation(fields: [perfilId], references: [id])
 
-  @@unique([perfilId, acao, recurso]) // 🔹 Evita duplicação de permissões
+  @@unique([perfilId, acao, recurso])
+}
+
+model Responsavel {
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
+  userId    String?    @unique
+  processos Processo[]
+  user      User?      @relation(fields: [userId], references: [id])
+
+  @@map("Responsavel")
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  perfilId Int?
-  perfil   Perfil? @relation(fields: [perfilId], references: [id])
+  id           String       @id @default(uuid())
+  email        String       @unique
+  perfilId     Int?
+  nome         String?
+  responsaveis Responsavel?
+  perfil       Perfil?      @relation(fields: [perfilId], references: [id])
 
   @@map("User")
 }
