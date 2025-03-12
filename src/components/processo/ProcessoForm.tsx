@@ -96,14 +96,14 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
         ])
 
         setListas({
-          formaEntrada,
-          responsavel,
-          requerido,
-          situacao,
-          encaminhamento,
-          pedidoManifestacao,
-          contatoPrevio,
-          evidencia,
+          formaEntrada: Array.isArray(formaEntrada) ? formaEntrada : [],
+          responsavel: Array.isArray(responsavel) ? responsavel : [],
+          requerido: Array.isArray(requerido) ? requerido : [],
+          situacao: Array.isArray(situacao) ? situacao : [],
+          encaminhamento: Array.isArray(encaminhamento) ? encaminhamento : [],
+          pedidoManifestacao: Array.isArray(pedidoManifestacao) ? pedidoManifestacao : [],
+          contatoPrevio: Array.isArray(contatoPrevio) ? contatoPrevio : [],
+          evidencia: Array.isArray(evidencia) ? evidencia : [],
         })
 
         console.log("🔄 Todas as listas carregadas!")

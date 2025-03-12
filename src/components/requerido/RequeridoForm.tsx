@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
-import MaskedInput from "react-text-mask"
+import InputMask from "react-input-mask"
 
 export default function RequeridoForm({
   requeridoId,
@@ -232,34 +232,24 @@ export default function RequeridoForm({
         {requeridoId ? "Editar Requerido" : "Criar Requerido"}
       </Typography>
 
-      {/* CNPJ (Com máscara) */}
-      <MaskedInput
-        mask={[
-          /\d/,
-          /\d/,
-          ".",
-          /\d/,
-          /\d/,
-          /\d/,
-          ".",
-          /\d/,
-          /\d/,
-          /\d/,
-          "/",
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-        ]}
+      {/* CNPJ (Com máscara) 
+      <InputMask
+        mask="99.999.999/9999-99"
         value={requerido?.cnpj || ""}
         onChange={handleCnpjChange}
         onBlur={handleCnpjBlur}
-        render={(ref, props) => (
-          <TextField {...props} inputRef={ref} fullWidth label="CNPJ" sx={{ mb: 2 }} />
+      >
+        {(inputProps) => (
+          <TextField {...inputProps} fullWidth label="CNPJ" sx={{ mb: 2 }} />
         )}
+      </InputMask> */}
+      <TextField
+        fullWidth
+        label="CNPJ"
+        value={requerido?.cnpj || ""}
+        onChange={handleCnpjChange}
+        onBlur={handleCnpjBlur}
+        sx={{ mb: 2 }}
       />
 
       {/* Nome do Requerido */}
@@ -317,7 +307,14 @@ export default function RequeridoForm({
         onChange={(_, newValue) =>
           setRequerido((prev) => ({ ...prev!, cnae: newValue || undefined }))
         }
-        renderInput={(params) => <TextField {...params} label="CNAE" sx={{ mb: 2 }} />}
+        renderInput={(params) => (
+          <TextField
+            placeholder="Digite algo para pesquisar"
+            {...params}
+            label="CNAE"
+            sx={{ mb: 2 }}
+          />
+        )}
       />
 
       {/* Setor */}

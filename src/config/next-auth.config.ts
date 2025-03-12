@@ -1,4 +1,3 @@
-// src/config/next-auth.config.ts
 import type { AuthOptions } from "next-auth"
 import AzureADProvider from "next-auth/providers/azure-ad"
 
@@ -10,7 +9,7 @@ export const authOptions: AuthOptions = {
       tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          scope: "openid email profile",
+          scope: "openid email profile offline_access",
         },
       },
     }),
@@ -20,7 +19,11 @@ export const authOptions: AuthOptions = {
     maxAge: 4 * 60 * 60, // 4 horas
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.refreshToken = account.refresh_token
+      }
       if (user) {
         token.id = user.id
       }
@@ -32,11 +35,9 @@ export const authOptions: AuthOptions = {
         user: {
           ...session.user,
           id: token.id,
+          accessToken: token.accessToken,
         },
       }
-    },
-    redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl) ? url : baseUrl
     },
   },
   pages: {

@@ -50,3 +50,7 @@ supabase/.branches/
 package-lock.json
 package-lock.json
 package-lock.json
+dev.csr
+dev.cert.cer
+server.js
+dev-cert.ext

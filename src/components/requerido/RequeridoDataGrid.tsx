@@ -192,7 +192,7 @@ export default function RequeridoDataGrid() {
         />
       </div>
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+      <Modal open={openModal} onClose={() => {}}>
         <Box
           sx={{
             position: "absolute",
@@ -208,6 +208,12 @@ export default function RequeridoDataGrid() {
             overflowY: "auto",
           }}
         >
+          {/* 🔹 Botão de Fechar */}
+          <Box display="flex" justifyContent="flex-end">
+            <IconButton onClick={() => setOpenModal(false)} color="inherit">
+              ✖
+            </IconButton>
+          </Box>
           {selectedRequeridoId ? (
             <RequeridoForm requeridoId={selectedRequeridoId} />
           ) : (
