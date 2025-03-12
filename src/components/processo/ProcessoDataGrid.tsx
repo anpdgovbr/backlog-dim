@@ -3,21 +3,8 @@
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material"
-import {
-  DataGrid,
-  GridColDef,
-  GridPaginationModel,
-  GridRenderCellParams,
-} from "@mui/x-data-grid"
+import { Box, Container, IconButton, Modal, TextField, Typography } from "@mui/material"
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
