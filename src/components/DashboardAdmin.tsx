@@ -68,7 +68,7 @@ const allSections: ISectionConfig[] = [
     icon: <Business />,
     baseColor: "#673ab7",
     component: () => <GerenciarRequeridos />,
-    requiredPermissions: ["Exibir_Requeridos"],
+    requiredPermissions: ["Exibir_Responsavel"],
   },
   {
     id: "contato_previo",

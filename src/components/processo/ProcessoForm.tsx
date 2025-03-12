@@ -19,7 +19,7 @@ import { useEffect, useState } from "react"
 
 export default function ProcessoForm({ processoId }: { processoId: number }) {
   const [processo, setProcesso] = useState<ProcessoOutput | null>(null)
-  const [requerido, setRequerido] = useState<RequeridoOutput | null>(null)
+  //const [requerido, setRequerido] = useState<RequeridoOutput | null>(null)
   const [loadingListas, setLoadingListas] = useState(true)
 
   const [listas, setListas] = useState<{

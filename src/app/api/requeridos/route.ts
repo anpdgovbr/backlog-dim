@@ -5,9 +5,9 @@ import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
 /**
- * 🔹 GET: Retorna todos os requeridos cadastrados
+ * 🔹 GET: Retorna requeridos com paginação e ordenação
  */
-export async function GET() {
+export async function GET(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user?.email) {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
@@ -20,11 +20,39 @@ export async function GET() {
   }
 
   try {
-    const requeridos = await prisma.requerido.findMany()
-    return NextResponse.json(requeridos)
+    const { searchParams } = new URL(req.url)
+    const page = Number(searchParams.get("page")) || 1
+    const pageSize = Number(searchParams.get("pageSize")) || 10
+    const orderBy = searchParams.get("orderBy") || "nome"
+    const ascending = searchParams.get("ascending") === "true"
+
+    const skip = (page - 1) * pageSize
+    const take = pageSize
+
+    // 🔹 Contagem total de registros
+    const total = await prisma.requerido.count()
+
+    // 🔹 Busca paginada com ordenação
+    const requeridos = await prisma.requerido.findMany({
+      skip,
+      take,
+      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+      include: {
+        cnae: { select: { id: true, code: true, nome: true } },
+        setor: { select: { id: true, nome: true } },
+      },
+    })
+
+    return NextResponse.json({ data: requeridos, total })
   } catch (error) {
     console.error("Erro ao buscar requeridos:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+
+    let errorMessage = "Erro interno do servidor"
+    if (error instanceof Error) {
+      errorMessage += `: ${error.message}`
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
