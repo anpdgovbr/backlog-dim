@@ -23,32 +23,32 @@ export default function ProcessoDataGrid() {
   const [openModal, setOpenModal] = useState(false)
   const [selectedProcessoId, setSelectedProcessoId] = useState<number | null>(null)
 
-  // Buscar dados da API
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true)
-      try {
-        const response = await fetch(
-          `/api/processos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=dataCriacao&ascending=false`
-        )
-        const { data, total } = await response.json()
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(
+        `/api/processos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=dataCriacao&ascending=false`
+      )
+      const { data, total } = await response.json()
 
-        if (Array.isArray(data)) {
-          setProcessos(data)
-          setFilteredData(data)
-          setTotalRows(total)
-        } else {
-          console.error("Resposta inesperada da API:", data)
-          setProcessos([])
-          setFilteredData([])
-        }
-      } catch (error) {
-        console.error("Erro ao buscar processos:", error)
+      if (Array.isArray(data)) {
+        setProcessos(data)
+        setFilteredData(data)
+        setTotalRows(total)
+      } else {
+        console.error("Resposta inesperada da API:", data)
         setProcessos([])
         setFilteredData([])
       }
-      setLoading(false)
+    } catch (error) {
+      console.error("Erro ao buscar processos:", error)
+      setProcessos([])
+      setFilteredData([])
     }
+    setLoading(false)
+  }
+  // Buscar dados da API
+  useEffect(() => {
     fetchData()
   }, [paginationModel])
 
@@ -64,19 +64,27 @@ export default function ProcessoDataGrid() {
     setFilteredData(filtered)
   }, [search, processos])
 
-  // Excluir processo
+  // Excluir processo e atualizar corretamente o DataGrid
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
         const response = await fetch(`/api/processos/${id}`, {
           method: "DELETE",
         })
-        const data = await response.json()
 
         if (response.ok) {
-          setProcessos((prev) => prev.filter((item) => item.id !== id))
+          // Atualiza a quantidade total de registros
           setTotalRows((prev) => prev - 1)
+
+          // Se a página atual ficou vazia após a exclusão, ajusta para a anterior
+          if (processos.length === 1 && paginationModel.page > 0) {
+            setPaginationModel((prev) => ({ ...prev, page: prev.page - 1 }))
+          } else {
+            // 🔄 Recarrega os processos para manter a quantidade correta na página
+            fetchData()
+          }
         } else {
+          const data = await response.json()
           alert("Erro ao excluir: " + data.error)
         }
       } catch (error) {

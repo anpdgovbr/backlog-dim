@@ -110,3 +110,47 @@ export async function PUT(
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions)
+
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+  }
+
+  const email = session.user.email
+
+  const temPermissao = await verificarPermissao(email, "Excluir", "Processo")
+  if (!temPermissao) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
+  const { id } = await params
+
+  try {
+    // 🔍 Verifica se o processo existe antes de tentar excluir
+    const processoExiste = await prisma.processo.findUnique({
+      where: { id: Number(id) },
+    })
+
+    if (!processoExiste) {
+      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+    }
+
+    // ❌ Exclui o processo
+    await prisma.processo.delete({
+      where: { id: Number(id) },
+    })
+
+    return NextResponse.json(
+      { message: "Processo excluído com sucesso" },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error("❌ Erro ao excluir processo:", error)
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  }
+}
