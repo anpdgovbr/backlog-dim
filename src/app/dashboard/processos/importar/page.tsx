@@ -1,7 +1,6 @@
 "use client"
 
-import { supabase } from "@/lib/supabase"
-import { ProcessoInput } from "@/types/Processo"
+import { prisma } from "@/lib/prisma"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,
@@ -78,75 +77,39 @@ export default function ImportarProcessos() {
 
     setLoading(true)
     setProgresso(0)
-    let sucesso = 0
-    const falhas: string[] = []
-    const contadores = {
-      responsaveis: {} as Record<string, number>,
-      formasEntrada: {} as Record<string, number>,
-      anonimos: 0,
-    }
 
     try {
-      for (const [index, linha] of dados.entries()) {
-        try {
-          const [
-            responsavel,
-            numeroProcesso,
-            dataCriacao,
-            situacao,
-            formaEntrada,
-            anonimoStr,
-            requerente,
-          ] = linha
+      // 🔹 Convertendo os dados do CSV para o formato correto
+      const processos = dados.map((linha) => ({
+        responsavelNome: linha[0],
+        numeroProcesso: linha[1],
+        dataCriacao: linha[2],
+        situacaoNome: linha[3],
+        formaEntradaNome: linha[4],
+        anonimoStr: linha[5],
+        requerenteNome: linha[6],
+      }))
 
-          if (!numeroProcesso) throw new Error("Número do processo ausente")
-
-          const anonimo = anonimoStr?.toLowerCase() === "sim"
-          const processo: ProcessoInput = {
-            numero: numeroProcesso,
-            dataCriacao: formatarData(dataCriacao),
-            anonimo,
-            requerente: anonimo ? numeroProcesso : requerente?.trim(),
-            responsavelId: await obterOuCriarEntidade("Responsavel", responsavel),
-            situacaoId: await obterOuCriarEntidade("Situacao", situacao),
-            formaEntradaId: await obterOuCriarEntidade("FormaEntrada", formaEntrada),
-          }
-
-          const { error } = await supabase.from("Processo").insert(processo)
-          if (error) throw error
-
-          sucesso++
-          contadores.anonimos += anonimo ? 1 : 0
-          contadores.responsaveis[responsavel] =
-            (contadores.responsaveis[responsavel] || 0) + 1
-          contadores.formasEntrada[formaEntrada] =
-            (contadores.formasEntrada[formaEntrada] || 0) + 1
-        } catch (error) {
-          falhas.push(tratarErro(error, linha[1]))
-        }
-        setProgresso(Math.round(((index + 1) / dados.length) * 100))
-      }
-    } finally {
-      setResumoImportacao({
-        totalRegistros: sucesso,
-        totalAnonimos: contadores.anonimos,
-        responsaveis: contadores.responsaveis,
-        formasEntrada: contadores.formasEntrada,
+      const response = await fetch("/api/importar-processos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ processos }),
       })
-      setRelatorio({ sucesso, falhas })
-      setLoading(false)
-      setImportado(true)
-    }
-  }
 
-  const tratarErro = (error: unknown, numeroProcesso: string): string => {
-    if (error instanceof Error) {
-      if (error.message.includes("duplicate key")) {
-        return `Processo ${numeroProcesso} já existe`
+      const resultado = await response.json()
+
+      if (response.ok) {
+        setRelatorio({ sucesso: resultado.sucesso, falhas: resultado.falhas })
+        setImportado(true)
+      } else {
+        alert(`Erro na importação: ${resultado.error}`)
       }
-      return `Erro em ${numeroProcesso}: ${error.message}`
+    } catch (error) {
+      alert("Erro inesperado na importação")
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
-    return `Erro desconhecido no processo ${numeroProcesso}`
   }
 
   const handleMudarPagina = (_: unknown, novaPagina: number) => {
@@ -370,22 +333,25 @@ const formatarData = (data: string): string => {
   return ano ? `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : ""
 }
 
-const obterOuCriarEntidade = async (tabela: string, nome: string): Promise<number> => {
-  const { data: existente } = await supabase
-    .from(tabela)
-    .select("id")
-    .eq("nome", nome)
-    .single()
-
+// 🔹 Obter ou criar entidades com acesso direto ao Prisma
+const obterOuCriarResponsavel = async (nome: string): Promise<number> => {
+  const existente = await prisma.responsavel.findUnique({ where: { nome } })
   if (existente) return existente.id
+  const novo = await prisma.responsavel.create({ data: { nome } })
+  return novo.id
+}
 
-  const { data: novo, error } = await supabase
-    .from(tabela)
-    .insert([{ nome }])
-    .select("id")
-    .single()
+const obterOuCriarSituacao = async (nome: string): Promise<number> => {
+  const existente = await prisma.situacao.findUnique({ where: { nome } })
+  if (existente) return existente.id
+  const novo = await prisma.situacao.create({ data: { nome } })
+  return novo.id
+}
 
-  if (error || !novo) throw new Error(`Falha ao criar ${tabela}: ${nome}`)
+const obterOuCriarFormaEntrada = async (nome: string): Promise<number> => {
+  const existente = await prisma.formaEntrada.findUnique({ where: { nome } })
+  if (existente) return existente.id
+  const novo = await prisma.formaEntrada.create({ data: { nome } })
   return novo.id
 }
 
