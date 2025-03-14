@@ -49,7 +49,8 @@ export default function ClientRootLayout({
               justifyContent: "space-between",
               px: 2,
               py: 1,
-              bgcolor: "primary.main",
+              backgroundImage:
+                "linear-gradient(135deg, #307244 0%, #00AEEF 50%, #FAA61A 100%)",
               color: "white",
               boxShadow: 2,
               position: "relative",
@@ -88,11 +89,13 @@ export default function ClientRootLayout({
               mt: "auto",
               textAlign: "center",
               py: 2,
-              bgcolor: "grey.200",
-              borderTop: "1px solid #ccc",
+              backgroundImage:
+                "linear-gradient(135deg, rgba(48, 114, 68, 0.5) 0%, rgba(0, 174, 239, 0.5) 50%, rgba(250, 166, 26, 0.5) 100%)",
+              borderTop: "1px solid rgba(0, 0, 0, 0.2)", // Borda mais sutil
+              color: "#000000", // Texto levemente escuro para contraste
             }}
           >
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="inherit">
               (cc) {new Date().getFullYear()} Desenvolvido pela DDSS/CGTI - Autoridade
               Nacional de Proteção de Dados.
             </Typography>

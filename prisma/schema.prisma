@@ -35,14 +35,6 @@ model Processo {
   @@map("Processo")
 }
 
-model FormaEntrada {
-  id        Int        @id @default(autoincrement())
-  nome      String     @unique
-  processos Processo[]
-
-  @@map("FormaEntrada")
-}
-
 model Requerido {
   id        Int        @id @default(autoincrement())
   nome      String
@@ -66,6 +58,14 @@ model CNAE {
   requeridos Requerido[]
 
   @@map("CNAE")
+}
+
+model FormaEntrada {
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
+  processos Processo[]
+
+  @@map("FormaEntrada")
 }
 
 model Setor {
