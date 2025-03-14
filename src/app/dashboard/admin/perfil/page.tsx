@@ -2,56 +2,177 @@
 
 import { Perfil } from "@/types/Perfil"
 import { User } from "@/types/User"
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 export default function GerenciarPerfis() {
+  const { data: session, status } = useSession()
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [perfis, setPerfis] = useState<Perfil[]>([])
+  const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
+
+  // 🔹 Enquanto `session` está carregando, exibimos um indicador de carregamento.
+  const loadingSession = status === "loading"
 
   useEffect(() => {
-    fetch("/api/usuarios")
-      .then((res) => res.json())
-      .then((data: User[]) => setUsuarios(data))
-      .catch((err) => console.error("Erro ao buscar usuários:", err))
+    const fetchData = async () => {
+      try {
+        const [usuariosRes, perfisRes] = await Promise.all([
+          fetch("/api/usuarios").then((res) => res.json()),
+          fetch("/api/perfis").then((res) => res.json()),
+        ])
 
-    fetch("/api/perfis")
-      .then((res) => res.json())
-      .then((data: Perfil[]) => setPerfis(data))
-      .catch((err) => console.error("Erro ao buscar perfis:", err))
+        setUsuarios(usuariosRes)
+        setPerfis(perfisRes)
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
   }, [])
 
-  const handlePerfilChange = async (userId: string, perfilId: number) => {
-    await fetch(`/api/usuarios/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ perfilId }),
-    })
+  // 🔹 Busca o perfil do usuário autenticado via API, baseado no e-mail
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch(`/api/perfil?email=${session.user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPerfilUsuario(data)
+          setLoadingPerfil(false)
+        })
+        .catch((err) => {
+          console.error("Erro ao buscar perfil do usuário autenticado:", err)
+          setLoadingPerfil(false)
+        })
+    }
+  }, [session?.user?.email])
 
-    // Atualiza a lista após alteração
-    setUsuarios((prev) =>
-      prev.map((user) => (user.id === userId ? { ...user, perfilId } : user))
+  // 🔹 Obtendo o `perfilId` do usuário autenticado
+  const usuarioPerfilId = perfilUsuario?.id || null
+
+  // 🔹 Restrição de Acesso: Apenas SuperAdmin (id=5) e Administrador (id=4)
+  const temPermissaoAcesso = usuarioPerfilId === 5 || usuarioPerfilId === 4
+
+  if (loadingSession || loadingPerfil) {
+    return (
+      <Container maxWidth="md">
+        <Box display="flex" justifyContent="center" mt={5}>
+          <CircularProgress />
+        </Box>
+      </Container>
     )
   }
 
+  if (!temPermissaoAcesso) {
+    return (
+      <Container maxWidth="md">
+        <Alert severity="error" sx={{ mt: 3 }}>
+          Você não tem permissão para acessar esta página.
+        </Alert>
+      </Container>
+    )
+  }
+
+  const handlePerfilChange = async (userId: string, perfilId: number) => {
+    try {
+      const response = await fetch(`/api/usuarios/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ perfilId }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar perfil")
+      }
+
+      // Atualiza o estado localmente para refletir a mudança na UI
+      setUsuarios((prev) =>
+        prev.map((user) => (user.id === userId ? { ...user, perfilId } : user))
+      )
+    } catch (error) {
+      console.error("Erro ao atualizar perfil do usuário:", error)
+    }
+  }
+
   return (
-    <div>
-      <h2>Gerenciar Perfis</h2>
-      {usuarios.map((user) => (
-        <div key={user.id}>
-          <span>{user.email}</span>
-          <select
-            value={user.perfilId || ""}
-            onChange={(e) => handlePerfilChange(user.id, Number(e.target.value))}
-          >
-            <option value="">Selecione um perfil</option>
-            {perfis.map((perfil) => (
-              <option key={perfil.id} value={perfil.id}>
-                {perfil.nome}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
-    </div>
+    <Container maxWidth="md">
+      <Typography
+        variant="h4"
+        sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}
+      >
+        Gerenciar Perfis
+      </Typography>
+
+      {loading ? (
+        <Box display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ bgcolor: "primary.main" }}>
+                <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
+                <TableCell sx={{ color: "black", fontWeight: "bold" }}>E-mail</TableCell>
+                <TableCell
+                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                >
+                  Perfil
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {usuarios.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.nome}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell align="center">
+                    <FormControl fullWidth>
+                      <InputLabel>Perfil</InputLabel>
+                      <Select
+                        value={user.perfilId || ""}
+                        onChange={(e) =>
+                          handlePerfilChange(user.id, Number(e.target.value))
+                        }
+                      >
+                        <MenuItem value="">Selecione um perfil</MenuItem>
+                        {perfis.map((perfil) => (
+                          <MenuItem key={perfil.id} value={perfil.id}>
+                            {perfil.nome}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                </TableRow> // 🔹 Evite espaços ou quebras de linha antes de fechar a <tr>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </Container>
   )
 }
