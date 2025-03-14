@@ -147,7 +147,7 @@ export default function ProcessoDataGrid() {
   ]
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 2 }}>
+    <Container maxWidth="lg">
       <Box>
         <Typography variant="h4" component="h1" gutterBottom>
           Lista de Processos

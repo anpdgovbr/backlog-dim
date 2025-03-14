@@ -129,7 +129,7 @@ const allSections: ISectionConfig[] = [
     title: "Situação",
     description: "Gerencie as situações de processos",
     icon: <AssignmentTurnedIn />,
-    baseColor: "#ffeb3b",
+    baseColor: "#3feb3b",
     component: () => <SituacaoPage />,
     requiredPermissions: ["Exibir_Metadados"],
   },

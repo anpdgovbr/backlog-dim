@@ -1,9 +1,11 @@
 "use client"
 
+import usePermissoes from "@/hooks/usePermissoes"
 import { RequeridoOutput } from "@/types/Requerido"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -30,6 +32,7 @@ export default function RequeridoDataGrid() {
   const [totalRows, setTotalRows] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
+  const { permissoes, loading: loadingPermissoes } = usePermissoes()
 
   // 🔹 Buscar dados da API (atualizado)
   useEffect(() => {
@@ -134,6 +137,7 @@ export default function RequeridoDataGrid() {
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
+            disabled={!permissoes["Editar_Responsavel"]} // 🔹 Bloqueia edição se não permitido. Requerido é o mesmo que Responsavel no quesito Permissão
             onClick={() => {
               setSelectedRequeridoId(params.row.id)
               setOpenModal(true)
@@ -141,7 +145,11 @@ export default function RequeridoDataGrid() {
           >
             <SettingsIcon />
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            disabled={!permissoes["Desabilitar_Responsavel"]} // 🔹 Bloqueia exclusão se não permitido. Requerido é o mesmo que Responsavel no quesito Permissão
+            onClick={() => handleDelete(params.row.id)}
+          >
             <GridDeleteIcon />
           </IconButton>
         </Box>
@@ -149,78 +157,91 @@ export default function RequeridoDataGrid() {
     },
   ]
 
+  if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
+
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4" component="h1">
-          Lista de Requeridos
-        </Typography>
+      {!permissoes["Exibir_Responsavel"] && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          Você não tem permissão para visualizar este conteúdo.
+        </Alert>
+      )}
 
-        {/* 🔹 Botão Adicionar */}
-        <Button
-          variant="contained"
-          startIcon={<GridAddIcon />}
-          onClick={() => {
-            setSelectedRequeridoId(null) // Garante que abrirá para adicionar novo
-            setOpenModal(true)
-          }}
-        >
-          Adicionar Requerido
-        </Button>
-      </Box>
+      {permissoes["Exibir_Responsavel"] && (
+        <>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h4" component="h1">
+              Lista de Requeridos
+            </Typography>
 
-      <TextField
-        label="Buscar..."
-        variant="outlined"
-        fullWidth
-        sx={{ mb: 2 }}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      <div style={{ display: "flex", height: "100%", width: "100%" }}>
-        <DataGrid
-          rows={filteredData}
-          columns={columns}
-          pageSizeOptions={[5, 10, 20]}
-          loading={loading}
-          paginationMode="server"
-          rowCount={totalRows}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
-        />
-      </div>
-
-      <Modal open={openModal} onClose={() => {}}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "background.paper",
-            p: 3,
-            borderRadius: 2,
-            minWidth: 900,
-            maxHeight: "80vh",
-            overflowY: "auto",
-          }}
-        >
-          {/* 🔹 Botão de Fechar */}
-          <Box display="flex" justifyContent="flex-end">
-            <IconButton onClick={() => setOpenModal(false)} color="inherit">
-              ✖
-            </IconButton>
+            {/* 🔹 Botão Adicionar */}
+            <Button
+              variant="contained"
+              startIcon={<GridAddIcon />}
+              disabled={!permissoes["Cadastrar_Responsavel"]}
+              onClick={() => {
+                setSelectedRequeridoId(null) // Garante que abrirá para adicionar novo
+                setOpenModal(true)
+              }}
+            >
+              Adicionar Requerido
+            </Button>
           </Box>
-          {selectedRequeridoId ? (
-            <RequeridoForm requeridoId={selectedRequeridoId} />
-          ) : (
-            <RequeridoForm requeridoId={null} />
-          )}
-        </Box>
-      </Modal>
+
+          <TextField
+            label="Buscar..."
+            variant="outlined"
+            fullWidth
+            sx={{ mb: 2 }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <div style={{ display: "flex", height: "100%", width: "100%" }}>
+            <DataGrid
+              rows={filteredData}
+              columns={columns}
+              pageSizeOptions={[5, 10, 20]}
+              loading={loading}
+              paginationMode="server"
+              rowCount={totalRows}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            />
+          </div>
+
+          <Modal open={openModal} onClose={() => {}}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                bgcolor: "background.paper",
+                p: 3,
+                borderRadius: 2,
+                minWidth: 900,
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              {/* 🔹 Botão de Fechar */}
+              <Box display="flex" justifyContent="flex-end">
+                <IconButton onClick={() => setOpenModal(false)} color="inherit">
+                  ✖
+                </IconButton>
+              </Box>
+              {selectedRequeridoId ? (
+                <RequeridoForm requeridoId={selectedRequeridoId} />
+              ) : (
+                <RequeridoForm requeridoId={null} />
+              )}
+            </Box>
+          </Modal>
+        </>
+      )}
     </Container>
   )
 }

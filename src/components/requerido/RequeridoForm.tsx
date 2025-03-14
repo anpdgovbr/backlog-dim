@@ -227,7 +227,7 @@ export default function RequeridoForm({
   if (!requerido) return <Typography>Carregando Requerido...</Typography>
 
   return (
-    <Paper sx={{ p: 3, mx: "auto", mt: 2, maxWidth: 600 }}>
+    <Paper sx={{ p: 3, mx: "auto", mt: 2 }}>
       <Typography variant="h5" gutterBottom>
         {requeridoId ? "Editar Requerido" : "Criar Requerido"}
       </Typography>

@@ -1,9 +1,10 @@
 "use client"
 
-import { supabase } from "@/lib/supabase"
+import usePermissoes from "@/hooks/usePermissoes"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -13,73 +14,83 @@ import {
   Typography,
 } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 interface CrudManagerProps {
-  tableName: string
   entityName: string
+  tableName: string
 }
 
-export default function CrudManager({ tableName, entityName }: CrudManagerProps) {
+export default function CrudManager({ entityName, tableName }: CrudManagerProps) {
+  const { permissoes, loading } = usePermissoes()
   const [items, setItems] = useState<{ id: number; nome: string }[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loadingData, setLoadingData] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{
-    id?: number
-    nome: string
-  }>({
+  const [selectedItem, setSelectedItem] = useState<{ id?: number; nome: string }>({
     nome: "",
   })
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    const { data, error } = await supabase.from(tableName).select("*")
-
-    if (error) {
-      console.error(`Erro ao buscar ${entityName}:`, error)
-    } else {
+  async function fetchData() {
+    setLoadingData(true)
+    try {
+      const res = await fetch(`/api/meta/${tableName.toLowerCase()}`)
+      const data = await res.json()
       setItems(data)
+    } catch (error) {
+      console.error(`Erro ao buscar ${tableName}:`, error)
     }
-    setLoading(false)
-  }, [tableName, entityName])
+    setLoadingData(false)
+  }
 
-  // 🟢 Buscar dados ao carregar
   useEffect(() => {
     fetchData()
-  }, [fetchData])
+  }, [tableName])
 
-  // 🟢 Criar ou Atualizar Registro
   async function handleSave() {
     if (!selectedItem.nome.trim()) return alert("Nome não pode estar vazio.")
 
-    const { id, nome } = selectedItem
-    let response
+    try {
+      const method = selectedItem.id ? "PUT" : "POST"
+      await fetch(`/api/meta/${tableName.toLowerCase()}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selectedItem),
+      })
 
-    if (id) {
-      response = await supabase.from(tableName).update({ nome }).eq("id", id)
-    } else {
-      response = await supabase.from(tableName).insert({ nome })
-    }
-
-    if (response.error) {
-      console.error(`Erro ao salvar ${entityName}:`, response.error)
-    } else {
       fetchData()
       setOpenModal(false)
       setSelectedItem({ nome: "" })
+    } catch (error) {
+      console.error(`Erro ao salvar ${tableName}:`, error)
     }
   }
 
-  // 🟢 Excluir Registro
   async function handleDelete(id: number) {
-    if (!confirm(`Tem certeza que deseja excluir este ${entityName}?`)) return
+    const item = items.find((item) => item.id === id)
+    if (!item) {
+      alert("Item não encontrado.")
+      return
+    }
 
-    const { error } = await supabase.from(tableName).delete().eq("id", id)
+    if (!confirm(`Tem certeza que deseja excluir "${item.nome}" da tabela ${tableName}?`))
+      return
 
-    if (error) {
-      console.error(`Erro ao excluir ${entityName}:`, error)
-    } else {
+    try {
+      const response = await fetch(`/api/meta/${tableName.toLowerCase()}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      })
+
+      if (!response.ok) {
+        const errorMessage = await response.json()
+        throw new Error(errorMessage.error || "Erro desconhecido ao excluir.")
+      }
+
       fetchData()
+    } catch (error) {
+      console.error(`Erro ao excluir "${item.nome}" de ${tableName}:`, error)
+      alert(`Erro ao excluir "${item.nome}": ${(error as Error).message}`)
     }
   }
 
@@ -94,6 +105,7 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
         <Box>
           <IconButton
             color="primary"
+            disabled={!permissoes["Editar_Metadados"]} // 🔹 Bloqueia edição se não permitido
             onClick={() => {
               setSelectedItem({ id: params.row.id, nome: params.row.nome })
               setOpenModal(true)
@@ -101,7 +113,11 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
           >
             <EditIcon />
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            disabled={!permissoes["Desabilitar_Metadados"]} // 🔹 Bloqueia exclusão se não permitido
+            onClick={() => handleDelete(params.row.id)}
+          >
             <DeleteIcon />
           </IconButton>
         </Box>
@@ -109,58 +125,77 @@ export default function CrudManager({ tableName, entityName }: CrudManagerProps)
     },
   ]
 
+  if (loading) return <Typography>Carregando permissões...</Typography>
+
   return (
     <Container>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4">{entityName}</Typography>
-        <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
-          Adicionar
-        </Button>
-      </Box>
+      {/* 🔹 Exibe alerta se o usuário não pode visualizar os metadados */}
+      {!permissoes["Exibir_Metadados"] && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          Você não tem permissão para visualizar este conteúdo.
+        </Alert>
+      )}
 
-      <Box display={"flex"} height={"100%"}>
-        <DataGrid
-          rows={items}
-          columns={columns}
-          loading={loading}
-          pageSizeOptions={[5, 10, 20]}
-        />
-      </Box>
-
-      {/* 🔹 Modal de Adição/Edição */}
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            p: 3,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h6">
-            {selectedItem.id ? "Editar" : "Adicionar"} {entityName}
-          </Typography>
-          <TextField
-            fullWidth
-            label="Nome"
-            value={selectedItem.nome}
-            onChange={(e) => setSelectedItem({ ...selectedItem, nome: e.target.value })}
-            sx={{ mt: 2 }}
-          />
-          <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button onClick={() => setOpenModal(false)} sx={{ mr: 2 }}>
-              Cancelar
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Salvar
+      {/* 🔹 Se pode ver, renderiza o CRUD normalmente */}
+      {permissoes["Exibir_Metadados"] && (
+        <>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h4">{entityName}</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!permissoes["Cadastrar_Metadados"]} // 🔹 Desabilita criação se não permitido
+              onClick={() => {
+                setSelectedItem({ nome: "" }) // 🔹 Garante que ao abrir o modal de criação, os dados anteriores são apagados
+                setOpenModal(true)
+              }}
+            >
+              Adicionar
             </Button>
           </Box>
-        </Box>
-      </Modal>
+
+          <DataGrid
+            rows={items}
+            columns={columns}
+            loading={loadingData}
+            pageSizeOptions={[5, 10, 20]}
+          />
+
+          <Modal
+            open={openModal}
+            onClose={() => {
+              setOpenModal(false)
+              setSelectedItem({ nome: "" })
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                bgcolor: "background.paper",
+                p: 3,
+                borderRadius: 2,
+                minWidth: 900,
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              <TextField
+                fullWidth
+                label="Nome"
+                value={selectedItem.nome}
+                onChange={(e) =>
+                  setSelectedItem({ ...selectedItem, nome: e.target.value })
+                }
+              />
+              <Button onClick={handleSave}>Salvar</Button>
+            </Box>
+          </Modal>
+        </>
+      )}
     </Container>
   )
 }
