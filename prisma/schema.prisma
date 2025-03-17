@@ -23,6 +23,16 @@ model Processo {
   evidenciaId          Int?
   anonimo              Boolean             @default(false)
   observacoes          String?
+  temaRequerimento     String?             // Novo campo opcional
+  envioPedido          DateTime?           // Novo campo opcional
+  prazo                Int?                // Novo campo opcional
+  dataVencimento       DateTime?           // Novo campo opcional, calculado
+  processoStatusId     Int?                // Relacionado à nova tabela ProcessoStatus
+  tipoReclamacaoId     Int?                // Relacionado à nova tabela TipoReclamacao
+  statusInternoId      Int?                // Relacionado à nova tabela StatusInterno
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
+
   contatoPrevio        ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
   encaminhamento       Encaminhamento?     @relation(fields: [encaminhamentoId], references: [id])
   evidencia            Evidencia?          @relation(fields: [evidenciaId], references: [id])
@@ -31,8 +41,35 @@ model Processo {
   requerido            Requerido?          @relation(fields: [requeridoId], references: [id])
   responsavel          Responsavel         @relation(fields: [responsavelId], references: [id])
   situacao             Situacao            @relation(fields: [situacaoId], references: [id])
+  processoStatus       ProcessoStatus?     @relation(fields: [processoStatusId], references: [id])
+  tipoReclamacao       TipoReclamacao?     @relation(fields: [tipoReclamacaoId], references: [id])
+  statusInterno        StatusInterno?      @relation(fields: [statusInternoId], references: [id])
 
   @@map("Processo")
+}
+
+model ProcessoStatus {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  processos Processo[]
+
+  @@map("ProcessoStatus")
+}
+
+model TipoReclamacao {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  processos Processo[]
+
+  @@map("TipoReclamacao")
+}
+
+model StatusInterno {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  processos Processo[]
+
+  @@map("StatusInterno")
 }
 
 model Requerido {
