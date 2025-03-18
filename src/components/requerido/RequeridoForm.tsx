@@ -16,7 +16,6 @@ import {
   Typography,
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
-import InputMask from "react-input-mask"
 
 export default function RequeridoForm({
   requeridoId,

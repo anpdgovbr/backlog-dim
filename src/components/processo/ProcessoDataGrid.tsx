@@ -50,6 +50,7 @@ export default function ProcessoDataGrid() {
   // Buscar dados da API
   useEffect(() => {
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationModel])
 
   // Filtro de busca

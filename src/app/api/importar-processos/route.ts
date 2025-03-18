@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma"
-import { ProcessoInput } from "@/types/Processo"
 import { NextRequest, NextResponse } from "next/server"
 
 // 🔹 Tipagem dos dados esperados
