@@ -1,3 +1,4 @@
+// @typescript-eslint/no-explicit-any
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 import { NextRequest, NextResponse } from "next/server"
@@ -23,13 +24,15 @@ type PrismaDelegate<T> = {
 }
 
 // Converte `allowedEntities[entidade]` para o tipo correto
-const getPrismaModel = (entidade: EntidadeKey): PrismaDelegate<any> => {
-  return allowedEntities[entidade] as unknown as PrismaDelegate<any>
+// tslint:disable-next-line: no-any
+const getPrismaModel = (entidade: EntidadeKey): PrismaDelegate<unknown> => {
+  // tslint:disable-next-line: no-any
+  return allowedEntities[entidade] as unknown as PrismaDelegate<unknown>
 }
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Readonly<{ entidade: string }> }
+  { params }: { params: Promise<{ entidade: string }> }
 ) {
   const ent = await params
   const entidade = ent.entidade.toLowerCase() as EntidadeKey
@@ -48,7 +51,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Readonly<{ entidade: string }> }
+  { params }: { params: Promise<{ entidade: string }> }
 ) {
   const ent = await params
   const entidade = ent.entidade.toLowerCase() as EntidadeKey
@@ -69,7 +72,7 @@ export async function POST(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Readonly<{ entidade: string }> }
+  { params }: { params: Promise<{ entidade: string }> }
 ) {
   const ent = await params
   const entidade = ent.entidade.toLowerCase() as EntidadeKey
@@ -94,7 +97,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Readonly<{ entidade: string }> }
+  { params }: { params: Promise<{ entidade: string }> }
 ) {
   const ent = await params
   const entidade = ent.entidade.toLowerCase() as EntidadeKey

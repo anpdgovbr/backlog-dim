@@ -1,6 +1,5 @@
 "use client"
 
-import { prisma } from "@/lib/prisma"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,
@@ -44,7 +43,8 @@ export default function ImportarProcessos() {
     sucesso: 0,
     falhas: [],
   })
-  const [resumoImportacao, setResumoImportacao] = useState<ResumoImportacao>({
+  // tslint:disable-next-line: no-unused-variable
+  const [resumoImportacao] = useState<ResumoImportacao>({
     totalRegistros: 0,
     totalAnonimos: 0,
     responsaveis: {},
@@ -326,7 +326,7 @@ const CategoriaResumo = ({
     </Box>
   </Card>
 )
-
+/**
 // Funções utilitárias
 const formatarData = (data: string): string => {
   const [dia, mes, ano] = data.split("/")
@@ -334,6 +334,7 @@ const formatarData = (data: string): string => {
 }
 
 // 🔹 Obter ou criar entidades com acesso direto ao Prisma
+
 const obterOuCriarResponsavel = async (nome: string): Promise<number> => {
   const existente = await prisma.responsavel.findUnique({ where: { nome } })
   if (existente) return existente.id
@@ -353,7 +354,7 @@ const obterOuCriarFormaEntrada = async (nome: string): Promise<number> => {
   if (existente) return existente.id
   const novo = await prisma.formaEntrada.create({ data: { nome } })
   return novo.id
-}
+} */
 
 const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, number> =>
   dados.reduce(

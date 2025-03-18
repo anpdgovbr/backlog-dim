@@ -44,6 +44,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
 
   useEffect(() => {
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableName])
 
   async function handleSave() {
