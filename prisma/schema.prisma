@@ -52,6 +52,8 @@ model ProcessoStatus {
   id    Int    @id @default(autoincrement())
   nome  String @unique
   processos Processo[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("ProcessoStatus")
 }
@@ -60,6 +62,8 @@ model TipoReclamacao {
   id    Int    @id @default(autoincrement())
   nome  String @unique
   processos Processo[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("TipoReclamacao")
 }
@@ -67,6 +71,8 @@ model TipoReclamacao {
 model StatusInterno {
   id    Int    @id @default(autoincrement())
   nome  String @unique
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
   processos Processo[]
 
   @@map("StatusInterno")
@@ -83,6 +89,8 @@ model Requerido {
   processos Processo[]
   cnae      CNAE?      @relation(fields: [cnaeId], references: [id])
   setor     Setor?     @relation(fields: [setorId], references: [id])
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("Requerido")
 }
@@ -93,6 +101,7 @@ model CNAE {
   code       String      @unique @db.VarChar(10)
   nome       String      @db.VarChar(255)
   requeridos Requerido[]
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("CNAE")
 }
@@ -101,6 +110,8 @@ model FormaEntrada {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
   processos Processo[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("FormaEntrada")
 }
@@ -109,6 +120,8 @@ model Setor {
   id         Int         @id @default(autoincrement())
   nome       String      @unique
   requeridos Requerido[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("Setor")
 }
@@ -117,6 +130,8 @@ model Situacao {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
   processos Processo[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("Situacao")
 }
@@ -124,6 +139,8 @@ model Situacao {
 model Encaminhamento {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
   processos Processo[]
 
   @@map("Encaminhamento")
@@ -133,6 +150,8 @@ model PedidoManifestacao {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
   processos Processo[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("PedidoManifestacao")
 }
@@ -140,6 +159,8 @@ model PedidoManifestacao {
 model ContatoPrevio {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
   processos Processo[]
 
   @@map("ContatoPrevio")
@@ -148,6 +169,8 @@ model ContatoPrevio {
 model Evidencia {
   id        Int        @id @default(autoincrement())
   nome      String     @unique
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
   processos Processo[]
 
   @@map("Evidencia")
@@ -158,6 +181,8 @@ model Perfil {
   nome       String      @unique
   permissoes Permissao[]
   usuarios   User[]
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("Perfil")
 }
@@ -169,6 +194,8 @@ model Permissao {
   permitido Boolean
   perfilId  Int
   perfil    Perfil  @relation(fields: [perfilId], references: [id])
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@unique([perfilId, acao, recurso])
 }
@@ -179,6 +206,8 @@ model Responsavel {
   userId    String?    @unique
   processos Processo[]
   user      User?      @relation(fields: [userId], references: [id])
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("Responsavel")
 }
@@ -190,6 +219,8 @@ model User {
   nome         String?
   responsaveis Responsavel?
   perfil       Perfil?      @relation(fields: [perfilId], references: [id])
+  active               Boolean             @default(true) // Soft delete
+  exclusionDate        DateTime?           // Soft delete timestamp
 
   @@map("User")
 }
