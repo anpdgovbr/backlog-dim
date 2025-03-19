@@ -2,8 +2,8 @@
 
 import GovBRAvatar from "@/components/GovBRAvatar"
 import AuthProvider from "@/context/SessionProvider"
-import ThemeRegistry from "@/context/ThemeRegistry"
 import "@/styles/mui-overrides.css"
+import { ThemeProvider } from "@/theme/ThemeProvider"
 import "@govbr-ds/core/dist/core.css"
 import { Box, Typography } from "@mui/material"
 import Link from "next/link"
@@ -32,7 +32,7 @@ export default function ClientRootLayout({
 
   return (
     <AuthProvider>
-      <ThemeRegistry>
+      <ThemeProvider>
         <Box
           sx={{
             display: "flex",
@@ -101,7 +101,7 @@ export default function ClientRootLayout({
             </Typography>
           </Box>
         </Box>
-      </ThemeRegistry>
+      </ThemeProvider>
     </AuthProvider>
   )
 }
