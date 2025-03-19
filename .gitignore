@@ -24,6 +24,8 @@ package-lock.json
 # misc
 .DS_Store
 *.pem
+*.csr
+/logs/
 
 # debug
 npm-debug.log*
@@ -55,3 +57,7 @@ dev.cert.cer
 server.js
 dev-cert.ext
 deploy.sh
+dev-cert.csr
+ecosystem.config.cjs
+logs/combined-0.log
+.gitignore
