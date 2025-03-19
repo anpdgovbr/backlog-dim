@@ -62,7 +62,7 @@ export default function ClientRootLayout({
                 href="/dashboard"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                Processamento Backlog DIM
+                Processamento Backlog DIM - ANPD <sup>Alfa 0.1</sup>
               </Link>
             </Typography>
 
