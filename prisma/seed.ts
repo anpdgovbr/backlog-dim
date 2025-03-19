@@ -745,18 +745,39 @@ async function main() {
   }
 
   // ==============================
-  // 🌟 Criando SuperAdmin
+  // 🌟 Criando Usuarios iniciais
   // ==============================
-  console.log("🔹 Criando SuperAdmin...")
+  console.log("🔹 Criando Usuários Iniciais...")
 
-  await prisma.user.upsert({
-    where: { email: "luciano.psilva@anpd.gov.br" }, // 🔹 Altere para o e-mail real
-    update: {},
-    create: {
-      email: "luciano.psilva@anpd.gov.br",
-      perfilId: perfis.superAdmin.id,
-    },
-  })
+  await Promise.all([
+    prisma.user.upsert({
+      where: { email: "luciano.psilva@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "luciano.psilva@anpd.gov.br",
+        perfilId: perfis.administrador.id,
+        nome: "Luciano Édipo",
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "fabricio.lopes@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "fabricio.lopes@anpd.gov.br",
+        perfilId: perfis.administrador.id,
+        nome: "Fabrício Lopes",
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "melissa.braga@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "melissa.braga@anpd.gov.br",
+        perfilId: perfis.administrador.id,
+        nome: "Melissa Braga",
+      },
+    }),
+  ])
 
   // ==============================
   // 🌟 Criando CNAE
