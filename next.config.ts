@@ -6,7 +6,13 @@ const nextConfig: NextConfig = {
     dirs: ["src"], // Garantindo que o ESLint veja a pasta correta
   },
   experimental: {
-    serverActions: { allowedOrigins: [] }, // Ajuste adequado para experimental
+    serverActions: {
+      allowedOrigins: [
+        "http://hml-dim.anpd.gov.br", // Permite HTTP
+        "https://hml-dim.anpd.gov.br", // Permite HTTPS
+        "http://localhost:3000", // Permite Localhost
+      ],
+    }, // Ajuste adequado para experimental
   },
 }
 
