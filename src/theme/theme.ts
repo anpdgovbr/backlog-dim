@@ -1,17 +1,24 @@
 import { createTheme } from "@mui/material/styles"
+import { ptBR } from "@mui/x-data-grid/locales"
 
-// Cores institucionais da ANPD, baseadas no Padrão Digital de Governo
+// Cores institucionais da ANPD
 const anpdColors = {
   primary: {
-    main: "#005A3C", // Verde ANPD
-    light: "#007A4D", // Tom mais claro para hover
-    dark: "#00432D", // Tom mais escuro para contraste
-    contrastText: "#FFFFFF", // Texto branco para botões
+    main: "#307244", // Verde ANPD (cor principal)
+    light: "#4C9A61", // Versão mais clara para hover e destaque
+    dark: "#20502E", // Versão mais escura para contraste
+    contrastText: "#FFFFFF", // Texto branco para legibilidade
   },
   secondary: {
-    main: "#FFB100", // Amarelo GOV.BR
-    light: "#FFEE66",
-    dark: "#FF9800",
+    main: "#00AEEF", // Azul ANPD
+    light: "#5FCCFF",
+    dark: "#0079B0",
+    contrastText: "#FFFFFF",
+  },
+  accent: {
+    main: "#FAA61A", // Laranja ANPD para destaques e alertas
+    light: "#FFC260",
+    dark: "#C77900",
     contrastText: "#000000",
   },
   background: {
@@ -26,10 +33,10 @@ const anpdColors = {
     main: "#C21807", // Vermelho GOV.BR para erros
   },
   warning: {
-    main: "#FF9800", // Laranja GOV.BR para alertas
+    main: "#FAA61A", // Usando o Laranja ANPD para alertas
   },
   info: {
-    main: "#007BC2", // Azul GOV.BR para informações
+    main: "#00AEEF", // Azul ANPD para informações
   },
   success: {
     main: "#2E7D32", // Verde GOV.BR para sucessos
@@ -37,7 +44,7 @@ const anpdColors = {
 }
 
 // Configuração do tema MUI
-const ANPDtheme = createTheme({
+let ANPDtheme = createTheme({
   palette: {
     primary: anpdColors.primary,
     secondary: anpdColors.secondary,
@@ -68,7 +75,7 @@ const ANPDtheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none", // Evita letras maiúsculas automáticas
+          textTransform: "none",
           fontWeight: 600,
           borderRadius: 8,
         },
@@ -77,7 +84,7 @@ const ANPDtheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          //boxShadow: "none", // Removendo sombras para manter o visual clean
+          boxShadow: "none",
           borderRadius: 8,
         },
       },
@@ -91,5 +98,7 @@ const ANPDtheme = createTheme({
     },
   },
 })
+
+ANPDtheme = createTheme(ANPDtheme, ptBR)
 
 export default ANPDtheme
