@@ -1,12 +1,12 @@
 "use client"
 
 import GovBRAvatar from "@/components/GovBRAvatar"
+import SystemTitle from "@/components/SystemTitle"
 import AuthProvider from "@/context/SessionProvider"
-import ThemeRegistry from "@/context/ThemeRegistry"
 import "@/styles/mui-overrides.css"
+import { ThemeProvider } from "@/theme/ThemeProvider"
 import "@govbr-ds/core/dist/core.css"
 import { Box, Typography } from "@mui/material"
-import Link from "next/link"
 import { useEffect, useState } from "react"
 
 export default function ClientRootLayout({
@@ -32,7 +32,7 @@ export default function ClientRootLayout({
 
   return (
     <AuthProvider>
-      <ThemeRegistry>
+      <ThemeProvider>
         <Box
           sx={{
             display: "flex",
@@ -57,14 +57,7 @@ export default function ClientRootLayout({
               zIndex: 1200,
             }}
           >
-            <Typography variant="h6" component="h1" color="white" letterSpacing={1}>
-              <Link
-                href="/dashboard"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                Processamento Backlog DIM<sup>Alfa 0.1</sup>
-              </Link>
-            </Typography>
+            <SystemTitle />
 
             <Box sx={{ position: "relative", display: "inline-block" }}>
               <GovBRAvatar />
@@ -101,7 +94,7 @@ export default function ClientRootLayout({
             </Typography>
           </Box>
         </Box>
-      </ThemeRegistry>
+      </ThemeProvider>
     </AuthProvider>
   )
 }
