@@ -54,3 +54,4 @@ dev.csr
 dev.cert.cer
 server.js
 dev-cert.ext
+deploy.sh
