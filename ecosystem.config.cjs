@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "backlog-dim",
       script: "server.js", // Caminho do seu servidor Next.js
-      watch: true,
+      watch: false,
       ignore_watch: ["node_modules", "logs"],
       instances: 1,
       exec_mode: "fork",
