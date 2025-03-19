@@ -1,5 +1,6 @@
 "use client"
 
+import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -163,7 +164,7 @@ export default function ProcessoDataGrid() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div style={{ display: "flex", height: "100%", width: "100%" }}>
+        <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
           <DataGrid
             rows={filteredData}
             columns={columns}
@@ -175,7 +176,7 @@ export default function ProcessoDataGrid() {
             onPaginationModelChange={setPaginationModel}
             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
           />
-        </div>
+        </Box>
       </Box>
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
