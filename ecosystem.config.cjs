@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "next-app",
+      name: "backlog-dim",
       script: "server.js", // Caminho do seu servidor Next.js
       watch: true,
       ignore_watch: ["node_modules", "logs"],
