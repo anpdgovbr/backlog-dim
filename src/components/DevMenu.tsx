@@ -22,6 +22,7 @@ interface DevRoutes {
 const DevMenu = () => {
   const [routes, setRoutes] = useState<DevRoutes>({ pages: [], apis: [] })
   const [expanded, setExpanded] = useState<string | false>(false)
+  const [expandedApi, setExpandedApi] = useState<boolean>(false) // Controla o accordion de APIs
 
   useEffect(() => {
     fetch("/dev-routes.json")
@@ -31,7 +32,7 @@ const DevMenu = () => {
   }, [])
 
   const toggleAccordion =
-    (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false)
     }
 
@@ -62,6 +63,7 @@ const DevMenu = () => {
         position: "fixed",
         left: 0,
         top: 0,
+        marginTop: "70px", // Evita sobreposição do header
         overflowY: "auto",
         borderRight: "1px solid #ddd",
         padding: 1,
@@ -98,19 +100,25 @@ const DevMenu = () => {
           </Accordion>
         ))}
 
-        <Typography
-          variant="h6"
-          sx={{ fontSize: 14, fontWeight: "bold", marginTop: 2, paddingLeft: 1 }}
+        {/* Accordion para APIs */}
+        <Accordion
+          expanded={expandedApi}
+          onChange={() => setExpandedApi(!expandedApi)}
+          sx={{ boxShadow: "none", marginTop: 1 }}
         >
-          APIs
-        </Typography>
-        <List dense>
-          {routes.apis.map((route) => (
-            <ListItem key={route} sx={{ padding: "4px 8px", opacity: 0.6 }}>
-              <ListItemText primary={route} sx={{ fontSize: 12 }} />
-            </ListItem>
-          ))}
-        </List>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 32 }}>
+            <Typography sx={{ fontSize: 13, fontWeight: "bold" }}>APIs</Typography>
+          </AccordionSummary>
+          <AccordionDetails sx={{ padding: 0 }}>
+            <List dense>
+              {routes.apis.map((route) => (
+                <ListItem key={route} sx={{ padding: "4px 8px", opacity: 0.6 }}>
+                  <ListItemText primary={route} sx={{ fontSize: 12 }} />
+                </ListItem>
+              ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </List>
     </Box>
   )
