@@ -11,7 +11,11 @@ export async function GET() {
   }
 
   // 🔹 Verifica permissão para visualizar os metadados
-  const temPermissao = await verificarPermissao(session.user.email, "Exibir", "Metadados")
+  const temPermissao = await verificarPermissao(
+    session.user.email,
+    "Exibir",
+    "Responsavel"
+  )
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
   }
@@ -35,7 +39,7 @@ export async function POST(req: NextRequest) {
   const temPermissao = await verificarPermissao(
     session.user.email,
     "Cadastrar",
-    "Metadados"
+    "Responsavel"
   )
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })

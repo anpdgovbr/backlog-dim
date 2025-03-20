@@ -11,6 +11,7 @@ const allowedEntities = {
   contatoprevio: prisma.contatoPrevio,
   evidencia: prisma.evidencia,
   formaentrada: prisma.formaEntrada,
+  responsavel: prisma.responsavel,
 } as const
 
 type EntidadeKey = keyof typeof allowedEntities
