@@ -22,7 +22,9 @@
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:studio": "npx prisma studio",
     "db:reset": "npx prisma migrate reset --force",
-    "db:seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "build-routes": "tsx scripts/generateDevRoutes.ts",
+    "prebuild": "npm run build-routes"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
