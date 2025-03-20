@@ -20,15 +20,13 @@ export default function DevMenu() {
   const [openPages, setOpenPages] = useState(true)
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      fetch("/api/dev-routes")
-        .then((res) => res.json())
-        .then((data) => {
-          setRoutes(data.pages || [])
-          setApiRoutes(data.apis || [])
-        })
-        .catch((err) => console.error("Erro ao buscar rotas:", err))
-    }
+    fetch("/dev-routes.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setRoutes(data.pages || [])
+        setApiRoutes(data.apis || [])
+      })
+      .catch((err) => console.error("Erro ao buscar rotas:", err))
   }, [])
 
   return (

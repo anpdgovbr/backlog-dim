@@ -61,3 +61,4 @@ dev-cert.csr
 ecosystem.config.cjs
 logs/combined-0.log
 .gitignore
+public/dev-routes.json
