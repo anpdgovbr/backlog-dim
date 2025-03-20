@@ -1,8 +1,10 @@
 "use client"
 
+import DevMenu from "@/components/DevMenu"
 import GovBRAvatar from "@/components/GovBRAvatar"
 import SystemTitle from "@/components/SystemTitle"
 import AuthProvider from "@/context/SessionProvider"
+// Importando o menu lateral
 import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
 import "@govbr-ds/core/dist/core.css"
@@ -41,6 +43,7 @@ export default function ClientRootLayout({
             position: "relative",
           }}
         >
+          {/* Cabeçalho */}
           <Box
             component="header"
             sx={{
@@ -64,18 +67,32 @@ export default function ClientRootLayout({
             </Box>
           </Box>
 
+          {/* Corpo do site com menu lateral */}
           <Box
             component="main"
             sx={{
               flex: 1,
-              display: "flex",
-              flexDirection: "column",
+              display: "flex", // Layout em duas colunas
+              flexDirection: "row",
               position: "relative",
             }}
           >
-            {children}
+            {/* Menu lateral fixo */}
+            <DevMenu />
+
+            {/* Conteúdo principal do site */}
+            <Box
+              sx={{
+                flex: 1,
+                padding: 3, // Espaçamento do conteúdo principal
+                marginLeft: "260px", // Mantém alinhado ao lado do menu
+              }}
+            >
+              {children}
+            </Box>
           </Box>
 
+          {/* Rodapé */}
           <Box
             component="footer"
             sx={{
