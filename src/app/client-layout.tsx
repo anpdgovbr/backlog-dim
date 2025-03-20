@@ -69,7 +69,6 @@ export default function ClientRootLayout({
 
           {/* Corpo do site com menu lateral */}
           <Box
-            component="main"
             sx={{
               flex: 1,
               display: "flex", // Layout em duas colunas
@@ -82,10 +81,13 @@ export default function ClientRootLayout({
 
             {/* Conteúdo principal do site */}
             <Box
+              component="main"
               sx={{
                 flex: 1,
-                padding: 3, // Espaçamento do conteúdo principal
-                marginLeft: "260px", // Mantém alinhado ao lado do menu
+                padding: 2, // Espaçamento do conteúdo principal
+                marginLeft: "250px", // Mantém alinhado ao lado do menu
+                flexDirection: "column",
+                display: "flex",
               }}
             >
               {children}
