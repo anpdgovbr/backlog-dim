@@ -1,93 +1,119 @@
 "use client"
 
-import { ExpandLess, ExpandMore } from "@mui/icons-material"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
-  Collapse,
-  Divider,
   List,
-  ListItemButton,
+  ListItem,
   ListItemText,
   Typography,
 } from "@mui/material"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
-export default function DevMenu() {
-  const [routes, setRoutes] = useState<string[]>([])
-  const [apiRoutes, setApiRoutes] = useState<string[]>([])
-  const [openApi, setOpenApi] = useState(false)
-  const [openPages, setOpenPages] = useState(true)
+interface DevRoutes {
+  pages: string[]
+  apis: string[]
+}
+
+const DevMenu = () => {
+  const [routes, setRoutes] = useState<DevRoutes>({ pages: [], apis: [] })
+  const [expanded, setExpanded] = useState<string | false>(false)
 
   useEffect(() => {
     fetch("/dev-routes.json")
       .then((res) => res.json())
-      .then((data) => {
-        setRoutes(data.pages || [])
-        setApiRoutes(data.apis || [])
-      })
+      .then((data) => setRoutes(data))
       .catch((err) => console.error("Erro ao buscar rotas:", err))
   }, [])
+
+  const toggleAccordion =
+    (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false)
+    }
+
+  const groupRoutes = (routes: string[]) => {
+    const groups: Record<string, string[]> = {}
+    routes.forEach((route) => {
+      const parts = route.split("/").filter(Boolean)
+      if (parts.length > 1) {
+        const group = parts[0]
+        if (!groups[group]) groups[group] = []
+        groups[group].push(route)
+      } else {
+        if (!groups["root"]) groups["root"] = []
+        groups["root"].push(route)
+      }
+    })
+    return groups
+  }
+
+  const groupedPages = groupRoutes(routes.pages)
 
   return (
     <Box
       sx={{
-        width: "250px",
+        width: 250,
+        bgcolor: "#f5f5f5",
         height: "100vh",
         position: "fixed",
         left: 0,
         top: 0,
-        bottom: 0,
-        backgroundColor: "#1a202c",
-        color: "white",
-        padding: 2,
         overflowY: "auto",
-        boxShadow: "2px 0 5px rgba(0, 0, 0, 0.2)",
+        borderRight: "1px solid #ddd",
+        padding: 1,
       }}
     >
-      <Typography variant="h6" sx={{ textAlign: "center", mb: 2 }}>
-        Menu de Rotas
+      <Typography variant="h6" sx={{ fontSize: 14, fontWeight: "bold", padding: "8px" }}>
+        📌 Dev Menu
       </Typography>
 
-      <Divider />
+      <List dense>
+        {Object.entries(groupedPages).map(([group, pages]) => (
+          <Accordion
+            key={group}
+            expanded={expanded === group}
+            onChange={toggleAccordion(group)}
+            sx={{ boxShadow: "none" }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 32 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: "bold" }}>
+                {group.toUpperCase()}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 0 }}>
+              <List dense>
+                {pages.map((route) => (
+                  <ListItem key={route} sx={{ padding: "4px 8px" }}>
+                    <Link href={route.replace("/page", "")} passHref>
+                      <ListItemText primary={route} sx={{ fontSize: 12 }} />
+                    </Link>
+                  </ListItem>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        ))}
 
-      {/* Páginas */}
-      <List>
-        <ListItemButton onClick={() => setOpenPages(!openPages)}>
-          <ListItemText primary="📂 Páginas" />
-          {openPages ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-
-        <Collapse in={openPages} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {routes.map((route) => (
-              <ListItemButton key={route} component={Link} href={route} sx={{ pl: 3 }}>
-                <ListItemText primary={route} />
-              </ListItemButton>
-            ))}
-          </List>
-        </Collapse>
-      </List>
-
-      <Divider />
-
-      {/* APIs */}
-      <List>
-        <ListItemButton onClick={() => setOpenApi(!openApi)}>
-          <ListItemText primary="🔗 APIs" />
-          {openApi ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-
-        <Collapse in={openApi} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {apiRoutes.map((route) => (
-              <ListItemButton key={route} component={Link} href={route} sx={{ pl: 3 }}>
-                <ListItemText primary={route} />
-              </ListItemButton>
-            ))}
-          </List>
-        </Collapse>
+        <Typography
+          variant="h6"
+          sx={{ fontSize: 14, fontWeight: "bold", marginTop: 2, paddingLeft: 1 }}
+        >
+          APIs
+        </Typography>
+        <List dense>
+          {routes.apis.map((route) => (
+            <ListItem key={route} sx={{ padding: "4px 8px", opacity: 0.6 }}>
+              <ListItemText primary={route} sx={{ fontSize: 12 }} />
+            </ListItem>
+          ))}
+        </List>
       </List>
     </Box>
   )
 }
+
+export default DevMenu
