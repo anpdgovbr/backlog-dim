@@ -1,6 +1,7 @@
 "use client"
 
 import DevMenu from "@/components/DevMenu"
+import FloatingDevMenu from "@/components/FloatingDevMenu"
 import GovBRAvatar from "@/components/GovBRAvatar"
 import SystemTitle from "@/components/SystemTitle"
 import AuthProvider from "@/context/SessionProvider"
@@ -74,19 +75,15 @@ export default function ClientRootLayout({
               display: "flex", // Layout em duas colunas
               flexDirection: "row",
               position: "relative",
+              pb: 5, // Espaçamento do rodapé
             }}
           >
-            {/* Menu lateral fixo */}
-            <DevMenu />
-
             {/* Conteúdo principal do site */}
             <Box
               component="main"
               sx={{
                 flex: 1,
                 padding: 2, // Espaçamento do conteúdo principal
-                marginLeft: "250px", // Mantém alinhado ao lado do menu
-                flexDirection: "column",
                 display: "flex",
               }}
             >
@@ -113,6 +110,7 @@ export default function ClientRootLayout({
             </Typography>
           </Box>
         </Box>
+        <FloatingDevMenu />
       </ThemeProvider>
     </AuthProvider>
   )
