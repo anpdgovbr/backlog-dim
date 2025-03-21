@@ -1,8 +1,20 @@
+import authOptions from "@/config/next-auth.config"
+import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { NextRequest, NextResponse } from "next/server"
 
-// 🔹 Criar um novo processo
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+  }
+
+  const permissoes = await buscarPermissoesConcedidas(session.user.email)
+  if (!pode(permissoes, "Cadastrar_Processo")) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
   try {
     const data = await req.json()
 
@@ -17,15 +29,24 @@ export async function POST(req: Request) {
     })
 
     console.log("Processo criado:", processo)
-    return NextResponse.json(processo, { status: 201 }) // HTTP 201 Created
+    return NextResponse.json(processo, { status: 201 })
   } catch (err) {
     console.error("Erro geral no POST:", err)
     return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
   }
 }
 
-// 🔹 Listar todos os processos com paginação e ordenação
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+  }
+
+  const permissoes = await buscarPermissoesConcedidas(session.user.email)
+  if (!pode(permissoes, "Exibir_Processo")) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
   try {
     const { searchParams } = new URL(req.url)
     const page = Number(searchParams.get("page")) || 1
@@ -36,21 +57,23 @@ export async function GET(req: Request) {
     const skip = (page - 1) * pageSize
     const take = pageSize
 
-    // 🔹 Contagem total de registros
-    const total = await prisma.processo.count()
-
-    // 🔹 Buscar dados paginados corretamente
-    const processos = await prisma.processo.findMany({
-      skip,
-      take,
-      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
-      include: {
-        formaEntrada: { select: { id: true, nome: true } },
-        responsavel: { select: { id: true, nome: true } },
-        situacao: { select: { id: true, nome: true } },
-        encaminhamento: { select: { id: true, nome: true } },
-      },
-    })
+    const [total, processos] = await Promise.all([
+      prisma.processo.count({
+        where: { active: true },
+      }),
+      prisma.processo.findMany({
+        where: { active: true },
+        skip,
+        take,
+        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+        include: {
+          formaEntrada: { select: { id: true, nome: true } },
+          responsavel: { select: { id: true, nome: true } },
+          situacao: { select: { id: true, nome: true } },
+          encaminhamento: { select: { id: true, nome: true } },
+        },
+      }),
+    ])
 
     return NextResponse.json({ data: processos, total })
   } catch (err) {

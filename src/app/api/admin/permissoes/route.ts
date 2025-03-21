@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma"
+import { PermissaoPayload } from "@/types/Permissao"
 import { NextRequest, NextResponse } from "next/server"
 
-// 🔹 Criar ou atualizar uma permissão associada a um perfil
+// ajuste o caminho se necessário
+
 export async function PATCH(req: NextRequest) {
-  const { perfilId, acao, recurso, permitido } = await req.json()
+  const { perfilId, acao, recurso, permitido }: PermissaoPayload = await req.json()
 
   if (!perfilId || !acao || !recurso || permitido === undefined) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 })

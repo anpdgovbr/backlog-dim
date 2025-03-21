@@ -1,4 +1,5 @@
 import authOptions from "@/config/next-auth.config"
+import { buscarPermissoesConcedidas, verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
 import { Permissao } from "@/types/Permissao"
 import { getServerSession } from "next-auth"
@@ -58,14 +59,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
   }
 
-  // 🔹 Buscar usuário autenticado e validar perfil
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    include: { perfil: true },
-  })
+  // 🔹 Verifica permissão para cadastrar permissões
+  const temPermissao = await verificarPermissao(
+    session.user.email,
+    "Cadastrar",
+    "Permissoes"
+  )
 
-  if (!user || !user.perfil || user.perfil.nome !== "SuperAdmin") {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  if (!temPermissao) {
+    return NextResponse.json(
+      { error: "Você não tem permissão para alterar permissões" },
+      { status: 403 }
+    )
   }
 
   // 🔹 Capturar dados da requisição
@@ -94,24 +99,19 @@ export async function POST(req: NextRequest) {
 
 // 🔹 Função para obter permissões SEM remover superiores
 async function getPermissoesPorPerfil(perfilNome: string) {
-  // Perfis herdados pelo usuário (apenas adiciona permissões)
   const perfisHerdados = [perfilNome, ...(HIERARQUIA_PERFIS[perfilNome] || [])]
 
-  // Buscar todas as permissões desses perfis
   const permissoes = await prisma.permissao.findMany({
     where: { perfil: { nome: { in: perfisHerdados } } },
   })
 
-  // 🔹 Consolidar permissões corretamente
   const permissoesMap = new Map<
     string,
     { acao: string; recurso: string; permitido: boolean }
   >()
 
-  permissoes.forEach((p: Permissao) => {
+  permissoes.forEach((p) => {
     const key = `${p.acao}_${p.recurso}`
-
-    // 🔹 MANTER permissões superiores e ignorar mudanças de perfis inferiores
     if (!permissoesMap.has(key) || p.permitido) {
       permissoesMap.set(key, { acao: p.acao, recurso: p.recurso, permitido: p.permitido })
     }

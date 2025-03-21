@@ -32,3 +32,13 @@ export interface ProcessoOutput {
   anonimo?: boolean
   observacoes?: string
 }
+
+export interface ProcessoImportacao {
+  responsavelNome: string
+  numeroProcesso: string
+  dataCriacao: string
+  situacaoNome: string
+  formaEntradaNome: string
+  anonimoStr: string
+  requerenteNome: string | null
+}

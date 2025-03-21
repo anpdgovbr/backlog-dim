@@ -1,10 +1,12 @@
-import { Permissao } from "@/types/Permissao"
+import { Permissao, PermissaoConcedida } from "@/types/Permissao"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 export default function usePermissoes() {
   const { data: session } = useSession()
-  const [permissoes, setPermissoes] = useState<Record<string, boolean>>({})
+  const [permissoes, setPermissoes] = useState<
+    Partial<Record<PermissaoConcedida, boolean>>
+  >({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,10 +23,15 @@ export default function usePermissoes() {
           setLoading(false)
           return
         }
-        const mapa = data.reduce<Record<string, boolean>>((acc, p) => {
-          acc[`${p.acao}_${p.recurso}`] = p.permitido
-          return acc
-        }, {})
+
+        const mapa = data.reduce<Partial<Record<PermissaoConcedida, boolean>>>(
+          (acc, p) => {
+            acc[`${p.acao}_${p.recurso}` as PermissaoConcedida] = p.permitido
+            return acc
+          },
+          {}
+        )
+
         setPermissoes(mapa)
         setLoading(false)
       })
@@ -35,4 +42,11 @@ export default function usePermissoes() {
   }, [session?.user?.email])
 
   return { permissoes, loading }
+}
+
+export function pode(
+  permissoes: Partial<Record<PermissaoConcedida, boolean>>,
+  acao: PermissaoConcedida
+): boolean {
+  return permissoes[acao] ?? false
 }
