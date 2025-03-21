@@ -20,7 +20,7 @@ export async function GET() {
     const dados = await prisma.cNAE.findMany()
     return NextResponse.json(dados)
   } catch (error) {
-    console.error("Erro ao buscar forma de entrada:", error)
+    console.error("Erro ao buscar CNAE:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     const novoDado = await prisma.cNAE.create({ data })
     return NextResponse.json(novoDado, { status: 201 })
   } catch (error) {
-    console.error("Erro ao criar forma de entrada:", error)
+    console.error("Erro ao criar CNAE:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }

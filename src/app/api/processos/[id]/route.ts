@@ -9,13 +9,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
-
-  if (!session || !session.user?.email) {
+  if (!session?.user?.email) {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
   const email = session.user.email
-
   const temPermissao = await verificarPermissao(email, "Exibir", "Processo")
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
@@ -24,14 +22,12 @@ export async function GET(
   const { id } = await params
 
   try {
-    const processo = await prisma.processo.findUnique({
-      where: { id: Number(id) },
+    const processo = await prisma.processo.findFirst({
+      where: { id: Number(id), active: true },
       include: {
         formaEntrada: true,
         responsavel: true,
-        requerido: {
-          include: { setor: true, cnae: true },
-        },
+        requerido: { include: { setor: true, cnae: true } },
         situacao: true,
         encaminhamento: true,
         pedidoManifestacao: true,
@@ -56,14 +52,12 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
-
-  if (!session || !session.user?.email) {
+  if (!session?.user?.email) {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
   const email = session.user.email
-
-  const temPermissao = await verificarPermissao(email, "Editar Geral", "Processo") //@todo: ajustar permissão
+  const temPermissao = await verificarPermissao(email, "EditarGeral", "Processo")
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
   }
@@ -71,19 +65,18 @@ export async function PUT(
   const { id } = await params
 
   try {
-    const body = await req.json() // Recebe os dados do request
-    console.log("🔄 Dados recebidos para atualização:", body)
-
-    // Verifica se o processo existe
+    const body = await req.json()
     const processoExiste = await prisma.processo.findUnique({
       where: { id: Number(id) },
     })
 
-    if (!processoExiste) {
-      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+    if (!processoExiste || !processoExiste.active) {
+      return NextResponse.json(
+        { error: "Processo não encontrado ou inativo" },
+        { status: 404 }
+      )
     }
 
-    // Atualiza o processo no banco de dados
     const processoAtualizado = await prisma.processo.update({
       where: { id: Number(id) },
       data: {
@@ -102,11 +95,9 @@ export async function PUT(
       },
     })
 
-    console.log("✅ Processo atualizado com sucesso:", processoAtualizado)
-
     return NextResponse.json(processoAtualizado)
   } catch (error) {
-    console.error("❌ Erro ao atualizar processo:", error)
+    console.error("Erro ao atualizar processo:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
@@ -116,13 +107,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
-
-  if (!session || !session.user?.email) {
+  if (!session?.user?.email) {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
   const email = session.user.email
-
   const temPermissao = await verificarPermissao(email, "Excluir", "Processo")
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
@@ -131,18 +120,23 @@ export async function DELETE(
   const { id } = await params
 
   try {
-    // 🔍 Verifica se o processo existe antes de tentar excluir
-    const processoExiste = await prisma.processo.findUnique({
+    const processo = await prisma.processo.findUnique({
       where: { id: Number(id) },
     })
 
-    if (!processoExiste) {
-      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+    if (!processo || !processo.active) {
+      return NextResponse.json(
+        { error: "Processo não encontrado ou já excluído" },
+        { status: 404 }
+      )
     }
 
-    // ❌ Exclui o processo
-    await prisma.processo.delete({
+    await prisma.processo.update({
       where: { id: Number(id) },
+      data: {
+        active: false,
+        exclusionDate: new Date(),
+      },
     })
 
     return NextResponse.json(
@@ -150,7 +144,7 @@ export async function DELETE(
       { status: 200 }
     )
   } catch (error) {
-    console.error("❌ Erro ao excluir processo:", error)
+    console.error("Erro ao excluir processo:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }

@@ -1,14 +1,51 @@
 import { prisma } from "@/lib/prisma"
+import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
 
-export async function verificarPermissao(email: string, acao: string, recurso: string) {
+// 🔹 Função auxiliar reutilizável
+export function pode(
+  permissoes: Partial<Record<PermissaoConcedida, boolean>>,
+  chave: PermissaoConcedida
+): boolean {
+  return !!permissoes[chave]
+}
+
+// 🔹 Retorna todas as permissões concedidas ao usuário
+export async function buscarPermissoesConcedidas(
+  email: string
+): Promise<Partial<Record<PermissaoConcedida, boolean>>> {
   const usuario = await prisma.user.findUnique({
     where: { email },
-    include: { perfil: { include: { permissoes: true } } },
+    include: {
+      perfil: {
+        include: {
+          permissoes: true,
+        },
+      },
+    },
   })
 
-  if (!usuario || !usuario.perfil) return false
+  if (!usuario?.perfil) return {}
 
-  return usuario.perfil.permissoes.some(
-    (p) => p.acao === acao && p.recurso === recurso && p.permitido
-  )
+  const resultado: Record<PermissaoConcedida, boolean> = {} as Record<
+    PermissaoConcedida,
+    boolean
+  >
+
+  for (const p of usuario.perfil.permissoes) {
+    const chave = `${p.acao}_${p.recurso}` as PermissaoConcedida
+    resultado[chave] = p.permitido
+  }
+
+  return resultado
+}
+
+// 🔹 Verifica se o usuário tem uma permissão específica
+export async function verificarPermissao(
+  email: string,
+  acao: AcaoPermissao,
+  recurso: RecursoPermissao
+): Promise<boolean> {
+  const permissoes = await buscarPermissoesConcedidas(email)
+  const chave = `${acao}_${recurso}` as PermissaoConcedida
+  return pode(permissoes, chave)
 }

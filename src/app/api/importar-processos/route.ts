@@ -1,16 +1,11 @@
+import authOptions from "@/config/next-auth.config"
+import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
+import { ProcessoImportacao } from "@/types/Processo"
+import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
 // 🔹 Tipagem dos dados esperados
-interface ProcessoImportacao {
-  responsavelNome: string
-  numeroProcesso: string
-  dataCriacao: string
-  situacaoNome: string
-  formaEntradaNome: string
-  anonimoStr: string
-  requerenteNome: string | null
-}
 
 // 🔹 Função para formatar a data corretamente
 const formatarData = (data: string): string => {
@@ -20,6 +15,18 @@ const formatarData = (data: string): string => {
 
 // 🔹 API de Importação
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+  }
+  const temPermissao = await verificarPermissao(
+    session.user.email,
+    "Cadastrar",
+    "Processo"
+  )
+  if (!temPermissao) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
   try {
     const { processos }: { processos: ProcessoImportacao[] } = await req.json()
 

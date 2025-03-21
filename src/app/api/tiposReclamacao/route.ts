@@ -17,10 +17,10 @@ export async function GET() {
   }
 
   try {
-    const dados = await prisma.situacao.findMany()
+    const dados = await prisma.tipoReclamacao.findMany()
     return NextResponse.json(dados)
   } catch (error) {
-    console.error("Erro ao buscar situações:", error)
+    console.error("Erro ao buscar tipo de reclamação:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
@@ -43,10 +43,10 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json()
-    const novoDado = await prisma.situacao.create({ data })
+    const novoDado = await prisma.tipoReclamacao.create({ data })
     return NextResponse.json(novoDado, { status: 201 })
   } catch (error) {
-    console.error("Erro ao criar situação:", error)
+    console.error("Erro ao criar tipo de reclamação:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
