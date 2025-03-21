@@ -6,6 +6,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+
   try {
     const permissaoId = parseInt(id, 10)
     if (isNaN(permissaoId)) {
@@ -19,6 +20,20 @@ export async function PATCH(
       return NextResponse.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
     }
 
+    // 🔹 Verifica se a permissão existe e está ativa
+    const permissao = await prisma.permissao.findUnique({
+      where: { id: permissaoId, active: true },
+      include: { perfil: true },
+    })
+
+    if (!permissao || !permissao.perfil?.active) {
+      return NextResponse.json(
+        { error: "Permissão não encontrada ou perfil desativado" },
+        { status: 404 }
+      )
+    }
+
+    // 🔹 Atualiza a permissão se estiver ativa
     const permissaoAtualizada = await prisma.permissao.update({
       where: { id: permissaoId },
       data: { permitido },

@@ -67,17 +67,21 @@ export default function DashboardSuperAdmin() {
 
   // 🔹 Atualizar Permissão (Ativar/Desativar)
   const handleTogglePermissao = async (permissao?: Permissao) => {
-    if (!permissao || permissao.id === undefined) {
-      console.error("Erro: Permissão inválida", permissao)
+    console.log("🖱️ Clique detectado - Permissão:", permissao)
+
+    if (!permissao || !permissao.id) {
+      console.error("🚨 ERRO: Permissão inválida!", permissao)
       return
     }
 
+    console.log("✅ Permissão clicada:", permissao)
+
+    // 🔹 Alterna a permissão visualmente primeiro
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
-    // Atualiza no frontend imediatamente
+    // 🔹 Atualiza estado visualmente
     setPermissoes((prev) => prev.map((p) => (p.id === permissao.id ? novaPermissao : p)))
 
-    // Enviar atualização para a API
     try {
       const res = await fetch(`/api/permissoes/${permissao.id}`, {
         method: "PATCH",
@@ -86,13 +90,18 @@ export default function DashboardSuperAdmin() {
       })
 
       if (!res.ok) {
-        console.error("Erro ao atualizar permissão", await res.json())
+        const errorData = await res.json()
+        throw new Error(errorData.error || "Erro desconhecido ao atualizar permissão")
       }
+
+      console.log("✅ Atualização bem-sucedida na API:", await res.json())
     } catch (err) {
-      console.error("Erro ao chamar API de permissões:", err)
+      console.error("🚨 Erro ao chamar API de permissões:", err)
+
+      // 🔹 Se der erro, reverte a alteração visual
+      setPermissoes((prev) => prev.map((p) => (p.id === permissao.id ? permissao : p)))
     }
   }
-
   // 🔹 Criar Nova Permissão
   const handleCriarPermissao = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -200,18 +209,29 @@ export default function DashboardSuperAdmin() {
                   </AccordionSummary>
                   <AccordionDetails>
                     <List>
-                      {permissoesRecurso.map((p) => (
-                        <ListItem key={`${p.id || p.acao}-${p.recurso}`}>
-                          <ListItemText primary={p.acao} />
-                          <Button
-                            variant={p?.permitido ? "contained" : "outlined"}
-                            color={p?.permitido ? "primary" : "secondary"}
-                            onClick={() => p?.id && handleTogglePermissao(p)}
-                          >
-                            {p?.permitido ? "Desativar" : "Ativar"}
-                          </Button>
-                        </ListItem>
-                      ))}
+                      {permissoesRecurso.map((p, index) => {
+                        console.log(`Permissão carregada para ${recurso}:`, p) // 📌 Adicionando log para cada permissão
+
+                        if (!p) {
+                          console.error(`Permissão inválida na posição ${index}:`, p)
+                          return null
+                        }
+                        return (
+                          <ListItem key={`${p.id || p.acao}-${p.recurso}`}>
+                            <ListItemText primary={p.acao} />
+                            <Button
+                              variant={p?.permitido ? "contained" : "outlined"}
+                              color={p?.permitido ? "primary" : "secondary"}
+                              onClick={() => {
+                                console.log("🖱️ Clique detectado - Permissão:", p)
+                                handleTogglePermissao(p)
+                              }}
+                            >
+                              {p?.permitido ? "Desativar" : "Ativar"}
+                            </Button>
+                          </ListItem>
+                        )
+                      })}
                     </List>
                   </AccordionDetails>
                 </Accordion>

@@ -131,19 +131,30 @@ async function getPermissoesPorPerfil(perfilNome: string) {
         active: true, // 🔹 Filtra apenas perfis ativos
       },
     },
+    select: {
+      id: true, // 🔹 Agora o ID da permissão será incluído no retorno
+      acao: true,
+      recurso: true,
+      permitido: true,
+    },
   })
 
   const permissoesMap = new Map<
     string,
-    { acao: string; recurso: string; permitido: boolean }
+    { id: number; acao: string; recurso: string; permitido: boolean }
   >()
 
   permissoes.forEach((p) => {
     const key = `${p.acao}_${p.recurso}`
     if (!permissoesMap.has(key) || p.permitido) {
-      permissoesMap.set(key, { acao: p.acao, recurso: p.recurso, permitido: p.permitido })
+      permissoesMap.set(key, {
+        id: p.id,
+        acao: p.acao,
+        recurso: p.recurso,
+        permitido: p.permitido,
+      })
     }
   })
 
-  return Array.from(permissoesMap.values())
+  return Array.from(permissoesMap.values()) // 🔹 Agora retorna o ID junto
 }
