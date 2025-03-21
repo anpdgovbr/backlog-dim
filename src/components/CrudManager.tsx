@@ -131,7 +131,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   if (loading) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container>
+    <Container maxWidth="lg">
       {/* 🔹 Exibe alerta se o usuário não pode visualizar os metadados */}
       {!permissoes["Exibir_Metadados"] && (
         <Alert severity="warning" sx={{ mb: 2 }}>
