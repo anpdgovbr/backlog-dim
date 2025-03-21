@@ -17,7 +17,9 @@ export async function GET() {
   }
 
   try {
-    const dados = await prisma.evidencia.findMany()
+    const dados = await prisma.evidencia.findMany({
+      where: { active: true },
+    })
     return NextResponse.json(dados)
   } catch (error) {
     console.error("Erro ao buscar evidências:", error)
@@ -43,7 +45,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json()
-    const novoDado = await prisma.evidencia.create({ data })
+    const novoDado = await prisma.evidencia.create({
+      data: {
+        ...data,
+        active: true,
+        exclusionDate: null,
+      },
+    })
     return NextResponse.json(novoDado, { status: 201 })
   } catch (error) {
     console.error("Erro ao criar evidência:", error)

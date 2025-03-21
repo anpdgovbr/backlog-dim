@@ -44,7 +44,7 @@ const allSections: ISectionConfig[] = [
     icon: <UploadFile />,
     baseColor: "#ff9800",
     component: () => <ImportarProcessos />,
-    requiredPermissions: ["Inserir_Processo"],
+    requiredPermissions: ["Cadastrar_Processo"],
   },
   {
     id: "paineladmin",

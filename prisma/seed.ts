@@ -281,25 +281,25 @@ async function main() {
     },
 
     {
-      acao: "Inserir",
+      acao: "Cadastrar",
       recurso: "Processo",
       permitido: false,
       perfilId: perfis.leitor.id,
     },
     {
-      acao: "Inserir",
+      acao: "Cadastrar",
       recurso: "Processo",
       permitido: true,
       perfilId: perfis.atendente.id,
     },
     {
-      acao: "Inserir",
+      acao: "Cadastrar",
       recurso: "Processo",
       permitido: true,
       perfilId: perfis.supervisor.id,
     },
     {
-      acao: "Inserir",
+      acao: "Cadastrar",
       recurso: "Processo",
       permitido: true,
       perfilId: perfis.administrador.id,

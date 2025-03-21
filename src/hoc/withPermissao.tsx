@@ -19,17 +19,17 @@ export default function withPermissao<T extends object>(
     const { permissoes, loading } = usePermissoes()
     const router = useRouter()
 
+    const chavePermissao = `${acao}_${recurso}` as keyof typeof permissoes
+
     useEffect(() => {
-      if (!loading && !permissoes[`${acao}_${recurso}`] && redirecionar) {
+      if (!loading && !permissoes[chavePermissao] && redirecionar) {
         router.push("/acesso-negado")
       }
-      // 🔹 eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [permissoes, loading, router])
+    }, [permissoes, loading, redirecionar, router])
 
     if (loading) return <p>Carregando permissões...</p>
 
-    // 🔹 Se não tem permissão e `redirecionar` for `false`, apenas não exibe o conteúdo
-    if (!permissoes[`${acao}_${recurso}`]) {
+    if (!permissoes[chavePermissao]) {
       return redirecionar ? null : (
         <Container maxWidth="md">
           <Alert severity="error" variant="filled">

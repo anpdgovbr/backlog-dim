@@ -1,19 +1,16 @@
 import authOptions from "@/config/next-auth.config"
 import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
+import { getOrRestoreByName } from "@/lib/prisma/getOrRestoreByName"
 import { ProcessoImportacao } from "@/types/Processo"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
-// 🔹 Tipagem dos dados esperados
-
-// 🔹 Função para formatar a data corretamente
 const formatarData = (data: string): string => {
   const [dia, mes, ano] = data.split("/")
   return ano ? `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : ""
 }
 
-// 🔹 API de Importação
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user?.email) {
@@ -37,7 +34,6 @@ export async function POST(req: NextRequest) {
     let sucesso = 0
     const falhas: string[] = []
 
-    // 🔹 Transação Prisma garantindo reversibilidade total
     await prisma.$transaction(async (tx) => {
       for (const processo of processos) {
         try {
@@ -55,36 +51,21 @@ export async function POST(req: NextRequest) {
 
           const anonimo = anonimoStr.toLowerCase() === "sim"
 
-          // 🔹 Buscar ou criar entidades auxiliares dentro da mesma transação
           const [responsavel, situacao, formaEntrada] = await Promise.all([
-            tx.responsavel.upsert({
-              where: { nome: responsavelNome },
-              update: {},
-              create: { nome: responsavelNome },
-            }),
-            tx.situacao.upsert({
-              where: { nome: situacaoNome },
-              update: {},
-              create: { nome: situacaoNome },
-            }),
-            tx.formaEntrada.upsert({
-              where: { nome: formaEntradaNome },
-              update: {},
-              create: { nome: formaEntradaNome },
-            }),
+            getOrRestoreByName(tx, "responsavel", responsavelNome),
+            getOrRestoreByName(tx, "situacao", situacaoNome),
+            getOrRestoreByName(tx, "formaEntrada", formaEntradaNome),
           ])
 
-          // 🔍 Verifica se o processo já existe
-          const processoExistente = await tx.processo.findUnique({
+          const processoExistente = await tx.processo.findFirst({
             where: { numero: numeroProcesso },
           })
 
           if (processoExistente) {
             falhas.push(`Processo ${numeroProcesso} já existe e não foi importado.`)
-            continue // Pula a inserção e vai para o próximo processo
+            throw new Error("Processo duplicado")
           }
 
-          // 🔹 Criar processo no Prisma dentro da transação
           await tx.processo.create({
             data: {
               numero: numeroProcesso,
@@ -101,7 +82,7 @@ export async function POST(req: NextRequest) {
         } catch (error) {
           const err = error as Error
           falhas.push(`Erro no processo ${processo.numeroProcesso}: ${err.message}`)
-          throw error // 🔥 Faz rollback da transação ao encontrar erro
+          throw error
         }
       }
     })

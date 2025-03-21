@@ -10,14 +10,15 @@ export async function GET() {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  // 🔹 Verifica permissão para visualizar os metadados
   const temPermissao = await verificarPermissao(session.user.email, "Exibir", "Metadados")
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
   }
 
   try {
-    const dados = await prisma.cNAE.findMany()
+    const dados = await prisma.cNAE.findMany({
+      where: { active: true },
+    })
     return NextResponse.json(dados)
   } catch (error) {
     console.error("Erro ao buscar CNAE:", error)
@@ -31,7 +32,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  // 🔹 Verifica permissão para cadastrar metadados
   const temPermissao = await verificarPermissao(
     session.user.email,
     "Cadastrar",
@@ -43,7 +43,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json()
-    const novoDado = await prisma.cNAE.create({ data })
+    const novoDado = await prisma.cNAE.create({
+      data: {
+        ...data,
+        active: true,
+        exclusionDate: null,
+      },
+    })
     return NextResponse.json(novoDado, { status: 201 })
   } catch (error) {
     console.error("Erro ao criar CNAE:", error)
