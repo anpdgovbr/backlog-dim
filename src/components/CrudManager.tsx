@@ -156,7 +156,15 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               Adicionar
             </Button>
           </Box>
-          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+          <Box
+            sx={{
+              ...dataGridStyles,
+              display: "flex",
+              height: "100%",
+              width: "100%",
+              mb: 2,
+            }}
+          >
             <DataGrid
               rows={items}
               columns={columns}
