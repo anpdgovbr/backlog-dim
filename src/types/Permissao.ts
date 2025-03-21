@@ -15,7 +15,6 @@ export interface PermissaoPayload {
 
 export type AcaoPermissao =
   | "Exibir"
-  | "Inserir"
   | "VerHistorico"
   | "EditarProprio"
   | "EditarGeral"
@@ -25,6 +24,7 @@ export type AcaoPermissao =
   | "Editar"
   | "Desabilitar"
   | "Criar"
+  | "Gerenciar"
 
 export type RecursoPermissao =
   | "Processo"

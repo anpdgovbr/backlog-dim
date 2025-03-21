@@ -2,7 +2,7 @@ import authOptions from "@/config/next-auth.config"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)

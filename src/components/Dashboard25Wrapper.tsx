@@ -1,5 +1,6 @@
 "use client"
 
+import { PermissaoConcedida } from "@/types/Permissao"
 import React from "react"
 
 import Dashboard25LayoutBase, {
@@ -20,7 +21,7 @@ export interface ISectionConfig {
   readonly baseColor: string
   readonly component: React.ComponentType<unknown> // <-- Componente estático
   readonly extraContent?: React.ReactNode
-  readonly requiredPermissions?: string[]
+  readonly requiredPermissions?: PermissaoConcedida[]
 }
 
 /**

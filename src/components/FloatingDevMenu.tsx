@@ -73,7 +73,7 @@ const FloatingDevMenu = () => {
       }
     }
 
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseUp = () => {
       isDragging = false
       // Salva a posição ao soltar
       localStorage.setItem(

@@ -1,7 +1,6 @@
 import authOptions from "@/config/next-auth.config"
-import { buscarPermissoesConcedidas, verificarPermissao } from "@/lib/permissoes"
+import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
-import { Permissao } from "@/types/Permissao"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
