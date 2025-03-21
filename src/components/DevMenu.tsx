@@ -58,7 +58,7 @@ const DevMenu = () => {
     <Box
       sx={{
         width: 250,
-        bgcolor: "#f5f5f5",
+        bgcolor: "#A5A5A5",
         height: "100vh",
         position: "fixed",
         left: 0,
@@ -86,8 +86,20 @@ const DevMenu = () => {
                 {group.toUpperCase()}
               </Typography>
             </AccordionSummary>
+
             <AccordionDetails sx={{ padding: 0 }}>
-              <List dense>
+              <List dense disablePadding>
+                {/* Adiciona o link para a raiz do grupo */}
+                <ListItem sx={{ padding: "4px 8px" }}>
+                  <Link href={`/${group}`} passHref>
+                    <ListItemText
+                      primary={`/${group}`}
+                      sx={{ fontSize: 12, fontWeight: "bold" }}
+                    />
+                  </Link>
+                </ListItem>
+
+                {/* Demais rotas do grupo */}
                 {pages.map((route) => (
                   <ListItem key={route} sx={{ padding: "4px 8px" }}>
                     <Link href={route.replace("/page", "")} passHref>
