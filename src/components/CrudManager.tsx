@@ -37,7 +37,9 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     try {
       const res = await fetch(`/api/meta/${tableName.toLowerCase()}`)
       const data = await res.json()
-      setItems(data.filter((item: any) => item.active !== false)) // 🔹 Só exibe itens ativos
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setItems(data.filter((item: any) => item.active !== false))
     } catch (error) {
       console.error(`Erro ao buscar ${tableName}:`, error)
     }
