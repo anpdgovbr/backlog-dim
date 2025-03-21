@@ -39,12 +39,8 @@ export default function ImportarProcessos() {
   const [loading, setLoading] = useState(false)
   const [progresso, setProgresso] = useState(0)
   const [importado, setImportado] = useState(false)
-  const [relatorio, setRelatorio] = useState<Relatorio>({
-    sucesso: 0,
-    falhas: [],
-  })
-  // tslint:disable-next-line: no-unused-variable
-  const [resumoImportacao] = useState<ResumoImportacao>({
+  const [relatorio, setRelatorio] = useState<Relatorio>({ sucesso: 0, falhas: [] })
+  const [resumoImportacao, setResumoImportacao] = useState<ResumoImportacao>({
     totalRegistros: 0,
     totalAnonimos: 0,
     responsaveis: {},
@@ -79,7 +75,6 @@ export default function ImportarProcessos() {
     setProgresso(0)
 
     try {
-      // 🔹 Convertendo os dados do CSV para o formato correto
       const processos = dados.map((linha) => ({
         responsavelNome: linha[0],
         numeroProcesso: linha[1],
@@ -100,6 +95,12 @@ export default function ImportarProcessos() {
 
       if (response.ok) {
         setRelatorio({ sucesso: resultado.sucesso, falhas: resultado.falhas })
+        setResumoImportacao({
+          totalRegistros: dados.length,
+          totalAnonimos: dados.filter((l) => l[5]?.toLowerCase() === "sim").length,
+          responsaveis: contarOcorrencias(dados, 0),
+          formasEntrada: contarOcorrencias(dados, 4),
+        })
         setImportado(true)
       } else {
         alert(`Erro na importação: ${resultado.error}`)
@@ -109,12 +110,11 @@ export default function ImportarProcessos() {
       console.error(error)
     } finally {
       setLoading(false)
+      setProgresso(100)
     }
   }
 
-  const handleMudarPagina = (_: unknown, novaPagina: number) => {
-    setPagina(novaPagina)
-  }
+  const handleMudarPagina = (_: unknown, novaPagina: number) => setPagina(novaPagina)
 
   const handleMudarLinhasPorPagina = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLinhasPorPagina(parseInt(event.target.value, 10))
@@ -129,7 +129,7 @@ export default function ImportarProcessos() {
         </Typography>
 
         <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-          <Button variant="contained" component="label">
+          <Button variant="contained" component="label" disabled={loading}>
             Selecionar CSV
             <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
           </Button>
@@ -138,7 +138,7 @@ export default function ImportarProcessos() {
             variant="contained"
             color="primary"
             onClick={handleImport}
-            disabled={loading || !dados.length}
+            disabled={loading || !dados.length || importado}
           >
             {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
           </Button>
@@ -152,50 +152,59 @@ export default function ImportarProcessos() {
           <Typography variant="h6" gutterBottom>
             {importado ? "Resultado da Importação" : "Análise do Arquivo"}
           </Typography>
+          {!importado && (
+            <Grid container spacing={1}>
+              <Grid item xs={6} md={3}>
+                <Estatistica
+                  titulo="Total"
+                  valor={importado ? resumoImportacao.totalRegistros : dados.length}
+                  cor="primary"
+                />
+              </Grid>
 
-          <Grid container spacing={1}>
-            <Grid item xs={6} md={3}>
-              <Estatistica
-                titulo="Total"
-                valor={importado ? resumoImportacao.totalRegistros : dados.length}
-                cor="primary"
-              />
-            </Grid>
+              <Grid item xs={6} md={3}>
+                <Estatistica
+                  titulo="Anônimos"
+                  valor={
+                    importado
+                      ? resumoImportacao.totalAnonimos
+                      : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
+                  }
+                  cor="secondary"
+                />
+              </Grid>
 
-            <Grid item xs={6} md={3}>
-              <Estatistica
-                titulo="Anônimos"
-                valor={
-                  importado
-                    ? resumoImportacao.totalAnonimos
-                    : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
-                }
-                cor="secondary"
-              />
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <CategoriaResumo
+                  titulo={
+                    importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"
+                  }
+                  dados={
+                    importado
+                      ? resumoImportacao.responsaveis
+                      : contarOcorrencias(dados, 0)
+                  }
+                />
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <CategoriaResumo
-                titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
-                dados={
-                  importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
-                }
-              />
+              <Grid item xs={12} md={6}>
+                <CategoriaResumo
+                  titulo={
+                    importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"
+                  }
+                  dados={
+                    importado
+                      ? resumoImportacao.formasEntrada
+                      : contarOcorrencias(dados, 4)
+                  }
+                  cor="secondary"
+                />
+              </Grid>
             </Grid>
-
-            <Grid item xs={12} md={6}>
-              <CategoriaResumo
-                titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
-                dados={
-                  importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
-                }
-                cor="secondary"
-              />
-            </Grid>
-          </Grid>
+          )}
         </Card>
 
-        {!!dados.length && (
+        {!importado && !!dados.length && (
           <Card sx={{ mb: 1 }}>
             <TableContainer>
               <Typography variant="h6" sx={{ p: 1 }}>
@@ -270,13 +279,15 @@ export default function ImportarProcessos() {
             )}
 
             {relatorio.falhas.length > 0 && (
-              <Alert severity="error">
+              <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
                 <Typography variant="subtitle1" gutterBottom>
-                  {relatorio.falhas.length} erros encontrados:
+                  {relatorio.falhas.length} erro(s) encontrados:
                 </Typography>
-                <Box component="ul" sx={{ maxHeight: 200, overflow: "auto" }}>
+                <Box component="ol" sx={{ maxHeight: 400, overflowY: "auto" }}>
                   {relatorio.falhas.map((falha, i) => (
-                    <li key={i}>{falha}</li>
+                    <li key={i}>
+                      <Typography variant="body2">{falha}</Typography>
+                    </li>
                   ))}
                 </Box>
               </Alert>
@@ -288,7 +299,7 @@ export default function ImportarProcessos() {
   )
 }
 
-// Componentes Auxiliares
+// Auxiliares
 const Estatistica = ({
   titulo,
   valor,
@@ -326,35 +337,6 @@ const CategoriaResumo = ({
     </Box>
   </Card>
 )
-/**
-// Funções utilitárias
-const formatarData = (data: string): string => {
-  const [dia, mes, ano] = data.split("/")
-  return ano ? `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : ""
-}
-
-// 🔹 Obter ou criar entidades com acesso direto ao Prisma
-
-const obterOuCriarResponsavel = async (nome: string): Promise<number> => {
-  const existente = await prisma.responsavel.findUnique({ where: { nome } })
-  if (existente) return existente.id
-  const novo = await prisma.responsavel.create({ data: { nome } })
-  return novo.id
-}
-
-const obterOuCriarSituacao = async (nome: string): Promise<number> => {
-  const existente = await prisma.situacao.findUnique({ where: { nome } })
-  if (existente) return existente.id
-  const novo = await prisma.situacao.create({ data: { nome } })
-  return novo.id
-}
-
-const obterOuCriarFormaEntrada = async (nome: string): Promise<number> => {
-  const existente = await prisma.formaEntrada.findUnique({ where: { nome } })
-  if (existente) return existente.id
-  const novo = await prisma.formaEntrada.create({ data: { nome } })
-  return novo.id
-} */
 
 const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, number> =>
   dados.reduce(

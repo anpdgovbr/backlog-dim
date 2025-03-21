@@ -23,7 +23,6 @@ type PrismaDelegate<T> = {
   findMany: (args?: Prisma.Args<T, "findMany">) => Promise<T[]>
   create: (args: Prisma.Args<T, "create">) => Promise<T>
   update: (args: Prisma.Args<T, "update">) => Promise<T>
-  delete: (args: Prisma.Args<T, "delete">) => Promise<T>
   findUnique: (args: Prisma.Args<T, "findUnique">) => Promise<T | null>
 }
 
@@ -56,7 +55,9 @@ export async function GET(
 
   try {
     const model = getPrismaModel(entidade)
-    const data = await model.findMany()
+    const data = await model.findMany({
+      where: { active: true }, // ⬅️ Somente registros ativos
+    })
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
@@ -143,8 +144,12 @@ export async function DELETE(
     if (!existingItem)
       return NextResponse.json({ error: "Item não encontrado" }, { status: 404 })
 
-    await model.delete({ where: { id: Number(id) } })
-    return NextResponse.json({ message: "Deletado com sucesso" })
+    await model.update({
+      where: { id: Number(id) },
+      data: { active: false, exclusionDate: new Date() }, // ⬅️ Soft delete
+    })
+
+    return NextResponse.json({ message: "Desabilitado com sucesso" })
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
