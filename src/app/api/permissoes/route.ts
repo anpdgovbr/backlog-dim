@@ -19,42 +19,55 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const perfilId = searchParams.get("perfilId")
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
   }
 
-  // Se estiver buscando as permissões de um perfil específico
-  if (perfilId) {
-    const perfil = await prisma.perfil.findUnique({
-      where: { id: Number(perfilId) },
-      select: { nome: true },
-    })
+  try {
+    // Se estiver buscando as permissões de um perfil específico
+    if (perfilId) {
+      const perfil = await prisma.perfil.findUnique({
+        where: { id: Number(perfilId), active: true }, // 🔹 Apenas perfis ativos
+        select: { nome: true },
+      })
 
-    if (!perfil) {
-      return NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 })
+      if (!perfil) {
+        return NextResponse.json(
+          { error: "Perfil não encontrado ou desativado" },
+          { status: 404 }
+        )
+      }
+
+      return NextResponse.json(await getPermissoesPorPerfil(perfil.nome))
     }
 
-    return NextResponse.json(await getPermissoesPorPerfil(perfil.nome))
+    // Se não, buscar as permissões do usuário autenticado
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email, active: true }, // 🔹 Apenas usuários ativos
+      include: { perfil: { where: { active: true } } },
+    })
+
+    if (!user || !user.perfil) {
+      return NextResponse.json(
+        { error: "Perfil não definido ou desativado" },
+        { status: 403 }
+      )
+    }
+
+    return NextResponse.json(await getPermissoesPorPerfil(user.perfil.nome))
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Erro ao buscar permissões", detalhe: (error as Error).message },
+      { status: 500 }
+    )
   }
-
-  // Se não, buscar as permissões do usuário autenticado
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    include: { perfil: true },
-  })
-
-  if (!user || !user.perfil) {
-    return NextResponse.json({ error: "Perfil não definido" }, { status: 403 })
-  }
-
-  return NextResponse.json(await getPermissoesPorPerfil(user.perfil.nome))
 }
 
 // ✅ MÉTODO POST → Criar Nova Permissão
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
   }
 
@@ -64,7 +77,6 @@ export async function POST(req: NextRequest) {
     "Cadastrar",
     "Permissoes"
   )
-
   if (!temPermissao) {
     return NextResponse.json(
       { error: "Você não tem permissão para alterar permissões" },
@@ -80,19 +92,31 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // 🔹 Verifica se o perfil existe e está ativo
+    const perfil = await prisma.perfil.findUnique({
+      where: { id: Number(perfilId), active: true },
+    })
+
+    if (!perfil) {
+      return NextResponse.json(
+        { error: "Perfil não encontrado ou desativado" },
+        { status: 404 }
+      )
+    }
+
     // 🔹 Criar permissão, prevenindo duplicatas
     const permissaoCriada = await prisma.permissao.upsert({
-      where: {
-        perfilId_acao_recurso: { perfilId: Number(perfilId), acao, recurso },
-      },
+      where: { perfilId_acao_recurso: { perfilId: Number(perfilId), acao, recurso } },
       update: { permitido },
       create: { perfilId: Number(perfilId), acao, recurso, permitido },
     })
 
     return NextResponse.json(permissaoCriada, { status: 201 })
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: "Erro ao criar permissão" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Erro ao criar permissão", detalhe: (error as Error).message },
+      { status: 500 }
+    )
   }
 }
 
@@ -101,7 +125,12 @@ async function getPermissoesPorPerfil(perfilNome: string) {
   const perfisHerdados = [perfilNome, ...(HIERARQUIA_PERFIS[perfilNome] || [])]
 
   const permissoes = await prisma.permissao.findMany({
-    where: { perfil: { nome: { in: perfisHerdados } } },
+    where: {
+      perfil: {
+        nome: { in: perfisHerdados },
+        active: true, // 🔹 Filtra apenas perfis ativos
+      },
+    },
   })
 
   const permissoesMap = new Map<

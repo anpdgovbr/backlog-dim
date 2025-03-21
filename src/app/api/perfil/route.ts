@@ -18,5 +18,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 })
   }
 
+  // 🔹 Verifica se o perfil foi desativado (soft delete)
+  if (!user.perfil.active) {
+    return NextResponse.json({ error: "Perfil desativado" }, { status: 403 })
+  }
+
   return NextResponse.json({ id: user.perfil.id, nome: user.perfil.nome })
 }
