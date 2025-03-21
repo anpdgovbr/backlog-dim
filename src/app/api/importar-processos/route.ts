@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
     let sucesso = 0
     const falhas: string[] = []
 
-    await prisma.$transaction(async (tx) => {
-      for (const processo of processos) {
-        try {
+    for (const processo of processos) {
+      try {
+        await prisma.$transaction(async (tx) => {
           const {
             responsavelNome,
             numeroProcesso,
@@ -62,8 +62,7 @@ export async function POST(req: NextRequest) {
           })
 
           if (processoExistente) {
-            falhas.push(`Processo ${numeroProcesso} já existe e não foi importado.`)
-            throw new Error("Processo duplicado")
+            throw new Error(`Processo ${numeroProcesso} já existe e não foi importado.`)
           }
 
           await tx.processo.create({
@@ -77,15 +76,14 @@ export async function POST(req: NextRequest) {
               formaEntradaId: formaEntrada.id,
             },
           })
+        })
 
-          sucesso++
-        } catch (error) {
-          const err = error as Error
-          falhas.push(`Erro no processo ${processo.numeroProcesso}: ${err.message}`)
-          throw error
-        }
+        sucesso++
+      } catch (error) {
+        const err = error as Error
+        falhas.push(`Erro no processo ${processo.numeroProcesso}: ${err.message}`)
       }
-    })
+    }
 
     return NextResponse.json({ sucesso, falhas })
   } catch (error) {

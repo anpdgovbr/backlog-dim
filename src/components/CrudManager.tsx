@@ -37,7 +37,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     try {
       const res = await fetch(`/api/meta/${tableName.toLowerCase()}`)
       const data = await res.json()
-      setItems(data)
+      setItems(data.filter((item: any) => item.active !== false)) // 🔹 Só exibe itens ativos
     } catch (error) {
       console.error(`Erro ao buscar ${tableName}:`, error)
     }
@@ -75,7 +75,9 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       return
     }
 
-    if (!confirm(`Tem certeza que deseja excluir "${item.nome}" da tabela ${tableName}?`))
+    if (
+      !confirm(`Tem certeza que deseja excluir \"${item.nome}\" da tabela ${tableName}?`)
+    )
       return
 
     try {
@@ -92,8 +94,8 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
 
       fetchData()
     } catch (error) {
-      console.error(`Erro ao excluir "${item.nome}" de ${tableName}:`, error)
-      alert(`Erro ao excluir "${item.nome}": ${(error as Error).message}`)
+      console.error(`Erro ao excluir \"${item.nome}\" de ${tableName}:`, error)
+      alert(`Erro ao excluir \"${item.nome}\": ${(error as Error).message}`)
     }
   }
 
@@ -108,7 +110,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         <Box>
           <IconButton
             color="primary"
-            disabled={!permissoes["Editar_Metadados"]} // 🔹 Bloqueia edição se não permitido
+            disabled={!permissoes["Editar_Metadados"]}
             onClick={() => {
               setSelectedItem({ id: params.row.id, nome: params.row.nome })
               setOpenModal(true)
@@ -118,7 +120,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
           </IconButton>
           <IconButton
             color="error"
-            disabled={!permissoes["Desabilitar_Metadados"]} // 🔹 Bloqueia exclusão se não permitido
+            disabled={!permissoes["Desabilitar_Metadados"]}
             onClick={() => handleDelete(params.row.id)}
           >
             <DeleteIcon />
@@ -132,14 +134,12 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
 
   return (
     <Container maxWidth="lg">
-      {/* 🔹 Exibe alerta se o usuário não pode visualizar os metadados */}
       {!permissoes["Exibir_Metadados"] && (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
         </Alert>
       )}
 
-      {/* 🔹 Se pode ver, renderiza o CRUD normalmente */}
       {permissoes["Exibir_Metadados"] && (
         <>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -147,9 +147,9 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             <Button
               variant="contained"
               color="primary"
-              disabled={!permissoes["Cadastrar_Metadados"]} // 🔹 Desabilita criação se não permitido
+              disabled={!permissoes["Cadastrar_Metadados"]}
               onClick={() => {
-                setSelectedItem({ nome: "" }) // 🔹 Garante que ao abrir o modal de criação, os dados anteriores são apagados
+                setSelectedItem({ nome: "" })
                 setOpenModal(true)
               }}
             >

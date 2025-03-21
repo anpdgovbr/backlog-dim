@@ -7442,6 +7442,7 @@ async function main() {
         active: true,
       },
     ],
+    skipDuplicates: true,
   })
 
   console.log("✅ Seed aplicado com sucesso!")
