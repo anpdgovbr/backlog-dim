@@ -12,6 +12,7 @@ const allowedEntities = {
   evidencia: prisma.evidencia,
   formaentrada: prisma.formaEntrada,
   responsavel: prisma.responsavel,
+  tiporeclamacao: prisma.tipoReclamacao,
 } as const
 
 type EntidadeKey = keyof typeof allowedEntities
