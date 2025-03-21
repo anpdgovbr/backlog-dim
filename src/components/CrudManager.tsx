@@ -1,6 +1,7 @@
 "use client"
 
 import usePermissoes from "@/hooks/usePermissoes"
+import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import {
@@ -14,6 +15,7 @@ import {
   Typography,
 } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
 interface CrudManagerProps {
@@ -154,14 +156,15 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               Adicionar
             </Button>
           </Box>
-
-          <DataGrid
-            rows={items}
-            columns={columns}
-            loading={loadingData}
-            pageSizeOptions={[5, 10, 20]}
-          />
-
+          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+            <DataGrid
+              rows={items}
+              columns={columns}
+              loading={loadingData}
+              pageSizeOptions={[5, 10, 20]}
+              localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            />
+          </Box>
           <Modal
             open={openModal}
             onClose={() => {
