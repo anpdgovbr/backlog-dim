@@ -16,7 +16,7 @@ export default function SystemTitle() {
           color: "inherit",
         }}
       >
-        Processamento Backlog DIM - ANPD{" "}
+        Processamento Backlog DIM{" "}
         <Typography
           variant="caption"
           component="sup"
