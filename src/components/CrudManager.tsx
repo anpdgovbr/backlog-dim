@@ -161,6 +161,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             sx={{
               ...dataGridStyles,
               display: "flex",
+              height: "100%",
               width: "100%",
               mb: 2,
             }}
