@@ -132,8 +132,8 @@ export default function GerenciarPerfis() {
         </Box>
       ) : (
         <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
+          <Table className="table">
+            <TableHead className="th">
               <TableRow sx={{ bgcolor: "primary.main" }}>
                 <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
                 <TableCell sx={{ color: "black", fontWeight: "bold" }}>E-mail</TableCell>
@@ -150,24 +150,28 @@ export default function GerenciarPerfis() {
                   <TableCell>{user.nome}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell align="center">
-                    <FormControl fullWidth>
-                      <InputLabel>Perfil</InputLabel>
+                    <FormControl fullWidth size="small">
+                      <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
                       <Select
+                        label="Perfil"
+                        className="input"
                         value={user.perfilId || ""}
                         onChange={(e) =>
                           handlePerfilChange(user.id, Number(e.target.value))
                         }
                       >
-                        <MenuItem value="">Selecione um perfil</MenuItem>
+                        <MenuItem className="br-item" value="">
+                          Selecione um perfil
+                        </MenuItem>
                         {perfis.map((perfil) => (
-                          <MenuItem key={perfil.id} value={perfil.id}>
+                          <MenuItem className="br-item" key={perfil.id} value={perfil.id}>
                             {perfil.nome}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
                   </TableCell>
-                </TableRow> // 🔹 Evite espaços ou quebras de linha antes de fechar a <tr>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

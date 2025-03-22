@@ -102,11 +102,12 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 80 },
+    { field: "id", headerName: "ID", width: 60, align: "center", headerAlign: "center" },
     { field: "nome", headerName: "Nome", flex: 1 },
     {
       field: "acoes",
       headerName: "Ações",
+
       width: 150,
       renderCell: (params) => (
         <Box>
@@ -136,13 +137,11 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
 
   return (
     <Container maxWidth="lg">
-      {!permissoes["Exibir_Metadados"] && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+      {!permissoes["Exibir_Metadados"] ? (
+        <Alert severity="error" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
         </Alert>
-      )}
-
-      {permissoes["Exibir_Metadados"] && (
+      ) : (
         <>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h4">{entityName}</Typography>
@@ -162,7 +161,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             sx={{
               ...dataGridStyles,
               display: "flex",
-              height: "100%",
               width: "100%",
               mb: 2,
             }}
