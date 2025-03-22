@@ -24,6 +24,7 @@ type PrismaDelegate<T> = {
   create: (args: Prisma.Args<T, "create">) => Promise<T>
   update: (args: Prisma.Args<T, "update">) => Promise<T>
   findUnique: (args: Prisma.Args<T, "findUnique">) => Promise<T | null>
+  count: (args?: Prisma.Args<T, "count">) => Promise<number>
 }
 
 const getPrismaModel = (entidade: EntidadeKey): PrismaDelegate<unknown> => {
@@ -45,20 +46,42 @@ export async function GET(
   const session = await getServerSession(authOptions)
   if (!session?.user?.email)
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+
   if (!(await validarAcesso(session.user.email, "Exibir")))
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
 
   const ent = await params
   const entidade = ent.entidade.toLowerCase() as EntidadeKey
+
   if (!(entidade in allowedEntities))
     return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
 
   try {
+    const { searchParams } = new URL(req.url)
+
+    const page = Number(searchParams.get("page")) || 1
+    const pageSize = Number(searchParams.get("pageSize")) || 10
+    const orderBy = searchParams.get("orderBy") || "id"
+    const ascending = searchParams.get("ascending") === "true"
+
+    const skip = (page - 1) * pageSize
+    const take = pageSize
+
     const model = getPrismaModel(entidade)
-    const data = await model.findMany({
-      where: { active: true }, // ⬅️ Somente registros ativos
-    })
-    return NextResponse.json(data)
+
+    const [total, data] = await Promise.all([
+      model.count({
+        where: { active: true },
+      }),
+      model.findMany({
+        where: { active: true },
+        skip,
+        take,
+        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+      }),
+    ])
+
+    return NextResponse.json({ data, total })
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
