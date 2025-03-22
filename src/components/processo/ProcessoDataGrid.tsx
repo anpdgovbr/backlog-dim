@@ -13,7 +13,6 @@ import ModalEditarProcesso from "./ModalEditarProcesso"
 
 export default function ProcessoDataGrid() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])
-  const [filteredData, setFilteredData] = useState<ProcessoOutput[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -28,43 +27,31 @@ export default function ProcessoDataGrid() {
     setLoading(true)
     try {
       const response = await fetch(
-        `/api/processos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=dataCriacao&ascending=false`
+        `/api/processos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=dataCriacao&ascending=false&search=${encodeURIComponent(
+          search
+        )}`
       )
       const { data, total } = await response.json()
 
       if (Array.isArray(data)) {
         setProcessos(data)
-        setFilteredData(data)
         setTotalRows(total)
       } else {
         console.error("Resposta inesperada da API:", data)
         setProcessos([])
-        setFilteredData([])
       }
     } catch (error) {
       console.error("Erro ao buscar processos:", error)
       setProcessos([])
-      setFilteredData([])
     }
     setLoading(false)
   }
-  // Buscar dados da API
+
+  // 🔄 Buscar dados sempre que paginação ou busca mudarem
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationModel])
-
-  // Filtro de busca
-  useEffect(() => {
-    const lowercasedFilter = search.toLowerCase()
-    const filtered = processos.filter(
-      (item) =>
-        item.responsavel?.nome.toLowerCase().includes(lowercasedFilter) ||
-        item.numero.toString().includes(lowercasedFilter) ||
-        item.situacao?.nome.toLowerCase().includes(lowercasedFilter)
-    )
-    setFilteredData(filtered)
-  }, [search, processos])
+  }, [paginationModel, search])
 
   // Excluir processo e atualizar corretamente o DataGrid
   const handleDelete = async (id: number) => {
@@ -75,14 +62,11 @@ export default function ProcessoDataGrid() {
         })
 
         if (response.ok) {
-          // Atualiza a quantidade total de registros
           setTotalRows((prev) => prev - 1)
 
-          // Se a página atual ficou vazia após a exclusão, ajusta para a anterior
           if (processos.length === 1 && paginationModel.page > 0) {
             setPaginationModel((prev) => ({ ...prev, page: prev.page - 1 }))
           } else {
-            // 🔄 Recarrega os processos para manter a quantidade correta na página
             fetchData()
           }
         } else {
@@ -95,7 +79,6 @@ export default function ProcessoDataGrid() {
     }
   }
 
-  // Definir colunas do DataGrid
   const columns: GridColDef<ProcessoOutput>[] = [
     { field: "numero", headerName: "Número", width: 130 },
     {
@@ -166,7 +149,9 @@ export default function ProcessoDataGrid() {
 
         <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
           <DataGrid
-            rows={filteredData}
+            disableColumnMenu
+            disableColumnSorting
+            rows={processos}
             columns={columns}
             pageSizeOptions={[5, 10, 20]}
             loading={loading}

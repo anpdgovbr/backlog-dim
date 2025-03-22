@@ -33,6 +33,7 @@ export async function GET(
         pedidoManifestacao: true,
         contatoPrevio: true,
         evidencia: true,
+        tipoReclamacao: true,
       },
     })
 
@@ -92,6 +93,7 @@ export async function PUT(
         contatoPrevioId: body.contatoPrevioId ?? null,
         evidenciaId: body.evidenciaId ?? null,
         anonimo: body.anonimo ?? false,
+        tipoReclamacaoId: body.tipoReclamacaoId ?? null,
       },
     })
 

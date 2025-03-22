@@ -14,6 +14,7 @@ export interface ProcessoInput {
   evidenciaId?: number
   anonimo?: boolean
   observacoes?: string
+  tipoReclamacaoId?: number
 }
 
 export interface ProcessoOutput {
@@ -31,6 +32,7 @@ export interface ProcessoOutput {
   evidencia?: EnumData
   anonimo?: boolean
   observacoes?: string
+  tipoReclamacao?: EnumData
 }
 
 export interface ProcessoImportacao {

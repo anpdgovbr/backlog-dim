@@ -39,6 +39,7 @@ export default function ModalEditarProcesso({
       contatoPrevioId: processo.contatoPrevio?.id,
       evidenciaId: processo.evidencia?.id,
       anonimo: processo.anonimo,
+      tipoReclamacaoId: processo.tipoReclamacao?.id,
     }
 
     const response = await fetch(`/api/processos/${processoId}`, {
