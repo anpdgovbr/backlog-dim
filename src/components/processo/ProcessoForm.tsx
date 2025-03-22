@@ -7,10 +7,12 @@ import {
   Box,
   Chip,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -33,6 +35,7 @@ export default function ProcessoForm({
     pedidoManifestacao: EnumData[]
     contatoPrevio: EnumData[]
     evidencia: EnumData[]
+    tipoReclamacao: EnumData[]
   }>({
     formaEntrada: [],
     responsavel: [],
@@ -42,6 +45,7 @@ export default function ProcessoForm({
     pedidoManifestacao: [],
     contatoPrevio: [],
     evidencia: [],
+    tipoReclamacao: [],
   })
 
   // 🔹 Carrega as listas auxiliares
@@ -69,6 +73,7 @@ export default function ProcessoForm({
           pedidoManifestacao,
           contatoPrevio,
           evidencia,
+          tipoReclamacao,
         ] = await Promise.all([
           fetchLista("formaEntrada"),
           fetchLista("responsaveis"),
@@ -78,6 +83,7 @@ export default function ProcessoForm({
           fetchLista("pedidosManifestacao"),
           fetchLista("contatosPrevios"),
           fetchLista("evidencias"),
+          fetchLista("tiposReclamacao"),
         ])
 
         setListas({
@@ -89,6 +95,7 @@ export default function ProcessoForm({
           pedidoManifestacao: Array.isArray(pedidoManifestacao) ? pedidoManifestacao : [],
           contatoPrevio: Array.isArray(contatoPrevio) ? contatoPrevio : [],
           evidencia: Array.isArray(evidencia) ? evidencia : [],
+          tipoReclamacao: Array.isArray(tipoReclamacao) ? tipoReclamacao : [],
         })
       } catch (error) {
         console.error("❌ Erro ao carregar listas:", error)
@@ -121,6 +128,7 @@ export default function ProcessoForm({
 
       {/* Número do Processo */}
       <TextField
+        size="small"
         fullWidth
         label="Número do Processo"
         value={processo.numero}
@@ -131,6 +139,7 @@ export default function ProcessoForm({
       {/* Data de Criação */}
       <TextField
         fullWidth
+        size="small"
         label="Data de Criação"
         value={new Date(processo.dataCriacao).toLocaleDateString()}
         disabled
@@ -139,6 +148,7 @@ export default function ProcessoForm({
 
       {/* Nome do Requerente */}
       <TextField
+        size="small"
         fullWidth
         label="Requerente"
         name="requerente"
@@ -148,48 +158,70 @@ export default function ProcessoForm({
       />
 
       {/* Campos Selecionáveis */}
-      {[
-        { key: "formaEntrada", label: "Forma de Entrada" },
-        { key: "responsavel", label: "Responsável" },
-        { key: "requerido", label: "Requerido" },
-        { key: "situacao", label: "Situação" },
-        { key: "encaminhamento", label: "Encaminhamento" },
-        { key: "pedidoManifestacao", label: "Pedido de Manifestação" },
-        { key: "contatoPrevio", label: "Contato Prévio" },
-        { key: "evidencia", label: "Evidência" },
-      ].map(({ key, label }) => {
-        const lista = listas[key as keyof typeof listas] ?? []
-        const selectedValue =
-          lista.find(
-            (item) =>
-              (item as EnumData)?.id ===
-              (processo[key as keyof ProcessoOutput] as EnumData)?.id
-          )?.id || ""
+      <Grid container spacing={2}>
+        {[
+          { key: "formaEntrada", label: "Forma de Entrada" },
+          { key: "responsavel", label: "Responsável" },
+          { key: "requerido", label: "Requerido" },
+          { key: "situacao", label: "Situação" },
+          { key: "encaminhamento", label: "Encaminhamento" },
+          { key: "pedidoManifestacao", label: "Pedido de Manifestação" },
+          { key: "contatoPrevio", label: "Contato Prévio" },
+          { key: "evidencia", label: "Evidência" },
+          { key: "tipoReclamacao", label: "Tipo de Reclamação" },
+        ].map(({ key, label }) => {
+          const lista = listas[key as keyof typeof listas] ?? []
+          const selectedValue =
+            lista.find(
+              (item) =>
+                (item as EnumData)?.id ===
+                (processo[key as keyof ProcessoOutput] as EnumData)?.id
+            )?.id || ""
 
-        return (
-          <FormControl fullWidth sx={{ mb: 2 }} key={key}>
-            <InputLabel>{label}</InputLabel>
-            <Select
-              name={key}
-              value={selectedValue}
-              onChange={(e) => {
-                const selectedItem = lista.find(
-                  (item) => item.id === Number(e.target.value)
-                )
-                if (selectedItem) {
-                  setProcesso({ ...processo, [key]: selectedItem })
-                }
-              }}
-            >
-              {lista.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.nome}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )
-      })}
+          return (
+            <Grid item xs={12} sm={6} key={key}>
+              <FormControl fullWidth size="small">
+                <InputLabel>{label}</InputLabel>
+                <Select
+                  name={key}
+                  label={label}
+                  value={selectedValue}
+                  onChange={(e) => {
+                    const selectedItem = lista.find(
+                      (item) => item.id === Number(e.target.value)
+                    )
+                    if (selectedItem) {
+                      setProcesso({ ...processo, [key]: selectedItem })
+                    }
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: { maxWidth: 400 }, // limite no dropdown
+                    },
+                  }}
+                >
+                  {lista.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <Tooltip title={item.nome}>
+                        <Box
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "100%",
+                          }}
+                        >
+                          {item.nome}
+                        </Box>
+                      </Tooltip>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          )
+        })}
+      </Grid>
     </Box>
   )
 }

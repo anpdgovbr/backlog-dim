@@ -53,16 +53,37 @@ export async function GET(req: Request) {
     const pageSize = Number(searchParams.get("pageSize")) || 10
     const orderBy = searchParams.get("orderBy") || "dataCriacao"
     const ascending = searchParams.get("ascending") === "true"
+    const search = searchParams.get("search")?.toLowerCase() || ""
 
     const skip = (page - 1) * pageSize
     const take = pageSize
 
+    const baseWhere = {
+      active: true,
+      ...(search
+        ? {
+            OR: [
+              { requerente: { contains: search, mode: "insensitive" as const } },
+              { numero: { contains: search } },
+              {
+                responsavel: {
+                  nome: { contains: search, mode: "insensitive" as const },
+                },
+              },
+              {
+                situacao: {
+                  nome: { contains: search, mode: "insensitive" as const },
+                },
+              },
+            ],
+          }
+        : {}),
+    }
+
     const [total, processos] = await Promise.all([
-      prisma.processo.count({
-        where: { active: true },
-      }),
+      prisma.processo.count({ where: baseWhere }),
       prisma.processo.findMany({
-        where: { active: true },
+        where: baseWhere,
         skip,
         take,
         orderBy: { [orderBy]: ascending ? "asc" : "desc" },
@@ -71,6 +92,7 @@ export async function GET(req: Request) {
           responsavel: { select: { id: true, nome: true } },
           situacao: { select: { id: true, nome: true } },
           encaminhamento: { select: { id: true, nome: true } },
+          tipoReclamacao: { select: { id: true, nome: true } },
         },
       }),
     ])

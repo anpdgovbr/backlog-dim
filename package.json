@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run buil-routes && next dev --turbopack",
+    "dev": "npm run build-routes && next dev --turbopack",
     "devs": "node server.js",
     "build": "next build",
     "start": "next start",
