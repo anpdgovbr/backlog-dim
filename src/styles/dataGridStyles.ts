@@ -2,11 +2,11 @@ import ANPDtheme from "@/theme/theme"
 import { SxProps } from "@mui/material"
 
 export const dataGridStyles = {
-  height: 400,
+  minHeight: 400,
   width: "100%",
   backgroundColor: ANPDtheme.palette.background.default, // Usa a cor do theme
   borderRadius: 2,
-  padding: 2,
+  py: 1,
   "& .MuiDataGrid-root": {
     backgroundColor: ANPDtheme.palette.background.paper, // Fundo branco do DataGrid
     borderRadius: 2,

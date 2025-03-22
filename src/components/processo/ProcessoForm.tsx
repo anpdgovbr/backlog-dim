@@ -1,25 +1,27 @@
 "use client"
 
 import { EnumData } from "@/types/EnumData"
-import { ProcessoInput, ProcessoOutput } from "@/types/Processo"
+import { ProcessoOutput } from "@/types/Processo"
 import { RequeridoOutput } from "@/types/Requerido"
 import {
   Box,
-  Button,
   Chip,
   FormControl,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
-export default function ProcessoForm({ processoId }: { processoId: number }) {
-  const [processo, setProcesso] = useState<ProcessoOutput | null>(null)
-  //const [requerido, setRequerido] = useState<RequeridoOutput | null>(null)
+export default function ProcessoForm({
+  processo,
+  setProcesso,
+}: {
+  processo: ProcessoOutput | null
+  setProcesso: (data: ProcessoOutput) => void
+}) {
   const [loadingListas, setLoadingListas] = useState(true)
 
   const [listas, setListas] = useState<{
@@ -42,22 +44,6 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
     evidencia: [],
   })
 
-  // 🔹 Carrega o processo
-  useEffect(() => {
-    async function fetchProcesso() {
-      try {
-        const response = await fetch(`/api/processos/${processoId}`)
-        if (!response.ok) throw new Error("Erro ao buscar processo")
-        const data = await response.json()
-        setProcesso(data)
-        console.log("✅ Processo carregado:", data)
-      } catch (error) {
-        console.error("❌ Erro ao carregar processo:", error)
-      }
-    }
-    fetchProcesso()
-  }, [processoId])
-
   // 🔹 Carrega as listas auxiliares
   useEffect(() => {
     async function fetchLista(endpoint: string) {
@@ -65,7 +51,6 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
         const response = await fetch(`/api/${endpoint}`)
         if (!response.ok) throw new Error(`Erro ao buscar ${endpoint}`)
         const data = await response.json()
-        console.log(`✅ ${endpoint} carregado com sucesso!`, data)
         return data
       } catch (error) {
         console.error(`❌ Erro ao carregar ${endpoint}:`, error)
@@ -105,12 +90,10 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
           contatoPrevio: Array.isArray(contatoPrevio) ? contatoPrevio : [],
           evidencia: Array.isArray(evidencia) ? evidencia : [],
         })
-
-        console.log("🔄 Todas as listas carregadas!")
       } catch (error) {
         console.error("❌ Erro ao carregar listas:", error)
       } finally {
-        setLoadingListas(false) // 🚀 Atualiza para indicar que os dados estão prontos
+        setLoadingListas(false)
       }
     }
     fetchListas()
@@ -120,40 +103,14 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
-    setProcesso((prev) => ({ ...prev!, [event.target.name]: event.target.value }))
-  }
-
-  async function handleSave() {
-    if (!processo) return
-
-    const payload: ProcessoInput = {
-      numero: processo!.numero,
-      dataCriacao: new Date(processo!.dataCriacao).toISOString(),
-      requerente: processo?.requerente,
-      formaEntradaId: processo?.formaEntrada?.id ?? undefined,
-      responsavelId: processo?.responsavel?.id ?? undefined,
-      requeridoId: processo?.requerido?.id ?? undefined,
-      situacaoId: processo?.situacao?.id ?? undefined,
-      pedidoManifestacaoId: processo?.pedidoManifestacao?.id ?? undefined,
-      contatoPrevioId: processo?.contatoPrevio?.id ?? undefined,
-      evidenciaId: processo?.evidencia?.id ?? undefined,
-      anonimo: processo?.anonimo ?? false,
-    }
-
-    await fetch(`/api/processos/${processoId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-
-    alert("✅ Processo atualizado com sucesso!")
+    setProcesso({ ...processo!, [event.target.name]: event.target.value })
   }
 
   if (!processo) return <Typography>Carregando Processo...</Typography>
   if (loadingListas) return <Typography>Carregando listas...</Typography>
 
   return (
-    <Paper sx={{ p: 3, mx: "auto", mt: 2, maxWidth: 600 }}>
+    <Box sx={{ maxWidth: 600 }}>
       {/* Chip de Anonimato */}
       <Box sx={{ display: "flex", justifyContent: "start", mb: 2 }}>
         <Chip
@@ -220,7 +177,7 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
                   (item) => item.id === Number(e.target.value)
                 )
                 if (selectedItem) {
-                  setProcesso((prev) => ({ ...prev!, [key]: selectedItem }))
+                  setProcesso({ ...processo, [key]: selectedItem })
                 }
               }}
             >
@@ -233,17 +190,6 @@ export default function ProcessoForm({ processoId }: { processoId: number }) {
           </FormControl>
         )
       })}
-
-      {/* Botão Salvar */}
-      <Button
-        fullWidth
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3 }}
-        onClick={handleSave}
-      >
-        Salvar Alterações
-      </Button>
-    </Paper>
+    </Box>
   )
 }

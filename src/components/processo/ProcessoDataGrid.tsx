@@ -4,12 +4,12 @@ import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { Box, Container, IconButton, Modal, TextField, Typography } from "@mui/material"
+import { Box, Container, IconButton, TextField, Typography } from "@mui/material"
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
-import ProcessoForm from "./ProcessoForm"
+import ModalEditarProcesso from "./ModalEditarProcesso"
 
 export default function ProcessoDataGrid() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])
@@ -100,8 +100,8 @@ export default function ProcessoDataGrid() {
     { field: "numero", headerName: "Número", width: 130 },
     {
       field: "dataCriacao",
-      headerName: "Data Criação",
-      width: 130,
+      headerName: "Criado em",
+      width: 100,
       renderCell: (params) =>
         params.row.dataCriacao
           ? new Date(params.row.dataCriacao).toLocaleDateString("pt-BR")
@@ -128,7 +128,7 @@ export default function ProcessoDataGrid() {
     {
       field: "acoes",
       headerName: "Ações",
-      width: 180,
+      width: 120,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
           <IconButton
@@ -159,7 +159,7 @@ export default function ProcessoDataGrid() {
           label="Buscar..."
           variant="outlined"
           fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 1 }}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -179,25 +179,11 @@ export default function ProcessoDataGrid() {
         </Box>
       </Box>
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "background.paper",
-            p: 3,
-            borderRadius: 2,
-            minWidth: 900,
-            maxHeight: "80vh",
-            overflowY: "auto",
-          }}
-        >
-          {selectedProcessoId && <ProcessoForm processoId={selectedProcessoId} />}
-        </Box>
-      </Modal>
+      <ModalEditarProcesso
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        processoId={selectedProcessoId}
+      />
     </Container>
   )
 }

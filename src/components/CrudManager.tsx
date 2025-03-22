@@ -10,13 +10,15 @@ import {
   Button,
   Container,
   IconButton,
-  Modal,
   TextField,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
+
+import DialogAlert from "./DialogAlert"
+import { GovBRInputModal } from "./GovBRModal"
 
 interface CrudManagerProps {
   entityName: string
@@ -31,15 +33,27 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   const [selectedItem, setSelectedItem] = useState<{ id?: number; nome: string }>({
     nome: "",
   })
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  })
+  const [totalRows, setTotalRows] = useState(0)
+  const [itemToDelete, setItemToDelete] = useState<{ id: number; nome: string } | null>(
+    null
+  )
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
   async function fetchData() {
     setLoadingData(true)
     try {
-      const res = await fetch(`/api/meta/${tableName.toLowerCase()}`)
-      const data = await res.json()
+      const res = await fetch(
+        `/api/meta/${tableName.toLowerCase()}?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=nome&ascending=true`
+      )
+      const { data, total } = await res.json()
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setItems(data.filter((item: any) => item.active !== false))
+      setTotalRows(total)
     } catch (error) {
       console.error(`Erro ao buscar ${tableName}:`, error)
     }
@@ -49,7 +63,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableName])
+  }, [tableName, paginationModel])
 
   async function handleSave() {
     if (!selectedItem.nome.trim()) return alert("Nome não pode estar vazio.")
@@ -70,23 +84,24 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     }
   }
 
-  async function handleDelete(id: number) {
+  function handleDeleteRequest(id: number) {
     const item = items.find((item) => item.id === id)
     if (!item) {
       alert("Item não encontrado.")
       return
     }
+    setItemToDelete({ id: item.id, nome: item.nome })
+  }
 
-    if (
-      !confirm(`Tem certeza que deseja excluir \"${item.nome}\" da tabela ${tableName}?`)
-    )
-      return
+  async function confirmDelete() {
+    if (!itemToDelete) return
+    setLoadingDelete(true)
 
     try {
       const response = await fetch(`/api/meta/${tableName.toLowerCase()}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: itemToDelete.id }),
       })
 
       if (!response.ok) {
@@ -95,19 +110,29 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       }
 
       fetchData()
+      setItemToDelete(null)
     } catch (error) {
-      console.error(`Erro ao excluir \"${item.nome}\" de ${tableName}:`, error)
-      alert(`Erro ao excluir \"${item.nome}\": ${(error as Error).message}`)
+      console.error(`Erro ao excluir "${itemToDelete.nome}":`, error)
+      alert(`Erro ao excluir "${itemToDelete.nome}": ${(error as Error).message}`)
+    } finally {
+      setLoadingDelete(false)
     }
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 60, align: "center", headerAlign: "center" },
-    { field: "nome", headerName: "Nome", flex: 1 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 60,
+      align: "center",
+      headerAlign: "center",
+      sortable: false,
+    },
+    { field: "nome", headerName: "Nome", flex: 1, sortable: false },
     {
       field: "acoes",
       headerName: "Ações",
-
+      sortable: false,
       width: 150,
       renderCell: (params) => (
         <Box>
@@ -124,7 +149,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
           <IconButton
             color="error"
             disabled={!permissoes["Desabilitar_Metadados"]}
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDeleteRequest(params.row.id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -161,54 +186,58 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             sx={{
               ...dataGridStyles,
               display: "flex",
-              height: "100%",
               width: "100%",
               mb: 2,
             }}
           >
             <DataGrid
+              disableColumnMenu
               rows={items}
               columns={columns}
               loading={loadingData}
               pageSizeOptions={[5, 10, 20]}
+              paginationMode="server"
+              rowCount={totalRows}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
             />
           </Box>
-          <Modal
+          <GovBRInputModal
             open={openModal}
             onClose={() => {
               setOpenModal(false)
               setSelectedItem({ nome: "" })
             }}
+            title="Adicionar item"
+            onSubmit={handleSave}
+            confirmText="Salvar"
+            cancelText="Cancelar"
+            disabled={!selectedItem.nome.trim()}
           >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 500,
-                bgcolor: "background.paper",
-                p: 3,
-                borderRadius: 2,
-                minWidth: 900,
-                maxHeight: "80vh",
-                overflowY: "auto",
-              }}
-            >
-              <TextField
-                fullWidth
-                label="Nome"
-                value={selectedItem.nome}
-                onChange={(e) =>
-                  setSelectedItem({ ...selectedItem, nome: e.target.value })
-                }
-              />
-              <Button onClick={handleSave}>Salvar</Button>
-            </Box>
-          </Modal>
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Nome"
+              value={selectedItem.nome}
+              sx={{ my: 1 }}
+              onChange={(e) => setSelectedItem({ ...selectedItem, nome: e.target.value })}
+            />
+          </GovBRInputModal>
         </>
       )}
+      <DialogAlert
+        open={!!itemToDelete}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={confirmDelete}
+        loading={loadingDelete}
+        title="Confirmar exclusão"
+        message={`Tem certeza que deseja excluir "${itemToDelete?.nome}" da tabela ${tableName}?`}
+        confirmText="Sim, excluir"
+        cancelText="Cancelar"
+        severity="danger"
+      />
     </Container>
   )
 }
