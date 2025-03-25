@@ -32,7 +32,7 @@ export default function withPermissao<T extends object>(
 
     if (!permissoes?.[chavePermissao]) {
       return redirecionar ? null : (
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
           <Alert severity="error" variant="filled">
             <AlertTitle>Acesso Negado</AlertTitle>
             <Typography variant="body1" color="inherit">
