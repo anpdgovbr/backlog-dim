@@ -22,7 +22,6 @@ export default function GerenciarPermissoes() {
       fetch(`/api/permissoes?perfilId=${perfilSelecionado}`)
         .then((res) => res.json())
         .then((data: Permissao[]) => {
-          // 🔹 Garante que cada permissão seja única, removendo duplicatas
           const permissoesUnicas = Array.from(
             new Map(
               data.map((p: Permissao) => [
@@ -44,12 +43,10 @@ export default function GerenciarPermissoes() {
   const handleTogglePermissao = async (permissao: Permissao) => {
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
-    // 🔹 Atualiza SOMENTE a permissão específica no estado
     setPermissoes((prev) =>
       prev.map((p: Permissao) => (p.id === permissao.id ? novaPermissao : p))
     )
 
-    // 🔹 Atualiza a permissão na API (garante que só afeta o perfil correto)
     await fetch(`/api/permissoes/${permissao.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

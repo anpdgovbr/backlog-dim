@@ -4,7 +4,6 @@ import FloatingDevMenu from "@/components/FloatingDevMenu"
 import GovBRAvatar from "@/components/GovBRAvatar"
 import SystemTitle from "@/components/SystemTitle"
 import AuthProvider from "@/context/SessionProvider"
-// Importando o menu lateral
 import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
 import "@govbr-ds/core/dist/core.css"
@@ -43,7 +42,6 @@ export default function ClientRootLayout({
             position: "relative",
           }}
         >
-          {/* Cabeçalho */}
           <Box
             component="header"
             sx={{
@@ -67,22 +65,20 @@ export default function ClientRootLayout({
             </Box>
           </Box>
 
-          {/* Corpo do site com menu lateral */}
           <Box
             sx={{
               flex: 1,
-              display: "flex", // Layout em duas colunas
+              display: "flex",
               flexDirection: "row",
               position: "relative",
-              pb: 5, // Espaçamento do rodapé
+              pb: 5,
             }}
           >
-            {/* Conteúdo principal do site */}
             <Box
               component="main"
               sx={{
                 flex: 1,
-                padding: 2, // Espaçamento do conteúdo principal
+                padding: 2,
                 display: "flex",
               }}
             >
@@ -90,7 +86,6 @@ export default function ClientRootLayout({
             </Box>
           </Box>
 
-          {/* Rodapé */}
           <Box
             component="footer"
             sx={{
@@ -99,8 +94,8 @@ export default function ClientRootLayout({
               py: 2,
               backgroundImage:
                 "linear-gradient(135deg, rgba(48, 114, 68, 0.5) 0%, rgba(0, 174, 239, 0.5) 50%, rgba(250, 166, 26, 0.5) 100%)",
-              borderTop: "1px solid rgba(0, 0, 0, 0.2)", // Borda mais sutil
-              color: "#000000", // Texto levemente escuro para contraste
+              borderTop: "1px solid rgba(0, 0, 0, 0.2)",
+              color: "#000000",
             }}
           >
             <Typography variant="body2" color="inherit">
