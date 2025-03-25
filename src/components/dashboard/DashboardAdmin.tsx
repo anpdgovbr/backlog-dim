@@ -10,7 +10,9 @@ import GerenciarProcessos from "@/app/processo/page"
 import GerenciarRequeridos from "@/app/requeridos/page"
 import ResponsaveisPage from "@/app/responsaveis/page"
 import SituacaoPage from "@/app/situacao/page"
-import Dashboard25Wrapper, { ISectionConfig } from "@/components/Dashboard25Wrapper"
+import Dashboard25Wrapper, {
+  ISectionConfig,
+} from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
 import {
   AssignmentTurnedIn,

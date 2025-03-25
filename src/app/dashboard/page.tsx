@@ -1,6 +1,6 @@
 "src/app/dashboard/page.tsx"
 
-import DashboardAdmin from "@/components/DashboardAdmin"
+import DashboardAdmin from "@/components/dashboard/DashboardAdmin"
 import { Box } from "@mui/material"
 
 export default function DashboardPage() {

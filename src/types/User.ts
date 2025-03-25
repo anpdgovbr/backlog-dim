@@ -3,4 +3,6 @@ export interface User {
   email: string
   perfilId?: number | null
   nome?: string
+  image?: string
+  acessToken?: string
 }

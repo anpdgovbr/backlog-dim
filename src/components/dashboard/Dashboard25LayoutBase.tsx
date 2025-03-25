@@ -13,7 +13,7 @@ import {
 import Grid from "@mui/material/Grid"
 import React, { useEffect, useState } from "react"
 
-import { Menu25Base } from "./Menu25Base"
+import { Menu25Base } from "../menu/Menu25Base"
 
 /**
  * Exige ao menos 1 item no array, impedindo arrays vazios em tempo de compilação.
