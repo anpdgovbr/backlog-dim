@@ -1,3 +1,5 @@
+"use client"
+
 import RequeridoDataGrid from "@/components/requerido/RequeridoDataGrid"
 import withPermissao from "@/hoc/withPermissao"
 
