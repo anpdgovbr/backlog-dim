@@ -3,6 +3,7 @@
 import GovBRAvatar from "@/components/GovBRAvatar"
 import SystemTitle from "@/components/SystemTitle"
 import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
+import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
 import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
@@ -34,77 +35,79 @@ export default function ClientRootLayout({
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-            position: "relative",
-          }}
-        >
-          <Box
-            component="header"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              px: 2,
-              py: 1,
-              backgroundImage:
-                "linear-gradient(135deg, #307244 0%, #00AEEF 50%, #FAA61A 100%)",
-              color: "white",
-              boxShadow: 2,
-              position: "relative",
-              zIndex: 1200,
-            }}
-          >
-            <SystemTitle />
-
-            <Box sx={{ position: "relative", display: "inline-block" }}>
-              <GovBRAvatar />
-            </Box>
-          </Box>
-
+        <NotificationProvider>
           <Box
             sx={{
-              flex: 1,
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
+              minHeight: "100vh",
               position: "relative",
-              pb: 5,
             }}
           >
             <Box
-              component="main"
+              component="header"
               sx={{
-                flex: 1,
-                padding: 2,
                 display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: 2,
+                py: 1,
+                backgroundImage:
+                  "linear-gradient(135deg, #307244 0%, #00AEEF 50%, #FAA61A 100%)",
+                color: "white",
+                boxShadow: 2,
+                position: "relative",
+                zIndex: 1200,
               }}
             >
-              {children}
+              <SystemTitle />
+
+              <Box sx={{ position: "relative", display: "inline-block" }}>
+                <GovBRAvatar />
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "row",
+                position: "relative",
+                pb: 5,
+              }}
+            >
+              <Box
+                component="main"
+                sx={{
+                  flex: 1,
+                  padding: 2,
+                  display: "flex",
+                }}
+              >
+                {children}
+              </Box>
+            </Box>
+
+            <Box
+              component="footer"
+              sx={{
+                mt: "auto",
+                textAlign: "center",
+                py: 2,
+                backgroundImage:
+                  "linear-gradient(135deg, rgba(48, 114, 68, 0.5) 0%, rgba(0, 174, 239, 0.5) 50%, rgba(250, 166, 26, 0.5) 100%)",
+                borderTop: "1px solid rgba(0, 0, 0, 0.2)",
+                color: "#000000",
+              }}
+            >
+              <Typography variant="body2" color="inherit">
+                (cc) {new Date().getFullYear()} Desenvolvido pela DDSS/CGTI - Autoridade
+                Nacional de Proteção de Dados.
+              </Typography>
             </Box>
           </Box>
-
-          <Box
-            component="footer"
-            sx={{
-              mt: "auto",
-              textAlign: "center",
-              py: 2,
-              backgroundImage:
-                "linear-gradient(135deg, rgba(48, 114, 68, 0.5) 0%, rgba(0, 174, 239, 0.5) 50%, rgba(250, 166, 26, 0.5) 100%)",
-              borderTop: "1px solid rgba(0, 0, 0, 0.2)",
-              color: "#000000",
-            }}
-          >
-            <Typography variant="body2" color="inherit">
-              (cc) {new Date().getFullYear()} Desenvolvido pela DDSS/CGTI - Autoridade
-              Nacional de Proteção de Dados.
-            </Typography>
-          </Box>
-        </Box>
-        <FloatingDevMenu />
+          <FloatingDevMenu />
+        </NotificationProvider>
       </ThemeProvider>
     </AuthProvider>
   )
