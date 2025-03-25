@@ -1,23 +1,10 @@
+//api/meta/[entidade]/route.ts
 import authOptions from "@/config/next-auth.config"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import { prisma } from "@/lib/prisma"
+import { MetaEntidade, allowedEntities } from "@/types/MetaEntidades"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
-
-const allowedEntities = {
-  setor: prisma.setor,
-  situacao: prisma.situacao,
-  encaminhamento: prisma.encaminhamento,
-  pedidomanifestacao: prisma.pedidoManifestacao,
-  contatoprevio: prisma.contatoPrevio,
-  evidencia: prisma.evidencia,
-  formaentrada: prisma.formaEntrada,
-  responsavel: prisma.responsavel,
-  tiporeclamacao: prisma.tipoReclamacao,
-} as const
-
-type EntidadeKey = keyof typeof allowedEntities
 
 type PrismaDelegate<T> = {
   findMany: (args?: Prisma.Args<T, "findMany">) => Promise<T[]>
@@ -27,7 +14,7 @@ type PrismaDelegate<T> = {
   count: (args?: Prisma.Args<T, "count">) => Promise<number>
 }
 
-const getPrismaModel = (entidade: EntidadeKey): PrismaDelegate<unknown> => {
+const getPrismaModel = (entidade: MetaEntidade): PrismaDelegate<unknown> => {
   return allowedEntities[entidade] as unknown as PrismaDelegate<unknown>
 }
 
@@ -51,7 +38,7 @@ export async function GET(
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
 
   const ent = await params
-  const entidade = ent.entidade.toLowerCase() as EntidadeKey
+  const entidade = ent.entidade.toLowerCase() as MetaEntidade
 
   if (!(entidade in allowedEntities))
     return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
@@ -98,7 +85,7 @@ export async function POST(
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
 
   const ent = await params
-  const entidade = ent.entidade.toLowerCase() as EntidadeKey
+  const entidade = ent.entidade.toLowerCase() as MetaEntidade
   if (!(entidade in allowedEntities))
     return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
 
@@ -125,7 +112,7 @@ export async function PUT(
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
 
   const ent = await params
-  const entidade = ent.entidade.toLowerCase() as EntidadeKey
+  const entidade = ent.entidade.toLowerCase() as MetaEntidade
   if (!(entidade in allowedEntities))
     return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
 
@@ -153,7 +140,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
 
   const ent = await params
-  const entidade = ent.entidade.toLowerCase() as EntidadeKey
+  const entidade = ent.entidade.toLowerCase() as MetaEntidade
   if (!(entidade in allowedEntities))
     return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
 
