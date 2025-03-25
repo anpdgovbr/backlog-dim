@@ -88,7 +88,7 @@ export function GovBRModal({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent id={`${id}-description`} className="br-modal-body">
+      <DialogContent id={`${id}-description`} className="br-modal-body" sx={{ m: 0 }}>
         {children}
       </DialogContent>
 
