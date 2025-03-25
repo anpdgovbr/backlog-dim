@@ -122,7 +122,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
         {/* Menu lateral (ou Select) */}
         <Grid item xs={12} md={3}>
           {isUpMd ? (
-            <Box>
+            <>
               {sections.map((section) => {
                 // Consideramos “aberto” se for a seção selecionada
                 const expanded = section.id === selectedSection
@@ -143,7 +143,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
                   />
                 )
               })}
-            </Box>
+            </>
           ) : (
             // Em telas pequenas, exibimos um Select
             <FormControl fullWidth variant="outlined" sx={{ mt: 1, mb: 1 }}>
