@@ -30,8 +30,6 @@ export default function GerenciarPerfis() {
   const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
-
-  // 🔹 Enquanto `session` está carregando, exibimos um indicador de carregamento.
   const loadingSession = status === "loading"
 
   useEffect(() => {
@@ -41,7 +39,6 @@ export default function GerenciarPerfis() {
           fetch("/api/usuarios").then((res) => res.json()),
           fetch("/api/perfis").then((res) => res.json()),
         ])
-
         setUsuarios(usuariosRes)
         setPerfis(perfisRes)
       } catch (err) {
@@ -54,7 +51,6 @@ export default function GerenciarPerfis() {
     fetchData()
   }, [])
 
-  // 🔹 Busca o perfil do usuário autenticado via API, baseado no e-mail
   useEffect(() => {
     if (session?.user?.email) {
       fetch(`/api/perfil?email=${session.user.email}`)
@@ -70,10 +66,8 @@ export default function GerenciarPerfis() {
     }
   }, [session?.user?.email])
 
-  // 🔹 Obtendo o `perfilId` do usuário autenticado
   const usuarioPerfilId = perfilUsuario?.id || null
 
-  // 🔹 Restrição de Acesso: Apenas SuperAdmin (id=5) e Administrador (id=4)
   const temPermissaoAcesso = usuarioPerfilId === 5 || usuarioPerfilId === 4
 
   if (loadingSession || loadingPerfil) {
@@ -108,7 +102,6 @@ export default function GerenciarPerfis() {
         throw new Error("Erro ao atualizar perfil")
       }
 
-      // Atualiza o estado localmente para refletir a mudança na UI
       setUsuarios((prev) =>
         prev.map((user) => (user.id === userId ? { ...user, perfilId } : user))
       )

@@ -32,14 +32,12 @@ export default function DashboardSuperAdmin() {
     permitido: true,
   })
 
-  // 🔹 Buscar Perfis
   useEffect(() => {
     fetch("/api/perfis")
       .then((res) => res.json())
       .then(setPerfis)
   }, [])
 
-  // 🔹 Buscar Permissões quando um perfil for selecionado
   useEffect(() => {
     if (perfilSelecionado !== null) {
       fetch(`/api/permissoes?perfilId=${perfilSelecionado}`)
@@ -48,7 +46,6 @@ export default function DashboardSuperAdmin() {
     }
   }, [perfilSelecionado])
 
-  // 🔹 Criar Novo Perfil
   const handleCriarPerfil = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!novoPerfil.trim()) return
@@ -65,7 +62,6 @@ export default function DashboardSuperAdmin() {
       .then(setPerfis)
   }
 
-  // 🔹 Atualizar Permissão (Ativar/Desativar)
   const handleTogglePermissao = async (permissao?: Permissao) => {
     console.log("🖱️ Clique detectado - Permissão:", permissao)
 
@@ -76,10 +72,8 @@ export default function DashboardSuperAdmin() {
 
     console.log("✅ Permissão clicada:", permissao)
 
-    // 🔹 Alterna a permissão visualmente primeiro
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
-    // 🔹 Atualiza estado visualmente
     setPermissoes((prev) => prev.map((p) => (p.id === permissao.id ? novaPermissao : p)))
 
     try {
@@ -98,11 +92,9 @@ export default function DashboardSuperAdmin() {
     } catch (err) {
       console.error("🚨 Erro ao chamar API de permissões:", err)
 
-      // 🔹 Se der erro, reverte a alteração visual
       setPermissoes((prev) => prev.map((p) => (p.id === permissao.id ? permissao : p)))
     }
   }
-  // 🔹 Criar Nova Permissão
   const handleCriarPermissao = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!novaPermissao.perfilId || !novaPermissao.acao || !novaPermissao.recurso) return
@@ -130,7 +122,6 @@ export default function DashboardSuperAdmin() {
         Dashboard SuperAdmin
       </Typography>
 
-      {/* 🔹 Seção de Gerenciar Perfis */}
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Gerenciar Perfis</Typography>
@@ -146,7 +137,6 @@ export default function DashboardSuperAdmin() {
         </AccordionDetails>
       </Accordion>
 
-      {/* 🔹 Criar Novo Perfil */}
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Criar Novo Perfil</Typography>
@@ -171,7 +161,6 @@ export default function DashboardSuperAdmin() {
         </AccordionDetails>
       </Accordion>
 
-      {/* 🔹 Gerenciar Permissões */}
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Gerenciar Permissões</Typography>
@@ -210,7 +199,7 @@ export default function DashboardSuperAdmin() {
                   <AccordionDetails>
                     <List>
                       {permissoesRecurso.map((p, index) => {
-                        console.log(`Permissão carregada para ${recurso}:`, p) // 📌 Adicionando log para cada permissão
+                        console.log(`Permissão carregada para ${recurso}:`, p)
 
                         if (!p) {
                           console.error(`Permissão inválida na posição ${index}:`, p)
@@ -243,7 +232,6 @@ export default function DashboardSuperAdmin() {
         </AccordionDetails>
       </Accordion>
 
-      {/* 🔹 Criar Nova Permissão */}
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Criar Nova Permissão</Typography>
