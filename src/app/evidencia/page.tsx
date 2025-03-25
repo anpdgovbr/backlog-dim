@@ -1,5 +1,12 @@
 import CrudManager from "@/components/CrudManager"
+import withPermissao from "@/hoc/withPermissao"
 
-export default function EvidenciaPage() {
+function EvidenciaPageContent() {
   return <CrudManager tableName="Evidencia" entityName="Evidência" />
 }
+
+const EvidenciaPage = withPermissao(EvidenciaPageContent, "Exibir", "Metadados", {
+  redirecionar: false,
+})
+
+export default EvidenciaPage

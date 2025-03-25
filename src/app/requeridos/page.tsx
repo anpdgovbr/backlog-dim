@@ -1,5 +1,17 @@
 import RequeridoDataGrid from "@/components/requerido/RequeridoDataGrid"
+import withPermissao from "@/hoc/withPermissao"
 
-export default function GerenciarRequeridos() {
+function GerenciarRequeridosContent() {
   return <RequeridoDataGrid />
 }
+
+const GerenciarRequeridos = withPermissao(
+  GerenciarRequeridosContent,
+  "Exibir",
+  "Responsavel",
+  {
+    redirecionar: false,
+  }
+)
+
+export default GerenciarRequeridos

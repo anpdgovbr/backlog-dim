@@ -1,5 +1,6 @@
 "use client"
 
+import withPermissao from "@/hoc/withPermissao"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,
@@ -33,7 +34,7 @@ type ResumoImportacao = {
   formasEntrada: Record<string, number>
 }
 
-export default function ImportarProcessos() {
+function ImportarProcessosContent() {
   const [cabecalho, setCabecalho] = useState<string[]>([])
   const [dados, setDados] = useState<CsvRow[]>([])
   const [loading, setLoading] = useState(false)
@@ -346,3 +347,14 @@ const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, numb
     },
     {} as Record<string, number>
   )
+
+const ImportarProcessos = withPermissao(
+  ImportarProcessosContent,
+  "Cadastrar",
+  "Processo",
+  {
+    redirecionar: false,
+  }
+)
+
+export default ImportarProcessos
