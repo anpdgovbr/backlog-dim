@@ -1,5 +1,6 @@
-import { ProcessoOutput } from "@/types/Processo"
-import { useEffect, useState } from "react"
+import { ProcessoInput, ProcessoOutput, toProcessoInput } from "@/types/Processo"
+import { useEffect, useMemo, useState } from "react"
+import { useForm } from "react-hook-form"
 
 import { GovBRInputModal } from "../GovBRModal"
 import ProcessoForm from "./ProcessoForm"
@@ -15,6 +16,46 @@ export default function ModalEditarProcesso({
 }) {
   const [processo, setProcesso] = useState<ProcessoOutput | null>(null)
 
+  const defaultValues = useMemo(() => {
+    return processo ? toProcessoInput(processo) : undefined
+  }, [processo])
+
+  console.log(defaultValues)
+
+  const methods = useForm<ProcessoInput>({ defaultValues })
+
+  const handleSubmit = methods.handleSubmit((dataFromForm) => {
+    if (!processo) return
+
+    const payload = {
+      ...dataFromForm,
+      numero: processo.numero,
+      dataCriacao: new Date(processo.dataCriacao).toISOString(),
+      anonimo: processo.anonimo,
+      formaEntradaId: dataFromForm.formaEntradaId,
+      responsavelId: dataFromForm.responsavelId,
+      situacaoId: dataFromForm.situacaoId,
+      encaminhamentoId: dataFromForm.encaminhamentoId,
+      pedidoManifestacaoId: dataFromForm.pedidoManifestacaoId,
+      contatoPrevioId: dataFromForm.contatoPrevioId,
+      evidenciaId: dataFromForm.evidenciaId,
+      tipoReclamacaoId: dataFromForm.tipoReclamacaoId,
+    }
+
+    fetch(`/api/processos/${processo.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then((res) => {
+      if (res.ok) {
+        alert("✅ Processo atualizado com sucesso!")
+        onClose()
+      } else {
+        alert("❌ Erro ao atualizar o processo")
+      }
+    })
+  })
+
   useEffect(() => {
     async function fetchProcesso() {
       if (!processoId) return
@@ -25,36 +66,11 @@ export default function ModalEditarProcesso({
     if (open && processoId) fetchProcesso()
   }, [open, processoId])
 
-  async function handleSave() {
-    if (!processo || !processoId) return
-    const payload = {
-      numero: processo.numero,
-      dataCriacao: new Date(processo.dataCriacao).toISOString(),
-      requerente: processo.requerente,
-      formaEntradaId: processo.formaEntrada?.id,
-      responsavelId: processo.responsavel?.id,
-      requeridoId: processo.requerido?.id,
-      situacaoId: processo.situacao?.id,
-      pedidoManifestacaoId: processo.pedidoManifestacao?.id,
-      contatoPrevioId: processo.contatoPrevio?.id,
-      evidenciaId: processo.evidencia?.id,
-      anonimo: processo.anonimo,
-      tipoReclamacaoId: processo.tipoReclamacao?.id,
+  useEffect(() => {
+    if (processo) {
+      methods.reset(toProcessoInput(processo))
     }
-
-    const response = await fetch(`/api/processos/${processoId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-
-    if (response.ok) {
-      alert("✅ Processo atualizado com sucesso!")
-      onClose()
-    } else {
-      alert("❌ Erro ao atualizar o processo")
-    }
-  }
+  }, [processo])
 
   return (
     <GovBRInputModal
@@ -63,10 +79,10 @@ export default function ModalEditarProcesso({
       onClose={onClose}
       title="Editar Processo"
       confirmText="Salvar Alterações"
-      onSubmit={handleSave}
+      onSubmit={handleSubmit}
       disabled={!processo}
     >
-      {processo && <ProcessoForm processo={processo} setProcesso={setProcesso} />}
+      {processo && <ProcessoForm processo={processo} methods={methods} />}
     </GovBRInputModal>
   )
 }

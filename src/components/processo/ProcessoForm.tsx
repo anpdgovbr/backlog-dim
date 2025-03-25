@@ -1,138 +1,114 @@
 "use client"
 
-import { ProcessoOutput } from "@/types/Processo"
-import { Box, Chip, Grid, TextField, Typography } from "@mui/material"
-import { FormProvider, useForm } from "react-hook-form"
+import { ProcessoInput, ProcessoOutput } from "@/types/Processo"
+import { Chip, Grid, TextField } from "@mui/material"
+import { FormProvider, UseFormReturn } from "react-hook-form"
 
 import { MetaDropdownSection } from "../select/MetaDropdownSection"
+import { RequeridoDropdownSection } from "../select/RequeridoDropdownSection"
 
 export default function ProcessoForm({
   processo,
-  setProcesso,
+  methods,
 }: {
-  processo: ProcessoOutput | null
-  setProcesso: (data: ProcessoOutput) => void
+  processo: ProcessoOutput
+  methods: UseFormReturn<ProcessoInput>
 }) {
-  const methods = useForm()
-
-  function handleChange(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    setProcesso({ ...processo!, [event.target.name]: event.target.value })
-  }
-
-  if (!processo) return <Typography>Carregando Processo...</Typography>
+  const { register } = methods
 
   return (
     <FormProvider {...methods}>
       <form>
-        <Box sx={{ maxWidth: "lg", pb: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "start", mb: 2 }}>
-            <Chip
-              label={processo.anonimo ? "Denúncia Anônima" : "Identificado"}
-              color={processo.anonimo ? "error" : "primary"}
+        <Chip
+          label={processo.anonimo ? "Denúncia Anônima" : "Identificado"}
+          color={processo.anonimo ? "error" : "primary"}
+          sx={{ mb: 2 }}
+        />
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              disabled
+              size="small"
+              label="Número"
+              value={processo.numero}
             />
-          </Box>
-
-          {/* Número do Processo */}
-          <TextField
-            size="small"
-            fullWidth
-            label="Número do Processo"
-            value={processo.numero}
-            disabled
-            sx={{ mb: 2 }}
-          />
-
-          {/* Data de Criação */}
-          <TextField
-            fullWidth
-            size="small"
-            label="Data de Criação"
-            value={new Date(processo.dataCriacao).toLocaleDateString()}
-            disabled
-            sx={{ mb: 2 }}
-          />
-
-          {/* Nome do Requerente */}
-          <TextField
-            size="small"
-            fullWidth
-            label="Requerente"
-            name="requerente"
-            value={processo.requerente || ""}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-
-          {/* Campos Selecionáveis */}
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="formaentrada"
-                label="Forma de Entrada"
-                name="formaEntrada"
-                defaultValue={processo.formaEntrada?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="responsavel"
-                label="Responsável"
-                name="responsavel"
-                defaultValue={processo.responsavel?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="situacao"
-                label="Situação"
-                name="situacao"
-                defaultValue={processo.situacao?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="encaminhamento"
-                label="Encaminhamento"
-                name="encaminhamento"
-                defaultValue={processo.encaminhamento?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="pedidomanifestacao"
-                label="Pedido de Manifestação"
-                name="pedidoManifestacao"
-                defaultValue={processo.pedidoManifestacao?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="contatoprevio"
-                label="Contato Prévio"
-                name="contatoPrevio"
-                defaultValue={processo.contatoPrevio?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="evidencia"
-                label="Evidência"
-                name="evidencia"
-                defaultValue={processo.evidencia?.id}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetaDropdownSection
-                entidade="tiporeclamacao"
-                label="Tipo de Reclamação"
-                name="tipoReclamacao"
-                defaultValue={processo.tipoReclamacao?.id}
-              />
-            </Grid>
           </Grid>
-        </Box>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              disabled
+              size="small"
+              label="Data de Criação"
+              value={new Date(processo.dataCriacao).toLocaleDateString()}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              {...register("requerente")}
+              label="Requerente"
+              fullWidth
+              size="small"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <RequeridoDropdownSection label="Requerido" name="requeridoId" />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="formaentrada"
+              name="formaEntradaId"
+              label="Forma de Entrada"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="responsavel"
+              name="responsavelId"
+              label="Responsável"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection entidade="situacao" name="situacaoId" label="Situação" />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="encaminhamento"
+              name="encaminhamentoId"
+              label="Encaminhamento"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="pedidomanifestacao"
+              name="pedidoManifestacaoId"
+              label="Pedido de Manifestação"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="contatoprevio"
+              name="contatoPrevioId"
+              label="Contato Prévio"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="evidencia"
+              name="evidenciaId"
+              label="Evidência"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetaDropdownSection
+              entidade="tiporeclamacao"
+              name="tipoReclamacaoId"
+              label="Tipo de Reclamação"
+            />
+          </Grid>
+        </Grid>
       </form>
     </FormProvider>
   )
