@@ -1,5 +1,17 @@
 import CrudManager from "@/components/CrudManager"
+import withPermissao from "@/hoc/withPermissao"
 
-export default function EncaminhamentoPage() {
+function EncaminhamentoPageContent() {
   return <CrudManager tableName="Encaminhamento" entityName="Encaminhamento" />
 }
+
+const EncaminhamentoPage = withPermissao(
+  EncaminhamentoPageContent,
+  "Exibir",
+  "Metadados",
+  {
+    redirecionar: false,
+  }
+)
+
+export default EncaminhamentoPage

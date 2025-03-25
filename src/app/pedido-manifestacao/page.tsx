@@ -1,7 +1,16 @@
 import CrudManager from "@/components/CrudManager"
+import withPermissao from "@/hoc/withPermissao"
 
-export default function PedidoManifestacaoPage() {
+function PedidoManifestacaoPageContent() {
   return (
     <CrudManager tableName="PedidoManifestacao" entityName="Pedidos de Manifestação" />
   )
 }
+const PedidoManifestacaoPage = withPermissao(
+  PedidoManifestacaoPageContent,
+  "Exibir",
+  "Metadados",
+  { redirecionar: false }
+)
+
+export default PedidoManifestacaoPage

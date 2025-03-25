@@ -1,6 +1,7 @@
 "use client"
 
 import usePermissoes from "@/hooks/usePermissoes"
+import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
 import { Alert, AlertTitle, Button, Container, Typography } from "@mui/material"
 import { useRouter } from "next/navigation"
 import { ComponentType, useEffect } from "react"
@@ -11,25 +12,25 @@ interface WithPermissaoOptions {
 
 export default function withPermissao<T extends object>(
   Componente: ComponentType<T>,
-  acao: string,
-  recurso: string,
-  { redirecionar = true }: WithPermissaoOptions = {} // 🔹 Padrão: redireciona, mas pode ser desativado
+  acao: AcaoPermissao,
+  recurso: RecursoPermissao,
+  { redirecionar = true }: WithPermissaoOptions = {}
 ) {
   return function Protegido(props: T) {
     const { permissoes, loading } = usePermissoes()
     const router = useRouter()
 
-    const chavePermissao = `${acao}_${recurso}` as keyof typeof permissoes
+    const chavePermissao = `${acao}_${recurso}` as PermissaoConcedida
 
     useEffect(() => {
-      if (!loading && !permissoes[chavePermissao] && redirecionar) {
+      if (!loading && !permissoes?.[chavePermissao] && redirecionar) {
         router.push("/acesso-negado")
       }
     }, [permissoes, loading, router, chavePermissao])
 
     if (loading) return <p>Carregando permissões...</p>
 
-    if (!permissoes[chavePermissao]) {
+    if (!permissoes?.[chavePermissao]) {
       return redirecionar ? null : (
         <Container maxWidth="md">
           <Alert severity="error" variant="filled">

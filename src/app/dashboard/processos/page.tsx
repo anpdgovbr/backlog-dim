@@ -1,5 +1,6 @@
 "use client"
 
+import withPermissao from "@/hoc/withPermissao"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -14,7 +15,7 @@ import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function ListaProcessos() {
+function ListarProcessosContent() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])
   const [filteredData, setFilteredData] = useState<ProcessoOutput[]>([])
   const [loading, setLoading] = useState(true)
@@ -23,10 +24,9 @@ export default function ListaProcessos() {
     page: 0,
     pageSize: 10,
   })
-  const [totalRows, setTotalRows] = useState(0) // 🔹 Total de registros no backend
+  const [totalRows, setTotalRows] = useState(0)
   const router = useRouter()
 
-  // Buscar dados da API
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
@@ -39,7 +39,7 @@ export default function ListaProcessos() {
         if (Array.isArray(data)) {
           setProcessos(data)
           setFilteredData(data)
-          setTotalRows(total) // 🔹 Atualiza o total de registros
+          setTotalRows(total)
         } else {
           console.error("Resposta inesperada da API:", data)
           setProcessos([])
@@ -67,7 +67,6 @@ export default function ListaProcessos() {
     setFilteredData(filtered)
   }, [search, processos])
 
-  // Função para excluir um processo
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
@@ -78,7 +77,7 @@ export default function ListaProcessos() {
 
         if (response.ok) {
           setProcessos((prev) => prev.filter((item) => item.id !== id))
-          setTotalRows((prev) => prev - 1) // 🔹 Atualiza total ao excluir
+          setTotalRows((prev) => prev - 1)
         } else {
           alert("Erro ao excluir: " + data.error)
         }
@@ -88,7 +87,6 @@ export default function ListaProcessos() {
     }
   }
 
-  // Definição das colunas da tabela
   const columns: GridColDef<ProcessoOutput>[] = [
     { field: "numero", headerName: "Número", width: 130 },
     {
@@ -96,7 +94,6 @@ export default function ListaProcessos() {
       headerName: "Data Criação",
       width: 130,
       renderCell: (params: GridRenderCellParams<ProcessoOutput>) => {
-        // Converter a string ISO para um objeto Date e formatar corretamente
         const data = params.row.dataCriacao ? new Date(params.row.dataCriacao) : null
         return data ? data.toLocaleDateString("pt-BR") : "Indefinida"
       },
@@ -149,8 +146,6 @@ export default function ListaProcessos() {
     },
   ]
 
-  console.log("processos:", filteredData)
-
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Box>
@@ -174,9 +169,9 @@ export default function ListaProcessos() {
             pageSizeOptions={[5, 10, 20]}
             loading={loading}
             paginationMode="server"
-            rowCount={totalRows} // 🔹 Agora passamos `rowCount`
-            paginationModel={paginationModel} // 🔹 Define modelo correto de paginação
-            onPaginationModelChange={setPaginationModel} // 🔹 Atualiza o estado da paginação
+            rowCount={totalRows}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
           />
         </div>
@@ -184,3 +179,9 @@ export default function ListaProcessos() {
     </Container>
   )
 }
+
+const ListarProcessos = withPermissao(ListarProcessosContent, "Exibir", "Processo", {
+  redirecionar: false,
+})
+
+export default ListarProcessos
