@@ -7,7 +7,7 @@ export interface RequeridoInput {
   cnaeId?: number
   site?: string
   email?: string
-  setorId?: number
+  setorId?: number | string
 }
 
 export interface RequeridoOutput {

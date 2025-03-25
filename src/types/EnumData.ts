@@ -1,4 +1,4 @@
 export interface EnumData {
-  id: number
+  id: number | string
   nome: string
 }

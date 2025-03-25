@@ -1,6 +1,16 @@
 "use client"
 
-import { Box, Modal, SxProps } from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Paper,
+  SxProps,
+  Typography,
+} from "@mui/material"
 import { ReactNode } from "react"
 
 interface GovBRModalProps {
@@ -29,65 +39,67 @@ export function GovBRModal({
   sx,
 }: GovBRModalProps) {
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") onClose()
       }}
-      disableEscapeKeyDown
       aria-labelledby={ariaLabelledBy}
       aria-describedby={`${id}-description`}
-      slotProps={{
-        backdrop: {
-          style: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
-        },
+      scroll={scroll ? "paper" : "body"}
+      PaperComponent={(props) => (
+        <Paper
+          {...props}
+          className={`br-modal is-${size}`}
+          id={id}
+          role="dialog"
+          aria-modal="true"
+          sx={{
+            width: "auto",
+            minWidth: 350,
+            borderRadius: 1,
+            maxHeight: scroll ? 600 : "unset",
+            display: "flex",
+            flexDirection: "column",
+            boxShadow: "var(--surface-shadow-sm)",
+            ...sx,
+          }}
+        />
+      )}
+      BackdropProps={{
+        style: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
       }}
     >
-      <Box
-        className={`br-modal is-${size}`}
-        id={id}
-        role="dialog"
-        aria-modal="true"
-        sx={{
-          minWidth: 350,
-          ...sx,
-          position: "absolute",
-          top: "40%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "#fff",
-          borderRadius: "4px",
-          maxHeight: scroll ? 500 : "unset",
-          display: "flex",
-          flexDirection: "column",
-          boxShadow: "var(--surface-shadow-sm)",
-          width: "auto",
-        }}
+      <DialogTitle
+        id={ariaLabelledBy}
+        className="br-modal-header"
+        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
-        <div className="br-modal-header">
-          <div className="modal-title" id={ariaLabelledBy}>
-            {title}
-          </div>
-          <button
-            className="br-button circle small close"
-            type="button"
-            aria-label="Fechar"
-            onClick={onClose}
-          >
-            <i className="fas fa-times" aria-hidden="true" />
-          </button>
-        </div>
-        <div className="br-modal-body" id={`${id}-description`}>
-          {children}
-        </div>
-        {footer && <div className="br-modal-footer justify-content-end">{footer}</div>}
-      </Box>
-    </Modal>
+        <Typography variant="h6" component="div" className="modal-title">
+          {title}
+        </Typography>
+        <IconButton
+          aria-label="Fechar"
+          onClick={onClose}
+          size="small"
+          className="br-button circle small close"
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent id={`${id}-description`} className="br-modal-body">
+        {children}
+      </DialogContent>
+
+      {footer && (
+        <DialogActions className="br-modal-footer justify-content-end" sx={{ gap: 1 }}>
+          {footer}
+        </DialogActions>
+      )}
+    </Dialog>
   )
 }
-
 export function GovBRConfirmModal({
   open,
   onClose,
@@ -124,7 +136,7 @@ export function GovBRConfirmModal({
         </>
       }
     >
-      <p>{message}</p>
+      <Typography>{message}</Typography>
     </GovBRModal>
   )
 }
