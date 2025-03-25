@@ -88,7 +88,6 @@ export function GovBRModal({
   )
 }
 
-// Modal de confirmação simples
 export function GovBRConfirmModal({
   open,
   onClose,
@@ -130,7 +129,6 @@ export function GovBRConfirmModal({
   )
 }
 
-// Modal de entrada com formulário
 export function GovBRInputModal({
   open,
   onClose,
@@ -174,7 +172,6 @@ export function GovBRInputModal({
   )
 }
 
-// Modal de seleção com opções (ex: radio buttons)
 export function GovBROptionModal({
   open,
   onClose,

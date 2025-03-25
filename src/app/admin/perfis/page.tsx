@@ -27,6 +27,7 @@ export default function GerenciarPerfis() {
   const { data: session, status } = useSession()
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [perfis, setPerfis] = useState<Perfil[]>([])
+  const [responsaveis, setResponsaveis] = useState<User[]>([])
   const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
@@ -35,19 +36,20 @@ export default function GerenciarPerfis() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [usuariosRes, perfisRes] = await Promise.all([
+        const [usuariosRes, perfisRes, responsaveisRes] = await Promise.all([
           fetch("/api/usuarios").then((res) => res.json()),
           fetch("/api/perfis").then((res) => res.json()),
+          fetch("/api/responsaveis").then((res) => res.json()),
         ])
         setUsuarios(usuariosRes)
         setPerfis(perfisRes)
+        setResponsaveis(responsaveisRes)
       } catch (err) {
         console.error("Erro ao buscar dados:", err)
       } finally {
         setLoading(false)
       }
     }
-
     fetchData()
   }, [])
 
@@ -72,7 +74,7 @@ export default function GerenciarPerfis() {
 
   if (loadingSession || loadingPerfil) {
     return (
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Box display="flex" justifyContent="center" mt={5}>
           <CircularProgress />
         </Box>
@@ -82,7 +84,7 @@ export default function GerenciarPerfis() {
 
   if (!temPermissaoAcesso) {
     return (
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Alert severity="error" sx={{ mt: 3 }}>
           Você não tem permissão para acessar esta página.
         </Alert>
@@ -111,7 +113,7 @@ export default function GerenciarPerfis() {
   }
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <Typography
         variant="h4"
         sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}
@@ -134,6 +136,11 @@ export default function GerenciarPerfis() {
                   sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
                 >
                   Perfil
+                </TableCell>
+                <TableCell
+                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                >
+                  Responsável
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -159,6 +166,33 @@ export default function GerenciarPerfis() {
                         {perfis.map((perfil) => (
                           <MenuItem className="br-item" key={perfil.id} value={perfil.id}>
                             {perfil.nome}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+
+                  <TableCell align="center">
+                    <FormControl fullWidth size="small">
+                      <InputLabel id={`responsavel-label-${user.id}`}>Perfil</InputLabel>
+                      <Select
+                        label="Responsável"
+                        className="input"
+                        value={user.responsavelId || ""}
+                        onChange={(e) =>
+                          handlePerfilChange(user.id, Number(e.target.value))
+                        }
+                      >
+                        <MenuItem className="br-item" value="">
+                          Relacione com um responsável
+                        </MenuItem>
+                        {responsaveis.map((responsavel) => (
+                          <MenuItem
+                            className="br-item"
+                            key={responsavel.id}
+                            value={responsavel.id}
+                          >
+                            {responsavel.nome}
                           </MenuItem>
                         ))}
                       </Select>

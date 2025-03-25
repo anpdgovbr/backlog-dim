@@ -77,7 +77,6 @@ export default function DialogAlert({
         },
       }}
     >
-      {/* Botão de fechar no canto superior direito */}
       <IconButton
         onClick={onClose}
         aria-label="Fechar"
