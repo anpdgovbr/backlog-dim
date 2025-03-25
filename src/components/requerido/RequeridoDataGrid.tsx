@@ -1,6 +1,7 @@
 "use client"
 
 import usePermissoes from "@/hooks/usePermissoes"
+import { dataGridStyles } from "@/styles/dataGridStyles"
 import { RequeridoOutput } from "@/types/Requerido"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -34,7 +35,6 @@ export default function RequeridoDataGrid() {
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
 
-  // 🔹 Buscar dados da API (atualizado)
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
@@ -43,15 +43,12 @@ export default function RequeridoDataGrid() {
           `/api/requeridos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}`
         )
 
-        // Verificar se a resposta é OK
         if (!response.ok) {
           throw new Error(`Erro HTTP: ${response.status} - ${await response.text()}`)
         }
 
-        // Tentar parsear o JSON
         const responseData = await response.json()
 
-        // Validar estrutura da resposta
         if (!responseData.data || !Array.isArray(responseData.data)) {
           throw new Error("Estrutura de dados inválida na resposta da API")
         }
@@ -61,7 +58,6 @@ export default function RequeridoDataGrid() {
         setTotalRows(responseData.total || 0)
       } catch (error) {
         console.error("Erro ao buscar requeridos:", error)
-        // Mostrar feedback para o usuário
         alert("Erro ao carregar dados. Verifique o console para mais detalhes.")
         setRequeridos([])
         setFilteredData([])
@@ -72,7 +68,6 @@ export default function RequeridoDataGrid() {
     fetchData()
   }, [paginationModel])
 
-  // 🔹 Filtro de busca
   useEffect(() => {
     const lowercasedFilter = search.toLowerCase()
     const filtered = requeridos.filter(
@@ -84,7 +79,6 @@ export default function RequeridoDataGrid() {
     setFilteredData(filtered)
   }, [search, requeridos])
 
-  // 🔹 Excluir requerido
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este requerido?")) {
       try {
@@ -105,7 +99,6 @@ export default function RequeridoDataGrid() {
     }
   }
 
-  // 🔹 Definir colunas do DataGrid
   const columns: GridColDef<RequeridoOutput>[] = [
     { field: "nome", headerName: "Nome", flex: 1 },
     { field: "cnpj", headerName: "CNPJ", width: 130 },
@@ -174,7 +167,6 @@ export default function RequeridoDataGrid() {
               Lista de Requeridos
             </Typography>
 
-            {/* 🔹 Botão Adicionar */}
             <Button
               variant="contained"
               startIcon={<GridAddIcon />}
@@ -197,7 +189,8 @@ export default function RequeridoDataGrid() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <div style={{ display: "flex", height: "100%", width: "100%" }}>
+          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+            {" "}
             <DataGrid
               rows={filteredData}
               columns={columns}
@@ -209,7 +202,7 @@ export default function RequeridoDataGrid() {
               onPaginationModelChange={setPaginationModel}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
             />
-          </div>
+          </Box>
 
           <Modal open={openModal} onClose={() => {}}>
             <Box
@@ -227,7 +220,6 @@ export default function RequeridoDataGrid() {
                 overflowY: "auto",
               }}
             >
-              {/* 🔹 Botão de Fechar */}
               <Box display="flex" justifyContent="flex-end">
                 <IconButton onClick={() => setOpenModal(false)} color="inherit">
                   ✖

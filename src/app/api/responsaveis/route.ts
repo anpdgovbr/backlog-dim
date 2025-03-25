@@ -10,7 +10,6 @@ export async function GET() {
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  // 🔹 Verifica permissão para visualizar os metadados
   const temPermissao = await verificarPermissao(
     session.user.email,
     "Exibir",

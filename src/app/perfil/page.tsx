@@ -34,8 +34,8 @@ export default function PerfilPage() {
   }, [session?.user?.email])
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper sx={{ p: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper sx={{ p: 2, boxShadow: 2 }}>
         <Typography variant="h4" gutterBottom>
           Meu Perfil
         </Typography>

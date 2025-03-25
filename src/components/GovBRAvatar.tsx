@@ -46,7 +46,7 @@ export default function GovBRAvatar() {
   }
 
   const menuItems = [
-    { label: "Dados pessoais", href: "/perfil" },
+    { label: "Meu perfil", href: "/perfil" },
     { label: "Sair", href: "/auth/logout" },
   ]
 

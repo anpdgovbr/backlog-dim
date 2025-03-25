@@ -1,8 +1,8 @@
 "use client"
 
-import FloatingDevMenu from "@/components/FloatingDevMenu"
 import GovBRAvatar from "@/components/GovBRAvatar"
 import SystemTitle from "@/components/SystemTitle"
+import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
 import AuthProvider from "@/context/SessionProvider"
 import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
