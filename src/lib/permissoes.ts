@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
 
-// 🔹 Função auxiliar reutilizável
 export function pode(
   permissoes: Partial<Record<PermissaoConcedida, boolean>>,
   chave: PermissaoConcedida
@@ -9,7 +8,6 @@ export function pode(
   return !!permissoes[chave]
 }
 
-// 🔹 Retorna todas as permissões concedidas ao usuário
 export async function buscarPermissoesConcedidas(
   email: string
 ): Promise<Partial<Record<PermissaoConcedida, boolean>>> {
@@ -39,7 +37,6 @@ export async function buscarPermissoesConcedidas(
   return resultado
 }
 
-// 🔹 Verifica se o usuário tem uma permissão específica
 export async function verificarPermissao(
   email: string,
   acao: AcaoPermissao,
