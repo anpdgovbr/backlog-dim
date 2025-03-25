@@ -31,7 +31,7 @@ export function MetaDropdownSection({
     const fetchOptions = async () => {
       setLoading(true)
       try {
-        const res = await fetch(`/api/meta/${entidade}`)
+        const res = await fetch(`/api/meta/${entidade}?pageSize=1000`)
         const json = await res.json()
         const data: EnumData[] = json.data ?? []
 
