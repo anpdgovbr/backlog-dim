@@ -1,3 +1,5 @@
+"use client"
+
 import CrudManager from "@/components/CrudManager"
 import withPermissao from "@/hoc/withPermissao"
 
