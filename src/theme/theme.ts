@@ -30,7 +30,7 @@ const anpdColors = {
     secondary: "#4F4F4F", // Cinza escuro para textos secundários
   },
   error: {
-    main: "#C21807", // Vermelho GOV.BR para erros
+    main: "rgba(194, 24, 7, 0.85)", // Vermelho GOV.BR para erros
   },
   warning: {
     main: "#FAA61A", // Usando o Laranja ANPD para alertas
