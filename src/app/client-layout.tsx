@@ -80,7 +80,7 @@ export default function ClientRootLayout({
                 component="main"
                 sx={{
                   flex: 1,
-                  padding: 2,
+                  p: 1,
                   display: "flex",
                 }}
               >

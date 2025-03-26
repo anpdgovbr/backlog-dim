@@ -113,97 +113,111 @@ export default function GerenciarPerfis() {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Typography
-        variant="h4"
-        sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}
+    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 1,
+          p: 2,
+        }}
       >
-        Gerenciar Perfis
-      </Typography>
+        <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+          Gerenciar Perfis
+        </Typography>
 
-      {loading ? (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table className="table">
-            <TableHead className="th">
-              <TableRow sx={{ bgcolor: "primary.main" }}>
-                <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
-                <TableCell sx={{ color: "black", fontWeight: "bold" }}>E-mail</TableCell>
-                <TableCell
-                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                >
-                  Perfil
-                </TableCell>
-                <TableCell
-                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                >
-                  Responsável
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {usuarios.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.nome}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell align="center">
-                    <FormControl fullWidth size="small">
-                      <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
-                      <Select
-                        label="Perfil"
-                        className="input"
-                        value={user.perfilId || ""}
-                        onChange={(e) =>
-                          handlePerfilChange(user.id, Number(e.target.value))
-                        }
-                      >
-                        <MenuItem className="br-item" value="">
-                          Selecione um perfil
-                        </MenuItem>
-                        {perfis.map((perfil) => (
-                          <MenuItem className="br-item" key={perfil.id} value={perfil.id}>
-                            {perfil.nome}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+        {loading ? (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table className="table">
+              <TableHead className="th">
+                <TableRow sx={{ bgcolor: "primary.main" }}>
+                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
+                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+                    E-mail
                   </TableCell>
-
-                  <TableCell align="center">
-                    <FormControl fullWidth size="small">
-                      <InputLabel id={`responsavel-label-${user.id}`}>Perfil</InputLabel>
-                      <Select
-                        label="Responsável"
-                        className="input"
-                        value={user.responsavelId || ""}
-                        onChange={(e) =>
-                          handlePerfilChange(user.id, Number(e.target.value))
-                        }
-                      >
-                        <MenuItem className="br-item" value="">
-                          Relacione com um responsável
-                        </MenuItem>
-                        {responsaveis.map((responsavel) => (
-                          <MenuItem
-                            className="br-item"
-                            key={responsavel.id}
-                            value={responsavel.id}
-                          >
-                            {responsavel.nome}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Perfil
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Responsável
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody>
+                {usuarios.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.nome}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell align="center">
+                      <FormControl fullWidth size="small">
+                        <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
+                        <Select
+                          label="Perfil"
+                          className="input"
+                          value={user.perfilId || ""}
+                          onChange={(e) =>
+                            handlePerfilChange(user.id, Number(e.target.value))
+                          }
+                        >
+                          <MenuItem className="br-item" value="">
+                            Selecione um perfil
+                          </MenuItem>
+                          {perfis.map((perfil) => (
+                            <MenuItem
+                              className="br-item"
+                              key={perfil.id}
+                              value={perfil.id}
+                            >
+                              {perfil.nome}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <FormControl fullWidth size="small">
+                        <InputLabel id={`responsavel-label-${user.id}`}>
+                          Perfil
+                        </InputLabel>
+                        <Select
+                          label="Responsável"
+                          className="input"
+                          value={user.responsavelId || ""}
+                          onChange={(e) =>
+                            handlePerfilChange(user.id, Number(e.target.value))
+                          }
+                        >
+                          <MenuItem className="br-item" value="">
+                            Relacione com um responsável
+                          </MenuItem>
+                          {responsaveis.map((responsavel) => (
+                            <MenuItem
+                              className="br-item"
+                              key={responsavel.id}
+                              value={responsavel.id}
+                            >
+                              {responsavel.nome}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
     </Container>
   )
 }

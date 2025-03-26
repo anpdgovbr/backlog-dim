@@ -117,138 +117,68 @@ export default function DashboardSuperAdmin() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Dashboard SuperAdmin
-      </Typography>
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 1,
+          p: 1,
+        }}
+      >
+        <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+          Dashboard SuperAdmin
+        </Typography>
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Gerenciar Perfis</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <List>
-            {perfis.map((perfil) => (
-              <ListItem key={`perfil-${perfil.id}`} divider>
-                <ListItemText primary={perfil.nome} />
-              </ListItem>
-            ))}
-          </List>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Criar Novo Perfil</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box
-            component="form"
-            onSubmit={handleCriarPerfil}
-            sx={{ display: "flex", gap: 2 }}
-          >
-            <TextField
-              label="Nome do Perfil"
-              variant="outlined"
-              value={novoPerfil}
-              onChange={(e) => setNovoPerfil(e.target.value)}
-              required
-            />
-            <Button type="submit" variant="contained">
-              Criar
-            </Button>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Gerenciar Permissões</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Select
-            value={perfilSelecionado ?? ""}
-            onChange={(e) => setPerfilSelecionado(Number(e.target.value))}
-            displayEmpty
-            fullWidth
-          >
-            <MenuItem value="">Selecione um perfil</MenuItem>
-            {perfis.map((perfil) => (
-              <MenuItem key={perfil.id} value={perfil.id}>
-                {perfil.nome}
-              </MenuItem>
-            ))}
-          </Select>
-
-          {perfilSelecionado !== null && permissoes.length > 0 ? (
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Gerenciar Perfis</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
             <List>
-              {Object.entries(
-                permissoes.reduce(
-                  (acc, p) => {
-                    if (!acc[p.recurso]) acc[p.recurso] = []
-                    acc[p.recurso].push(p)
-                    return acc
-                  },
-                  {} as Record<string, Permissao[]>
-                )
-              ).map(([recurso, permissoesRecurso]) => (
-                <Accordion key={`recurso-${recurso}`}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">{recurso}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <List>
-                      {permissoesRecurso.map((p, index) => {
-                        console.log(`Permissão carregada para ${recurso}:`, p)
-
-                        if (!p) {
-                          console.error(`Permissão inválida na posição ${index}:`, p)
-                          return null
-                        }
-                        return (
-                          <ListItem key={`${p.id || p.acao}-${p.recurso}`}>
-                            <ListItemText primary={p.acao} />
-                            <Button
-                              variant={p?.permitido ? "contained" : "outlined"}
-                              color={p?.permitido ? "primary" : "secondary"}
-                              onClick={() => {
-                                console.log("🖱️ Clique detectado - Permissão:", p)
-                                handleTogglePermissao(p)
-                              }}
-                            >
-                              {p?.permitido ? "Desativar" : "Ativar"}
-                            </Button>
-                          </ListItem>
-                        )
-                      })}
-                    </List>
-                  </AccordionDetails>
-                </Accordion>
+              {perfis.map((perfil) => (
+                <ListItem key={`perfil-${perfil.id}`} divider>
+                  <ListItemText primary={perfil.nome} />
+                </ListItem>
               ))}
             </List>
-          ) : (
-            <Typography variant="body2">Nenhuma permissão disponível.</Typography>
-          )}
-        </AccordionDetails>
-      </Accordion>
+          </AccordionDetails>
+        </Accordion>
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Criar Nova Permissão</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box
-            component="form"
-            onSubmit={handleCriarPermissao}
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Criar Novo Perfil</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box
+              component="form"
+              onSubmit={handleCriarPerfil}
+              sx={{ display: "flex", gap: 2 }}
+            >
+              <TextField
+                label="Nome do Perfil"
+                variant="outlined"
+                value={novoPerfil}
+                onChange={(e) => setNovoPerfil(e.target.value)}
+                required
+              />
+              <Button type="submit" variant="contained">
+                Criar
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Gerenciar Permissões</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
             <Select
-              value={novaPermissao.perfilId}
-              onChange={(e) =>
-                setNovaPermissao({ ...novaPermissao, perfilId: e.target.value })
-              }
+              value={perfilSelecionado ?? ""}
+              onChange={(e) => setPerfilSelecionado(Number(e.target.value))}
               displayEmpty
-              required
+              fullWidth
             >
               <MenuItem value="">Selecione um perfil</MenuItem>
               {perfis.map((perfil) => (
@@ -258,27 +188,106 @@ export default function DashboardSuperAdmin() {
               ))}
             </Select>
 
-            <TextField
-              label="Ação"
-              required
-              onChange={(e) =>
-                setNovaPermissao({ ...novaPermissao, acao: e.target.value })
-              }
-            />
-            <TextField
-              label="Recurso"
-              required
-              onChange={(e) =>
-                setNovaPermissao({ ...novaPermissao, recurso: e.target.value })
-              }
-            />
+            {perfilSelecionado !== null && permissoes.length > 0 ? (
+              <List>
+                {Object.entries(
+                  permissoes.reduce(
+                    (acc, p) => {
+                      if (!acc[p.recurso]) acc[p.recurso] = []
+                      acc[p.recurso].push(p)
+                      return acc
+                    },
+                    {} as Record<string, Permissao[]>
+                  )
+                ).map(([recurso, permissoesRecurso]) => (
+                  <Accordion key={`recurso-${recurso}`}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography variant="h6">{recurso}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <List>
+                        {permissoesRecurso.map((p, index) => {
+                          console.log(`Permissão carregada para ${recurso}:`, p)
 
-            <Button type="submit" variant="contained">
-              Criar Permissão
-            </Button>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
+                          if (!p) {
+                            console.error(`Permissão inválida na posição ${index}:`, p)
+                            return null
+                          }
+                          return (
+                            <ListItem key={`${p.id || p.acao}-${p.recurso}`}>
+                              <ListItemText primary={p.acao} />
+                              <Button
+                                variant={p?.permitido ? "contained" : "outlined"}
+                                color={p?.permitido ? "primary" : "secondary"}
+                                onClick={() => {
+                                  console.log("🖱️ Clique detectado - Permissão:", p)
+                                  handleTogglePermissao(p)
+                                }}
+                              >
+                                {p?.permitido ? "Desativar" : "Ativar"}
+                              </Button>
+                            </ListItem>
+                          )
+                        })}
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body2">Nenhuma permissão disponível.</Typography>
+            )}
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Criar Nova Permissão</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box
+              component="form"
+              onSubmit={handleCriarPermissao}
+              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+            >
+              <Select
+                value={novaPermissao.perfilId}
+                onChange={(e) =>
+                  setNovaPermissao({ ...novaPermissao, perfilId: e.target.value })
+                }
+                displayEmpty
+                required
+              >
+                <MenuItem value="">Selecione um perfil</MenuItem>
+                {perfis.map((perfil) => (
+                  <MenuItem key={perfil.id} value={perfil.id}>
+                    {perfil.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <TextField
+                label="Ação"
+                required
+                onChange={(e) =>
+                  setNovaPermissao({ ...novaPermissao, acao: e.target.value })
+                }
+              />
+              <TextField
+                label="Recurso"
+                required
+                onChange={(e) =>
+                  setNovaPermissao({ ...novaPermissao, recurso: e.target.value })
+                }
+              />
+
+              <Button type="submit" variant="contained">
+                Criar Permissão
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
     </Container>
   )
 }
