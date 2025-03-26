@@ -1,4 +1,9 @@
-# Runs formatter before commit
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+node ./scripts/bump-version.js
+git add package.json
+
 node_modules/.bin/lint-staged
 
 npm run pre-commit
