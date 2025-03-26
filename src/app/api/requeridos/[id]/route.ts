@@ -25,8 +25,11 @@ export async function GET(
 
   try {
     const { id } = await params
-    const requerido = await prisma.requerido.findUnique({
-      where: { id: Number(id) },
+    const requerido = await prisma.requerido.findFirst({
+      where: {
+        id: Number(id),
+        active: true,
+      },
       include: {
         setor: true,
         cnae: true,
@@ -68,6 +71,17 @@ export async function PUT(
 
   const { id } = await params
 
+  const existente = await prisma.requerido.findUnique({
+    where: { id: Number(id) },
+  })
+
+  if (!existente || !existente.active) {
+    return NextResponse.json(
+      { error: "Requerido não encontrado ou inativo" },
+      { status: 404 }
+    )
+  }
+
   try {
     const data = await req.json()
     const requeridoAtualizado = await prisma.requerido.update({
@@ -94,10 +108,10 @@ export async function DELETE(
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
   }
 
-  // 🔹 Verifica permissão para excluir metadados
+  // 🔹 Verifica permissão para desabilitar, para requeridos usamos Responsavel
   const temPermissao = await verificarPermissao(
     session.user.email,
-    "Excluir",
+    "Desabilitar",
     "Responsavel"
   )
   if (!temPermissao) {
@@ -107,8 +121,12 @@ export async function DELETE(
   const { id } = await params
 
   try {
-    await prisma.requerido.delete({
+    await prisma.requerido.update({
       where: { id: Number(id) },
+      data: {
+        active: false,
+        exclusionDate: new Date(),
+      },
     })
     return NextResponse.json({ message: "Requerido deletado com sucesso" })
   } catch (error) {
