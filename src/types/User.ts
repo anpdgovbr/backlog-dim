@@ -5,5 +5,5 @@ export interface User {
   nome?: string
   image?: string
   acessToken?: string
-  responsavelId?: number
+  responsavelId?: number | null
 }

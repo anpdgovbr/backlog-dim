@@ -53,3 +53,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
   }
 }
+
+export async function PATCH(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+  }
+
+  const temPermissao = await verificarPermissao(
+    session.user.email,
+    "Cadastrar",
+    "Responsavel"
+  )
+  if (!temPermissao) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
+  try {
+    const { responsavelId, userId } = await req.json()
+
+    // ❗ Agora só impede undefined (aceita null para userId)
+    if (typeof responsavelId !== "number") {
+      return NextResponse.json({ error: "ID do responsável inválido" }, { status: 400 })
+    }
+
+    const updated = await prisma.responsavel.update({
+      where: { id: responsavelId },
+      data: { userId: userId ?? null }, // Desvincula se userId = null
+    })
+
+    return NextResponse.json(updated)
+  } catch (error) {
+    console.error("Erro ao atualizar responsável:", error)
+    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
+  }
+}
