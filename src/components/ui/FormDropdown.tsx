@@ -1,5 +1,5 @@
 import { EnumData } from "@/types/EnumData"
-import { MenuItem, TextField, TextFieldProps, Tooltip } from "@mui/material"
+import { MenuItem, SelectProps, TextField, TextFieldProps, Tooltip } from "@mui/material"
 import { Controller, useFormContext } from "react-hook-form"
 
 type FormDropdown = TextFieldProps & {
@@ -8,6 +8,7 @@ type FormDropdown = TextFieldProps & {
   tooltip?: string
   options: EnumData[]
   defaultValue?: string | number
+  menuProps?: Partial<SelectProps>["MenuProps"]
 }
 
 export function FormDropdown({
@@ -16,28 +17,32 @@ export function FormDropdown({
   name,
   options = [],
   defaultValue,
+  menuProps,
   ...rest
 }: FormDropdown) {
   const { control } = useFormContext()
 
   function renderOptions() {
-    return options.map((option) => {
-      return (
-        <MenuItem
-          sx={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "100%",
-          }}
-          id={`option-${name}-${option.id}`}
-          key={option.id}
-          value={option.id}
-        >
-          {option.nome}
-        </MenuItem>
-      )
-    })
+    return options.map((option) => (
+      <MenuItem
+        key={option.id}
+        value={option.id}
+        sx={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "100%",
+        }}
+      >
+        <Tooltip title={option.nome} placement="right" arrow>
+          <span>
+            {option.nome.length > 50
+              ? `${option.nome.slice(0, 50).trim()}...`
+              : option.nome}
+          </span>
+        </Tooltip>
+      </MenuItem>
+    ))
   }
 
   return (
@@ -61,6 +66,18 @@ export function FormDropdown({
             sx={{
               "& .MuiInputBase-root": {
                 borderRadius: 1,
+              },
+            }}
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  style: {
+                    maxWidth: 400,
+                    whiteSpace: "normal",
+                    wordWrap: "break-word",
+                  },
+                },
+                ...menuProps,
               },
             }}
             {...rest}
