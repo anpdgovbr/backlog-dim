@@ -11,27 +11,11 @@ interface IMenu25BaseProps {
   readonly title: string
   readonly description?: string
   readonly icon?: React.ReactNode
-
-  /**
-   * Pode ser algo como "primary.light", "secondary.main", "#1978cf" etc.
-   * Usada para:
-   *  - Borda do card
-   *  - Título
-   *  - Fundo semitransparente do ícone
-   */
   readonly baseColor: string
-
-  /** Define se o item está aberto (expandido) ou fechado. */
   readonly expanded: boolean
-
-  /** Fundo padrão quando fechado/aberto. */
   readonly collapsedBgColor?: string
   readonly expandedBgColor?: string
-
-  /** Aparece apenas quando `expanded` é true. */
   readonly extraContent?: React.ReactNode
-
-  /** Chamado ao clicar no card inteiro. */
   readonly onToggle: () => void
 }
 
@@ -43,8 +27,8 @@ export function Menu25Base(props: IMenu25BaseProps) {
     icon,
     baseColor,
     expanded,
-    collapsedBgColor = "#eaf3fc",
-    expandedBgColor = "#ffffff",
+    collapsedBgColor = "#f2f5f8", // govbr: --gray-2
+    expandedBgColor = "#ffffff", // govbr: --pure-0
     extraContent,
     onToggle,
   } = props
@@ -52,7 +36,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
   return (
     <Box
       id={`menu-item-${id}`}
-      onClick={onToggle} // 🔥 Ação agora é ao clicar no card inteiro
+      onClick={onToggle}
       sx={(theme: Theme) => {
         const actualBaseColor = parseThemeColor(theme, baseColor)
         const bgColor = expanded
@@ -61,91 +45,97 @@ export function Menu25Base(props: IMenu25BaseProps) {
         const iconCircleBg = calcIconCircleBg(theme, baseColor)
 
         return {
-          mb: 1,
-          p: 1,
+          mb: 0.5,
+          p: 0.5,
           borderRadius: 1,
           bgcolor: bgColor,
           border: `1px solid ${iconCircleBg}`,
-          cursor: "pointer", // 🔥 Indica que o card é clicável
+          cursor: "pointer",
           transition: "background 0.3s ease",
+          boxShadow: expanded ? theme.shadows[1] : "none",
           "&:hover": {
             backgroundColor: theme.palette.action.hover,
           },
 
-          // 🔹 Linha principal do card
           "& .menu-header": {
             display: "flex",
-            alignItems: "center", // 🔥 Centraliza verticalmente os elementos
+            alignItems: "center",
             justifyContent: "space-between",
-            gap: 1, // 🔹 Adiciona espaço uniforme entre os elementos
-            flexWrap: "wrap", // 🔹 Permite que o título quebre linha se necessário
-            minHeight: 48, // 🔥 Garante altura mínima uniforme da linha
+            gap: theme.spacing(1),
+            flexWrap: "wrap",
+            minHeight: 44,
+            padding: theme.spacing(0.5, 1),
           },
 
           "& .iconCircle": {
-            minWidth: 40, // 🔥 Garante tamanho mínimo para evitar que quebre
-            width: 40,
-            height: 40,
+            width: 30,
+            height: 30,
             borderRadius: "50%",
             backgroundColor: iconCircleBg,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             color: "#fff",
+            fontSize: 16,
+            flexShrink: 0,
           },
 
           "& .titleText": {
             textTransform: "uppercase",
             color: actualBaseColor,
-            fontWeight: 700,
+            fontWeight: theme.typography.fontWeightMedium,
             letterSpacing: "0.02em",
-            wordBreak: "break-word", // 🔥 Permite quebra de palavra longa
-            flex: 1, // 🔹 Faz o título ocupar o espaço disponível sem quebrar layout
-            minWidth: 0, // 🔹 Impede que o título force o card a ficar muito largo
-            lineHeight: 1.2,
+            wordBreak: "break-word",
+            flex: 1,
+            minWidth: 0,
+            lineHeight: 1.3,
+            fontSize: theme.typography.body2.fontSize,
           },
 
           "& .iconExpand": {
-            flexShrink: 0, // 🔹 Garante que o ícone de expansão não quebre linha
-            display: "flex", // 🔹 Para garantir que ele fique alinhado verticalmente
+            flexShrink: 0,
+            display: "flex",
             alignItems: "center",
+            color: actualBaseColor,
+            fontSize: 18,
           },
 
           "& .description": {
-            mt: 1,
+            mt: 0.5,
+            px: 1,
+            fontSize: theme.typography.caption.fontSize,
             color: theme.palette.text.secondary,
           },
 
           "& .extraContent": {
             mt: 1,
+            px: 1,
           },
         }
       }}
     >
-      {/* 🔹 Linha principal do card */}
       <Box className="menu-header">
-        {/* Ícone */}
         {icon && <Box className="iconCircle">{icon}</Box>}
 
-        {/* Título ajustado para suportar palavras grandes */}
-        <Typography className="titleText" variant="subtitle1">
+        <Typography className="titleText" variant="body2">
           {title}
         </Typography>
 
-        {/* Ícone de expansão/recolhimento - agora fixo à direita */}
         <Box className="iconExpand">
-          {expanded ? <KeyboardArrowRight /> : <KeyboardArrowDown />}
+          {expanded ? (
+            <KeyboardArrowRight fontSize="small" />
+          ) : (
+            <KeyboardArrowDown fontSize="small" />
+          )}
         </Box>
       </Box>
 
-      {/* Descrição */}
       {description && (
-        <Typography variant="body2" className="description">
+        <Typography variant="caption" className="description">
           {description}
         </Typography>
       )}
 
-      {/* Conteúdo extra só aparece se estiver expandido */}
       {expanded && extraContent && <Box className="extraContent">{extraContent}</Box>}
     </Box>
   )
