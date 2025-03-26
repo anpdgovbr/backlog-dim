@@ -20,7 +20,11 @@ export async function GET() {
   }
 
   try {
-    const dados = await prisma.responsavel.findMany()
+    const dados = await prisma.responsavel.findMany({
+      include: {
+        user: true,
+      },
+    })
     return NextResponse.json(dados)
   } catch (error) {
     console.error("Erro ao buscar responsaveis:", error)

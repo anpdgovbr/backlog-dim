@@ -1,6 +1,7 @@
 "use client"
 
 import { Perfil } from "@/types/Perfil"
+import { ResponsavelComUser } from "@/types/Responsavel"
 import { User } from "@/types/User"
 import {
   Alert,
@@ -27,7 +28,7 @@ export default function GerenciarPerfis() {
   const { data: session, status } = useSession()
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [perfis, setPerfis] = useState<Perfil[]>([])
-  const [responsaveis, setResponsaveis] = useState<User[]>([])
+  const [responsaveis, setResponsaveis] = useState<ResponsavelComUser[]>([])
   const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
@@ -112,6 +113,31 @@ export default function GerenciarPerfis() {
     }
   }
 
+  const handleResponsavelChange = async (
+    userId: string,
+    responsavelId: number | null
+  ) => {
+    try {
+      const response = await fetch(`/api/usuarios/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ responsavelId }), // 🔥 aqui!
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar responsável")
+      }
+
+      setUsuarios((prev) =>
+        prev.map((user) =>
+          user.id === userId ? { ...user, responsavelId: Number(responsavelId) } : user
+        )
+      )
+    } catch (error) {
+      console.error("Erro ao atualizar responsável do usuário:", error)
+    }
+  }
+
   return (
     <Container maxWidth="lg">
       <Typography
@@ -174,17 +200,23 @@ export default function GerenciarPerfis() {
 
                   <TableCell align="center">
                     <FormControl fullWidth size="small">
-                      <InputLabel id={`responsavel-label-${user.id}`}>Perfil</InputLabel>
+                      <InputLabel id={`responsavel-label-${user.id}`}>
+                        Responsável
+                      </InputLabel>
                       <Select
                         label="Responsável"
                         className="input"
-                        value={user.responsavelId || ""}
-                        onChange={(e) =>
-                          handlePerfilChange(user.id, Number(e.target.value))
-                        }
+                        value={user.responsavelId ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value
+                          handleResponsavelChange(
+                            user.id,
+                            value === "" ? null : Number(value)
+                          )
+                        }}
                       >
                         <MenuItem className="br-item" value="">
-                          Relacione com um responsável
+                          Sem responsável
                         </MenuItem>
                         {responsaveis.map((responsavel) => (
                           <MenuItem
@@ -192,7 +224,8 @@ export default function GerenciarPerfis() {
                             key={responsavel.id}
                             value={responsavel.id}
                           >
-                            {responsavel.nome}
+                            {responsavel.nome}{" "}
+                            {responsavel.user?.email ? `(${responsavel.user.email})` : ""}
                           </MenuItem>
                         ))}
                       </Select>
