@@ -81,7 +81,7 @@ model StatusInterno {
 model Requerido {
   id        Int        @id @default(autoincrement())
   nome      String
-  cnpj      String?    @unique
+  cnpj      String    @unique
   site      String?
   email     String?
   setorId   Int?
