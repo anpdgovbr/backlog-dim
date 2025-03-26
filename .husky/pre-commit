@@ -4,7 +4,7 @@
 echo "🚀 Rodando hook de pre-commit do Husky..."
 
 # Atualiza a versão automaticamente
-node ./scripts/bump-version.js
+node ./scripts/bump-version.cjs
 
 # Garante que o package.json modificado seja commitado
 git add package.json
