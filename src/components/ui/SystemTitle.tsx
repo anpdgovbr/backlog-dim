@@ -1,5 +1,7 @@
 import { Link, Typography } from "@mui/material"
 
+import Version from "./Version"
+
 export default function SystemTitle() {
   return (
     <Typography
@@ -23,7 +25,7 @@ export default function SystemTitle() {
           fontWeight={500}
           sx={{ opacity: 0.8 }}
         >
-          Alfa 0.1
+          Alfa <Version />
         </Typography>
       </Link>
     </Typography>

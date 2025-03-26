@@ -2,7 +2,17 @@
 
 import { Box, CircularProgress, Typography } from "@mui/material"
 
-export default function GovBrLoading({ message = "Carregando..." }) {
+interface GovBrLoadingProps {
+  message?: string
+  fullScreen?: boolean
+  minHeight?: number | string
+}
+
+export default function GovBrLoading({
+  message = "Carregando...",
+  fullScreen = false,
+  minHeight = 200,
+}: GovBrLoadingProps) {
   return (
     <Box
       sx={{
@@ -10,19 +20,23 @@ export default function GovBrLoading({ message = "Carregando..." }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
-        bgcolor: "background.default",
+        width: "100%",
+        height: fullScreen ? "100vh" : "100%",
+        minHeight: fullScreen ? "100vh" : minHeight,
+        bgcolor: fullScreen ? "background.default" : "transparent",
+        textAlign: "center",
+        px: 2,
       }}
     >
       <CircularProgress
-        size={60}
+        size={50}
         thickness={4}
         sx={{
           color: "primary.main",
           mb: 2,
         }}
       />
-      <Typography variant="h6" color="text.primary">
+      <Typography variant="body1" color="text.primary">
         {message}
       </Typography>
     </Box>
