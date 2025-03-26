@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
@@ -22,6 +23,7 @@ export default function ProcessoDataGrid() {
   const [totalRows, setTotalRows] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const [selectedProcessoId, setSelectedProcessoId] = useState<number | null>(null)
+  const { notify } = useNotification()
 
   const fetchData = async () => {
     setLoading(true)
@@ -71,10 +73,12 @@ export default function ProcessoDataGrid() {
           }
         } else {
           const data = await response.json()
-          alert("Erro ao excluir: " + data.error)
+          console.error("Erro ao excluir processo:", data)
+          notify({ type: "error", message: "Erro ao excluir processo" })
         }
       } catch (error) {
-        alert("Erro ao excluir: " + error)
+        console.error("Erro ao excluir processo:", error)
+        notify({ type: "error", message: "Erro ao excluir processo" })
       }
     }
   }
