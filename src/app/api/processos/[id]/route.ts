@@ -34,6 +34,8 @@ export async function GET(
         contatoPrevio: true,
         evidencia: true,
         tipoReclamacao: true,
+        processoStatus: true,
+        statusInterno: true,
       },
     })
 
@@ -94,6 +96,9 @@ export async function PUT(
         evidenciaId: body.evidenciaId ?? null,
         anonimo: body.anonimo ?? false,
         tipoReclamacaoId: body.tipoReclamacaoId ?? null,
+        observacoes: body.observacoes,
+        processoStatusId: body.processoStatusId ?? null,
+        statusInternoId: body.statusInternoId ?? null,
       },
     })
 

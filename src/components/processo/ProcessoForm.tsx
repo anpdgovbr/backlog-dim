@@ -108,6 +108,17 @@ export default function ProcessoForm({
               label="Tipo de Reclamação"
             />
           </Grid>
+          <Grid item xs={12}>
+            <TextField
+              {...register("observacoes")}
+              name="observacoes"
+              label="Observações"
+              multiline
+              fullWidth
+              size="small"
+              rows={2}
+            />
+          </Grid>
         </Grid>
       </form>
     </FormProvider>
