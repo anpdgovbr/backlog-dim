@@ -1,6 +1,6 @@
 {
   "name": "backlog-dim",
-  "version": "0.1.2",
+  "version": "0.1.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "lint": "next lint",
     "lint-staged": "lint-staged",
     "postinstall": "husky install",
-    "prebuild": "npm run build-routes",
+    "version:env": "node scripts/set-version-env.cjs",
+    "prebuild": "npm run version:env && npm run build-routes",
     "pre-commit": "lint-staged",
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:push": "npx prisma db push",
@@ -27,9 +28,17 @@
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop"
   },
+  "eslintConfig": {
+    "extends": "next/core-web-vitals",
+    "settings": {
+      "next": {
+        "rootDir": "src"
+      }
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "next lint --fix",
+      "eslint --fix",
       "prettier --write"
     ],
     "*.{css,json}": [

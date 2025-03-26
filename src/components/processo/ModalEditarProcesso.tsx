@@ -4,7 +4,7 @@ import { parseId } from "@/utils/parseId"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { GovBRInputModal } from "../GovBRModal"
+import { GovBRInputModal } from "../modal/GovBRModal"
 import ProcessoForm from "./ProcessoForm"
 
 export default function ModalEditarProcesso({

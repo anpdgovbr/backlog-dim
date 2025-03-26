@@ -18,8 +18,8 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
-import DialogAlert from "./DialogAlert"
-import { GovBRInputModal } from "./GovBRModal"
+import { GovBRInputModal } from "./modal/GovBRModal"
+import DialogAlert from "./ui/DialogAlert"
 
 interface CrudManagerProps {
   entityName: string
