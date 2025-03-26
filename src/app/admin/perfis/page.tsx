@@ -1,13 +1,16 @@
 "use client"
 
 import { Perfil } from "@/types/Perfil"
+import { Responsavel } from "@/types/Responsavel"
 import { User } from "@/types/User"
+import { LinkOff } from "@mui/icons-material"
 import {
   Alert,
   Box,
   CircularProgress,
   Container,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -27,7 +30,7 @@ export default function GerenciarPerfis() {
   const { data: session, status } = useSession()
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [perfis, setPerfis] = useState<Perfil[]>([])
-  const [responsaveis, setResponsaveis] = useState<User[]>([])
+  const [responsaveis, setResponsaveis] = useState<Responsavel[]>([])
   const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
@@ -112,6 +115,29 @@ export default function GerenciarPerfis() {
     }
   }
 
+  const handleResponsavelChange = async (
+    userId: string | null,
+    responsavelId: number
+  ) => {
+    try {
+      const response = await fetch("/api/responsaveis", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, responsavelId }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar vínculo de responsável")
+      }
+
+      setUsuarios((prev) =>
+        prev.map((user) => (user.id === userId ? { ...user, responsavelId } : user))
+      )
+    } catch (error) {
+      console.error("Erro ao vincular/desvincular responsável:", error)
+    }
+  }
+
   return (
     <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
       <Box
@@ -148,6 +174,11 @@ export default function GerenciarPerfis() {
                     sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
                   >
                     Responsável
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Ação
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -186,19 +217,17 @@ export default function GerenciarPerfis() {
                     <TableCell align="center">
                       <FormControl fullWidth size="small">
                         <InputLabel id={`responsavel-label-${user.id}`}>
-                          Perfil
+                          Responsável
                         </InputLabel>
                         <Select
                           label="Responsável"
                           className="input"
-                          value={user.responsavelId || ""}
-                          onChange={(e) =>
-                            handlePerfilChange(user.id, Number(e.target.value))
-                          }
+                          value={user.responsavelId ?? ""}
+                          onChange={(e) => {
+                            const responsavelId = Number(e.target.value)
+                            handleResponsavelChange(user.id, responsavelId) // responsavelId sempre number
+                          }}
                         >
-                          <MenuItem className="br-item" value="">
-                            Relacione com um responsável
-                          </MenuItem>
                           {responsaveis.map((responsavel) => (
                             <MenuItem
                               className="br-item"
@@ -210,6 +239,26 @@ export default function GerenciarPerfis() {
                           ))}
                         </Select>
                       </FormControl>
+                    </TableCell>
+                    <TableCell align="center">
+                      {user.responsavelId && (
+                        <IconButton
+                          size="small"
+                          color="error"
+                          title="Desvincular responsável"
+                          onClick={() => {
+                            // Encontra o responsável que tem esse userId
+                            const responsavel = responsaveis.find(
+                              (r) => r.userId === user.id
+                            )
+                            if (responsavel) {
+                              handleResponsavelChange(null, responsavel.id)
+                            }
+                          }}
+                        >
+                          <LinkOff />
+                        </IconButton>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
