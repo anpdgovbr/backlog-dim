@@ -65,6 +65,15 @@ export function MetaDropdownSection({
       options={options}
       tooltip={tooltip}
       defaultValue={defaultValue ?? (hasAllOption ? "ALL" : undefined)}
+      menuProps={{
+        PaperProps: {
+          style: {
+            maxWidth: 400,
+            whiteSpace: "normal",
+            wordWrap: "break-word",
+          },
+        },
+      }}
     />
   )
 }

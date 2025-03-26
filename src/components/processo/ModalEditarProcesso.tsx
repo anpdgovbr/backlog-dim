@@ -1,4 +1,5 @@
 import { ProcessoInput, ProcessoOutput, toProcessoInput } from "@/types/Processo"
+import { parseId } from "@/utils/parseId"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -23,6 +24,7 @@ export default function ModalEditarProcesso({
   console.log(defaultValues)
 
   const methods = useForm<ProcessoInput>({ defaultValues })
+  const { reset } = methods
 
   const handleSubmit = methods.handleSubmit((dataFromForm) => {
     if (!processo) return
@@ -32,14 +34,16 @@ export default function ModalEditarProcesso({
       numero: processo.numero,
       dataCriacao: new Date(processo.dataCriacao).toISOString(),
       anonimo: processo.anonimo,
-      formaEntradaId: dataFromForm.formaEntradaId,
-      responsavelId: dataFromForm.responsavelId,
-      situacaoId: dataFromForm.situacaoId,
-      encaminhamentoId: dataFromForm.encaminhamentoId,
-      pedidoManifestacaoId: dataFromForm.pedidoManifestacaoId,
-      contatoPrevioId: dataFromForm.contatoPrevioId,
-      evidenciaId: dataFromForm.evidenciaId,
-      tipoReclamacaoId: dataFromForm.tipoReclamacaoId,
+      formaEntradaId: parseId(dataFromForm.formaEntradaId),
+      responsavelId: parseId(dataFromForm.responsavelId),
+      situacaoId: parseId(dataFromForm.situacaoId),
+      encaminhamentoId: parseId(dataFromForm.encaminhamentoId),
+      pedidoManifestacaoId: parseId(dataFromForm.pedidoManifestacaoId),
+      contatoPrevioId: parseId(dataFromForm.contatoPrevioId),
+      evidenciaId: parseId(dataFromForm.evidenciaId),
+      tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
+      requeridoId: parseId(dataFromForm.requeridoId),
+      observacoes: dataFromForm.observacoes,
     }
 
     fetch(`/api/processos/${processo.id}`, {
@@ -68,9 +72,9 @@ export default function ModalEditarProcesso({
 
   useEffect(() => {
     if (processo) {
-      methods.reset(toProcessoInput(processo))
+      reset(toProcessoInput(processo))
     }
-  }, [processo])
+  }, [processo, reset])
 
   return (
     <GovBRInputModal
