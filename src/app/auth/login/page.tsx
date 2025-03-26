@@ -1,6 +1,6 @@
 "use client"
 
-import GovBrLoading from "@/components/GovBrLoading"
+import GovBrLoading from "@/components/ui/GovBrLoading"
 import { Box, Button, CircularProgress, Container, Typography } from "@mui/material"
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
