@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
@@ -49,6 +50,7 @@ function ImportarProcessosContent() {
   })
   const [pagina, setPagina] = useState(0)
   const [linhasPorPagina, setLinhasPorPagina] = useState(10)
+  const { notify } = useNotification()
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -103,11 +105,14 @@ function ImportarProcessosContent() {
           formasEntrada: contarOcorrencias(dados, 4),
         })
         setImportado(true)
+        notify({ type: "success", message: "Importação concluída com sucesso" })
       } else {
-        alert(`Erro na importação: ${resultado.error}`)
+        console.error(resultado.error)
+        notify({ type: "error", message: `Erro na importação: ${resultado.error}` })
       }
     } catch (error) {
-      alert("Erro inesperado na importação")
+      console.error("Erro inesperado na importação:", error)
+      notify({ type: "error", message: "Erro inesperado na importação" })
       console.error(error)
     } finally {
       setLoading(false)

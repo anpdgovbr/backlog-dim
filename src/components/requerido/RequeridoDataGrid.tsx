@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { RequeridoOutput } from "@/types/Requerido"
@@ -34,6 +35,7 @@ export default function RequeridoDataGrid() {
   const [openModal, setOpenModal] = useState(false)
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
+  const { notify } = useNotification()
 
   useEffect(() => {
     async function fetchData() {
@@ -58,7 +60,10 @@ export default function RequeridoDataGrid() {
         setTotalRows(responseData.total || 0)
       } catch (error) {
         console.error("Erro ao buscar requeridos:", error)
-        alert("Erro ao carregar dados. Verifique o console para mais detalhes.")
+        notify({
+          message: "Erro ao carregar dados. Verifique o console para mais detalhes.",
+          type: "error",
+        })
         setRequeridos([])
         setFilteredData([])
         setTotalRows(0)
@@ -66,7 +71,7 @@ export default function RequeridoDataGrid() {
       setLoading(false)
     }
     fetchData()
-  }, [paginationModel])
+  }, [paginationModel, notify])
 
   useEffect(() => {
     const lowercasedFilter = search.toLowerCase()
@@ -91,10 +96,12 @@ export default function RequeridoDataGrid() {
           setRequeridos((prev) => prev.filter((item) => item.id !== id))
           setTotalRows((prev) => prev - 1)
         } else {
-          alert("Erro ao excluir: " + data.error)
+          notify({ type: "error", message: `Erro ao excluir requerido: ${data.error}` })
+          console.error("Erro ao excluir requerido:", data.error)
         }
       } catch (error) {
-        alert("Erro ao excluir: " + error)
+        notify({ type: "error", message: `Erro ao excluir requerido: ${error}` })
+        console.error("Erro ao excluir requerido:", error)
       }
     }
   }
