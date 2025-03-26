@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import { CNAE } from "@/types/CNAE"
 import { EnumData } from "@/types/EnumData"
 import { RequeridoInput, RequeridoOutput } from "@/types/Requerido"
@@ -17,13 +18,12 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 
-export default function RequeridoForm({
-  requeridoId,
-  onSave,
-}: {
+interface RequeridoFormProps {
   requeridoId: number | null
   onSave?: () => void
-}) {
+}
+
+export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProps) {
   const [requerido, setRequerido] = useState<RequeridoOutput | null>(
     requeridoId
       ? null
@@ -50,6 +50,8 @@ export default function RequeridoForm({
     cnaes: [],
     setores: [],
   })
+
+  const { notify } = useNotification()
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -174,7 +176,7 @@ export default function RequeridoForm({
     if (emailValidation || siteValidation) {
       setEmailError(emailValidation || undefined)
       setSiteError(siteValidation || undefined)
-      alert("Por favor, corrija os erros antes de salvar.")
+      notify({ type: "warning", message: "Por favor, corrija os erros antes de salvar." })
       return
     }
 
@@ -216,10 +218,11 @@ export default function RequeridoForm({
     }
 
     if (response.ok) {
-      alert("✅ Requerido salvo com sucesso!")
+      notify({ type: "success", message: "Requerido salvo com sucesso!" })
       if (onSave) onSave()
     } else {
-      alert("❌ Erro ao salvar o Requerido!")
+      notify({ type: "error", message: "Erro ao salvar o Requerido" })
+      console.error("❌ Erro ao salvar o Requerido:", await response.text())
     }
   }
 

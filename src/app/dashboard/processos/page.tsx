@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
@@ -26,6 +27,7 @@ function ListarProcessosContent() {
   })
   const [totalRows, setTotalRows] = useState(0)
   const router = useRouter()
+  const { notify } = useNotification()
 
   useEffect(() => {
     async function fetchData() {
@@ -78,11 +80,14 @@ function ListarProcessosContent() {
         if (response.ok) {
           setProcessos((prev) => prev.filter((item) => item.id !== id))
           setTotalRows((prev) => prev - 1)
+          notify({ type: "success", message: "Processo excluído com sucesso" })
         } else {
-          alert("Erro ao excluir: " + data.error)
+          console.error("Erro ao excluir processo:", data)
+          notify({ type: "error", message: "Erro ao excluir processo" })
         }
       } catch (error) {
-        alert("Erro ao excluir: " + error)
+        console.error("Erro ao excluir processo:", error)
+        notify({ type: "error", message: "Erro ao excluir processo" })
       }
     }
   }

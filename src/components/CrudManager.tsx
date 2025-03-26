@@ -1,5 +1,6 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
@@ -42,6 +43,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     null
   )
   const [loadingDelete, setLoadingDelete] = useState(false)
+  const { notify } = useNotification()
 
   async function fetchData() {
     setLoadingData(true)
@@ -66,7 +68,8 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   }, [tableName, paginationModel])
 
   async function handleSave() {
-    if (!selectedItem.nome.trim()) return alert("Nome não pode estar vazio.")
+    if (!selectedItem.nome.trim())
+      return notify({ type: "warning", message: "Nome é obrigatório" })
 
     try {
       const method = selectedItem.id ? "PUT" : "POST"
@@ -77,9 +80,14 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       })
 
       fetchData()
+      notify({
+        type: "success",
+        message: `Item "${selectedItem.nome}" salvo com sucesso`,
+      })
       setOpenModal(false)
       setSelectedItem({ nome: "" })
     } catch (error) {
+      notify({ type: "error", message: "Erro ao salvar item" })
       console.error(`Erro ao salvar ${tableName}:`, error)
     }
   }
@@ -87,7 +95,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   function handleDeleteRequest(id: number) {
     const item = items.find((item) => item.id === id)
     if (!item) {
-      alert("Item não encontrado.")
+      notify({ type: "error", message: "Item não encontrado" })
       return
     }
     setItemToDelete({ id: item.id, nome: item.nome })
@@ -110,10 +118,20 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       }
 
       fetchData()
+      notify({
+        type: "success",
+        message: `Item "${itemToDelete.nome}" excluído com sucesso`,
+      })
+
       setItemToDelete(null)
-    } catch (error) {
-      console.error(`Erro ao excluir "${itemToDelete.nome}":`, error)
-      alert(`Erro ao excluir "${itemToDelete.nome}": ${(error as Error).message}`)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Erro ao excluir "${itemToDelete.nome}":`, error)
+        notify({
+          type: "error",
+          message: `Erro ao excluir "${itemToDelete.nome}": ${error.message}`,
+        })
+      }
     } finally {
       setLoadingDelete(false)
     }
