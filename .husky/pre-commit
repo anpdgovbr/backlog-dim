@@ -1,10 +1,13 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "🚀 Rodando hook de pre-commit do Husky..."
+
+# Atualiza a versão automaticamente
 node ./scripts/bump-version.js
 
+# Garante que o package.json modificado seja commitado
 git add package.json
 
-node_modules/.bin/lint-staged
-
-npm run pre-commit
+# Lint-staged (se estiver configurado)
+npx lint-staged
