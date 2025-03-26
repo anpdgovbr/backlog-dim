@@ -1,3 +1,4 @@
+import { useNotification } from "@/context/NotificationProvider"
 import { ProcessoInput, ProcessoOutput, toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
 import { useEffect, useMemo, useState } from "react"
@@ -21,7 +22,7 @@ export default function ModalEditarProcesso({
     return processo ? toProcessoInput(processo) : undefined
   }, [processo])
 
-  console.log(defaultValues)
+  const { notify } = useNotification()
 
   const methods = useForm<ProcessoInput>({ defaultValues })
   const { reset } = methods
@@ -52,10 +53,11 @@ export default function ModalEditarProcesso({
       body: JSON.stringify(payload),
     }).then((res) => {
       if (res.ok) {
-        alert("✅ Processo atualizado com sucesso!")
+        notify({ type: "success", message: "Processo atualizado com sucesso" })
         onClose()
       } else {
-        alert("❌ Erro ao atualizar o processo")
+        notify({ type: "error", message: "Erro ao atualizar o processo" })
+        console.error("Erro ao atualizar o processo:", res)
       }
     })
   })
