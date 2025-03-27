@@ -163,8 +163,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
           )}
         </Grid>
 
-        {/* Conteúdo principal */}
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={9} sx={{ p: 0, m: 0 }}>
           {renderSelectedSection()}
         </Grid>
       </Grid>

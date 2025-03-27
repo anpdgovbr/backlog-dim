@@ -4,7 +4,7 @@ import { EnumData } from "@/types/EnumData"
 import { useEffect, useState } from "react"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"
-import { FormDropdown } from "../ui/FormDropdown"
+import { FormDropdown } from "./FormDropdown"
 
 interface RequeridoDropdownSectionProps {
   label: string

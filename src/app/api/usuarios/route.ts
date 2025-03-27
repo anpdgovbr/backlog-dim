@@ -1,10 +1,10 @@
-import { prisma } from "@/lib/prisma"
+import { mapearUsuariosComResponsaveis } from "@/lib/helpers/mapaUserComResponsavel"
 import { NextResponse } from "next/server"
 
 export async function GET() {
   try {
-    const usuarios = await prisma.user.findMany()
-    return NextResponse.json(usuarios)
+    const result = await mapearUsuariosComResponsaveis()
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Erro ao buscar usuários:", error)
     return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })

@@ -2,6 +2,7 @@
 
 import { Perfil } from "@/types/Perfil"
 import { Permissao } from "@/types/Permissao"
+import { Box, Container, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 
 export default function GerenciarPermissoes() {
@@ -55,51 +56,62 @@ export default function GerenciarPermissoes() {
   }
 
   return (
-    <div className="container">
-      <h2>Gerenciar Permissões</h2>
-
-      <select
-        onChange={(e) => setPerfilSelecionado(Number(e.target.value))}
-        value={perfilSelecionado || ""}
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 1,
+          p: 2,
+        }}
       >
-        <option value="">Selecione um perfil</option>
-        {perfis.map((perfil) => (
-          <option key={perfil.id} value={perfil.id}>
-            {perfil.nome}
-          </option>
-        ))}
-      </select>
+        <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+          Gerenciar Permissões
+        </Typography>
 
-      {loading ? (
-        <p>Carregando permissões...</p>
-      ) : perfilSelecionado !== null && permissoes.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Ação</th>
-              <th>Recurso</th>
-              <th>Permitido</th>
-            </tr>
-          </thead>
-          <tbody>
-            {permissoes.map((p: Permissao) => (
-              <tr key={`${p.acao}_${p.recurso}_${perfilSelecionado}`}>
-                <td>{p.acao}</td>
-                <td>{p.recurso}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={p.permitido}
-                    onChange={() => handleTogglePermissao(p)}
-                  />
-                </td>
+        <select
+          onChange={(e) => setPerfilSelecionado(Number(e.target.value))}
+          value={perfilSelecionado || ""}
+        >
+          <option value="">Selecione um perfil</option>
+          {perfis.map((perfil) => (
+            <option key={perfil.id} value={perfil.id}>
+              {perfil.nome}
+            </option>
+          ))}
+        </select>
+
+        {loading ? (
+          <p>Carregando permissões...</p>
+        ) : perfilSelecionado !== null && permissoes.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Ação</th>
+                <th>Recurso</th>
+                <th>Permitido</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Não há permissões disponíveis para este perfil.</p>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {permissoes.map((p: Permissao) => (
+                <tr key={`${p.acao}_${p.recurso}_${perfilSelecionado}`}>
+                  <td>{p.acao}</td>
+                  <td>{p.recurso}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={p.permitido}
+                      onChange={() => handleTogglePermissao(p)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>Não há permissões disponíveis para este perfil.</p>
+        )}
+      </Box>
+    </Container>
   )
 }
