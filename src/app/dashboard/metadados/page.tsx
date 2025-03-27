@@ -5,84 +5,48 @@ import EncaminhamentoPage from "@/app/dashboard/metadados/encaminhamento/page"
 import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
 import FormaEntradaPage from "@/app/dashboard/metadados/forma-entrada/page"
 import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestacao/page"
-import ImportarProcessos from "@/app/dashboard/processos/importar/page"
-import GerenciarRequeridos from "@/app/dashboard/requeridos/page"
-import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
-import GerenciarProcessos from "@/app/processo/page"
+import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
 import Dashboard25Wrapper, {
   ISectionConfig,
 } from "@/components/dashboard/Dashboard25Wrapper"
+import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
 import {
-  Business,
-  EngineeringOutlined,
+  AssignmentTurnedIn,
   Forum,
   Input,
   PermContactCalendar,
-  Person,
   Send,
-  UploadFile,
   Visibility,
 } from "@mui/icons-material"
-import { Box, CircularProgress, Container, Typography } from "@mui/material"
+import { Box, CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
+
+import TipoReclamacaoPage from "./tipo-reclamacao/page"
 
 const allSections: ISectionConfig[] = [
   {
-    id: "processos",
-    title: "Processos",
-    description: "Gerencie os processos",
-    icon: <EngineeringOutlined />,
-    baseColor: "#1976d2",
-    component: () => <GerenciarProcessos />,
-    requiredPermissions: ["Exibir_Processo"],
-  },
-  {
-    id: "importar",
-    title: "Importar",
-    description: "Importe dados de processos",
-    icon: <UploadFile />,
-    baseColor: "#ff9800",
-    component: () => <ImportarProcessos />,
-    requiredPermissions: ["Cadastrar_Processo"],
-  },
-  {
-    id: "paineladmin",
-    title: "Painel Admin",
-    description: "Gerencie o painel administrativo",
-    icon: <Business />,
-    baseColor: "#673ab7",
-    component: () => {
-      return (
-        <Container maxWidth="lg" sx={{ minWidth: 600 }}>
-          <Typography variant="body1">Painel Admin</Typography>
-        </Container>
-      )
-    },
-    requiredPermissions: ["Gerenciar_Relatorios"],
-  },
-  {
-    id: "requeridos",
-    title: "Requeridos",
-    description: "Gerencie os requeridos",
-    icon: <Business />,
-    baseColor: "#673ab7",
-    component: () => <GerenciarRequeridos />,
-    requiredPermissions: ["Exibir_Responsavel"],
-  },
-  {
     id: "contato_previo",
     title: "Contato Prévio",
-    description: "Gerencie os tipos de contato prévio",
+    description: "",
     icon: <PermContactCalendar />,
     baseColor: "#4caf50",
     component: () => <ContatoPrevioPage />,
     requiredPermissions: ["Exibir_Metadados"],
   },
   {
+    id: "tipo_reclamacao",
+    title: "Tipo de Reclamação",
+    description: "",
+    icon: <Input />,
+    baseColor: "#ff9800",
+    component: () => <TipoReclamacaoPage />,
+    requiredPermissions: ["Exibir_Metadados"],
+  },
+  {
     id: "encaminhamento",
     title: "Encaminhamentos",
-    description: "Gerencie os encaminhamentos disponíveis",
+    description: "",
     icon: <Send />,
     baseColor: "#f44336",
     component: () => <EncaminhamentoPage />,
@@ -91,7 +55,7 @@ const allSections: ISectionConfig[] = [
   {
     id: "evidencia",
     title: "Evidências",
-    description: "Gerencie as evidências registradas",
+    description: "",
     icon: <Visibility />,
     baseColor: "#03a9f4",
     component: () => <EvidenciaPage />,
@@ -100,7 +64,7 @@ const allSections: ISectionConfig[] = [
   {
     id: "forma_entrada",
     title: "Formas de Entrada",
-    description: "Gerencie as formas de entrada de processos",
+    description: "",
     icon: <Input />,
     baseColor: "#ff5722",
     component: () => <FormaEntradaPage />,
@@ -109,24 +73,25 @@ const allSections: ISectionConfig[] = [
   {
     id: "pedido_manifestacao",
     title: "Pedidos de Manifestação",
-    description: "Gerencie os pedidos de manifestação",
+    description: "",
     icon: <Forum />,
     baseColor: "#9c27b0",
     component: () => <PedidoManifestacaoPage />,
     requiredPermissions: ["Exibir_Metadados"],
   },
+
   {
-    id: "responsaveis",
-    title: "Responsáveis",
-    description: "Gerencie os responsáveis pelo atendimento",
-    icon: <Person />,
-    baseColor: "#009688",
-    component: () => <ResponsaveisPage />,
-    requiredPermissions: ["Exibir_Responsavel"],
+    id: "situacao",
+    title: "Situação",
+    description: "",
+    icon: <AssignmentTurnedIn />,
+    baseColor: "#3feb3b",
+    component: () => <SituacaoPage />,
+    requiredPermissions: ["Exibir_Metadados"],
   },
 ]
 
-export default function DashboardAdmin() {
+function GerenciarMetadadosContent() {
   const { permissoes, loading } = usePermissoes()
   const [sections, setSections] = useState<ISectionConfig[]>([])
 
@@ -147,13 +112,21 @@ export default function DashboardAdmin() {
       </Box>
     )
   }
-
   return (
-    <Box>
-      <Dashboard25Wrapper
-        sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]}
-        defaultSectionId="processos"
-      />
-    </Box>
+    <Dashboard25Wrapper
+      sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]}
+      defaultSectionId="contato_previo" //@todo: Default section to show, fazer um dashboard inicial
+    />
   )
 }
+
+const GerenciarMetadados = withPermissao(
+  GerenciarMetadadosContent,
+  "Exibir",
+  "Metadados",
+  {
+    redirecionar: false,
+  }
+)
+
+export default GerenciarMetadados

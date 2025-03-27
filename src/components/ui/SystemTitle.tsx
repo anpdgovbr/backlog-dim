@@ -1,13 +1,15 @@
 import { Link, Typography } from "@mui/material"
 
+import Version from "./Version"
+
 export default function SystemTitle() {
   return (
     <Typography
-      variant="h5" // Um pouco maior para dar mais presença
+      variant="h4"
       component="h1"
-      fontWeight={700} // Destacar o nome do sistema
-      letterSpacing={0.75} // Pequeno espaçamento para leitura
-      sx={{ color: "primary.contrastText", textAlign: "center" }} // Usa a paleta do theme.ts
+      fontWeight={700}
+      letterSpacing={0.75}
+      sx={{ color: "primary.contrastText", textAlign: "center" }}
     >
       <Link
         href="/dashboard"
@@ -23,7 +25,7 @@ export default function SystemTitle() {
           fontWeight={500}
           sx={{ opacity: 0.8 }}
         >
-          Alfa 0.1
+          Alfa <Version />
         </Typography>
       </Link>
     </Typography>

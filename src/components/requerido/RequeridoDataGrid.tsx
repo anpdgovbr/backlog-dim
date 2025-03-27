@@ -196,9 +196,18 @@ export default function RequeridoDataGrid() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+          <Box
+            sx={{
+              ...dataGridStyles,
+              display: "flex",
+              height: "100%",
+              width: "100%",
+              p: 0,
+            }}
+          >
             {" "}
             <DataGrid
+              sx={{ minHeight: "45vh" }}
               rows={filteredData}
               columns={columns}
               pageSizeOptions={[5, 10, 20]}

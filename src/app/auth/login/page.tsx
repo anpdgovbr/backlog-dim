@@ -1,6 +1,6 @@
 "use client"
 
-import GovBrLoading from "@/components/GovBrLoading"
+import GovBrLoading from "@/components/ui/GovBrLoading"
 import { Box, Button, CircularProgress, Container, Typography } from "@mui/material"
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -12,14 +12,16 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
+  const showLoading = redirecting || isLoading || status === "loading"
 
   // Controle de redirecionamento
   useEffect(() => {
     if (status === "authenticated") {
       setRedirecting(true)
+      setIsLoading(true) // Mantém o loading até redirecionar
       const timer = setTimeout(() => {
         router.replace("/dashboard")
-      }, 500) // Pequeno delay para exibir o loading
+      }, 500)
 
       return () => clearTimeout(timer)
     }
@@ -29,20 +31,26 @@ export default function LoginPage() {
     try {
       setIsLoading(true)
       setError(null)
-      await signIn("azure-ad", {
+      const result = await signIn("azure-ad", {
         redirect: false,
         callbackUrl: "/dashboard",
       })
+
+      if (result?.error) {
+        setError("Falha ao realizar o login. Tente novamente.")
+        setIsLoading(false) // só desliga o loading se falhou
+      }
+
+      // Se deu certo, não faz nada — o `useEffect` cuidará do redirecionamento
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
       console.error("Erro de login:", err)
-    } finally {
       setIsLoading(false)
     }
   }
 
   // Exibir loading durante transições críticas
-  if (redirecting || status === "loading" || isLoading) {
+  if (showLoading) {
     return (
       <GovBrLoading
         message={redirecting ? "Redirecionando..." : "Verificando sessão..."}

@@ -18,8 +18,8 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
-import DialogAlert from "./DialogAlert"
-import { GovBRInputModal } from "./GovBRModal"
+import { GovBRInputModal } from "./modal/GovBRModal"
+import DialogAlert from "./ui/DialogAlert"
 
 interface CrudManagerProps {
   entityName: string
@@ -179,7 +179,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   if (loading) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ p: 0, m: 0 }}>
       {!permissoes["Exibir_Metadados"] ? (
         <Alert severity="error" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
@@ -205,10 +205,13 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               ...dataGridStyles,
               display: "flex",
               width: "100%",
+              m: 0,
               mb: 2,
+              p: 0,
             }}
           >
             <DataGrid
+              sx={{ minHeight: "45vh" }}
               disableColumnMenu
               rows={items}
               columns={columns}

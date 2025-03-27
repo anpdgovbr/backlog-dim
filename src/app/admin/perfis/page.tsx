@@ -1,14 +1,16 @@
 "use client"
 
 import { Perfil } from "@/types/Perfil"
-import { ResponsavelComUser } from "@/types/Responsavel"
+import { Responsavel } from "@/types/Responsavel"
 import { User } from "@/types/User"
+import { LinkOff } from "@mui/icons-material"
 import {
   Alert,
   Box,
   CircularProgress,
   Container,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -28,7 +30,7 @@ export default function GerenciarPerfis() {
   const { data: session, status } = useSession()
   const [usuarios, setUsuarios] = useState<User[]>([])
   const [perfis, setPerfis] = useState<Perfil[]>([])
-  const [responsaveis, setResponsaveis] = useState<ResponsavelComUser[]>([])
+  const [responsaveis, setResponsaveis] = useState<Responsavel[]>([])
   const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
@@ -114,129 +116,157 @@ export default function GerenciarPerfis() {
   }
 
   const handleResponsavelChange = async (
-    userId: string,
-    responsavelId: number | null
+    userId: string | null,
+    responsavelId: number
   ) => {
     try {
-      const response = await fetch(`/api/usuarios/${userId}`, {
+      const response = await fetch("/api/responsaveis", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ responsavelId }), // 🔥 aqui!
+        body: JSON.stringify({ userId, responsavelId }),
       })
 
       if (!response.ok) {
-        throw new Error("Erro ao atualizar responsável")
+        throw new Error("Erro ao atualizar vínculo de responsável")
       }
 
       setUsuarios((prev) =>
-        prev.map((user) =>
-          user.id === userId ? { ...user, responsavelId: Number(responsavelId) } : user
-        )
+        prev.map((user) => (user.id === userId ? { ...user, responsavelId } : user))
       )
     } catch (error) {
-      console.error("Erro ao atualizar responsável do usuário:", error)
+      console.error("Erro ao vincular/desvincular responsável:", error)
     }
   }
 
   return (
-    <Container maxWidth="lg">
-      <Typography
-        variant="h4"
-        sx={{ mt: 3, mb: 2, fontWeight: "bold", textAlign: "center" }}
+    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 1,
+          p: 2,
+        }}
       >
-        Gerenciar Perfis
-      </Typography>
+        <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+          Gerenciar Perfis
+        </Typography>
 
-      {loading ? (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table className="table">
-            <TableHead className="th">
-              <TableRow sx={{ bgcolor: "primary.main" }}>
-                <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
-                <TableCell sx={{ color: "black", fontWeight: "bold" }}>E-mail</TableCell>
-                <TableCell
-                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                >
-                  Perfil
-                </TableCell>
-                <TableCell
-                  sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                >
-                  Responsável
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {usuarios.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.nome}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell align="center">
-                    <FormControl fullWidth size="small">
-                      <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
-                      <Select
-                        label="Perfil"
-                        className="input"
-                        value={user.perfilId || ""}
-                        onChange={(e) =>
-                          handlePerfilChange(user.id, Number(e.target.value))
-                        }
-                      >
-                        <MenuItem className="br-item" value="">
-                          Selecione um perfil
-                        </MenuItem>
-                        {perfis.map((perfil) => (
-                          <MenuItem className="br-item" key={perfil.id} value={perfil.id}>
-                            {perfil.nome}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+        {loading ? (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table className="table">
+              <TableHead className="th">
+                <TableRow sx={{ bgcolor: "primary.main" }}>
+                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
+                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+                    E-mail
                   </TableCell>
-
-                  <TableCell align="center">
-                    <FormControl fullWidth size="small">
-                      <InputLabel id={`responsavel-label-${user.id}`}>
-                        Responsável
-                      </InputLabel>
-                      <Select
-                        label="Responsável"
-                        className="input"
-                        value={user.responsavelId ?? ""}
-                        onChange={(e) => {
-                          const value = e.target.value
-                          handleResponsavelChange(
-                            user.id,
-                            value === "" ? null : Number(value)
-                          )
-                        }}
-                      >
-                        <MenuItem className="br-item" value="">
-                          Sem responsável
-                        </MenuItem>
-                        {responsaveis.map((responsavel) => (
-                          <MenuItem
-                            className="br-item"
-                            key={responsavel.id}
-                            value={responsavel.id}
-                          >
-                            {responsavel.nome}{" "}
-                            {responsavel.user?.email ? `(${responsavel.user.email})` : ""}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Perfil
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Responsável
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
+                  >
+                    Ação
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody>
+                {usuarios.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.nome}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell align="center">
+                      <FormControl fullWidth size="small">
+                        <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
+                        <Select
+                          label="Perfil"
+                          className="input"
+                          value={user.perfilId || ""}
+                          onChange={(e) =>
+                            handlePerfilChange(user.id, Number(e.target.value))
+                          }
+                        >
+                          <MenuItem className="br-item" value="">
+                            Selecione um perfil
+                          </MenuItem>
+                          {perfis.map((perfil) => (
+                            <MenuItem
+                              className="br-item"
+                              key={perfil.id}
+                              value={perfil.id}
+                            >
+                              {perfil.nome}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <FormControl fullWidth size="small">
+                        <InputLabel id={`responsavel-label-${user.id}`}>
+                          Responsável
+                        </InputLabel>
+                        <Select
+                          label="Responsável"
+                          className="input"
+                          value={user.responsavelId ?? ""}
+                          onChange={(e) => {
+                            const responsavelId = Number(e.target.value)
+                            handleResponsavelChange(user.id, responsavelId) // responsavelId sempre number
+                          }}
+                        >
+                          {responsaveis.map((responsavel) => (
+                            <MenuItem
+                              className="br-item"
+                              key={responsavel.id}
+                              value={responsavel.id}
+                            >
+                              {responsavel.nome}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                    <TableCell align="center">
+                      {user.responsavelId && (
+                        <IconButton
+                          size="small"
+                          color="error"
+                          title="Desvincular responsável"
+                          onClick={() => {
+                            // Encontra o responsável que tem esse userId
+                            const responsavel = responsaveis.find(
+                              (r) => r.userId === user.id
+                            )
+                            if (responsavel) {
+                              handleResponsavelChange(null, responsavel.id)
+                            }
+                          }}
+                        >
+                          <LinkOff />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
     </Container>
   )
 }
