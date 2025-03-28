@@ -26,7 +26,7 @@ export default function withPermissao<T extends object>(
       if (!loading && !permissoes?.[chavePermissao] && redirecionar) {
         router.push("/acesso-negado")
       }
-    }, [permissoes, loading, router, chavePermissao, redirecionar])
+    }, [permissoes, loading, router, chavePermissao])
 
     // 🔒 Enquanto estiver carregando, mostra feedback
     if (loading) {
