@@ -8,9 +8,8 @@ import SettingsIcon from "@mui/icons-material/Settings"
 import { Box, Container, IconButton, TextField, Typography } from "@mui/material"
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-
-import ModalEditarProcesso from "./ModalEditarProcesso"
 
 export default function ProcessoDataGrid() {
   const [processos, setProcessos] = useState<ProcessoOutput[]>([])
@@ -21,8 +20,7 @@ export default function ProcessoDataGrid() {
     pageSize: 10,
   })
   const [totalRows, setTotalRows] = useState(0)
-  const [openModal, setOpenModal] = useState(false)
-  const [selectedProcessoId, setSelectedProcessoId] = useState<number | null>(null)
+  const router = useRouter()
   const { notify } = useNotification()
 
   const fetchData = async () => {
@@ -121,8 +119,7 @@ export default function ProcessoDataGrid() {
           <IconButton
             color="primary"
             onClick={() => {
-              setSelectedProcessoId(params.row.id)
-              setOpenModal(true)
+              router.push(`/dashboard/processos/editar/${params.row.id}`)
             }}
           >
             <SettingsIcon />
@@ -136,7 +133,7 @@ export default function ProcessoDataGrid() {
   ]
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
       <Box>
         <Typography variant="h4" component="h1" gutterBottom>
           Lista de Processos
@@ -151,7 +148,16 @@ export default function ProcessoDataGrid() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+        <Box
+          sx={{
+            ...dataGridStyles,
+            display: "flex",
+            height: "100%",
+            width: "100%",
+            m: 0,
+            p: 0,
+          }}
+        >
           <DataGrid
             disableColumnMenu
             disableColumnSorting
@@ -167,12 +173,6 @@ export default function ProcessoDataGrid() {
           />
         </Box>
       </Box>
-
-      <ModalEditarProcesso
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        processoId={selectedProcessoId}
-      />
     </Container>
   )
 }

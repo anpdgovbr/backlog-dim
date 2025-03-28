@@ -107,7 +107,7 @@ function GerenciarMetadadosContent() {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
         <CircularProgress />
       </Box>
     )
