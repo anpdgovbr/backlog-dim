@@ -10,10 +10,9 @@ export default function usePermissoes() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!session?.user?.email) {
-      setLoading(false)
-      return
-    }
+    if (!session?.user?.email) return // aguarde até estar disponível
+
+    setLoading(true) // marca como carregando só quando for buscar
 
     fetch(`/api/permissoes?email=${session.user.email}`)
       .then((res) => res.json())

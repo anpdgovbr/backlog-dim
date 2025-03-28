@@ -19,17 +19,25 @@ export default function withPermissao<T extends object>(
   return function Protegido(props: T) {
     const { permissoes, loading } = usePermissoes()
     const router = useRouter()
-
     const chavePermissao = `${acao}_${recurso}` as PermissaoConcedida
 
+    // Redirecionamento se não tiver permissão (após carregar)
     useEffect(() => {
       if (!loading && !permissoes?.[chavePermissao] && redirecionar) {
         router.push("/acesso-negado")
       }
-    }, [permissoes, loading, router, chavePermissao])
+    }, [permissoes, loading, router, chavePermissao, redirecionar])
 
-    if (loading) return <p>Carregando permissões...</p>
+    // 🔒 Enquanto estiver carregando, mostra feedback
+    if (loading) {
+      return (
+        <Container maxWidth="lg">
+          <Typography variant="body1">Carregando permissões...</Typography>
+        </Container>
+      )
+    }
 
+    // ❌ Se não tiver permissão e redirecionamento estiver desativado
     if (!permissoes?.[chavePermissao]) {
       return redirecionar ? null : (
         <Container maxWidth="lg">
@@ -53,6 +61,7 @@ export default function withPermissao<T extends object>(
       )
     }
 
+    // ✅ Permissão concedida
     return <Componente {...props} />
   }
 }

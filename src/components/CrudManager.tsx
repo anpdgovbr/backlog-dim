@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useEffect, useState } from "react"
 
@@ -192,6 +192,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               variant="contained"
               color="primary"
               disabled={!permissoes["Cadastrar_Metadados"]}
+              startIcon={<GridAddIcon />}
               onClick={() => {
                 setSelectedItem({ nome: "" })
                 setOpenModal(true)

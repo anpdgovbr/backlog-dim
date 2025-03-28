@@ -1,6 +1,8 @@
 "use client"
 
 import {
+  Alert,
+  AlertTitle,
   Box,
   FormControl,
   InputLabel,
@@ -109,7 +111,17 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
   function renderSelectedSection() {
     const foundSection = sections.find((sec) => sec.id === selectedSection)
     if (!foundSection) {
-      return <Box>{fallback ?? <Box>Seção não encontrada.</Box>}</Box>
+      return (
+        <Box>
+          {fallback ?? (
+            <Alert sx={{ mx: 1 }} variant="filled" severity="error">
+              {" "}
+              <AlertTitle> Erro de seção</AlertTitle> Nenhuma seção inicial ou padrão
+              encontrada para o seu perfil
+            </Alert>
+          )}
+        </Box>
+      )
     }
 
     const SectionComponent = foundSection.component
@@ -118,7 +130,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Grid container spacing={1} /* espaçamento de 2 entre o menu e o conteúdo */>
+      <Grid container spacing={0} /* espaçamento de 2 entre o menu e o conteúdo */>
         {/* Menu lateral (ou Select) */}
         <Grid item xs={12} md={3}>
           {isUpMd ? (
@@ -146,7 +158,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
             </>
           ) : (
             // Em telas pequenas, exibimos um Select
-            <FormControl fullWidth variant="outlined" sx={{ mt: 1, mb: 1 }}>
+            <FormControl fullWidth variant="outlined" sx={{ mx: 1 }}>
               <InputLabel>Selecionar Seção</InputLabel>
               <Select
                 value={selectedSection}

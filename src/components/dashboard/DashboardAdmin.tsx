@@ -6,9 +6,9 @@ import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
 import FormaEntradaPage from "@/app/dashboard/metadados/forma-entrada/page"
 import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestacao/page"
 import ImportarProcessos from "@/app/dashboard/processos/importar/page"
+import ListarProcessos from "@/app/dashboard/processos/page"
 import GerenciarRequeridos from "@/app/dashboard/requeridos/page"
 import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
-import GerenciarProcessos from "@/app/processo/page"
 import Dashboard25Wrapper, {
   ISectionConfig,
 } from "@/components/dashboard/Dashboard25Wrapper"
@@ -34,7 +34,7 @@ const allSections: ISectionConfig[] = [
     description: "Gerencie os processos",
     icon: <EngineeringOutlined />,
     baseColor: "#1976d2",
-    component: () => <GerenciarProcessos />,
+    component: () => <ListarProcessos />,
     requiredPermissions: ["Exibir_Processo"],
   },
   {
@@ -142,7 +142,7 @@ export default function DashboardAdmin() {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <CircularProgress />
       </Box>
     )
