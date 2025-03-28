@@ -7,3 +7,7 @@ export interface User {
   acessToken?: string
   responsavelId?: number | null
 }
+
+export interface UsuarioComResponsavel extends User {
+  responsavelNome: string | null
+}

@@ -1,11 +1,14 @@
 "use client"
 
+import { useNotification } from "@/context/NotificationProvider"
+import withPermissao from "@/hoc/withPermissao"
+import { fetcher } from "@/lib/fetcher"
+import { dataGridStyles } from "@/styles/dataGridStyles"
 import { Perfil } from "@/types/Perfil"
 import { Responsavel } from "@/types/Responsavel"
-import { User } from "@/types/User"
+import { UsuarioComResponsavel } from "@/types/User"
 import { LinkOff } from "@mui/icons-material"
 import {
-  Alert,
   Box,
   CircularProgress,
   Container,
@@ -13,69 +16,162 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material"
+import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+import useSWR from "swr"
 
-export default function GerenciarPerfis() {
-  const { data: session, status } = useSession()
-  const [usuarios, setUsuarios] = useState<User[]>([])
+function GerenciarPerfisContent() {
+  const { status } = useSession()
+  const { notify } = useNotification()
+
+  const {
+    data: usuarios = [],
+    mutate,
+    error,
+    isLoading,
+  } = useSWR<UsuarioComResponsavel[]>("/api/usuarios", fetcher)
+
   const [perfis, setPerfis] = useState<Perfil[]>([])
   const [responsaveis, setResponsaveis] = useState<Responsavel[]>([])
-  const [perfilUsuario, setPerfilUsuario] = useState<Perfil | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [loadingPerfil, setLoadingPerfil] = useState<boolean>(true)
-  const loadingSession = status === "loading"
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [usuariosRes, perfisRes, responsaveisRes] = await Promise.all([
-          fetch("/api/usuarios").then((res) => res.json()),
+        const [perfisRes, responsaveisRes] = await Promise.all([
           fetch("/api/perfis").then((res) => res.json()),
           fetch("/api/responsaveis").then((res) => res.json()),
         ])
-        setUsuarios(usuariosRes)
         setPerfis(perfisRes)
         setResponsaveis(responsaveisRes)
       } catch (err) {
         console.error("Erro ao buscar dados:", err)
-      } finally {
-        setLoading(false)
+        notify({ type: "error", message: "Erro ao carregar perfis ou responsáveis" })
       }
     }
     fetchData()
-  }, [])
+  }, [notify])
 
   useEffect(() => {
-    if (session?.user?.email) {
-      fetch(`/api/perfil?email=${session.user.email}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setPerfilUsuario(data)
-          setLoadingPerfil(false)
-        })
-        .catch((err) => {
-          console.error("Erro ao buscar perfil do usuário autenticado:", err)
-          setLoadingPerfil(false)
-        })
+    if (error) {
+      notify({ type: "error", message: "Erro ao carregar usuários" })
     }
-  }, [session?.user?.email])
+  }, [error, notify])
 
-  const usuarioPerfilId = perfilUsuario?.id || null
+  const handlePerfilChange = async (userId: string, perfilId: number) => {
+    try {
+      const res = await fetch(`/api/usuarios/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ perfilId }),
+      })
 
-  const temPermissaoAcesso = usuarioPerfilId === 5 || usuarioPerfilId === 4
+      if (!res.ok) throw new Error("Erro ao atualizar perfil")
 
-  if (loadingSession || loadingPerfil) {
+      notify({ type: "success", message: "Perfil atualizado com sucesso" })
+      mutate()
+    } catch (err) {
+      console.error(err)
+      notify({ type: "error", message: "Erro ao atualizar perfil" })
+    }
+  }
+
+  const handleResponsavelChange = async (
+    userId: string | null,
+    responsavelId: number
+  ) => {
+    try {
+      const res = await fetch("/api/responsaveis", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, responsavelId }),
+      })
+
+      if (!res.ok) throw new Error("Erro ao atualizar responsável")
+
+      notify({ type: "success", message: "Responsável atualizado com sucesso" })
+      mutate()
+    } catch (err) {
+      console.error(err)
+      notify({ type: "error", message: "Erro ao atualizar responsável" })
+    }
+  }
+
+  const columns: GridColDef<UsuarioComResponsavel>[] = [
+    { field: "nome", headerName: "Nome", flex: 1 },
+    { field: "email", headerName: "E-mail", flex: 1 },
+    {
+      field: "perfilId",
+      headerName: "Perfil",
+      flex: 1,
+      renderCell: (params) => (
+        <FormControl fullWidth size="small">
+          <InputLabel>Perfil</InputLabel>
+          <Select
+            label="Perfil"
+            value={params.row.perfilId || ""}
+            onChange={(e) => handlePerfilChange(params.row.id, Number(e.target.value))}
+          >
+            <MenuItem value="">Selecione</MenuItem>
+            {perfis.map((perfil) => (
+              <MenuItem key={perfil.id} value={perfil.id}>
+                {perfil.nome}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ),
+    },
+    {
+      field: "responsavelId",
+      headerName: "Responsável",
+      flex: 1,
+      renderCell: (params) => (
+        <FormControl fullWidth size="small">
+          <InputLabel>Responsável</InputLabel>
+          <Select
+            label="Responsável"
+            value={params.row.responsavelId ?? ""}
+            onChange={(e) =>
+              handleResponsavelChange(params.row.id, Number(e.target.value))
+            }
+          >
+            {responsaveis.map((r) => (
+              <MenuItem key={r.id} value={r.id}>
+                {r.nome}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ),
+    },
+    {
+      field: "acoes",
+      headerName: "Ações",
+      width: 100,
+      renderCell: (params) => {
+        const responsavel = responsaveis.find((r) => r.userId === params.row.id)
+        return (
+          responsavel && (
+            <IconButton
+              size="small"
+              color="error"
+              title="Desvincular responsável"
+              onClick={() => handleResponsavelChange(null, responsavel.id)}
+            >
+              <LinkOff />
+            </IconButton>
+          )
+        )
+      },
+    },
+  ]
+
+  if (status === "loading") {
     return (
       <Container maxWidth="lg">
         <Box display="flex" justifyContent="center" mt={5}>
@@ -85,188 +181,40 @@ export default function GerenciarPerfis() {
     )
   }
 
-  if (!temPermissaoAcesso) {
-    return (
-      <Container maxWidth="lg">
-        <Alert severity="error" sx={{ mt: 3 }}>
-          Você não tem permissão para acessar esta página.
-        </Alert>
-      </Container>
-    )
-  }
-
-  const handlePerfilChange = async (userId: string, perfilId: number) => {
-    try {
-      const response = await fetch(`/api/usuarios/${userId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ perfilId }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao atualizar perfil")
-      }
-
-      setUsuarios((prev) =>
-        prev.map((user) => (user.id === userId ? { ...user, perfilId } : user))
-      )
-    } catch (error) {
-      console.error("Erro ao atualizar perfil do usuário:", error)
-    }
-  }
-
-  const handleResponsavelChange = async (
-    userId: string | null,
-    responsavelId: number
-  ) => {
-    try {
-      const response = await fetch("/api/responsaveis", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, responsavelId }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao atualizar vínculo de responsável")
-      }
-
-      setUsuarios((prev) =>
-        prev.map((user) => (user.id === userId ? { ...user, responsavelId } : user))
-      )
-    } catch (error) {
-      console.error("Erro ao vincular/desvincular responsável:", error)
-    }
-  }
-
   return (
     <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
+      <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+        Gerenciar Perfis
+      </Typography>
+
       <Box
         sx={{
-          bgcolor: "background.paper",
-          borderRadius: 2,
-          boxShadow: 1,
-          p: 2,
+          ...dataGridStyles,
+
+          height: 540,
+          width: "100%",
+          "& .MuiDataGrid-row": { minHeight: 56 },
         }}
       >
-        <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
-          Gerenciar Perfis
-        </Typography>
-
-        {loading ? (
-          <Box display="flex" justifyContent="center">
-            <CircularProgress />
-          </Box>
-        ) : (
-          <TableContainer component={Paper}>
-            <Table className="table">
-              <TableHead className="th">
-                <TableRow sx={{ bgcolor: "primary.main" }}>
-                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>Nome</TableCell>
-                  <TableCell sx={{ color: "black", fontWeight: "bold" }}>
-                    E-mail
-                  </TableCell>
-                  <TableCell
-                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                  >
-                    Perfil
-                  </TableCell>
-                  <TableCell
-                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                  >
-                    Responsável
-                  </TableCell>
-                  <TableCell
-                    sx={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-                  >
-                    Ação
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {usuarios.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.nome}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell align="center">
-                      <FormControl fullWidth size="small">
-                        <InputLabel id={`perfil-label-${user.id}`}>Perfil</InputLabel>
-                        <Select
-                          label="Perfil"
-                          className="input"
-                          value={user.perfilId || ""}
-                          onChange={(e) =>
-                            handlePerfilChange(user.id, Number(e.target.value))
-                          }
-                        >
-                          <MenuItem className="br-item" value="">
-                            Selecione um perfil
-                          </MenuItem>
-                          {perfis.map((perfil) => (
-                            <MenuItem
-                              className="br-item"
-                              key={perfil.id}
-                              value={perfil.id}
-                            >
-                              {perfil.nome}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <FormControl fullWidth size="small">
-                        <InputLabel id={`responsavel-label-${user.id}`}>
-                          Responsável
-                        </InputLabel>
-                        <Select
-                          label="Responsável"
-                          className="input"
-                          value={user.responsavelId ?? ""}
-                          onChange={(e) => {
-                            const responsavelId = Number(e.target.value)
-                            handleResponsavelChange(user.id, responsavelId) // responsavelId sempre number
-                          }}
-                        >
-                          {responsaveis.map((responsavel) => (
-                            <MenuItem
-                              className="br-item"
-                              key={responsavel.id}
-                              value={responsavel.id}
-                            >
-                              {responsavel.nome}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </TableCell>
-                    <TableCell align="center">
-                      {user.responsavelId && (
-                        <IconButton
-                          size="small"
-                          color="error"
-                          title="Desvincular responsável"
-                          onClick={() => {
-                            // Encontra o responsável que tem esse userId
-                            const responsavel = responsaveis.find(
-                              (r) => r.userId === user.id
-                            )
-                            if (responsavel) {
-                              handleResponsavelChange(null, responsavel.id)
-                            }
-                          }}
-                        >
-                          <LinkOff />
-                        </IconButton>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+        <DataGrid
+          disableColumnMenu
+          disableColumnSorting
+          getRowId={(row) => row.id}
+          rows={usuarios}
+          columns={columns}
+          loading={isLoading}
+          localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+        />
       </Box>
     </Container>
   )
 }
+
+const GerenciarPerfis = withPermissao(
+  GerenciarPerfisContent,
+  "Desabilitar",
+  "Relatorios",
+  { redirecionar: false }
+)
+
+export default GerenciarPerfis

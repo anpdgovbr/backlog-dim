@@ -6,7 +6,14 @@ export const dataGridStyles = {
   width: "100%",
   backgroundColor: ANPDtheme.palette.background.default, // Usa a cor do theme
   borderRadius: 2,
-  py: 1,
+  "& .MuiDataGrid-row": { alignItems: "center" },
+  "& .MuiDataGrid-cell": {
+    display: "flex",
+    alignItems: "center",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
   "& .MuiDataGrid-root": {
     backgroundColor: ANPDtheme.palette.background.paper, // Fundo branco do DataGrid
     borderRadius: 2,
