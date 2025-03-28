@@ -1,5 +1,6 @@
 // lib/helpers/mapaUserComResponsavel.ts
 import { prisma } from "@/lib/prisma"
+import { UsuarioComResponsavel } from "@/types/User"
 
 export async function mapearUsuariosComResponsaveis() {
   const usuarios = await prisma.user.findMany()
@@ -23,6 +24,6 @@ export async function mapearUsuariosComResponsaveis() {
       perfilId: u.perfilId,
       responsavelId: responsavel?.id ?? null,
       responsavelNome: responsavel?.nome ?? null,
-    }
+    } as UsuarioComResponsavel
   })
 }

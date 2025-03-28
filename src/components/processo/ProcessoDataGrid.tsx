@@ -96,7 +96,19 @@ export default function ProcessoDataGrid() {
       field: "requerente",
       headerName: "Requerente",
       flex: 1,
-      renderCell: (params) => params.row.requerente || "Anônimo",
+      renderCell: (params) => (
+        <span
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "block",
+            width: "100%",
+          }}
+        >
+          {params.row.requerente || "Anônimo"}
+        </span>
+      ),
     },
     {
       field: "responsavel",
@@ -154,8 +166,6 @@ export default function ProcessoDataGrid() {
             display: "flex",
             height: "100%",
             width: "100%",
-            m: 0,
-            p: 0,
           }}
         >
           <DataGrid
