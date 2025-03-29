@@ -54,12 +54,14 @@ export async function GET(req: Request) {
     const orderBy = searchParams.get("orderBy") || "dataCriacao"
     const ascending = searchParams.get("ascending") === "true"
     const search = searchParams.get("search")?.toLowerCase() || ""
+    const responsavelUserId = searchParams.get("responsavelUserId")
 
     const skip = (page - 1) * pageSize
     const take = pageSize
 
     const baseWhere = {
       active: true,
+      ...(responsavelUserId ? { responsavel: { userId: responsavelUserId } } : {}),
       ...(search
         ? {
             OR: [
