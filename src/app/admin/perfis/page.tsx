@@ -190,13 +190,12 @@ function GerenciarPerfisContent() {
       <Box
         sx={{
           ...dataGridStyles,
-
           height: 540,
           width: "100%",
-          "& .MuiDataGrid-row": { minHeight: 56 },
         }}
       >
         <DataGrid
+          rowHeight={60}
           disableColumnMenu
           disableColumnSorting
           getRowId={(row) => row.id}

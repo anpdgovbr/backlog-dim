@@ -1,46 +1,34 @@
+import { fetcher } from "@/lib/fetcher"
 import { Permissao, PermissaoConcedida } from "@/types/Permissao"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import useSWR from "swr"
 
 export default function usePermissoes() {
   const { data: session } = useSession()
-  const [permissoes, setPermissoes] = useState<
-    Partial<Record<PermissaoConcedida, boolean>>
-  >({})
-  const [loading, setLoading] = useState(true)
+  const email = session?.user?.email
 
-  useEffect(() => {
-    if (!session?.user?.email) return // aguarde até estar disponível
+  const { data, error, isLoading } = useSWR<Permissao[]>(
+    email ? `/api/permissoes?email=${email}` : null,
+    fetcher
+  )
 
-    setLoading(true) // marca como carregando só quando for buscar
+  const permissoes: Partial<Record<PermissaoConcedida, boolean>> = {}
 
-    fetch(`/api/permissoes?email=${session.user.email}`)
-      .then((res) => res.json())
-      .then((data: Permissao[]) => {
-        if (!Array.isArray(data)) {
-          console.error("Erro: API retornou dados inválidos", data)
-          setLoading(false)
-          return
-        }
+  if (Array.isArray(data)) {
+    for (const p of data) {
+      permissoes[`${p.acao}_${p.recurso}` as PermissaoConcedida] = p.permitido
+    }
+  }
 
-        const mapa = data.reduce<Partial<Record<PermissaoConcedida, boolean>>>(
-          (acc, p) => {
-            acc[`${p.acao}_${p.recurso}` as PermissaoConcedida] = p.permitido
-            return acc
-          },
-          {}
-        )
+  if (error) {
+    console.error("Erro ao buscar permissões:", error)
+  }
 
-        setPermissoes(mapa)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar permissões:", err)
-        setLoading(false)
-      })
-  }, [session?.user?.email])
-
-  return { permissoes, loading }
+  return {
+    permissoes,
+    loading: isLoading,
+    error,
+  }
 }
 
 export function pode(
