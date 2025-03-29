@@ -190,18 +190,6 @@ async function main() {
     skipDuplicates: true,
   })
 
-  console.log("🔹 Criando status interno...")
-
-  await prisma.statusInterno.createMany({
-    data: [
-      { nome: "Importado" },
-      { nome: "Criado" },
-      { nome: "Atualizado" },
-      { nome: "Processado" },
-    ],
-    skipDuplicates: true,
-  })
-
   // ==============================
   // 🌟 Criando ProcessoStatus
   // ==============================

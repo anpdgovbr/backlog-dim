@@ -1,6 +1,7 @@
 import { EnumData } from "./EnumData"
 import { RequeridoOutput } from "./Requerido"
 import { Responsavel } from "./Responsavel"
+import { StatusInterno } from "./StatusInterno"
 
 export interface ProcessoInput {
   numero: string
@@ -35,7 +36,7 @@ export interface ProcessoOutput {
   anonimo?: boolean
   observacoes?: string
   tipoReclamacao?: EnumData
-  statusInterno?: EnumData
+  statusInterno?: StatusInterno
 }
 
 export interface ProcessoImportacao {
