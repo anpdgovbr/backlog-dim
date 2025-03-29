@@ -54,10 +54,6 @@ ALTER TABLE "Situacao" ADD COLUMN     "active" BOOLEAN NOT NULL DEFAULT true,
 ADD COLUMN     "exclusionDate" TIMESTAMP(3);
 
 -- AlterTable
-ALTER TABLE "StatusInterno" ADD COLUMN     "active" BOOLEAN NOT NULL DEFAULT true,
-ADD COLUMN     "exclusionDate" TIMESTAMP(3);
-
--- AlterTable
 ALTER TABLE "TipoReclamacao" ADD COLUMN     "active" BOOLEAN NOT NULL DEFAULT true,
 ADD COLUMN     "exclusionDate" TIMESTAMP(3);
 
