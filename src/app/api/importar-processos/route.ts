@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
               responsavelId: responsavel.id,
               situacaoId: situacao.id,
               formaEntradaId: formaEntrada.id,
+              statusInterno: processo.statusInterno ?? "IMPORTADO",
             },
           })
         })

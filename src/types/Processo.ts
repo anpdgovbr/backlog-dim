@@ -47,6 +47,7 @@ export interface ProcessoImportacao {
   formaEntradaNome: string
   anonimoStr: string
   requerenteNome: string | null
+  statusInterno: StatusInterno
 }
 
 export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {

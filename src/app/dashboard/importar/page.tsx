@@ -2,6 +2,7 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
+import { StatusInterno } from "@/types/StatusInterno"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,
@@ -86,6 +87,7 @@ function ImportarProcessosContent() {
         formaEntradaNome: linha[4],
         anonimoStr: linha[5],
         requerenteNome: linha[6],
+        StatusInterno: StatusInterno.IMPORTADO,
       }))
 
       const response = await fetch("/api/importar-processos", {
