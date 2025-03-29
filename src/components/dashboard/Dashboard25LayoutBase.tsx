@@ -158,9 +158,10 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
             </>
           ) : (
             // Em telas pequenas, exibimos um Select
-            <FormControl fullWidth variant="outlined" sx={{ mx: 1 }}>
+            <FormControl fullWidth variant="outlined" sx={{ mx: 1, mb: 1 }} size="small">
               <InputLabel>Selecionar Seção</InputLabel>
               <Select
+                size="small"
                 value={selectedSection}
                 onChange={handleSelectChange}
                 label="Selecionar Seção"
