@@ -1,5 +1,6 @@
 import { EnumData } from "./EnumData"
 import { RequeridoOutput } from "./Requerido"
+import { Responsavel } from "./Responsavel"
 
 export interface ProcessoInput {
   numero: string
@@ -24,7 +25,7 @@ export interface ProcessoOutput {
   dataCriacao: Date
   requerente?: string
   formaEntrada?: EnumData
-  responsavel: EnumData
+  responsavel: Responsavel
   requerido?: RequeridoOutput
   situacao?: EnumData
   encaminhamento?: EnumData

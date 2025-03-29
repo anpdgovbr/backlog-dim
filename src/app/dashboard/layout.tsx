@@ -12,6 +12,7 @@ import {
   Person,
   Settings,
   TableChart,
+  UploadFile,
 } from "@mui/icons-material"
 import {
   Box,
@@ -99,6 +100,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
     if (perfilId >= 3) {
       links.push(
+        { href: "/dashboard/importar", text: "Importar", icon: <UploadFile /> },
         { href: "/dashboard/requeridos", text: "Requeridos", icon: <Business /> },
         { href: "/dashboard/responsaveis", text: "Responsáveis", icon: <Person /> }
       )
@@ -110,7 +112,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       )
     }
   }
-  links.push({ href: "#", text: "Configurações", icon: <Settings /> })
 
   return (
     <Container maxWidth="lg" sx={{ mt: 1 }}>

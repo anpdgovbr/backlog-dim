@@ -89,7 +89,7 @@ export async function GET(req: Request) {
         orderBy: { [orderBy]: ascending ? "asc" : "desc" },
         include: {
           formaEntrada: { select: { id: true, nome: true } },
-          responsavel: { select: { id: true, nome: true } },
+          responsavel: { select: { id: true, nome: true, userId: true } },
           situacao: { select: { id: true, nome: true } },
           encaminhamento: { select: { id: true, nome: true } },
           tipoReclamacao: { select: { id: true, nome: true } },

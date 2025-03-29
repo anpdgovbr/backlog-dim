@@ -1,11 +1,11 @@
 "use client"
 
+import ImportarProcessos from "@/app/dashboard/importar/page"
 import ContatoPrevioPage from "@/app/dashboard/metadados/contato-previo/page"
 import EncaminhamentoPage from "@/app/dashboard/metadados/encaminhamento/page"
 import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
 import FormaEntradaPage from "@/app/dashboard/metadados/forma-entrada/page"
 import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestacao/page"
-import ImportarProcessos from "@/app/dashboard/processos/importar/page"
 import ListarProcessos from "@/app/dashboard/processos/page"
 import GerenciarRequeridos from "@/app/dashboard/requeridos/page"
 import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
