@@ -1,7 +1,7 @@
 "use client"
 
 import TopNotification from "@/components/notification/TopNotification"
-import React, { createContext, useContext, useState } from "react"
+import React, { createContext, useCallback, useContext, useState } from "react"
 
 type NotificationType = "success" | "error" | "info" | "warning"
 
@@ -28,11 +28,11 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   const [message, setMessage] = useState("")
   const [type, setType] = useState<NotificationType>("info")
 
-  const notify = ({ message, type = "info" }: NotificationOptions) => {
+  const notify = useCallback(({ message, type = "info" }: NotificationOptions) => {
     setMessage(message)
     setType(type)
     setOpen(true)
-  }
+  }, [])
 
   const handleClose = () => setOpen(false)
 
