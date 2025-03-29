@@ -53,7 +53,7 @@ export default function GovBRAvatar() {
   return (
     <div ref={menuRef} style={{ position: "relative" }}>
       <button
-        style={{ height: "56px" }}
+        style={{ height: "48px" }}
         className="br-sign-in"
         type="button"
         aria-label={`Olá, ${session?.user?.name}`}
@@ -95,7 +95,7 @@ export default function GovBRAvatar() {
           top: "100%",
           zIndex: 1000,
           width: "240px",
-          marginTop: "8px",
+          marginTop: "0px",
         }}
       >
         {menuItems.map((item) => (
