@@ -35,6 +35,7 @@ export interface ProcessoOutput {
   anonimo?: boolean
   observacoes?: string
   tipoReclamacao?: EnumData
+  statusInterno?: EnumData
 }
 
 export interface ProcessoImportacao {
