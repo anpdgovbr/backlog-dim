@@ -136,7 +136,18 @@ export default function DashboardAdmin() {
         section.requiredPermissions?.some((perm) => permissoes[perm])
       )
 
-      setSections(filteredSections.length > 0 ? filteredSections : [])
+      // Só atualiza o state se mudou
+      setSections((prev) => {
+        const prevIds = prev
+          .map((s) => s.id)
+          .sort()
+          .join(",")
+        const nextIds = filteredSections
+          .map((s) => s.id)
+          .sort()
+          .join(",")
+        return prevIds !== nextIds ? filteredSections : prev
+      })
     }
   }, [permissoes, loading])
 

@@ -71,7 +71,8 @@ export default function RequeridoDataGrid() {
       setLoading(false)
     }
     fetchData()
-  }, [paginationModel, notify])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginationModel])
 
   useEffect(() => {
     const lowercasedFilter = search.toLowerCase()

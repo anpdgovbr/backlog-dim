@@ -36,20 +36,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { data: session, status } = useSession()
   const pathname = usePathname()
   const router = useRouter()
+  const email = session?.user?.email
   const [perfilId, setPerfilId] = useState<number | null>(null)
   const [loadingPerfil, setLoadingPerfil] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(true)
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    let redirected = false
+    if (status === "unauthenticated" && !redirected) {
+      redirected = true
       router.push("/auth/login")
     }
   }, [status, router])
 
   useEffect(() => {
+    if (!email) return
+
     const fetchPerfil = async () => {
       try {
-        const res = await fetch(`/api/perfil?email=${session?.user?.email}`)
+        const res = await fetch(`/api/perfil?email=${email}`)
         const data = await res.json()
         setPerfilId(data?.id || null)
       } catch (err) {
@@ -59,10 +64,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }
     }
 
-    if (session?.user?.email) {
-      fetchPerfil()
-    }
-  }, [session?.user?.email])
+    fetchPerfil()
+  }, [email])
 
   const carregando = status === "loading" || loadingPerfil
 

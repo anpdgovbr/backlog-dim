@@ -1,11 +1,12 @@
 "use client"
 
 import { useNotification } from "@/context/NotificationProvider"
+import usePode from "@/hooks/usePode"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { Box, Container, IconButton, TextField, Typography } from "@mui/material"
+import { Alert, Box, Container, IconButton, TextField, Typography } from "@mui/material"
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
@@ -22,6 +23,7 @@ export default function ProcessoDataGrid() {
   const [totalRows, setTotalRows] = useState(0)
   const router = useRouter()
   const { notify } = useNotification()
+  const { pode, loading: loadingPermissoes } = usePode()
 
   const fetchData = async () => {
     setLoading(true)
@@ -47,13 +49,11 @@ export default function ProcessoDataGrid() {
     setLoading(false)
   }
 
-  // 🔄 Buscar dados sempre que paginação ou busca mudarem
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationModel, search])
 
-  // Excluir processo e atualizar corretamente o DataGrid
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
@@ -130,13 +130,18 @@ export default function ProcessoDataGrid() {
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
+            disabled={!pode("Editar", "Processo")}
             onClick={() => {
               router.push(`/dashboard/processos/editar/${params.row.id}`)
             }}
           >
             <SettingsIcon />
           </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <IconButton
+            color="error"
+            disabled={!pode("Desabilitar", "Processo")}
+            onClick={() => handleDelete(params.row.id)}
+          >
             <GridDeleteIcon />
           </IconButton>
         </Box>
@@ -144,45 +149,55 @@ export default function ProcessoDataGrid() {
     },
   ]
 
+  if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
+
   return (
     <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
-      <Box>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Lista de Processos
-        </Typography>
+      {!pode("Exibir", "Processo") ? (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          Você não tem permissão para visualizar os processos.
+        </Alert>
+      ) : (
+        <>
+          <Box>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Lista de Processos
+            </Typography>
 
-        <TextField
-          label="Buscar..."
-          variant="outlined"
-          fullWidth
-          sx={{ mb: 1 }}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+            <TextField
+              label="Buscar..."
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 1 }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-        <Box
-          sx={{
-            ...dataGridStyles,
-            display: "flex",
-            height: "100%",
-            width: "100%",
-          }}
-        >
-          <DataGrid
-            disableColumnMenu
-            disableColumnSorting
-            rows={processos}
-            columns={columns}
-            pageSizeOptions={[5, 10, 20]}
-            loading={loading}
-            paginationMode="server"
-            rowCount={totalRows}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
-          />
-        </Box>
-      </Box>
+            <Box
+              sx={{
+                ...dataGridStyles,
+                display: "flex",
+                height: "100%",
+                width: "100%",
+              }}
+            >
+              <DataGrid
+                disableColumnMenu
+                disableColumnSorting
+                rows={processos}
+                columns={columns}
+                pageSizeOptions={[5, 10, 20]}
+                loading={loading}
+                paginationMode="server"
+                rowCount={totalRows}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+              />
+            </Box>
+          </Box>
+        </>
+      )}
     </Container>
   )
 }
