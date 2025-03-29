@@ -6,9 +6,23 @@ import { useProcessos } from "@/hooks/useProcessos"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
+import AddIcon from "@mui/icons-material/Add"
 import GridDeleteIcon from "@mui/icons-material/Delete"
+import RestartAltIcon from "@mui/icons-material/RestartAlt"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { Alert, Box, Container, IconButton, TextField, Typography } from "@mui/material"
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  FormControlLabel,
+  IconButton,
+  Stack,
+  Switch,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material"
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
@@ -20,6 +34,7 @@ export default function ProcessoDataGrid() {
     page: 0,
     pageSize: 10,
   })
+  const [somenteMeus, setSomenteMeus] = useState(true)
 
   const router = useRouter()
   const { notify } = useNotification()
@@ -36,6 +51,7 @@ export default function ProcessoDataGrid() {
     search,
     orderBy: "dataCriacao",
     ascending: false,
+    ...(somenteMeus && userId ? { responsavelUserId: userId } : {}),
   })
 
   const podeEditar = (responsavelUserId?: string | null): boolean =>
@@ -62,6 +78,12 @@ export default function ProcessoDataGrid() {
         notify({ type: "error", message: "Erro ao excluir processo" })
       }
     }
+  }
+
+  const handleClearFilters = () => {
+    setSearch("")
+    setSomenteMeus(true)
+    setPaginationModel({ page: 0, pageSize: 10 })
   }
 
   const columns: GridColDef<ProcessoOutput>[] = [
@@ -141,43 +163,78 @@ export default function ProcessoDataGrid() {
           Você não tem permissão para visualizar os processos.
         </Alert>
       ) : (
-        <>
-          <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Lista de Processos
-            </Typography>
+        <Box>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Lista de Processos
+          </Typography>
 
+          <Stack direction={{ xs: "column", sm: "column" }} spacing={1} mb={1}>
             <TextField
               label="Buscar..."
               variant="outlined"
               fullWidth
               size="small"
-              sx={{ mb: 1 }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {/* precisamos criar uma linha de filtros e  botoes aqui  */}
-
-            <Box
-              sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}
+            <Stack
+              direction={{ xs: "row", sm: "row" }}
+              spacing={1}
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <DataGrid
-                sx={{ minHeight: "45vh" }}
-                disableColumnMenu
-                disableColumnSorting
-                rows={processos}
-                columns={columns}
-                loading={isLoading}
-                pageSizeOptions={[5, 10, 20]}
-                paginationMode="server"
-                rowCount={total}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
-                localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={somenteMeus}
+                    onChange={(e) => setSomenteMeus(e.target.checked)}
+                  />
+                }
+                label="Somente atribuídos a mim"
+                sx={{ ml: 1, mr: 1 }}
               />
-            </Box>
+
+              <Tooltip title="Limpar filtros">
+                <Button
+                  startIcon={<RestartAltIcon />}
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleClearFilters}
+                >
+                  Limpar
+                </Button>
+              </Tooltip>
+
+              <Tooltip title="Adicionar novo processo">
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  color="primary"
+                  onClick={() => router.push("/dashboard/processos/novo")}
+                >
+                  Novo
+                </Button>
+              </Tooltip>
+            </Stack>
+          </Stack>
+
+          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+            <DataGrid
+              sx={{ minHeight: "45vh" }}
+              disableColumnMenu
+              disableColumnSorting
+              rows={processos}
+              columns={columns}
+              loading={isLoading}
+              pageSizeOptions={[5, 10, 20]}
+              paginationMode="server"
+              rowCount={total}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            />
           </Box>
-        </>
+        </Box>
       )}
     </Container>
   )

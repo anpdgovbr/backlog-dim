@@ -4,6 +4,10 @@ import { BaseQueryParams } from "@/types/BaseQueryParams"
 import { ProcessoOutput } from "@/types/Processo"
 import useSWR from "swr"
 
+interface UseProcessosParams extends BaseQueryParams {
+  responsavelUserId?: string
+}
+
 interface UseProcessosResult {
   data: ProcessoOutput[]
   total: number
@@ -11,13 +15,14 @@ interface UseProcessosResult {
   error: unknown
 }
 
-export function useProcessos(params: BaseQueryParams): UseProcessosResult {
+export function useProcessos(params: UseProcessosParams): UseProcessosResult {
   const {
     page = 1,
     pageSize = 10,
     search = "",
     orderBy = "dataCriacao",
     ascending = false,
+    responsavelUserId,
   } = params
 
   const query = new URLSearchParams({
@@ -27,6 +32,10 @@ export function useProcessos(params: BaseQueryParams): UseProcessosResult {
     orderBy,
     ascending: ascending.toString(),
   })
+
+  if (responsavelUserId) {
+    query.set("responsavelUserId", responsavelUserId)
+  }
 
   const queryString = query.toString()
   const key = `/api/processos?${queryString}`
