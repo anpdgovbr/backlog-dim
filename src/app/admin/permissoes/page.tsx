@@ -14,22 +14,21 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { ptBR } from "@mui/x-data-grid/locales"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
 
 function GerenciarPermissoesContent() {
   const { notify } = useNotification()
   const [perfilSelecionado, setPerfilSelecionado] = useState<number | "">("")
-  const {
-    data: perfis,
-    isLoading: loadingPerfis,
-    error: erroPerfis,
-  } = useSWRImmutable<Perfil[]>("/api/perfis", fetcher)
+
+  const { data: perfis, isLoading: loadingPerfis } = useSWRImmutable<Perfil[]>(
+    "/api/perfis",
+    fetcher
+  )
 
   const {
     data: permissoes,
@@ -56,29 +55,26 @@ function GerenciarPermissoesContent() {
         message: `Permissão ${novaPermissao.permitido ? "concedida" : "revogada"}`,
       })
     } catch (error) {
-      console.error("Erro ao atualizar permissão", error)
+      console.error("Erro ao atualizar permissão:", error)
       notify({ type: "error", message: "Erro ao atualizar permissão" })
     }
   }
 
-  const columns: GridColDef<Permissao>[] = [
-    { field: "acao", headerName: "Ação", flex: 1 },
-    { field: "recurso", headerName: "Recurso", flex: 1 },
-    {
-      field: "permitido",
-      headerName: "Permitido",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <input
-          type="checkbox"
-          checked={params.row.permitido}
-          onChange={() => handleTogglePermissao(params.row)}
-        />
-      ),
-    },
-  ]
+  const permissoesAgrupadas = useMemo(() => {
+    if (!permissoes) return {}
+
+    const agrupado: Record<string, Permissao[]> = {}
+    permissoes.forEach((p) => {
+      if (!agrupado[p.recurso]) agrupado[p.recurso] = []
+      agrupado[p.recurso].push(p)
+    })
+
+    Object.keys(agrupado).forEach((recurso) => {
+      agrupado[recurso].sort((a, b) => a.acao.localeCompare(b.acao))
+    })
+
+    return agrupado
+  }, [permissoes])
 
   return (
     <Container maxWidth="lg" sx={{ p: 0 }}>
@@ -88,8 +84,6 @@ function GerenciarPermissoesContent() {
 
       {loadingPerfis ? (
         <CircularProgress />
-      ) : erroPerfis ? (
-        <Typography color="error">Erro ao carregar perfis</Typography>
       ) : (
         <FormControl fullWidth size="small" sx={{ mb: 2 }}>
           <InputLabel id="perfil-select-label">Perfil</InputLabel>
@@ -114,16 +108,44 @@ function GerenciarPermissoesContent() {
       ) : loadingPermissoes ? (
         <CircularProgress />
       ) : permissoes?.length ? (
-        <Box sx={dataGridStyles}>
-          <DataGrid
-            rows={permissoes}
-            columns={columns}
-            getRowId={(row) => row.id}
-            disableColumnMenu
-            disableColumnSorting
-            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
-            autoHeight
-          />
+        <Box sx={{ ...dataGridStyles, px: 2, py: 1 }}>
+          {Object.entries(permissoesAgrupadas).map(([recurso, permissoesDoRecurso]) => (
+            <Box key={recurso} sx={{ mb: 4 }}>
+              <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+                {recurso}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                }}
+              >
+                {permissoesDoRecurso.map((p) => (
+                  <Box
+                    key={p.id}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      px: 2,
+                      py: 1,
+                      bgcolor: "background.paper",
+                      borderRadius: 1,
+                      boxShadow: 1,
+                    }}
+                  >
+                    <Typography>{p.acao}</Typography>
+                    <Switch
+                      checked={p.permitido}
+                      onChange={() => handleTogglePermissao(p)}
+                      inputProps={{ "aria-label": `Permissão ${p.acao}` }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          ))}
         </Box>
       ) : (
         <Typography variant="body2">
