@@ -35,7 +35,6 @@ export async function GET(
         evidencia: true,
         tipoReclamacao: true,
         processoStatus: true,
-        statusInterno: true,
       },
     })
 
@@ -98,7 +97,6 @@ export async function PUT(
         tipoReclamacaoId: body.tipoReclamacaoId ?? null,
         observacoes: body.observacoes,
         processoStatusId: body.processoStatusId ?? null,
-        statusInternoId: body.statusInternoId ?? null,
       },
     })
 
