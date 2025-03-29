@@ -18,7 +18,6 @@ export type AcaoPermissao =
   | "VerHistorico"
   | "EditarProprio"
   | "EditarGeral"
-  | "Excluir"
   | "AlterarResponsavel"
   | "Cadastrar"
   | "Editar"

@@ -9,7 +9,6 @@ import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
 import Dashboard25Wrapper, {
   ISectionConfig,
 } from "@/components/dashboard/Dashboard25Wrapper"
-import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
 import {
   AssignmentTurnedIn,
@@ -91,19 +90,24 @@ const allSections: ISectionConfig[] = [
   },
 ]
 
-function GerenciarMetadadosContent() {
+export default function GerenciarMetadados() {
   const { permissoes, loading } = usePermissoes()
   const [sections, setSections] = useState<ISectionConfig[]>([])
 
   useEffect(() => {
     if (!loading) {
-      const filteredSections = allSections.filter((section) =>
+      const filtered = allSections.filter((section) =>
         section.requiredPermissions?.some((perm) => permissoes[perm])
       )
 
-      setSections(filteredSections.length > 0 ? filteredSections : [])
+      // só atualiza se for diferente
+      setSections((prev) => {
+        const isDifferent =
+          prev.length !== filtered.length || prev.some((s, i) => s.id !== filtered[i]?.id)
+        return isDifferent ? filtered : prev
+      })
     }
-  }, [permissoes, loading])
+  }, [loading, permissoes])
 
   if (loading) {
     return (
@@ -115,18 +119,7 @@ function GerenciarMetadadosContent() {
   return (
     <Dashboard25Wrapper
       sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]}
-      defaultSectionId="contato_previo" //@todo: Default section to show, fazer um dashboard inicial
+      defaultSectionId="contato_previo"
     />
   )
 }
-
-const GerenciarMetadados = withPermissao(
-  GerenciarMetadadosContent,
-  "Exibir",
-  "Metadados",
-  {
-    redirecionar: false,
-  }
-)
-
-export default GerenciarMetadados

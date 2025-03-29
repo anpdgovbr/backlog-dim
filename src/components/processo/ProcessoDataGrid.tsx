@@ -2,6 +2,8 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
+import { useProcessos } from "@/hooks/useProcessos"
+import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { ProcessoOutput } from "@/types/Processo"
 import GridDeleteIcon from "@mui/icons-material/Delete"
@@ -10,49 +12,36 @@ import { Alert, Box, Container, IconButton, TextField, Typography } from "@mui/m
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export default function ProcessoDataGrid() {
-  const [processos, setProcessos] = useState<ProcessoOutput[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   })
-  const [totalRows, setTotalRows] = useState(0)
+
   const router = useRouter()
   const { notify } = useNotification()
   const { pode, loading: loadingPermissoes } = usePode()
+  const { userId, loading: loadingUserId } = useUsuarioIdLogado()
 
-  const fetchData = async () => {
-    setLoading(true)
-    try {
-      const response = await fetch(
-        `/api/processos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=dataCriacao&ascending=false&search=${encodeURIComponent(
-          search
-        )}`
-      )
-      const { data, total } = await response.json()
+  const {
+    data: processos,
+    total,
+    isLoading,
+  } = useProcessos({
+    page: paginationModel.page + 1,
+    pageSize: paginationModel.pageSize,
+    search,
+    orderBy: "dataCriacao",
+    ascending: false,
+  })
 
-      if (Array.isArray(data)) {
-        setProcessos(data)
-        setTotalRows(total)
-      } else {
-        console.error("Resposta inesperada da API:", data)
-        setProcessos([])
-      }
-    } catch (error) {
-      console.error("Erro ao buscar processos:", error)
-      setProcessos([])
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationModel, search])
+  const podeEditar = (responsavelUserId?: string | null): boolean =>
+    !!userId &&
+    (pode("EditarGeral", "Processo") ||
+      (pode("EditarProprio", "Processo") && responsavelUserId === userId))
 
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
@@ -62,13 +51,7 @@ export default function ProcessoDataGrid() {
         })
 
         if (response.ok) {
-          setTotalRows((prev) => prev - 1)
-
-          if (processos.length === 1 && paginationModel.page > 0) {
-            setPaginationModel((prev) => ({ ...prev, page: prev.page - 1 }))
-          } else {
-            fetchData()
-          }
+          notify({ type: "success", message: "Processo excluído com sucesso" })
         } else {
           const data = await response.json()
           console.error("Erro ao excluir processo:", data)
@@ -130,10 +113,8 @@ export default function ProcessoDataGrid() {
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
-            disabled={!pode("Editar", "Processo")}
-            onClick={() => {
-              router.push(`/dashboard/processos/editar/${params.row.id}`)
-            }}
+            disabled={!podeEditar(params.row.responsavel?.userId)}
+            onClick={() => router.push(`/dashboard/processos/editar/${params.row.id}`)}
           >
             <SettingsIcon />
           </IconButton>
@@ -149,7 +130,9 @@ export default function ProcessoDataGrid() {
     },
   ]
 
-  if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
+  if (loadingPermissoes || loadingUserId) {
+    return <Typography>Carregando permissões...</Typography>
+  }
 
   return (
     <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
@@ -168,28 +151,26 @@ export default function ProcessoDataGrid() {
               label="Buscar..."
               variant="outlined"
               fullWidth
+              size="small"
               sx={{ mb: 1 }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {/* precisamos criar uma linha de filtros e  botoes aqui  */}
 
             <Box
-              sx={{
-                ...dataGridStyles,
-                display: "flex",
-                height: "100%",
-                width: "100%",
-              }}
+              sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}
             >
               <DataGrid
+                sx={{ minHeight: "45vh" }}
                 disableColumnMenu
                 disableColumnSorting
                 rows={processos}
                 columns={columns}
+                loading={isLoading}
                 pageSizeOptions={[5, 10, 20]}
-                loading={loading}
                 paginationMode="server"
-                rowCount={totalRows}
+                rowCount={total}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}

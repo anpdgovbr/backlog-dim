@@ -203,10 +203,8 @@ export default function RequeridoDataGrid() {
               display: "flex",
               height: "100%",
               width: "100%",
-              p: 0,
             }}
           >
-            {" "}
             <DataGrid
               sx={{ minHeight: "45vh" }}
               rows={filteredData}

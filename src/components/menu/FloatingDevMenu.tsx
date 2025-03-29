@@ -191,13 +191,15 @@ const FloatingDevMenu = () => {
                         />
                       </Link>
                     </ListItem>
-                    {pages.map((route) => (
-                      <ListItem key={route} sx={{ padding: "4px 8px" }}>
-                        <Link href={route.replace("/page", "")} passHref>
-                          <ListItemText primary={route} sx={{ fontSize: 12 }} />
-                        </Link>
-                      </ListItem>
-                    ))}
+                    {pages
+                      .filter((route) => !route.includes("["))
+                      .map((route) => (
+                        <ListItem key={route} sx={{ padding: "4px 8px" }}>
+                          <Link href={route.replace("/page", "")} passHref>
+                            <ListItemText primary={route} sx={{ fontSize: 12 }} />
+                          </Link>
+                        </ListItem>
+                      ))}
                   </List>
                 </AccordionDetails>
               </Accordion>

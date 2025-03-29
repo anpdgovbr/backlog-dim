@@ -289,7 +289,7 @@ async function main() {
     {
       acao: "Cadastrar",
       recurso: "Processo",
-      permitido: true,
+      permitido: false,
       perfilId: perfis.atendente.id,
     },
     {
@@ -381,25 +381,25 @@ async function main() {
     },
 
     {
-      acao: "Excluir",
+      acao: "Desabilitar",
       recurso: "Processo",
       permitido: false,
       perfilId: perfis.leitor.id,
     },
     {
-      acao: "Excluir",
+      acao: "Desabilitar",
       recurso: "Processo",
       permitido: false,
       perfilId: perfis.atendente.id,
     },
     {
-      acao: "Excluir",
+      acao: "Desabilitar",
       recurso: "Processo",
       permitido: true,
       perfilId: perfis.supervisor.id,
     },
     {
-      acao: "Excluir",
+      acao: "Desabilitar",
       recurso: "Processo",
       permitido: true,
       perfilId: perfis.administrador.id,

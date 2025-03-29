@@ -2,6 +2,7 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import usePermissoes from "@/hooks/usePermissoes"
+import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
@@ -16,7 +17,8 @@ import {
 } from "@mui/material"
 import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
-import { useEffect, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
+import useSWR from "swr"
 
 import { GovBRInputModal } from "./modal/GovBRModal"
 import DialogAlert from "./ui/DialogAlert"
@@ -26,50 +28,42 @@ interface CrudManagerProps {
   tableName: string
 }
 
+interface Item {
+  id: number
+  nome: string
+  active?: boolean
+}
+
 export default function CrudManager({ entityName, tableName }: CrudManagerProps) {
-  const { permissoes, loading } = usePermissoes()
-  const [items, setItems] = useState<{ id: number; nome: string }[]>([])
-  const [loadingData, setLoadingData] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{ id?: number; nome: string }>({
-    nome: "",
-  })
+  const { permissoes, loading: loadingPerms } = usePermissoes()
+  const { notify } = useNotification()
+
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   })
-  const [totalRows, setTotalRows] = useState(0)
-  const [itemToDelete, setItemToDelete] = useState<{ id: number; nome: string } | null>(
-    null
-  )
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<Partial<Item>>({ nome: "" })
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null)
   const [loadingDelete, setLoadingDelete] = useState(false)
-  const { notify } = useNotification()
 
-  async function fetchData() {
-    setLoadingData(true)
-    try {
-      const res = await fetch(
-        `/api/meta/${tableName.toLowerCase()}?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=nome&ascending=true`
-      )
-      const { data, total } = await res.json()
+  const { data, isLoading, mutate } = useSWR(
+    `/api/meta/${tableName.toLowerCase()}?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=nome&ascending=true`,
+    fetcher
+  )
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setItems(data.filter((item: any) => item.active !== false))
-      setTotalRows(total)
-    } catch (error) {
-      console.error(`Erro ao buscar ${tableName}:`, error)
-    }
-    setLoadingData(false)
-  }
+  const items: Item[] = useMemo(() => {
+    if (!Array.isArray(data?.data)) return []
+    return data.data.filter((item: Item) => item.active !== false)
+  }, [data])
 
-  useEffect(() => {
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableName, paginationModel])
+  const totalRows = data?.total ?? 0
 
   async function handleSave() {
-    if (!selectedItem.nome.trim())
-      return notify({ type: "warning", message: "Nome é obrigatório" })
+    if (!selectedItem.nome?.trim()) {
+      notify({ type: "warning", message: "Nome é obrigatório" })
+      return
+    }
 
     try {
       const method = selectedItem.id ? "PUT" : "POST"
@@ -79,7 +73,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         body: JSON.stringify(selectedItem),
       })
 
-      fetchData()
+      mutate()
       notify({
         type: "success",
         message: `Item "${selectedItem.nome}" salvo com sucesso`,
@@ -92,14 +86,17 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     }
   }
 
-  function handleDeleteRequest(id: number) {
-    const item = items.find((item) => item.id === id)
-    if (!item) {
-      notify({ type: "error", message: "Item não encontrado" })
-      return
-    }
-    setItemToDelete({ id: item.id, nome: item.nome })
-  }
+  const handleDeleteRequest = useCallback(
+    (id: number) => {
+      const item = items.find((i) => i.id === id)
+      if (!item) {
+        notify({ type: "error", message: "Item não encontrado" })
+        return
+      }
+      setItemToDelete(item)
+    },
+    [items, notify]
+  )
 
   async function confirmDelete() {
     if (!itemToDelete) return
@@ -117,12 +114,11 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         throw new Error(errorMessage.error || "Erro desconhecido ao excluir.")
       }
 
-      fetchData()
+      mutate()
       notify({
         type: "success",
         message: `Item "${itemToDelete.nome}" excluído com sucesso`,
       })
-
       setItemToDelete(null)
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -137,46 +133,48 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
     }
   }
 
-  const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: "ID",
-      width: 60,
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-    },
-    { field: "nome", headerName: "Nome", flex: 1, sortable: false },
-    {
-      field: "acoes",
-      headerName: "Ações",
-      sortable: false,
-      width: 150,
-      renderCell: (params) => (
-        <Box>
-          <IconButton
-            color="primary"
-            disabled={!permissoes["Editar_Metadados"]}
-            onClick={() => {
-              setSelectedItem({ id: params.row.id, nome: params.row.nome })
-              setOpenModal(true)
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            disabled={!permissoes["Desabilitar_Metadados"]}
-            onClick={() => handleDeleteRequest(params.row.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ]
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: "id",
+        headerName: "ID",
+        width: 60,
+        align: "center",
+        headerAlign: "center",
+      },
+      { field: "nome", headerName: "Nome", flex: 1 },
+      {
+        field: "acoes",
+        headerName: "Ações",
+        width: 150,
+        sortable: false,
+        renderCell: (params) => (
+          <Box>
+            <IconButton
+              color="primary"
+              disabled={!permissoes["Editar_Metadados"]}
+              onClick={() => {
+                setSelectedItem({ id: params.row.id, nome: params.row.nome })
+                setOpenModal(true)
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              color="error"
+              disabled={!permissoes["Desabilitar_Metadados"]}
+              onClick={() => handleDeleteRequest(params.row.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ),
+      },
+    ],
+    [permissoes, handleDeleteRequest]
+  )
 
-  if (loading) return <Typography>Carregando permissões...</Typography>
+  if (loadingPerms) return <Typography>Carregando permissões...</Typography>
 
   return (
     <Container maxWidth="lg" sx={{ p: 0, m: 0 }}>
@@ -201,22 +199,14 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               Adicionar
             </Button>
           </Box>
-          <Box
-            sx={{
-              ...dataGridStyles,
-              display: "flex",
-              width: "100%",
-              m: 0,
-              mb: 2,
-              p: 0,
-            }}
-          >
+
+          <Box sx={{ ...dataGridStyles, width: "100%", m: 0, mb: 2, p: 0 }}>
             <DataGrid
               sx={{ minHeight: "45vh" }}
               disableColumnMenu
               rows={items}
               columns={columns}
-              loading={loadingData}
+              loading={isLoading}
               pageSizeOptions={[5, 10, 20]}
               paginationMode="server"
               rowCount={totalRows}
@@ -225,6 +215,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
             />
           </Box>
+
           <GovBRInputModal
             open={openModal}
             onClose={() => {
@@ -235,7 +226,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             onSubmit={handleSave}
             confirmText="Salvar"
             cancelText="Cancelar"
-            disabled={!selectedItem.nome.trim()}
+            disabled={!selectedItem.nome?.trim()}
           >
             <TextField
               fullWidth
@@ -249,6 +240,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
           </GovBRInputModal>
         </>
       )}
+
       <DialogAlert
         open={!!itemToDelete}
         onClose={() => setItemToDelete(null)}

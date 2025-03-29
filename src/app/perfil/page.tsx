@@ -17,7 +17,7 @@ interface Perfil {
 }
 
 export default function PerfilPage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const [perfil, setPerfil] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -32,6 +32,16 @@ export default function PerfilPage() {
         .catch(() => setLoading(false))
     }
   }, [session?.user?.email])
+
+  if (status === "loading") {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
+  }
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

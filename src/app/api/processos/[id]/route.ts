@@ -119,7 +119,7 @@ export async function DELETE(
   }
 
   const email = session.user.email
-  const temPermissao = await verificarPermissao(email, "Excluir", "Processo")
+  const temPermissao = await verificarPermissao(email, "Desabilitar", "Processo")
   if (!temPermissao) {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
   }
