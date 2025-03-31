@@ -1,53 +1,42 @@
-import authOptions from "@/config/next-auth.config"
-import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { NextResponse } from "next/server"
+import { withApi } from "@/lib/withApi"
+import { AcaoAuditoria } from "@prisma/client"
 
-export async function POST(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
+export const POST = withApi(
+  async ({ req }) => {
+    try {
+      const data = await req.json()
+
+      const processo = await prisma.processo.create({
+        data,
+        include: {
+          formaEntrada: true,
+          responsavel: true,
+          situacao: true,
+          encaminhamento: true,
+        },
+      })
+
+      return {
+        response: Response.json(processo, { status: 201 }),
+        audit: {
+          depois: processo,
+        },
+      }
+    } catch (err) {
+      console.error("Erro geral no POST:", err)
+      return Response.json({ error: "Erro interno no servidor" }, { status: 500 })
+    }
+  },
+  {
+    tabela: "processo",
+    acao: AcaoAuditoria.CREATE,
+    permissao: "Cadastrar_Processo",
   }
+)
 
-  const permissoes = await buscarPermissoesConcedidas(session.user.email)
-  if (!pode(permissoes, "Cadastrar_Processo")) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  try {
-    const data = await req.json()
-
-    const processo = await prisma.processo.create({
-      data,
-      include: {
-        formaEntrada: true,
-        responsavel: true,
-        situacao: true,
-        encaminhamento: true,
-      },
-    })
-
-    console.log("Processo criado:", processo)
-    return NextResponse.json(processo, { status: 201 })
-  } catch (err) {
-    console.error("Erro geral no POST:", err)
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
-  }
-}
-
-export async function GET(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
-
-  const permissoes = await buscarPermissoesConcedidas(session.user.email)
-  if (!pode(permissoes, "Exibir_Processo")) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  try {
+export const GET = withApi(
+  async ({ req }) => {
     const { searchParams } = new URL(req.url)
     const page = Number(searchParams.get("page")) || 1
     const pageSize = Number(searchParams.get("pageSize")) || 10
@@ -99,9 +88,20 @@ export async function GET(req: Request) {
       }),
     ])
 
-    return NextResponse.json({ data: processos, total })
-  } catch (err) {
-    console.error("Erro na API /api/processos:", err)
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
+    return {
+      response: Response.json({ data: processos, total }),
+      audit: {
+        depois: {
+          page,
+          search,
+          totalResultados: total,
+        },
+      },
+    }
+  },
+  {
+    tabela: "processo",
+    acao: AcaoAuditoria.GET,
+    permissao: "Exibir_Processo",
   }
-}
+)

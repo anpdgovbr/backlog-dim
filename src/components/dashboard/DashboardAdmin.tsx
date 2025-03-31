@@ -59,7 +59,7 @@ const allSections: ISectionConfig[] = [
         </Container>
       )
     },
-    requiredPermissions: ["Gerenciar_Relatorios"],
+    requiredPermissions: ["Alterar_Usuario"],
   },
   {
     id: "requeridos",

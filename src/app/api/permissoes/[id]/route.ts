@@ -1,47 +1,57 @@
 import { prisma } from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
+import { withApiForId } from "@/lib/withApi"
+import { AcaoAuditoria } from "@prisma/client"
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params
-
-  try {
-    const permissaoId = parseInt(id, 10)
+// Handler isolado
+const handlerPATCH = withApiForId<{ id: string }>(
+  async ({ params, req }) => {
+    const permissaoId = parseInt(params.id, 10)
     if (isNaN(permissaoId)) {
-      return NextResponse.json({ error: "ID inválido" }, { status: 400 })
+      return Response.json({ error: "ID inválido" }, { status: 400 })
     }
 
-    const body = await request.json()
+    const body = await req.json()
     const { permitido } = body
 
     if (typeof permitido !== "boolean") {
-      return NextResponse.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
+      return Response.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
     }
 
-    // 🔹 Verifica se a permissão existe e está ativa
     const permissao = await prisma.permissao.findUnique({
-      where: { id: permissaoId, active: true },
-      include: { perfil: true },
+      where: { id: permissaoId },
     })
 
-    if (!permissao || !permissao.perfil?.active) {
-      return NextResponse.json(
-        { error: "Permissão não encontrada ou perfil desativado" },
+    if (!permissao || !permissao.active) {
+      return Response.json(
+        { error: "Permissão não encontrada ou desativada" },
         { status: 404 }
       )
     }
 
-    // 🔹 Atualiza a permissão se estiver ativa
     const permissaoAtualizada = await prisma.permissao.update({
       where: { id: permissaoId },
       data: { permitido },
     })
 
-    return NextResponse.json(permissaoAtualizada)
-  } catch (error) {
-    console.error("Erro ao atualizar permissão:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: Response.json(permissaoAtualizada),
+      audit: {
+        antes: permissao,
+        depois: permissaoAtualizada,
+      },
+    }
+  },
+  {
+    tabela: "permissao",
+    acao: AcaoAuditoria.UPDATE,
+    permissao: "Alterar_Permissoes",
   }
+)
+
+// Export padrão com await em context.params
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerPATCH(req, { params: await context.params })
 }

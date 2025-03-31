@@ -225,3 +225,29 @@ model User {
 
   @@map("User")
 }
+
+
+enum AcaoAuditoria {
+  CREATE
+  UPDATE
+  DELETE
+  PATCH
+  GET
+}
+
+model AuditLog {
+  id          Int            @id @default(autoincrement())
+  tabela      String
+  acao        AcaoAuditoria  // Agora usa enum
+  registroId  Int?
+  userId      String?
+  email       String?
+  antes       Json?
+  depois      Json?
+  contexto    String?
+  ip          String?        // 🆕 IP do cliente (opcional)
+  userAgent   String?        // 🆕 Navegador/dispositivo (opcional)
+  criadoEm    DateTime       @default(now())
+
+  @@map("AuditLog")
+}

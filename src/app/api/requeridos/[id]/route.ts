@@ -1,30 +1,12 @@
-import { authOptions } from "@/config/next-auth.config"
-import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { NextRequest, NextResponse } from "next/server"
+import { withApiForId } from "@/lib/withApi"
+import { AcaoAuditoria } from "@prisma/client"
 
-/**
- * 🔹 GET: Retorna um Requerido específico
- */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
+// === GET ===
+const handlerGET = withApiForId<{ id: string }>(
+  async ({ params }) => {
+    const { id } = params
 
-  if (!session || !session.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
-
-  // 🔹 Verifica permissão para visualizar metadados
-  const temPermissao = await verificarPermissao(session.user.email, "Exibir", "Processo")
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  try {
-    const { id } = await params
     const requerido = await prisma.requerido.findFirst({
       where: {
         id: Number(id),
@@ -37,90 +19,90 @@ export async function GET(
     })
 
     if (!requerido) {
-      return NextResponse.json({ error: "Requerido não encontrado" }, { status: 404 })
+      return Response.json({ error: "Requerido não encontrado" }, { status: 404 })
     }
 
-    return NextResponse.json(requerido)
-  } catch (error) {
-    console.error("Erro ao buscar requerido:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: Response.json(requerido),
+      audit: {
+        depois: { id: requerido.id },
+      },
+    }
+  },
+  {
+    tabela: "requerido",
+    acao: AcaoAuditoria.GET,
+    permissao: "Exibir_Processo",
   }
+)
+
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerGET(req, { params: await context.params })
 }
 
-/**
- * 🔹 PUT: Atualiza um Requerido específico
- */
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session || !session.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
+// === PUT ===
+const handlerPUT = withApiForId<{ id: string }>(
+  async ({ params, req }) => {
+    const { id } = params
+    const body = await req.json()
 
-  // 🔹 Verifica permissão para editar metadados
-  const temPermissao = await verificarPermissao(
-    session.user.email,
-    "Editar",
-    "Responsavel"
-  )
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  const { id } = await params
-
-  const existente = await prisma.requerido.findUnique({
-    where: { id: Number(id) },
-  })
-
-  if (!existente || !existente.active) {
-    return NextResponse.json(
-      { error: "Requerido não encontrado ou inativo" },
-      { status: 404 }
-    )
-  }
-
-  try {
-    const data = await req.json()
-    const requeridoAtualizado = await prisma.requerido.update({
+    const existente = await prisma.requerido.findUnique({
       where: { id: Number(id) },
-      data,
     })
 
-    return NextResponse.json(requeridoAtualizado)
-  } catch (error) {
-    console.error("Erro ao atualizar requerido:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    if (!existente || !existente.active) {
+      return Response.json(
+        { error: "Requerido não encontrado ou inativo" },
+        { status: 404 }
+      )
+    }
+
+    const atualizado = await prisma.requerido.update({
+      where: { id: Number(id) },
+      data: body,
+    })
+
+    return {
+      response: Response.json(atualizado),
+      audit: {
+        antes: existente,
+        depois: atualizado,
+      },
+    }
+  },
+  {
+    tabela: "requerido",
+    acao: AcaoAuditoria.UPDATE,
+    permissao: "Editar_Responsavel",
   }
+)
+
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerPUT(req, { params: await context.params })
 }
 
-/**
- * 🔹 DELETE: Remove um Requerido específico
- */
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session || !session.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
+// === DELETE ===
+const handlerDELETE = withApiForId<{ id: string }>(
+  async ({ params }) => {
+    const { id } = params
 
-  // 🔹 Verifica permissão para desabilitar, para requeridos usamos Responsavel
-  const temPermissao = await verificarPermissao(
-    session.user.email,
-    "Desabilitar",
-    "Responsavel"
-  )
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
+    const existente = await prisma.requerido.findUnique({
+      where: { id: Number(id) },
+    })
 
-  const { id } = await params
+    if (!existente || !existente.active) {
+      return Response.json(
+        { error: "Requerido não encontrado ou já excluído" },
+        { status: 404 }
+      )
+    }
 
-  try {
     await prisma.requerido.update({
       where: { id: Number(id) },
       data: {
@@ -128,9 +110,27 @@ export async function DELETE(
         exclusionDate: new Date(),
       },
     })
-    return NextResponse.json({ message: "Requerido deletado com sucesso" })
-  } catch (error) {
-    console.error("Erro ao deletar requerido:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+
+    return {
+      response: Response.json(
+        { message: "Requerido excluído com sucesso" },
+        { status: 200 }
+      ),
+      audit: {
+        antes: existente,
+      },
+    }
+  },
+  {
+    tabela: "requerido",
+    acao: AcaoAuditoria.DELETE,
+    permissao: "Desabilitar_Responsavel",
   }
+)
+
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerDELETE(req, { params: await context.params })
 }

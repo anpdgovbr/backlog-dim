@@ -1,25 +1,28 @@
 import { prisma } from "@/lib/prisma"
+import { withApiForId } from "@/lib/withApi"
+import { AcaoAuditoria } from "@prisma/client"
 import { Prisma } from "@prisma/client"
-import { NextRequest, NextResponse } from "next/server"
 
 interface PatchRequestBody {
   perfilId?: number
   responsavelId?: number | null
 }
 
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
-  try {
-    const { perfilId, responsavelId }: PatchRequestBody = await request.json()
-    const { id } = await context.params
+const handlerPATCH = withApiForId<{ id: string }>(
+  async ({ req, params }) => {
+    const { id } = params
+    const { perfilId, responsavelId }: PatchRequestBody = await req.json()
 
     if (perfilId === undefined && responsavelId === undefined) {
-      return NextResponse.json(
+      return Response.json(
         { error: "É necessário fornecer 'perfilId' ou 'responsavelId'" },
         { status: 400 }
       )
+    }
+
+    const usuarioAntes = await prisma.user.findUnique({ where: { id } })
+    if (!usuarioAntes) {
+      return Response.json({ error: "Usuário não encontrado" }, { status: 404 })
     }
 
     const data: Prisma.UserUpdateInput = {}
@@ -28,7 +31,7 @@ export async function PATCH(
       data.perfil = { connect: { id: perfilId } }
     }
 
-    if (responsavelId === null || responsavelId === null) {
+    if (responsavelId === null) {
       data.responsavel = { disconnect: true }
     } else if (responsavelId !== undefined) {
       data.responsavel = { connect: { id: responsavelId } }
@@ -39,9 +42,24 @@ export async function PATCH(
       data,
     })
 
-    return NextResponse.json({ success: true, usuario: usuarioAtualizado })
-  } catch (error) {
-    console.error("Erro ao atualizar perfil ou responsável do usuário:", error)
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
+    return {
+      response: Response.json({ success: true, usuario: usuarioAtualizado }),
+      audit: {
+        antes: usuarioAntes,
+        depois: usuarioAtualizado,
+      },
+    }
+  },
+  {
+    tabela: "user",
+    acao: AcaoAuditoria.UPDATE,
+    permissao: "Alterar_Usuario", // @todo: adicionar essa permissão no banco de dados
   }
+)
+
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerPATCH(req, { params: await context.params })
 }
