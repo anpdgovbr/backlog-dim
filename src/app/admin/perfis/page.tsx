@@ -2,10 +2,10 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
+import { usePerfis } from "@/hooks/usePerfis"
+import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { Perfil } from "@/types/Perfil"
-import { Responsavel } from "@/types/Responsavel"
 import { UsuarioComResponsavel } from "@/types/User"
 import { LinkOff } from "@mui/icons-material"
 import {
@@ -22,45 +22,19 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
 import useSWR from "swr"
 
 function GerenciarPerfisContent() {
   const { status } = useSession()
   const { notify } = useNotification()
 
-  const {
-    data: usuarios = [],
-    mutate,
-    error,
-    isLoading,
-  } = useSWR<UsuarioComResponsavel[]>("/api/usuarios", fetcher)
+  const { data: usuarios = [], mutate: mutateUsuarios } = useSWR<UsuarioComResponsavel[]>(
+    "/api/usuarios",
+    fetcher
+  )
 
-  const [perfis, setPerfis] = useState<Perfil[]>([])
-  const [responsaveis, setResponsaveis] = useState<Responsavel[]>([])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [perfisRes, responsaveisRes] = await Promise.all([
-          fetch("/api/perfis").then((res) => res.json()),
-          fetch("/api/responsaveis").then((res) => res.json()),
-        ])
-        setPerfis(perfisRes)
-        setResponsaveis(responsaveisRes)
-      } catch (err) {
-        console.error("Erro ao buscar dados:", err)
-        notify({ type: "error", message: "Erro ao carregar perfis ou responsáveis" })
-      }
-    }
-    fetchData()
-  }, [notify])
-
-  useEffect(() => {
-    if (error) {
-      notify({ type: "error", message: "Erro ao carregar usuários" })
-    }
-  }, [error, notify])
+  const { perfis } = usePerfis()
+  const { responsaveis, mutate: mutateResponsaveis } = useResponsaveis()
 
   const handlePerfilChange = async (userId: string, perfilId: number) => {
     try {
@@ -73,7 +47,7 @@ function GerenciarPerfisContent() {
       if (!res.ok) throw new Error("Erro ao atualizar perfil")
 
       notify({ type: "success", message: "Perfil atualizado com sucesso" })
-      mutate()
+      mutateUsuarios()
     } catch (err) {
       console.error(err)
       notify({ type: "error", message: "Erro ao atualizar perfil" })
@@ -94,7 +68,8 @@ function GerenciarPerfisContent() {
       if (!res.ok) throw new Error("Erro ao atualizar responsável")
 
       notify({ type: "success", message: "Responsável atualizado com sucesso" })
-      mutate()
+      mutateUsuarios()
+      mutateResponsaveis()
     } catch (err) {
       console.error(err)
       notify({ type: "error", message: "Erro ao atualizar responsável" })
@@ -201,7 +176,7 @@ function GerenciarPerfisContent() {
           getRowId={(row) => row.id}
           rows={usuarios}
           columns={columns}
-          loading={isLoading}
+          loading={false}
           localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
         />
       </Box>
