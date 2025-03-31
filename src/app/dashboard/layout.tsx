@@ -1,12 +1,11 @@
 "use client"
 
+import SideMenu, { LinkItem } from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 import {
   AdminPanelSettings,
   Assessment,
   Business,
-  ChevronLeft,
-  ChevronRight,
   Home,
   ManageSearch,
   Person,
@@ -14,22 +13,8 @@ import {
   TableChart,
   UploadFile,
 } from "@mui/icons-material"
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Divider,
-  Drawer,
-  IconButton,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  List as MUIList,
-  Tooltip,
-  Typography,
-} from "@mui/material"
+import { Box, CircularProgress, Container } from "@mui/material"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -40,19 +25,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const email = session?.user?.email
   const [perfilId, setPerfilId] = useState<number | null>(null)
   const [loadingPerfil, setLoadingPerfil] = useState(true)
-  const [drawerOpen, setDrawerOpen] = useState(true)
 
   useEffect(() => {
-    let redirected = false
-    if (status === "unauthenticated" && !redirected) {
-      redirected = true
-      router.push("/auth/login")
-    }
+    if (status === "unauthenticated") router.push("/auth/login")
   }, [status, router])
 
   useEffect(() => {
     if (!email) return
-
     const fetchPerfil = async () => {
       try {
         const res = await fetch(`/api/perfil?email=${email}`)
@@ -64,13 +43,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setLoadingPerfil(false)
       }
     }
-
     fetchPerfil()
   }, [email])
 
-  const carregando = status === "loading" || loadingPerfil
-
-  if (carregando) {
+  if (status === "loading" || loadingPerfil) {
     return (
       <Container maxWidth="lg">
         <Box display="flex" justifyContent="center" mt={5}>
@@ -80,7 +56,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  const links = [{ href: "/dashboard", text: "Página Inicial", icon: <Home /> }]
+  const links: LinkItem[] = [
+    { href: "/dashboard", text: "Página Inicial", icon: <Home /> },
+  ]
   if (perfilId === null) {
     links.push({ href: "#", text: "Configurações", icon: <Settings /> })
   } else {
@@ -117,62 +95,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <Container maxWidth="lg" sx={{ mt: 1 }}>
       <GovBrBreadcrumb basePath="/dashboard" />
       <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-        <Drawer
-          variant="permanent"
-          open={drawerOpen}
-          slotProps={{
-            paper: {
-              sx: {
-                position: "relative",
-                width: drawerOpen ? 240 : 72,
-                bgcolor: "background.paper",
-                borderRight: 1,
-                borderColor: "divider",
-                alignSelf: "flex-start",
-                overflowX: "hidden",
-                transition: "width 0.3s ease",
-              },
-            },
-          }}
-        >
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent={drawerOpen ? "space-between" : "center"}
-            px={2}
-            py={1}
-          >
-            {drawerOpen && <Typography variant="subtitle1">Acesso rápido</Typography>}
-            <IconButton onClick={() => setDrawerOpen(!drawerOpen)} size="small">
-              {drawerOpen ? <ChevronLeft /> : <ChevronRight />}
-            </IconButton>
-          </Box>
-
-          <Divider />
-
-          <MUIList>
-            {links.map(({ href, text, icon }) => (
-              <ListItemButton
-                key={href}
-                component={Link}
-                href={href}
-                selected={
-                  pathname === href ||
-                  (href !== "/dashboard" && pathname.startsWith(href))
-                }
-                sx={{ justifyContent: drawerOpen ? "flex-start" : "center", px: 2 }}
-              >
-                <Tooltip title={!drawerOpen ? text : ""} placement="right" arrow>
-                  <ListItemIcon sx={{ minWidth: 0, mr: drawerOpen ? 2 : 0 }}>
-                    {icon}
-                  </ListItemIcon>
-                </Tooltip>
-                {drawerOpen && <ListItemText primary={text} />}
-              </ListItemButton>
-            ))}
-          </MUIList>
-        </Drawer>
-
+        <SideMenu
+          links={links}
+          pathname={pathname}
+          title="Dashboard"
+          storageKey="drawerDashboard"
+        />
         <Box
           sx={{
             flexGrow: 1,

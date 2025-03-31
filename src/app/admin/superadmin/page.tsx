@@ -273,4 +273,6 @@ const SuperAdminPage = () => {
   )
 }
 
-export default withPermissao(SuperAdminPage, "Desabilitar", "Relatorios")
+export default withPermissao(SuperAdminPage, "Desabilitar", "Relatorios", {
+  redirecionar: false,
+})
