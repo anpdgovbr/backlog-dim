@@ -18,12 +18,11 @@ export type AcaoPermissao =
   | "VerHistorico"
   | "EditarProprio"
   | "EditarGeral"
-  | "AlterarResponsavel"
+  | "Alterar"
   | "Cadastrar"
   | "Editar"
   | "Desabilitar"
   | "Criar"
-  | "Gerenciar"
 
 export type RecursoPermissao =
   | "Processo"
@@ -31,5 +30,6 @@ export type RecursoPermissao =
   | "Metadados"
   | "Relatorios"
   | "Permissoes"
+  | "Usuario"
 
 export type PermissaoConcedida = `${AcaoPermissao}_${RecursoPermissao}`

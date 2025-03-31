@@ -52,10 +52,12 @@ function ImportarProcessosContent() {
   const [pagina, setPagina] = useState(0)
   const [linhasPorPagina, setLinhasPorPagina] = useState(10)
   const { notify } = useNotification()
+  const [fileName, setFileName] = useState<string>("")
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
+    setFileName(file.name)
 
     Papa.parse(file, {
       header: false,
@@ -93,7 +95,10 @@ function ImportarProcessosContent() {
       const response = await fetch("/api/importar-processos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ processos }),
+        body: JSON.stringify({
+          nomeArquivo: fileName,
+          processos,
+        }),
       })
 
       const resultado = await response.json()

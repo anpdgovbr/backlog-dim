@@ -1,27 +1,12 @@
-import authOptions from "@/config/next-auth.config"
-import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { NextRequest, NextResponse } from "next/server"
+import { withApiForId } from "@/lib/withApi"
+import { AcaoAuditoria } from "@prisma/client"
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
+// === GET ===
+const handlerGET = withApiForId<{ id: string }>(
+  async ({ params }) => {
+    const { id } = params
 
-  const email = session.user.email
-  const temPermissao = await verificarPermissao(email, "Exibir", "Processo")
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  const { id } = await params
-
-  try {
     const processo = await prisma.processo.findFirst({
       where: { id: Number(id), active: true },
       include: {
@@ -39,41 +24,40 @@ export async function GET(
     })
 
     if (!processo) {
-      return NextResponse.json({ error: "Processo não encontrado" }, { status: 404 })
+      return Response.json({ error: "Processo não encontrado" }, { status: 404 })
     }
 
-    return NextResponse.json(processo)
-  } catch (error) {
-    console.error("Erro ao buscar processo:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: Response.json(processo),
+      audit: {
+        depois: { id: processo.id },
+      },
+    }
+  },
+  {
+    tabela: "processo",
+    acao: AcaoAuditoria.GET,
+    permissao: "Exibir_Processo",
   }
+)
+
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerGET(req, { params: await context.params })
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
-
-  const email = session.user.email
-  const temPermissao = await verificarPermissao(email, "EditarGeral", "Processo")
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  const { id } = await params
-
-  try {
+// === PUT ===
+const handlerPUT = withApiForId<{ id: string }>(
+  async ({ params, req }) => {
+    const { id } = params
     const body = await req.json()
-    const processoExiste = await prisma.processo.findUnique({
-      where: { id: Number(id) },
-    })
 
-    if (!processoExiste || !processoExiste.active) {
-      return NextResponse.json(
+    const processoAtual = await prisma.processo.findUnique({ where: { id: Number(id) } })
+
+    if (!processoAtual || !processoAtual.active) {
+      return Response.json(
         { error: "Processo não encontrado ou inativo" },
         { status: 404 }
       )
@@ -100,37 +84,39 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(processoAtualizado)
-  } catch (error) {
-    console.error("Erro ao atualizar processo:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: Response.json(processoAtualizado),
+      audit: {
+        antes: processoAtual,
+        depois: processoAtualizado,
+      },
+    }
+  },
+  {
+    tabela: "processo",
+    acao: AcaoAuditoria.UPDATE,
+    permissao: "EditarGeral_Processo",
   }
+)
+
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerPUT(req, { params: await context.params })
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  }
+// === DELETE ===
+const handlerDELETE = withApiForId<{ id: string }>(
+  async ({ params }) => {
+    const { id } = params
 
-  const email = session.user.email
-  const temPermissao = await verificarPermissao(email, "Desabilitar", "Processo")
-  if (!temPermissao) {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-  }
-
-  const { id } = await params
-
-  try {
     const processo = await prisma.processo.findUnique({
       where: { id: Number(id) },
     })
 
     if (!processo || !processo.active) {
-      return NextResponse.json(
+      return Response.json(
         { error: "Processo não encontrado ou já excluído" },
         { status: 404 }
       )
@@ -144,12 +130,26 @@ export async function DELETE(
       },
     })
 
-    return NextResponse.json(
-      { message: "Processo excluído com sucesso" },
-      { status: 200 }
-    )
-  } catch (error) {
-    console.error("Erro ao excluir processo:", error)
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: Response.json(
+        { message: "Processo excluído com sucesso" },
+        { status: 200 }
+      ),
+      audit: {
+        antes: processo,
+      },
+    }
+  },
+  {
+    tabela: "processo",
+    acao: AcaoAuditoria.DELETE,
+    permissao: "Desabilitar_Processo",
   }
+)
+
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerDELETE(req, { params: await context.params })
 }

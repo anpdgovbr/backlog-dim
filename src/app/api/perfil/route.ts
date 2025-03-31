@@ -1,27 +1,22 @@
 import { prisma } from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
+import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const email = searchParams.get("email")
-
-  if (!email) {
-    return NextResponse.json({ error: "E-mail é obrigatório" }, { status: 400 })
-  }
-
+export const GET = withApiSlimNoParams(async ({ email }) => {
   const user = await prisma.user.findUnique({
     where: { email },
     include: { perfil: true },
   })
 
   if (!user || !user.perfil) {
-    return NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 })
+    return Response.json({ error: "Perfil não encontrado" }, { status: 404 })
   }
 
-  // 🔹 Verifica se o perfil foi desativado (soft delete)
   if (!user.perfil.active) {
-    return NextResponse.json({ error: "Perfil desativado" }, { status: 403 })
+    return Response.json({ error: "Perfil desativado" }, { status: 403 })
   }
 
-  return NextResponse.json({ id: user.perfil.id, nome: user.perfil.nome })
-}
+  return Response.json({
+    id: user.perfil.id,
+    nome: user.perfil.nome,
+  })
+}, undefined)

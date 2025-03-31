@@ -1,17 +1,11 @@
+// app/api/perfis/route.ts
 import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-export async function GET() {
-  try {
-    const perfis = await prisma.perfil.findMany({
-      where: { active: true }, // 🔹 Filtra apenas perfis ativos
-    })
+export const GET = withApiSlimNoParams(async () => {
+  const perfis = await prisma.perfil.findMany({
+    where: { active: true },
+  })
 
-    return NextResponse.json(perfis)
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Erro ao buscar perfis", detalhe: (error as Error).message },
-      { status: 500 }
-    )
-  }
-}
+  return Response.json(perfis)
+}, undefined) // <- sem permissão explícita

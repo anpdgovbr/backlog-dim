@@ -393,31 +393,6 @@ async function main() {
       perfilId: perfis.administrador.id,
     },
 
-    {
-      acao: "AlterarResponsavel",
-      recurso: "Processo",
-      permitido: false,
-      perfilId: perfis.leitor.id,
-    },
-    {
-      acao: "AlterarResponsavel",
-      recurso: "Processo",
-      permitido: false,
-      perfilId: perfis.atendente.id,
-    },
-    {
-      acao: "AlterarResponsavel",
-      recurso: "Processo",
-      permitido: true,
-      perfilId: perfis.supervisor.id,
-    },
-    {
-      acao: "AlterarResponsavel",
-      recurso: "Processo",
-      permitido: true,
-      perfilId: perfis.administrador.id,
-    },
-
     // 🔹 Permissões da entidade Responsável
     {
       acao: "Exibir",
@@ -714,6 +689,99 @@ async function main() {
       recurso: "Relatorios",
       permitido: true,
       perfilId: perfis.administrador.id,
+    },
+
+    // 🔹 Permissões de Usuarios-pERMISSOES
+
+    {
+      acao: "Exibir",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.leitor.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.atendente.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.supervisor.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Usuario",
+      permitido: false,
+      perfilId: perfis.leitor.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Usuario",
+      permitido: false,
+      perfilId: perfis.atendente.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Usuario",
+      permitido: false,
+      perfilId: perfis.supervisor.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Usuario",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Permissoes",
+      permitido: false,
+      perfilId: perfis.leitor.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Permissoes",
+      permitido: false,
+      perfilId: perfis.atendente.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Permissoes",
+      permitido: false,
+      perfilId: perfis.supervisor.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Permissoes",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Permissoes",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
     },
   ]
 

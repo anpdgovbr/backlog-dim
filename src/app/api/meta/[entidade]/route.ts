@@ -1,166 +1,145 @@
-//api/meta/[entidade]/route.ts
-import authOptions from "@/config/next-auth.config"
-import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import { MetaEntidade, allowedEntities } from "@/types/MetaEntidades"
-import { Prisma } from "@prisma/client"
-import { getServerSession } from "next-auth"
-import { NextRequest, NextResponse } from "next/server"
+import { withApiForId } from "@/lib/withApi"
+import { withApiSlim } from "@/lib/withApiSlim"
+import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
+import { AcaoAuditoria } from "@prisma/client"
+import { NextResponse } from "next/server"
 
-type PrismaDelegate<T> = {
-  findMany: (args?: Prisma.Args<T, "findMany">) => Promise<T[]>
-  create: (args: Prisma.Args<T, "create">) => Promise<T>
-  update: (args: Prisma.Args<T, "update">) => Promise<T>
-  findUnique: (args: Prisma.Args<T, "findUnique">) => Promise<T | null>
-  count: (args?: Prisma.Args<T, "count">) => Promise<number>
-}
+const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => {
+  const validacao = validarEntidadeParams(params)
+  if (!validacao.valid) return validacao.response
 
-const getPrismaModel = (entidade: MetaEntidade): PrismaDelegate<unknown> => {
-  return allowedEntities[entidade] as unknown as PrismaDelegate<unknown>
-}
+  const { model } = validacao
+  const { searchParams } = new URL(req.url)
 
-async function validarAcesso(
-  email: string,
-  acao: "Exibir" | "Cadastrar" | "Editar" | "Desabilitar"
-) {
-  const permissoes = await buscarPermissoesConcedidas(email)
-  return pode(permissoes, `${acao}_Metadados`)
-}
+  const page = Number(searchParams.get("page")) || 1
+  const pageSize = Number(searchParams.get("pageSize")) || 10
+  const orderBy = searchParams.get("orderBy") || "id"
+  const ascending = searchParams.get("ascending") === "true"
+
+  const [total, data] = await Promise.all([
+    model.count({ where: { active: true } }),
+    model.findMany({
+      where: { active: true },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+    }),
+  ])
+
+  return NextResponse.json({ data, total })
+}, "Exibir_Metadados")
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ entidade: string }> }
+  req: Request,
+  context: { params: Promise<{ entidade: string }> }
 ) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email)
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-
-  if (!(await validarAcesso(session.user.email, "Exibir")))
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-
-  const ent = await params
-  const entidade = ent.entidade.toLowerCase() as MetaEntidade
-
-  if (!(entidade in allowedEntities))
-    return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
-
-  try {
-    const { searchParams } = new URL(req.url)
-
-    const page = Number(searchParams.get("page")) || 1
-    const pageSize = Number(searchParams.get("pageSize")) || 10
-    const orderBy = searchParams.get("orderBy") || "id"
-    const ascending = searchParams.get("ascending") === "true"
-
-    const skip = (page - 1) * pageSize
-    const take = pageSize
-
-    const model = getPrismaModel(entidade)
-
-    const [total, data] = await Promise.all([
-      model.count({
-        where: { active: true },
-      }),
-      model.findMany({
-        where: { active: true },
-        skip,
-        take,
-        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
-      }),
-    ])
-
-    return NextResponse.json({ data, total })
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
-  }
+  return handlerGET(req, { params: await context.params })
 }
+
+// POST
+const handlerPOST = withApiForId<{ entidade: string }>(
+  async ({ req, params }) => {
+    const validacao = validarEntidadeParams(params)
+    if (!validacao.valid) return validacao.response
+
+    const { model } = validacao
+    const { nome } = await req.json()
+    if (!nome) {
+      return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 })
+    }
+
+    const novo = await model.create({ data: { nome } })
+
+    return {
+      response: NextResponse.json(novo, { status: 201 }),
+      audit: { depois: novo as object },
+    }
+  },
+  {
+    permissao: "Cadastrar_Metadados",
+    acao: AcaoAuditoria.CREATE,
+    tabela: (params) => params.entidade,
+  }
+)
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ entidade: string }> }
+  req: Request,
+  context: { params: Promise<{ entidade: string }> }
 ) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email)
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  if (!(await validarAcesso(session.user.email, "Cadastrar")))
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-
-  const ent = await params
-  const entidade = ent.entidade.toLowerCase() as MetaEntidade
-  if (!(entidade in allowedEntities))
-    return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
-
-  try {
-    const { nome } = await req.json()
-    if (!nome) return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 })
-
-    const model = getPrismaModel(entidade)
-    const newItem = await model.create({ data: { nome } })
-    return NextResponse.json(newItem, { status: 201 })
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
-  }
+  return handlerPOST(req, { params: await context.params })
 }
+
+// PUT
+const handlerPUT = withApiForId<{ entidade: string }>(
+  async ({ req, params }) => {
+    const validacao = validarEntidadeParams(params)
+    if (!validacao.valid) return validacao.response
+
+    const { model } = validacao
+    const { id, nome } = await req.json()
+    if (!id || !nome) {
+      return NextResponse.json({ error: "ID e Nome são obrigatórios" }, { status: 400 })
+    }
+
+    const antes = await model.findUnique({ where: { id } })
+    const depois = await model.update({ where: { id }, data: { nome } })
+
+    return {
+      response: NextResponse.json(depois),
+      audit: { antes: antes as object, depois: depois as object },
+    }
+  },
+  {
+    permissao: "Editar_Metadados",
+    acao: AcaoAuditoria.UPDATE,
+    tabela: (params) => params.entidade,
+  }
+)
 
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ entidade: string }> }
+  req: Request,
+  context: { params: Promise<{ entidade: string }> }
 ) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email)
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  if (!(await validarAcesso(session.user.email, "Editar")))
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
-
-  const ent = await params
-  const entidade = ent.entidade.toLowerCase() as MetaEntidade
-  if (!(entidade in allowedEntities))
-    return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
-
-  try {
-    const { id, nome } = await req.json()
-    if (!id || !nome)
-      return NextResponse.json({ error: "ID e Nome são obrigatórios" }, { status: 400 })
-
-    const model = getPrismaModel(entidade)
-    const updatedItem = await model.update({ where: { id }, data: { nome } })
-    return NextResponse.json(updatedItem)
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
-  }
+  return handlerPUT(req, { params: await context.params })
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ entidade: string }> }
-) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.email)
-    return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })
-  if (!(await validarAcesso(session.user.email, "Desabilitar")))
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 })
+// DELETE
+const handlerDELETE = withApiForId<{ entidade: string }>(
+  async ({ req, params }) => {
+    const validacao = validarEntidadeParams(params)
+    if (!validacao.valid) return validacao.response
 
-  const ent = await params
-  const entidade = ent.entidade.toLowerCase() as MetaEntidade
-  if (!(entidade in allowedEntities))
-    return NextResponse.json({ error: "Entidade inválida" }, { status: 400 })
-
-  try {
+    const { model } = validacao
     const { id } = await req.json()
-    if (!id || isNaN(Number(id)))
+    if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: "ID inválido ou ausente" }, { status: 400 })
+    }
 
-    const model = getPrismaModel(entidade)
-    const existingItem = await model.findUnique({ where: { id: Number(id) } })
-    if (!existingItem)
+    const antes = await model.findUnique({ where: { id: Number(id) } })
+    if (!antes) {
       return NextResponse.json({ error: "Item não encontrado" }, { status: 404 })
+    }
 
-    await model.update({
+    const depois = await model.update({
       where: { id: Number(id) },
-      data: { active: false, exclusionDate: new Date() }, // ⬅️ Soft delete
+      data: { active: false, exclusionDate: new Date() },
     })
 
-    return NextResponse.json({ message: "Desabilitado com sucesso" })
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
+    return {
+      response: NextResponse.json({ message: "Desabilitado com sucesso" }),
+      audit: { antes: antes as object, depois: depois as object },
+    }
+  },
+  {
+    permissao: "Desabilitar_Metadados",
+    acao: AcaoAuditoria.DELETE,
+    tabela: (params) => params.entidade,
   }
+)
+
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ entidade: string }> }
+) {
+  return handlerDELETE(req, { params: await context.params })
 }

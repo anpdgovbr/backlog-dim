@@ -1,12 +1,10 @@
+// src/app/api/usuarios/route.ts
 import { mapearUsuariosComResponsaveis } from "@/lib/helpers/mapaUserComResponsavel"
-import { NextResponse } from "next/server"
+import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-export async function GET() {
-  try {
-    const result = await mapearUsuariosComResponsaveis()
-    return NextResponse.json(result)
-  } catch (error) {
-    console.error("Erro ao buscar usuários:", error)
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 })
-  }
-}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const GET = withApiSlimNoParams(async ({ req: _req }) => {
+  const result = await mapearUsuariosComResponsaveis()
+
+  return Response.json(result)
+}, "Exibir_Usuario")
