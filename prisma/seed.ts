@@ -825,12 +825,12 @@ async function main() {
       },
     }),
     prisma.user.upsert({
-      where: { email: "melissa.braga@anpd.gov.br" },
+      where: { email: "arthur.vasconcelos@anpd.gov.br" },
       update: {},
       create: {
-        email: "melissa.braga@anpd.gov.br",
+        email: "arthur.vasconcelos@anpd.gov.br",
         perfilId: perfis.administrador.id,
-        nome: "Melissa Braga",
+        nome: "Arthur Oliveira Vasconcelos",
       },
     }),
   ])
