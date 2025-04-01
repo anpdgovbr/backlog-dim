@@ -1,3 +1,5 @@
+"use client"
+
 import { Box, Button, Container, Typography } from "@mui/material"
 import Link from "next/link"
 
@@ -12,7 +14,7 @@ export default function HomePage() {
           minHeight: "75vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <Typography variant="h2" gutterBottom>

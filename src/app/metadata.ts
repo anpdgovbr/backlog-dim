@@ -1,23 +1,25 @@
 import { Metadata } from "next"
 
 export const globalMetadata: Metadata = {
-  title: "Sistema de Processamentos",
-  description: "Gerenciamento de Processamentos usando o Padrão Digital de Governo",
-  keywords: "GovBR, Processamentos, Next.js, Design System",
-  authors: [{ name: "Seu Nome", url: "https://seusite.com" }],
+  title: "Fila de Processamento - ANPD",
+  description:
+    "Sistema interno para gestão de denúncias e petições relacionadas à LGPD, seguindo o Padrão Digital de Governo.",
+  keywords:
+    "ANPD, LGPD, Denúncias, Petições, GovBR, Next.js, Supabase, Design System, Fila de Processamento",
+  authors: [{ name: "Luciano Édipo", url: "https://github.com/lucianoedipo" }],
   openGraph: {
-    title: "Sistema de Processamentos",
-    description: "Gerenciamento de Processamentos",
-    url: "https://seusite.com",
-    siteName: "Sistema GovBR",
+    title: "Fila de Processamento - ANPD",
+    description:
+      "Aplicação interna da ANPD para acompanhamento e gestão de requerimentos relacionados à LGPD.",
+    url: "https://hml-dim.anpd.gov.br/",
     images: [
       {
-        url: "https://seusite.com/imagem.jpg",
-        width: 800,
-        height: 600,
-        alt: "Imagem de Exemplo"
-      }
+        url: "https://gov.br/anpd/assets/img/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fila de Processamento - ANPD",
+      },
     ],
-    type: "website"
-  }
+    type: "website",
+  },
 }

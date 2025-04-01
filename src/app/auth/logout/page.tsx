@@ -1,6 +1,6 @@
 "use client"
 
-import GovBrLoading from "@/components/GovBrLoading"
+import GovBrLoading from "@/components/ui/GovBrLoading"
 import { Box, Button, Typography } from "@mui/material"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -23,7 +23,7 @@ export default function LogoutPage() {
 
       // Forçar limpeza completa da sessão
       await fetch("/api/auth/session", {
-        method: "DELETE"
+        method: "DELETE",
       })
 
       // Redirecionamento imediato
@@ -32,7 +32,7 @@ export default function LogoutPage() {
       // Efetuar logout após redirecionamento
       await signOut({
         redirect: false,
-        callbackUrl: "/"
+        callbackUrl: "/",
       })
     } catch (err) {
       console.error(err)
@@ -56,7 +56,7 @@ export default function LogoutPage() {
           justifyContent: "center",
           minHeight: "75vh",
           textAlign: "center",
-          p: 3
+          p: 3,
         }}
       >
         <Typography variant="h5" color="error" gutterBottom>
