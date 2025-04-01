@@ -217,25 +217,29 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
           </Box>
 
           <GovBRInputModal
+            key={`modal-${selectedItem.id || "new"}`} // Isso faz o modal recriar somente quando o item muda
             open={openModal}
             onClose={() => {
               setOpenModal(false)
               setSelectedItem({ nome: "" })
             }}
-            title="Adicionar item"
+            title={selectedItem.id ? "Editar item" : "Adicionar item"}
             onSubmit={handleSave}
             confirmText="Salvar"
             cancelText="Cancelar"
             disabled={!selectedItem.nome?.trim()}
           >
             <TextField
+              autoFocus // Adiciona foco automático
               fullWidth
               size="small"
               variant="outlined"
               label="Nome"
               value={selectedItem.nome}
               sx={{ my: 1 }}
-              onChange={(e) => setSelectedItem({ ...selectedItem, nome: e.target.value })}
+              onChange={(e) =>
+                setSelectedItem((prev) => ({ ...prev, nome: e.target.value }))
+              }
             />
           </GovBRInputModal>
         </>
