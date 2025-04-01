@@ -7,7 +7,7 @@ import { globalMetadata } from "./metadata"
 export const metadata = globalMetadata
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode
 }>) {

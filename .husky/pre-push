@@ -1,2 +1,2 @@
-# Runs build (lint) before push
+#!/bin/sh
 npm run build

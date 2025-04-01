@@ -1,166 +1,261 @@
 "use client"
 
-import { supabase } from "@/lib/supabase"
+import { useNotification } from "@/context/NotificationProvider"
+import usePermissoes from "@/hooks/usePermissoes"
+import { fetcher } from "@/lib/fetcher"
+import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import {
+  Alert,
   Box,
   Button,
   Container,
   IconButton,
-  Modal,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { useCallback, useEffect, useState } from "react"
+import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
+import { useCallback, useMemo, useState } from "react"
+import useSWR from "swr"
+
+import { GovBRInputModal } from "./modal/GovBRModal"
+import DialogAlert from "./ui/DialogAlert"
 
 interface CrudManagerProps {
-  tableName: string
   entityName: string
+  tableName: string
 }
 
-export default function CrudManager({ tableName, entityName }: CrudManagerProps) {
-  const [items, setItems] = useState<{ id: number; nome: string }[]>([])
-  const [loading, setLoading] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{
-    id?: number
-    nome: string
-  }>({
-    nome: ""
+interface Item {
+  id: number
+  nome: string
+  active?: boolean
+}
+
+export default function CrudManager({ entityName, tableName }: CrudManagerProps) {
+  const { permissoes, loading: loadingPerms } = usePermissoes()
+  const { notify } = useNotification()
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
   })
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<Partial<Item>>({ nome: "" })
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    const { data, error } = await supabase.from(tableName).select("*")
+  const { data, isLoading, mutate } = useSWR(
+    `/api/meta/${tableName.toLowerCase()}?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}&orderBy=nome&ascending=true`,
+    fetcher
+  )
 
-    if (error) {
-      console.error(`Erro ao buscar ${entityName}:`, error)
-    } else {
-      setItems(data)
-    }
-    setLoading(false)
-  }, [tableName, entityName])
+  const items: Item[] = useMemo(() => {
+    if (!Array.isArray(data?.data)) return []
+    return data.data.filter((item: Item) => item.active !== false)
+  }, [data])
 
-  // 🟢 Buscar dados ao carregar
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  const totalRows = data?.total ?? 0
 
-  // 🟢 Criar ou Atualizar Registro
   async function handleSave() {
-    if (!selectedItem.nome.trim()) return alert("Nome não pode estar vazio.")
-
-    const { id, nome } = selectedItem
-    let response
-
-    if (id) {
-      response = await supabase.from(tableName).update({ nome }).eq("id", id)
-    } else {
-      response = await supabase.from(tableName).insert({ nome })
+    if (!selectedItem.nome?.trim()) {
+      notify({ type: "warning", message: "Nome é obrigatório" })
+      return
     }
 
-    if (response.error) {
-      console.error(`Erro ao salvar ${entityName}:`, response.error)
-    } else {
-      fetchData()
+    try {
+      const method = selectedItem.id ? "PUT" : "POST"
+      await fetch(`/api/meta/${tableName.toLowerCase()}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selectedItem),
+      })
+
+      mutate()
+      notify({
+        type: "success",
+        message: `Item "${selectedItem.nome}" salvo com sucesso`,
+      })
       setOpenModal(false)
       setSelectedItem({ nome: "" })
+    } catch (error) {
+      notify({ type: "error", message: "Erro ao salvar item" })
+      console.error(`Erro ao salvar ${tableName}:`, error)
     }
   }
 
-  // 🟢 Excluir Registro
-  async function handleDelete(id: number) {
-    if (!confirm(`Tem certeza que deseja excluir este ${entityName}?`)) return
+  const handleDeleteRequest = useCallback(
+    (id: number) => {
+      const item = items.find((i) => i.id === id)
+      if (!item) {
+        notify({ type: "error", message: "Item não encontrado" })
+        return
+      }
+      setItemToDelete(item)
+    },
+    [items, notify]
+  )
 
-    const { error } = await supabase.from(tableName).delete().eq("id", id)
+  async function confirmDelete() {
+    if (!itemToDelete) return
+    setLoadingDelete(true)
 
-    if (error) {
-      console.error(`Erro ao excluir ${entityName}:`, error)
-    } else {
-      fetchData()
+    try {
+      const response = await fetch(`/api/meta/${tableName.toLowerCase()}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: itemToDelete.id }),
+      })
+
+      if (!response.ok) {
+        const errorMessage = await response.json()
+        throw new Error(errorMessage.error || "Erro desconhecido ao excluir.")
+      }
+
+      mutate()
+      notify({
+        type: "success",
+        message: `Item "${itemToDelete.nome}" excluído com sucesso`,
+      })
+      setItemToDelete(null)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Erro ao excluir "${itemToDelete.nome}":`, error)
+        notify({
+          type: "error",
+          message: `Erro ao excluir "${itemToDelete.nome}": ${error.message}`,
+        })
+      }
+    } finally {
+      setLoadingDelete(false)
     }
   }
 
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 80 },
-    { field: "nome", headerName: "Nome", flex: 1 },
-    {
-      field: "acoes",
-      headerName: "Ações",
-      width: 150,
-      renderCell: (params) => (
-        <Box>
-          <IconButton
-            color="primary"
-            onClick={() => {
-              setSelectedItem({ id: params.row.id, nome: params.row.nome })
-              setOpenModal(true)
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      )
-    }
-  ]
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: "id",
+        headerName: "ID",
+        width: 60,
+        align: "center",
+        headerAlign: "center",
+      },
+      { field: "nome", headerName: "Nome", flex: 1 },
+      {
+        field: "acoes",
+        headerName: "Ações",
+        width: 150,
+        sortable: false,
+        renderCell: (params) => (
+          <Box>
+            <IconButton
+              color="primary"
+              disabled={!permissoes["Editar_Metadados"]}
+              onClick={() => {
+                setSelectedItem({ id: params.row.id, nome: params.row.nome })
+                setOpenModal(true)
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              color="error"
+              disabled={!permissoes["Desabilitar_Metadados"]}
+              onClick={() => handleDeleteRequest(params.row.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ),
+      },
+    ],
+    [permissoes, handleDeleteRequest]
+  )
+
+  if (loadingPerms) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4">{entityName}</Typography>
-        <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
-          Adicionar
-        </Button>
-      </Box>
-
-      <Box display={"flex"} height={"100%"}>
-        <DataGrid
-          rows={items}
-          columns={columns}
-          loading={loading}
-          pageSizeOptions={[5, 10, 20]}
-        />
-      </Box>
-
-      {/* 🔹 Modal de Adição/Edição */}
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            p: 3,
-            borderRadius: 2
-          }}
-        >
-          <Typography variant="h6">
-            {selectedItem.id ? "Editar" : "Adicionar"} {entityName}
-          </Typography>
-          <TextField
-            fullWidth
-            label="Nome"
-            value={selectedItem.nome}
-            onChange={(e) => setSelectedItem({ ...selectedItem, nome: e.target.value })}
-            sx={{ mt: 2 }}
-          />
-          <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button onClick={() => setOpenModal(false)} sx={{ mr: 2 }}>
-              Cancelar
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Salvar
+    <Container maxWidth="lg" sx={{ p: 0, m: 0 }}>
+      {!permissoes["Exibir_Metadados"] ? (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Você não tem permissão para visualizar este conteúdo.
+        </Alert>
+      ) : (
+        <>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h4">{entityName}</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!permissoes["Cadastrar_Metadados"]}
+              startIcon={<GridAddIcon />}
+              onClick={() => {
+                setSelectedItem({ nome: "" })
+                setOpenModal(true)
+              }}
+            >
+              Adicionar
             </Button>
           </Box>
-        </Box>
-      </Modal>
+
+          <Box sx={{ ...dataGridStyles, width: "100%", m: 0, mb: 2, p: 0 }}>
+            <DataGrid
+              sx={{ minHeight: "45vh" }}
+              disableColumnMenu
+              rows={items}
+              columns={columns}
+              loading={isLoading}
+              pageSizeOptions={[5, 10, 20]}
+              paginationMode="server"
+              rowCount={totalRows}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            />
+          </Box>
+
+          <GovBRInputModal
+            key={`modal-${selectedItem.id || "new"}`} // Isso faz o modal recriar somente quando o item muda
+            open={openModal}
+            onClose={() => {
+              setOpenModal(false)
+              setSelectedItem({ nome: "" })
+            }}
+            title={selectedItem.id ? "Editar item" : "Adicionar item"}
+            onSubmit={handleSave}
+            confirmText="Salvar"
+            cancelText="Cancelar"
+            disabled={!selectedItem.nome?.trim()}
+          >
+            <TextField
+              autoFocus // Adiciona foco automático
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Nome"
+              value={selectedItem.nome}
+              sx={{ my: 1 }}
+              onChange={(e) =>
+                setSelectedItem((prev) => ({ ...prev, nome: e.target.value }))
+              }
+            />
+          </GovBRInputModal>
+        </>
+      )}
+
+      <DialogAlert
+        open={!!itemToDelete}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={confirmDelete}
+        loading={loadingDelete}
+        title="Confirmar exclusão"
+        message={`Tem certeza que deseja excluir "${itemToDelete?.nome}" da tabela ${tableName}?`}
+        confirmText="Sim, excluir"
+        cancelText="Cancelar"
+        severity="danger"
+      />
     </Container>
   )
 }
