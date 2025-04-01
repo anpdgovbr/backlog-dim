@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const GET = withApiSlim(async ({ req }) => {
+const handleGET = withApiSlim(async ({ req }) => {
   const { searchParams } = new URL(req.url)
 
   const page = parseInt(searchParams.get("page") || "1")
@@ -90,3 +90,10 @@ export const GET = withApiSlim(async ({ req }) => {
 
   return NextResponse.json({ total, dados })
 }, undefined)
+
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  return handleGET(req, { params: await context.params })
+}
