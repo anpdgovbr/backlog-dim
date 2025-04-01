@@ -1,5 +1,6 @@
 // app/api/auditoria/route.ts
 import { prisma } from "@/lib/prisma"
+import { withApiSlim } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -47,3 +48,45 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+
+export const GET = withApiSlim(async ({ req }) => {
+  const { searchParams } = new URL(req.url)
+
+  const page = parseInt(searchParams.get("page") || "1")
+  const pageSize = parseInt(searchParams.get("pageSize") || "10")
+  const acaoParam = searchParams.get("acao")
+  const acao =
+    acaoParam && Object.values(AcaoAuditoria).includes(acaoParam as AcaoAuditoria)
+      ? (acaoParam as AcaoAuditoria)
+      : undefined
+  const tabela = searchParams.get("tabela")
+  const email = searchParams.get("email")
+  const dataInicial = searchParams.get("dataInicial")
+  const dataFinal = searchParams.get("dataFinal")
+
+  const where = {
+    ...(acao && { acao }),
+    ...(tabela && { tabela }),
+    ...(email && { email }),
+    ...(dataInicial || dataFinal
+      ? {
+          criadoEm: {
+            ...(dataInicial && { gte: new Date(dataInicial) }),
+            ...(dataFinal && { lte: new Date(dataFinal) }),
+          },
+        }
+      : {}),
+  }
+
+  const [total, dados] = await Promise.all([
+    prisma.auditLog.count({ where }),
+    prisma.auditLog.findMany({
+      where,
+      orderBy: { criadoEm: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ])
+
+  return NextResponse.json({ total, dados })
+}, undefined)
