@@ -1,6 +1,7 @@
 "use client"
 
-import { Box, Container, Typography } from "@mui/material"
+import AdminLogViewer from "@/components/dashboard/AdminLogViewer"
+import { Box, Container } from "@mui/material"
 
 export default function AdminHomePage() {
   return (
@@ -23,12 +24,7 @@ export default function AdminHomePage() {
             minHeight: "60vh",
           }}
         >
-          <Typography variant="h6" gutterBottom>
-            Área de monitoramento
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Espaço reservado para gráficos, estatísticas e indicadores do sistema.
-          </Typography>
+          <AdminLogViewer />
         </Box>
       </Box>
     </Container>
