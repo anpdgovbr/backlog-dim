@@ -86,7 +86,6 @@ async function main() {
   })
 
   console.log("🔹 Criando Tipos de Reclamação...")
-
   await prisma.tipoReclamacao.createMany({
     data: [
       { nome: "Acesso indevido a dados pessoais" },
@@ -190,9 +189,6 @@ async function main() {
     skipDuplicates: true,
   })
 
-  // ==============================
-  // 🌟 Criando ProcessoStatus
-  // ==============================
   console.log("🔹 Criando ProcessoStatus...")
   await prisma.processoStatus.createMany({
     data: [
@@ -208,11 +204,7 @@ async function main() {
     skipDuplicates: true,
   })
 
-  // ==============================
-  // 🌟 Criando Perfis
-  // ==============================
   console.log("🔹 Criando Perfis...")
-
   const perfis = {
     leitor: await prisma.perfil.upsert({
       where: { nome: "Leitor" },
@@ -241,11 +233,7 @@ async function main() {
     }),
   }
 
-  // ==============================
-  // 🌟 Criando Permissões
-  // ==============================
   console.log("🔹 Criando Permissões...")
-
   const permissoes = [
     // 🔹 Permissões da entidade Processo (cada perfil tem sua permissão individual)
     { acao: "Exibir", recurso: "Processo", permitido: true, perfilId: perfis.leitor.id },
@@ -784,7 +772,6 @@ async function main() {
       perfilId: perfis.superAdmin.id,
     },
   ]
-
   // 🔹 Atualiza as permissões corretamente no banco
   for (const permissao of permissoes) {
     await prisma.permissao.upsert({
@@ -800,11 +787,7 @@ async function main() {
     })
   }
 
-  // ==============================
-  // 🌟 Criando Usuarios iniciais
-  // ==============================
   console.log("🔹 Criando Usuários Iniciais...")
-
   await Promise.all([
     prisma.user.upsert({
       where: { email: "luciano.psilva@anpd.gov.br" },
@@ -833,13 +816,36 @@ async function main() {
         nome: "Arthur Oliveira Vasconcelos",
       },
     }),
+    prisma.user.upsert({
+      where: { email: "henrique.silva@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "henrique.silva@anpd.gov.br",
+        perfilId: perfis.supervisor.id,
+        nome: "Henrique Adriano Santos Silva",
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "thatyane.batista@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "thatyane.batista@anpd.gov.br",
+        perfilId: perfis.supervisor.id,
+        nome: "Thatyane Oliveira Campos Batista",
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "daniel.chaves@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "daniel.chaves@anpd.gov.br",
+        nome: "Daniel Guimaraes Chaves",
+        perfilId: perfis.administrador.id,
+      },
+    }),
   ])
 
-  // ==============================
-  // 🌟 Criando CNAE
-  // ==============================
   console.log("🔹 Criando CNAE...")
-
   await prisma.cNAE.createMany({
     data: [
       {
