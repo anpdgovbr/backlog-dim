@@ -76,7 +76,6 @@ Os dados são cadastrados manualmente via formulário ou importados por CSV, arm
 └── set-version-env.cjs    → Define variáveis de versão no ambiente
 
 📁 public/                 → Arquivos públicos estáticos
-├── govbr-ds/              → Assets do Design System GovBR (v3.6.1)
 └── dev-routes.json        → Arquivo gerado para debug de rotas dinâmicas
 
 📁 .husky/                 → Hooks de Git para validações automáticas (lint, format)
@@ -84,10 +83,9 @@ Os dados são cadastrados manualmente via formulário ou importados por CSV, arm
 📄 tsconfig.json           → Configuração do TypeScript
 📄 eslint.config.mjs       → Configuração do ESLint
 📄 .prettierrc             → Configuração do Prettier
-📄 .env.local              → Variáveis de ambiente locais (não versionadas)
 📄 next.config.ts          → Configuração do Next.js
 📄 package.json            → Dependências e scripts do projeto
-📄 server.js               → Servidor customizado (usado em dev)
+📄 server.js               → Servidor customizado (usado em devs)
 📄 README.md               → Documentação principal do projeto
 ```
 
@@ -145,6 +143,25 @@ npm run dev
 
 Acesse em: [http://localhost:3000](http://localhost:3000)
 
+## 📦 Scripts – Desenvolvimento e Build
+
+<details>
+<summary>Mostrar scripts de build e desenvolvimento</summary>
+
+| Script                 | Descrição                                             |
+| ---------------------- | ----------------------------------------------------- |
+| `npm run dev`          | Inicia a aplicação com Turbopack e geração de rotas   |
+| `npm run devs`         | Inicia o app via `server.js` (com https + cert)       |
+| `npm run build`        | Compila a aplicação para produção                     |
+| `npm run start`        | Inicia a aplicação em ambiente de produção            |
+| `npm run build-routes` | Gera rotas para ambiente de desenvolvimento           |
+| `npm run version:env`  | Define variáveis de versão da aplicação               |
+| `npm run prebuild`     | Executa `version:env` e `build-routes` antes do build |
+
+</details>
+
+---
+
 ## 🔧 Prisma – Comandos Úteis
 
 <details>
@@ -157,25 +174,6 @@ Acesse em: [http://localhost:3000](http://localhost:3000)
 | `npx prisma db seed`               | Executa o seed com dados iniciais                 |
 | `npx prisma generate`              | Gera o cliente Prisma                             |
 | `npx prisma studio`                | Abre o Prisma Studio (interface gráfica)          |
-
-</details>
-
----
-
-## 📦 Scripts – Desenvolvimento e Build
-
-<details>
-<summary>Mostrar scripts de build e desenvolvimento</summary>
-
-| Script                 | Descrição                                             |
-| ---------------------- | ----------------------------------------------------- |
-| `npm run dev`          | Inicia a aplicação com Turbopack e geração de rotas   |
-| `npm run devs`         | Inicia o app via `server.js` (modo alternativo)       |
-| `npm run build`        | Compila a aplicação para produção                     |
-| `npm run start`        | Inicia a aplicação em ambiente de produção            |
-| `npm run build-routes` | Gera rotas para ambiente de desenvolvimento           |
-| `npm run version:env`  | Define variáveis de versão da aplicação               |
-| `npm run prebuild`     | Executa `version:env` e `build-routes` antes do build |
 
 </details>
 
@@ -207,7 +205,7 @@ Acesse em: [http://localhost:3000](http://localhost:3000)
 | `npm run db:reset`       | Reseta e aplica migrações do banco             |
 | `npm run db:seed`        | Executa seed do banco com dados iniciais       |
 | `npm run prisma:migrate` | Aplica migração em ambiente de desenvolvimento |
-| `npm run prisma:push`    | Empurra modelo Prisma direto para o banco      |
+| `npm run prisma:push`    | Aplica modelo Prisma direto para o banco       |
 | `npm run prisma:reset`   | Reseta banco com migrações do zero             |
 | `npm run prisma:seed`    | Executa o seed via Prisma                      |
 | `npm run prisma:studio`  | Abre a interface Prisma Studio                 |
