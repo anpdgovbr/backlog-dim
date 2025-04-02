@@ -1,4 +1,5 @@
-import { MenuItem, Stack, TextField, Typography } from "@mui/material"
+import { dataGridStyles } from "@/styles/dataGridStyles"
+import { Box, MenuItem, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import dayjs from "dayjs"
 import { useEffect, useState } from "react"
@@ -60,6 +61,7 @@ export default function AdminLogViewer() {
           size="small"
         />
         <TextField
+          sx={{ width: 120 }}
           label="Tabela"
           value={filtroTabela}
           onChange={(e) => setFiltroTabela(e.target.value)}
@@ -73,6 +75,7 @@ export default function AdminLogViewer() {
           <MenuItem value="permissao">permissao</MenuItem>
         </TextField>
         <TextField
+          sx={{ width: 120 }}
           label="Ação"
           value={filtroAcao}
           onChange={(e) => setFiltroAcao(e.target.value)}
@@ -86,15 +89,17 @@ export default function AdminLogViewer() {
           <MenuItem value="DELETE">DELETE</MenuItem>
         </TextField>
       </Stack>
-      <DataGrid
-        rows={dados}
-        columns={colunas}
-        getRowId={(row) => row.id}
-        autoHeight
-        disableRowSelectionOnClick
-        density="compact"
-        pageSizeOptions={[10, 25, 50]}
-      />
+      <Box sx={{ ...dataGridStyles, height: "100%", width: "100%", display: "flex" }}>
+        <DataGrid
+          sx={{ minHeight: "45vh" }}
+          rows={dados}
+          columns={colunas}
+          getRowId={(row) => row.id}
+          disableRowSelectionOnClick
+          density="compact"
+          pageSizeOptions={[10, 25, 50]}
+        />
+      </Box>
     </Stack>
   )
 }
