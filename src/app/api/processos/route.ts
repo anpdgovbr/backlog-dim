@@ -2,13 +2,40 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { AcaoAuditoria } from "@prisma/client"
 
+async function gerarNumeroProcesso(): Promise<string> {
+  const agora = new Date()
+  const ano = agora.getFullYear()
+  const mes = String(agora.getMonth() + 1).padStart(2, "0")
+
+  const prefixo = `P${ano}${mes}` // Ex: P202504
+
+  // Conta quantos processos já existem neste mês/ano
+  const inicioMes = new Date(ano, agora.getMonth(), 1)
+  const fimMes = new Date(ano, agora.getMonth() + 1, 0, 23, 59, 59, 999)
+
+  const totalMes = await prisma.processo.count({
+    where: {
+      dataCriacao: {
+        gte: inicioMes,
+        lte: fimMes,
+      },
+    },
+  })
+
+  return `${prefixo}-${String(totalMes + 1).padStart(4, "0")}` // Ex: P202504-0001
+}
+
 export const POST = withApi(
   async ({ req }) => {
     try {
       const data = await req.json()
+      const numero = await gerarNumeroProcesso()
 
       const processo = await prisma.processo.create({
-        data,
+        data: {
+          ...data,
+          numero,
+        },
         include: {
           formaEntrada: true,
           responsavel: true,
