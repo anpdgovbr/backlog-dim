@@ -9,6 +9,7 @@ import {
   GridSortModel,
 } from "@mui/x-data-grid"
 import dayjs from "dayjs"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface AuditLogEntry {
@@ -49,6 +50,7 @@ export default function AdminLogViewer() {
   const [sortModel, setSortModel] = useState<GridSortModel>([
     { field: "criadoEm", sort: "desc" },
   ])
+  const router = useRouter()
 
   const fetchLogs = async () => {
     const params = new URLSearchParams()
@@ -120,9 +122,18 @@ export default function AdminLogViewer() {
 
       <Box sx={{ ...dataGridStyles, height: "100%", width: "100%", display: "flex" }}>
         <DataGrid
-          sx={{ minHeight: "45vh" }}
+          sx={{
+            minHeight: "30vh",
+            "& .MuiDataGrid-row:hover": {
+              cursor: "pointer",
+              backgroundColor: "rgba(0, 0, 0, 0.04)",
+            },
+          }}
           rows={dados}
           columns={colunas}
+          onRowClick={(params) => {
+            router.push(`/admin/auditoria/${params.row.id}`)
+          }}
           getRowId={(row) => row.id}
           rowCount={total}
           paginationMode="server"
