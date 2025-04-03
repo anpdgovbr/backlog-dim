@@ -100,7 +100,7 @@ export default function ProcessoDataGrid() {
     {
       field: "requerente",
       headerName: "Requerente",
-      flex: 1,
+      flex: 1.5,
       renderCell: (params) => (
         <span
           style={{
@@ -124,7 +124,7 @@ export default function ProcessoDataGrid() {
     {
       field: "situacao",
       headerName: "Situação",
-      flex: 1,
+      flex: 0.8,
       renderCell: (params) => params.row.situacao?.nome || "Indefinida",
     },
     {

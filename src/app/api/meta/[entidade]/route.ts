@@ -13,7 +13,7 @@ const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => 
 
   const page = Number(searchParams.get("page")) || 1
   const pageSize = Number(searchParams.get("pageSize")) || 10
-  const orderBy = searchParams.get("orderBy") || "id"
+  const orderBy = searchParams.get("orderBy") || "nome"
   const ascending = searchParams.get("ascending") === "true"
 
   const [total, data] = await Promise.all([
