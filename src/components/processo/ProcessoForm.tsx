@@ -1,48 +1,67 @@
 "use client"
 
 import { ProcessoInput, ProcessoOutput } from "@/types/Processo"
-import { Chip, Grid, TextField } from "@mui/material"
+import { Checkbox, Chip, FormControlLabel, Grid, TextField } from "@mui/material"
 import { FormProvider, UseFormReturn } from "react-hook-form"
 
 import { MetaDropdownSection } from "../select/MetaDropdownSection"
 import { RequeridoDropdownSection } from "../select/RequeridoDropdownSection"
 
-export default function ProcessoForm({
-  processo,
-  methods,
-}: {
-  processo: ProcessoOutput
+interface ProcessoFormProps {
+  processo?: ProcessoOutput
   methods: UseFormReturn<ProcessoInput>
-}) {
+}
+
+export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
   const { register } = methods
+
+  const emModoEdicao = Boolean(processo)
 
   return (
     <FormProvider {...methods}>
       <form>
-        <Chip
-          label={processo.anonimo ? "Denúncia Anônima" : "Identificado"}
-          color={processo.anonimo ? "error" : "primary"}
-          sx={{ mb: 2 }}
-        />
+        {emModoEdicao ? (
+          <Chip
+            label={processo?.anonimo ? "Denúncia Anônima" : "Identificado"}
+            color={processo?.anonimo ? "error" : "primary"}
+            sx={{ mb: 2 }}
+          />
+        ) : (
+          <FormControlLabel
+            control={<Checkbox {...register("anonimo")} />}
+            label="Denúncia Anônima?"
+            sx={{ mb: 2 }}
+          />
+        )}
+
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              disabled
-              size="small"
-              label="Número"
-              value={processo.numero}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              disabled
-              size="small"
-              label="Data de Criação"
-              value={new Date(processo.dataCriacao).toLocaleDateString()}
-            />
-          </Grid>
+          {emModoEdicao && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  disabled
+                  size="small"
+                  label="Número"
+                  value={processo?.numero ?? ""}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  disabled
+                  size="small"
+                  label="Data de Criação"
+                  value={
+                    processo?.dataCriacao
+                      ? new Date(processo.dataCriacao).toLocaleDateString()
+                      : ""
+                  }
+                />
+              </Grid>
+            </>
+          )}
+
           <Grid item xs={12} sm={6}>
             <TextField
               {...register("requerente")}
@@ -111,7 +130,6 @@ export default function ProcessoForm({
           <Grid item xs={12}>
             <TextField
               {...register("observacoes")}
-              name="observacoes"
               label="Observações"
               multiline
               fullWidth

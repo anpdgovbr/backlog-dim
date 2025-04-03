@@ -10,29 +10,10 @@ import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
 import "@govbr-ds/core/dist/core.css"
 import { Box, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
 
 export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-    const script = document.createElement("script")
-    script.src = "/govbr-ds/core-init.js"
-    script.defer = true
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
-
-  if (!isClient) {
-    return <p>Carregando...</p>
-  }
-
   return (
     <AuthProvider>
       <AuditProvider>

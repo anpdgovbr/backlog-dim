@@ -3,13 +3,22 @@
 import SideMenu, { LinkItem } from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 import withPermissao from "@/hoc/withPermissao"
-import { Group, Home, LockPerson, Shield } from "@mui/icons-material"
+import {
+  Group,
+  Home,
+  LockPerson,
+  Shield,
+  SupervisedUserCircleOutlined,
+  ViewCompactAltOutlined,
+} from "@mui/icons-material"
 import { Box, Container } from "@mui/material"
 import { usePathname } from "next/navigation"
 
 const links: LinkItem[] = [
-  { href: "/admin", text: "Dashboard", icon: <Home /> },
+  { href: "/admin", text: "Painel de Gestão", icon: <Home /> },
+  { href: "/dashboard", text: "Painel de trabalho", icon: <ViewCompactAltOutlined /> },
   { href: "/admin/perfis", text: "Gerenciar Perfis", icon: <Group /> },
+  { href: "/admin/auditoria", text: "Auditoria", icon: <SupervisedUserCircleOutlined /> },
   { href: "/admin/permissoes", text: "Permissões", icon: <LockPerson /> },
   { href: "/admin/superadmin", text: "SuperAdmin", icon: <Shield /> },
 ]

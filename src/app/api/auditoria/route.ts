@@ -1,7 +1,7 @@
 // app/api/auditoria/route.ts
 import { prisma } from "@/lib/prisma"
 import { withApiSlim } from "@/lib/withApiSlim"
-import { AcaoAuditoria } from "@prisma/client"
+import { AcaoAuditoria, Prisma } from "@prisma/client"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -52,22 +52,29 @@ export async function POST(req: NextRequest) {
 const handleGET = withApiSlim(async ({ req }) => {
   const { searchParams } = new URL(req.url)
 
+  // 🧾 Paginação e ordenação
   const page = parseInt(searchParams.get("page") || "1")
   const pageSize = parseInt(searchParams.get("pageSize") || "10")
+  const orderBy = searchParams.get("orderBy") || "criadoEm"
+  const ascending = searchParams.get("ascending") === "true"
+
+  // 🔍 Filtros
   const acaoParam = searchParams.get("acao")
   const acao =
     acaoParam && Object.values(AcaoAuditoria).includes(acaoParam as AcaoAuditoria)
       ? (acaoParam as AcaoAuditoria)
       : undefined
-  const tabela = searchParams.get("tabela")
-  const email = searchParams.get("email")
+
+  const tabela = searchParams.get("tabela") || undefined
+  const email = searchParams.get("email") || undefined
   const dataInicial = searchParams.get("dataInicial")
   const dataFinal = searchParams.get("dataFinal")
+  const search = searchParams.get("search")?.toLowerCase() || ""
 
-  const where = {
+  const where: Prisma.AuditLogWhereInput = {
     ...(acao && { acao }),
-    ...(tabela && { tabela }),
-    ...(email && { email }),
+    ...(tabela && { tabela: { contains: tabela, mode: "insensitive" } }),
+    ...(email && { email: { contains: email, mode: "insensitive" } }),
     ...(dataInicial || dataFinal
       ? {
           criadoEm: {
@@ -76,13 +83,20 @@ const handleGET = withApiSlim(async ({ req }) => {
           },
         }
       : {}),
+    ...(search && {
+      OR: [
+        { tabela: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { acao: { equals: search as AcaoAuditoria } },
+      ],
+    }),
   }
 
   const [total, dados] = await Promise.all([
     prisma.auditLog.count({ where }),
     prisma.auditLog.findMany({
       where,
-      orderBy: { criadoEm: "desc" },
+      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
