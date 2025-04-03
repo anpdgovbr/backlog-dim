@@ -27,6 +27,8 @@ import {
 import Papa from "papaparse"
 import { useState } from "react"
 
+const EXPECTED_COLUMNS = 7
+
 type CsvRow = string[]
 type Relatorio = { sucesso: number; falhas: string[] }
 type ResumoImportacao = {
@@ -54,7 +56,24 @@ function ImportarProcessosContent() {
   const { notify } = useNotification()
   const [fileName, setFileName] = useState<string>("")
 
+  // Reseta todos os estados ao carregar um novo arquivo
+  const resetState = () => {
+    setCabecalho([])
+    setDados([])
+    setImportado(false)
+    setProgresso(0)
+    setRelatorio({ sucesso: 0, falhas: [] })
+    setResumoImportacao({
+      totalRegistros: 0,
+      totalAnonimos: 0,
+      responsaveis: {},
+      formasEntrada: {},
+    })
+    setPagina(0)
+  }
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    resetState()
     const file = event.target.files?.[0]
     if (!file) return
     setFileName(file.name)
@@ -66,12 +85,24 @@ function ImportarProcessosContent() {
       encoding: "ISO-8859-1",
       complete: (result) => {
         const data = result.data as CsvRow[]
+        if (data.length === 0) {
+          notify({ type: "error", message: "Arquivo vazio." })
+          return
+        }
+        // Validação do número de colunas
+        if (data[0].length !== EXPECTED_COLUMNS) {
+          notify({
+            type: "error",
+            message: `Número de colunas inesperado. Esperado: ${EXPECTED_COLUMNS}, encontrado: ${data[0].length}.`,
+          })
+          return
+        }
         setCabecalho(data[0])
         setDados(data.slice(1))
-        setImportado(false)
-        setPagina(0)
       },
     })
+    // Limpa o valor do input para permitir re-upload do mesmo arquivo
+    event.target.value = ""
   }
 
   const handleImport = async () => {
@@ -80,8 +111,14 @@ function ImportarProcessosContent() {
     setLoading(true)
     setProgresso(0)
 
-    try {
-      const processos = dados.map((linha) => ({
+    const totalRows = dados.length
+    let successCount = 0
+    const failures: string[] = []
+
+    // Processa cada linha individualmente
+    for (let i = 0; i < totalRows; i++) {
+      const linha = dados[i]
+      const processo = {
         responsavelNome: linha[0],
         numeroProcesso: linha[1],
         dataCriacao: linha[2],
@@ -90,40 +127,71 @@ function ImportarProcessosContent() {
         anonimoStr: linha[5],
         requerenteNome: linha[6],
         StatusInterno: StatusInterno.IMPORTADO,
-      }))
-
-      const response = await fetch("/api/importar-processos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nomeArquivo: fileName,
-          processos,
-        }),
-      })
-
-      const resultado = await response.json()
-
-      if (response.ok) {
-        setRelatorio({ sucesso: resultado.sucesso, falhas: resultado.falhas })
-        setResumoImportacao({
-          totalRegistros: dados.length,
-          totalAnonimos: dados.filter((l) => l[5]?.toLowerCase() === "sim").length,
-          responsaveis: contarOcorrencias(dados, 0),
-          formasEntrada: contarOcorrencias(dados, 4),
-        })
-        setImportado(true)
-        notify({ type: "success", message: "Importação concluída com sucesso" })
-      } else {
-        console.error(resultado.error)
-        notify({ type: "error", message: `Erro na importação: ${resultado.error}` })
       }
-    } catch (error) {
-      console.error("Erro inesperado na importação:", error)
-      notify({ type: "error", message: "Erro inesperado na importação" })
-      console.error(error)
-    } finally {
-      setLoading(false)
-      setProgresso(100)
+
+      try {
+        const response = await fetch("/api/importar-processos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nomeArquivo: fileName,
+            processos: [processo],
+          }),
+        })
+
+        const resultado = await response.json()
+
+        if (response.ok) {
+          successCount += resultado.sucesso ?? 1
+        } else {
+          // Extraí somente a mensagem de erro, utilizando o campo 'falhas' se disponível.
+          if (resultado.falhas && Array.isArray(resultado.falhas)) {
+            failures.push(resultado.falhas.join(", "))
+          } else if (resultado.error) {
+            failures.push(resultado.error)
+          } else {
+            failures.push("Erro desconhecido")
+          }
+        }
+      } catch (error) {
+        let errorMessage = "Erro inesperado na importação"
+        if (error instanceof Error) {
+          errorMessage = error.message
+        }
+        console.error("Erro ao importar processo:", error)
+        failures.push(errorMessage)
+      }
+
+      // Atualiza o progresso conforme o processamento das linhas
+      setProgresso(Math.round(((i + 1) / totalRows) * 100))
+    }
+
+    setRelatorio({ sucesso: successCount, falhas: failures })
+    setResumoImportacao({
+      totalRegistros: totalRows,
+      totalAnonimos: dados.filter((l) => l[5]?.toLowerCase() === "sim").length,
+      responsaveis: contarOcorrencias(dados, 0),
+      formasEntrada: contarOcorrencias(dados, 4),
+    })
+    setImportado(true)
+    setLoading(false)
+
+    // Dispara a notificação com base no resultado:
+    if (failures.length === 0) {
+      notify({
+        type: "success",
+        message: `Importação concluída com sucesso (${successCount} processos importados)`,
+      })
+    } else if (successCount === 0) {
+      notify({
+        type: "error",
+        message: `Importação concluída com erros (0 importados, ${failures.length} erros)`,
+      })
+    } else {
+      notify({
+        type: "warning",
+        message: `Importação parcialmente concluída: ${successCount} processos importados e ${failures.length} erros`,
+      })
     }
   }
 

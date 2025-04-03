@@ -81,11 +81,15 @@ export const POST = withApi(
         }
       }
 
+      const statusCode = erros.length > 0 ? 400 : 200
       return {
-        response: Response.json({
-          sucesso,
-          falhas: erros.map((e) => `Linha ${e.linha}: ${e.mensagem}`),
-        }),
+        response: Response.json(
+          {
+            sucesso,
+            falhas: erros.map((e) => `Linha ${e.linha}: ${e.mensagem}`),
+          },
+          { status: statusCode }
+        ),
         audit: {
           depois: {
             nomeArquivo: nomeArquivo ?? "desconhecido.csv",
