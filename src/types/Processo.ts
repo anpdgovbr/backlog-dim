@@ -5,7 +5,7 @@ import { StatusInterno } from "./StatusInterno"
 
 export interface ProcessoInput {
   numero: string
-  dataCriacao: string // Mantemos como string para receber no formato correto (ISO 8601)
+  dataCriacao: string
   requerente?: string
   formaEntradaId?: number
   responsavelId: number
@@ -18,6 +18,13 @@ export interface ProcessoInput {
   observacoes?: string
   tipoReclamacaoId?: number
   encaminhamentoId?: number
+  temaRequerimento?: string[]
+  tipoRequerimento?: "PETICAO_TITULAR" | "DENUNCIA_LGPD"
+  resumo?: string
+  dataConclusao?: string
+  dataEnvioPedido?: string
+  prazoPedido?: number
+  requeridoFinalId?: number
 }
 
 export interface ProcessoOutput {
@@ -37,6 +44,13 @@ export interface ProcessoOutput {
   observacoes?: string
   tipoReclamacao?: EnumData
   statusInterno?: StatusInterno
+  temaRequerimento: string[]
+  tipoRequerimento?: "PETICAO_TITULAR" | "DENUNCIA_LGPD"
+  resumo?: string
+  dataConclusao?: Date
+  dataEnvioPedido?: Date
+  prazoPedido?: number
+  requeridoFinal?: RequeridoOutput
 }
 
 export interface ProcessoImportacao {
@@ -59,6 +73,7 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         : processo.dataCriacao.toISOString(),
 
     requerente: processo.requerente ?? "",
+
     formaEntradaId:
       processo.formaEntrada?.id != null ? Number(processo.formaEntrada.id) : undefined,
     responsavelId: Number(processo.responsavel?.id ?? 0),
@@ -81,7 +96,25 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         : undefined,
     requeridoId:
       processo.requerido?.id != null ? Number(processo.requerido.id) : undefined,
+
     anonimo: processo.anonimo ?? false,
     observacoes: processo.observacoes ?? "",
+
+    temaRequerimento: processo.temaRequerimento ?? [],
+    tipoRequerimento: processo.tipoRequerimento ?? undefined,
+    resumo: processo.resumo ?? "",
+    dataConclusao:
+      processo.dataConclusao instanceof Date
+        ? processo.dataConclusao.toISOString()
+        : (processo.dataConclusao ?? undefined),
+    dataEnvioPedido:
+      processo.dataEnvioPedido instanceof Date
+        ? processo.dataEnvioPedido.toISOString()
+        : (processo.dataEnvioPedido ?? undefined),
+    prazoPedido: processo.prazoPedido ?? undefined,
+    requeridoFinalId:
+      processo.requeridoFinal?.id != null
+        ? Number(processo.requeridoFinal.id)
+        : undefined,
   }
 }
