@@ -103,14 +103,16 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
     temaRequerimento: processo.temaRequerimento ?? [],
     tipoRequerimento: processo.tipoRequerimento ?? undefined,
     resumo: processo.resumo ?? "",
-    dataConclusao:
-      processo.dataConclusao instanceof Date
-        ? processo.dataConclusao.toISOString()
-        : (processo.dataConclusao ?? undefined),
     dataEnvioPedido:
-      processo.dataEnvioPedido instanceof Date
-        ? processo.dataEnvioPedido.toISOString()
-        : (processo.dataEnvioPedido ?? undefined),
+      typeof processo.dataEnvioPedido === "string"
+        ? (processo.dataEnvioPedido as string).split("T")[0]
+        : undefined,
+
+    dataConclusao:
+      typeof processo.dataConclusao === "string"
+        ? (processo.dataConclusao as string).split("T")[0]
+        : undefined,
+
     prazoPedido: processo.prazoPedido ?? undefined,
     requeridoFinalId:
       processo.requeridoFinal?.id != null
