@@ -8,63 +8,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Alteração em Processo
 model Processo {
-  id                   Int            @id @default(autoincrement())
-  numero               String         @unique
-  dataCriacao          DateTime
-  requerente           String?
-  formaEntradaId       Int
-  responsavelId        Int
-  requeridoId          Int?
-  situacaoId           Int
-  encaminhamentoId     Int?
-  pedidoManifestacaoId Int?
-  contatoPrevioId      Int?
-  evidenciaId          Int?
-  anonimo              Boolean        @default(false)
-  observacoes          String?
-  temaRequerimento     String? // Novo campo opcional
-  envioPedido          DateTime? // Novo campo opcional
-  prazo                Int? // Novo campo opcional
-  dataVencimento       DateTime? // Novo campo opcional, calculado
-  processoStatusId     Int? // Relacionado à nova tabela ProcessoStatus
-  tipoReclamacaoId     Int? // Relacionado à nova tabela TipoReclamacao
-  active               Boolean        @default(true) // Soft delete
-  exclusionDate        DateTime? // Soft delete timestamp
-  statusInterno        StatusInterno? // Enum direto
+  id                     Int             @id @default(autoincrement())
+  numero                 String          @unique
+  dataCriacao            DateTime
+  requerente             String?
+  formaEntradaId         Int
+  responsavelId          Int
+  requeridoId            Int?
+  requeridoFinalId       Int?            
+  situacaoId             Int
+  encaminhamentoId       Int?
+  pedidoManifestacaoId   Int?
+  contatoPrevioId        Int?
+  evidenciaId            Int?
+  anonimo                Boolean         @default(false)
+  observacoes            String?
+  temaRequerimento       String[]        @default([])
+  envioPedido            DateTime?
+  prazo                  Int?
+  dataVencimento         DateTime?
+  processoStatusId       Int?
+  tipoReclamacaoId       Int?
+  statusInterno          StatusInterno?
+  tipoRequerimento       TipoRequerimento? 
+  resumo                 String?            
+  dataConclusao          DateTime?          
+  dataEnvioPedido        DateTime?          
+  prazoPedido            Int?               
 
-  contatoPrevio      ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
-  encaminhamento     Encaminhamento?     @relation(fields: [encaminhamentoId], references: [id])
-  evidencia          Evidencia?          @relation(fields: [evidenciaId], references: [id])
-  formaEntrada       FormaEntrada        @relation(fields: [formaEntradaId], references: [id])
-  pedidoManifestacao PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
-  requerido          Requerido?          @relation(fields: [requeridoId], references: [id])
-  responsavel        Responsavel         @relation(fields: [responsavelId], references: [id])
-  situacao           Situacao            @relation(fields: [situacaoId], references: [id])
-  processoStatus     ProcessoStatus?     @relation(fields: [processoStatusId], references: [id])
-  tipoReclamacao     TipoReclamacao?     @relation(fields: [tipoReclamacaoId], references: [id])
+  active                 Boolean         @default(true)
+  exclusionDate          DateTime?
+
+  contatoPrevio          ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
+  encaminhamento         Encaminhamento?     @relation(fields: [encaminhamentoId], references: [id])
+  evidencia              Evidencia?          @relation(fields: [evidenciaId], references: [id])
+  formaEntrada           FormaEntrada        @relation(fields: [formaEntradaId], references: [id])
+  pedidoManifestacao     PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
+  requerido              Requerido?          @relation(fields: [requeridoId], references: [id])
+  requeridoFinal         Requerido?          @relation("RequeridoFinal", fields: [requeridoFinalId], references: [id])
+  responsavel            Responsavel         @relation(fields: [responsavelId], references: [id])
+  situacao               Situacao            @relation(fields: [situacaoId], references: [id])
+  processoStatus         ProcessoStatus?     @relation(fields: [processoStatusId], references: [id])
+  tipoReclamacao         TipoReclamacao?     @relation(fields: [tipoReclamacaoId], references: [id])
 
   @@map("Processo")
+  @@index([active])
+}
+
+enum TipoRequerimento {
+  PETICAO_TITULAR
+  DENUNCIA_LGPD
 }
 
 model ProcessoStatus {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
   processos     Processo[]
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime? 
 
   @@map("ProcessoStatus")
+  @@index([active])
 }
 
 model TipoReclamacao {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
   processos     Processo[]
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime? 
 
   @@map("TipoReclamacao")
+  @@index([active])
 }
 
 enum StatusInterno {
@@ -75,21 +92,32 @@ enum StatusInterno {
   CONSOLIDADO
 }
 
+enum TipoRequerido {
+  PESSOA_FISICA
+  PESSOA_JURIDICA
+  ESTRANGEIRO
+}
+
 model Requerido {
-  id            Int        @id @default(autoincrement())
-  nome          String
-  cnpj          String     @unique
-  site          String?
-  email         String?
-  setorId       Int?
-  cnaeId        Int?
-  processos     Processo[]
-  cnae          CNAE?      @relation(fields: [cnaeId], references: [id])
-  setor         Setor?     @relation(fields: [setorId], references: [id])
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  id                     Int            @id @default(autoincrement())
+  nome                   String
+  tipo                   TipoRequerido  @default(PESSOA_JURIDICA) 
+  cnpj                   String?        @unique
+  cpf                    String?        @unique
+  site                   String?
+  email                  String?
+  politicaPrivacidadeUrl String?
+  setorId                Int?
+  cnaeId                 Int?
+  processos              Processo[]
+  processosComoRequeridoFinal Processo[] @relation("RequeridoFinal")
+  cnae                   CNAE?          @relation(fields: [cnaeId], references: [id])
+  setor                  Setor?         @relation(fields: [setorId], references: [id])
+  active                 Boolean        @default(true)
+  exclusionDate          DateTime?
 
   @@map("Requerido")
+  @@index([active])
 }
 
 model CNAE {
@@ -98,79 +126,87 @@ model CNAE {
   code          String      @unique @db.VarChar(10)
   nome          String      @db.VarChar(255)
   requeridos    Requerido[]
-  exclusionDate DateTime? // Soft delete timestamp
+  exclusionDate DateTime? 
 
   @@map("CNAE")
+  @@index([active])
 }
 
 model FormaEntrada {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
   processos     Processo[]
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
 
   @@map("FormaEntrada")
+  @@index([active])
 }
 
 model Setor {
   id            Int         @id @default(autoincrement())
   nome          String      @unique
   requeridos    Requerido[]
-  active        Boolean     @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean     @default(true) 
+  exclusionDate DateTime?  
 
   @@map("Setor")
+  @@index([active])
 }
 
 model Situacao {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
   processos     Processo[]
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
 
   @@map("Situacao")
+  @@index([active])
 }
 
 model Encaminhamento {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
   processos     Processo[]
 
   @@map("Encaminhamento")
+  @@index([active])
 }
 
 model PedidoManifestacao {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
   processos     Processo[]
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
 
   @@map("PedidoManifestacao")
+  @@index([active])
 }
 
 model ContatoPrevio {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
   processos     Processo[]
 
   @@map("ContatoPrevio")
+  @@index([active])
 }
 
 model Evidencia {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
-  active        Boolean    @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean    @default(true) 
+  exclusionDate DateTime?  
   processos     Processo[]
 
   @@map("Evidencia")
+  @@index([active])
 }
 
 model Perfil {
@@ -178,10 +214,11 @@ model Perfil {
   nome          String      @unique
   permissoes    Permissao[]
   usuarios      User[]
-  active        Boolean     @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean     @default(true) 
+  exclusionDate DateTime?  
 
   @@map("Perfil")
+  @@index([active])
 }
 
 model Permissao {
@@ -191,10 +228,11 @@ model Permissao {
   permitido     Boolean
   perfilId      Int
   perfil        Perfil    @relation(fields: [perfilId], references: [id])
-  active        Boolean   @default(true) // Soft delete
-  exclusionDate DateTime? // Soft delete timestamp
+  active        Boolean   @default(true) 
+  exclusionDate DateTime?  
 
   @@unique([perfilId, acao, recurso])
+  @@index([active])
 }
 
 model Responsavel {
@@ -208,6 +246,7 @@ model Responsavel {
   exclusionDate DateTime?
 
   @@map("Responsavel")
+  @@index([active])
 }
 
 model User {
@@ -224,6 +263,7 @@ model User {
   exclusionDate DateTime?
 
   @@map("User")
+  @@index([active])
 }
 
 
@@ -238,15 +278,15 @@ enum AcaoAuditoria {
 model AuditLog {
   id          Int            @id @default(autoincrement())
   tabela      String
-  acao        AcaoAuditoria  // Agora usa enum
+  acao        AcaoAuditoria  
   registroId  Int?
   userId      String?
   email       String?
   antes       Json?
   depois      Json?
   contexto    String?
-  ip          String?        // 🆕 IP do cliente (opcional)
-  userAgent   String?        // 🆕 Navegador/dispositivo (opcional)
+  ip          String?       
+  userAgent   String?        
   criadoEm    DateTime       @default(now())
 
   @@map("AuditLog")

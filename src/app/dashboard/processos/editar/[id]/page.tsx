@@ -3,17 +3,15 @@
 import ProcessoForm from "@/components/processo/ProcessoForm"
 import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
+import useProcessoById from "@/hooks/useProcessoById"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import { ProcessoInput, ProcessoOutput, toProcessoInput } from "@/types/Processo"
+import { ProcessoInput, toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
-import useSWR, { mutate } from "swr"
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function EditarProcessoPage() {
   const { id } = useParams<{ id: string }>()
@@ -22,10 +20,7 @@ export default function EditarProcessoPage() {
   const { pode, loading: loadingPerms } = usePode()
   const { userId, loading: loadingUserId } = useUsuarioIdLogado()
 
-  const { data: processo, isLoading } = useSWR<ProcessoOutput>(
-    id ? `/api/processos/${id}` : null,
-    fetcher
-  )
+  const { processo, isLoading, mutate } = useProcessoById(id)
 
   const defaultValues = useMemo(() => {
     return processo ? toProcessoInput(processo) : undefined
@@ -57,6 +52,13 @@ export default function EditarProcessoPage() {
       evidenciaId: parseId(dataFromForm.evidenciaId),
       tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
       requeridoId: parseId(dataFromForm.requeridoId),
+      requeridoFinalId: parseId(dataFromForm.requeridoFinalId),
+      tipoRequerimento: dataFromForm.tipoRequerimento,
+      resumo: dataFromForm.resumo,
+      dataConclusao: dataFromForm.dataConclusao,
+      dataEnvioPedido: dataFromForm.dataEnvioPedido,
+      prazoPedido: dataFromForm.prazoPedido,
+      temaRequerimento: dataFromForm.temaRequerimento ?? [],
       observacoes: dataFromForm.observacoes,
     }
 
@@ -68,7 +70,7 @@ export default function EditarProcessoPage() {
 
     if (res.ok) {
       notify({ type: "success", message: "Processo atualizado com sucesso" })
-      mutate(`/api/processos/${id}`)
+      mutate()
     } else {
       notify({ type: "error", message: "Erro ao atualizar o processo" })
       console.error("Erro ao atualizar o processo:", res)
@@ -77,6 +79,7 @@ export default function EditarProcessoPage() {
 
   useEffect(() => {
     if (processo) {
+      console.log("processo", processo)
       reset(toProcessoInput(processo))
     }
   }, [processo, reset])
