@@ -1,5 +1,4 @@
-import { CNAE } from "./CNAE"
-import { EnumData } from "./EnumData"
+import { CnaeDto, EnumData } from "@anpd/shared-types"
 
 export interface RequeridoInput {
   nome: string
@@ -14,7 +13,7 @@ export interface RequeridoOutput {
   id: number
   nome: string
   cnpj: string
-  cnae?: CNAE
+  cnae?: CnaeDto
   site?: string
   email?: string
   setor?: EnumData

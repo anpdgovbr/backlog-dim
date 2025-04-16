@@ -1,4 +1,4 @@
-import { EnumData } from "@/types/EnumData"
+import { EnumData } from "@anpd/shared-types"
 import { MenuItem, SelectProps, TextField, TextFieldProps, Tooltip } from "@mui/material"
 import { Controller, useFormContext } from "react-hook-form"
 
