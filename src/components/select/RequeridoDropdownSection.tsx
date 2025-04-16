@@ -1,7 +1,6 @@
 "use client"
 
-import { EnumData } from "@anpd/shared-types"
-import { useEffect, useState } from "react"
+import { useControladores } from "@/hooks/useControladores"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"
 import { FormDropdown } from "./FormDropdown"
@@ -21,39 +20,22 @@ export function RequeridoDropdownSection({
   hasAllOption = false,
   defaultValue,
 }: Readonly<RequeridoDropdownSectionProps>) {
-  const [options, setOptions] = useState<{ nome: string; id: number | string }[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data, isLoading } = useControladores({
+    page: 1,
+    pageSize: 1000, // pode ajustar esse limite conforme necessário
+    orderBy: "nome",
+    ascending: true,
+  })
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      setLoading(true)
-      try {
-        const res = await fetch(`/api/requeridos`)
-        const json = await res.json()
-        const data: EnumData[] = json.data ?? []
+  const options = [
+    ...(hasAllOption ? [{ nome: "Todos", id: "ALL" }] : []),
+    ...data.map((controlador) => ({
+      nome: controlador.nome,
+      id: controlador.id,
+    })),
+  ]
 
-        const parsed = data.map((item) => ({
-          nome: item.nome,
-          id: item.id,
-        }))
-
-        if (hasAllOption) {
-          setOptions([{ nome: "Todos", id: "ALL" }, ...parsed])
-        } else {
-          setOptions(parsed)
-        }
-      } catch (error) {
-        console.error(`Erro ao carregar requerido:`, error)
-        setOptions([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchOptions()
-  }, [hasAllOption])
-
-  if (loading) return <FormSkeleton numberOfFields={1} />
+  if (isLoading) return <FormSkeleton numberOfFields={1} />
 
   return (
     <FormDropdown
