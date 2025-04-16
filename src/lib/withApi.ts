@@ -2,7 +2,7 @@
 import { authOptions } from "@/config/next-auth.config"
 import { registrarAuditoria } from "@/lib/helpers/auditoria-server"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import type { PermissaoConcedida } from "@/types/Permissao"
+import { PermissaoConcedida } from "@anpd/shared-types"
 import { AcaoAuditoria } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import type { NextRequest } from "next/server"

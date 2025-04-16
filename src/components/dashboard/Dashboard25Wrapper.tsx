@@ -1,6 +1,6 @@
 "use client"
 
-import { PermissaoConcedida } from "@/types/Permissao"
+import { PermissaoConcedida } from "@anpd/shared-types"
 import React from "react"
 
 import Dashboard25LayoutBase, {

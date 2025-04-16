@@ -1,7 +1,7 @@
 "use client"
 
-import { EnumData } from "@/types/EnumData"
 import { MetaEntidade } from "@/types/MetaEntidades"
+import { EnumData } from "@anpd/shared-types"
 import { useEffect, useState } from "react"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"

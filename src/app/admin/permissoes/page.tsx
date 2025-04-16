@@ -4,8 +4,7 @@ import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { Perfil } from "@/types/Perfil"
-import { Permissao } from "@/types/Permissao"
+import { PerfilDto, PermissaoDto } from "@anpd/shared-types"
 import {
   Box,
   CircularProgress,
@@ -25,7 +24,7 @@ function GerenciarPermissoesContent() {
   const { notify } = useNotification()
   const [perfilSelecionado, setPerfilSelecionado] = useState<number | "">("")
 
-  const { data: perfis, isLoading: loadingPerfis } = useSWRImmutable<Perfil[]>(
+  const { data: perfis, isLoading: loadingPerfis } = useSWRImmutable<PerfilDto[]>(
     "/api/perfis",
     fetcher
   )
@@ -34,12 +33,12 @@ function GerenciarPermissoesContent() {
     data: permissoes,
     isLoading: loadingPermissoes,
     mutate,
-  } = useSWR<Permissao[]>(
+  } = useSWR<PermissaoDto[]>(
     perfilSelecionado ? `/api/permissoes?perfilId=${perfilSelecionado}` : null,
     fetcher
   )
 
-  const handleTogglePermissao = async (permissao: Permissao) => {
+  const handleTogglePermissao = async (permissao: PermissaoDto) => {
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
     try {
@@ -63,7 +62,7 @@ function GerenciarPermissoesContent() {
   const permissoesAgrupadas = useMemo(() => {
     if (!permissoes) return {}
 
-    const agrupado: Record<string, Permissao[]> = {}
+    const agrupado: Record<string, PermissaoDto[]> = {}
     permissoes.forEach((p) => {
       if (!agrupado[p.recurso]) agrupado[p.recurso] = []
       agrupado[p.recurso].push(p)

@@ -1,7 +1,7 @@
 "use client"
 
-import { ProcessoInput, ProcessoOutput } from "@/types/Processo"
 import { adicionarDiasUteis } from "@/utils/date"
+import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 import {
   Checkbox,
   Chip,

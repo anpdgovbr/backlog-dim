@@ -1,10 +1,9 @@
 "use client"
 
 import { useNotification } from "@/context/NotificationProvider"
-import { CNAE } from "@/types/CNAE"
-import { EnumData } from "@/types/EnumData"
 import { RequeridoInput, RequeridoOutput } from "@/types/Requerido"
 import { validateEmail, validateSite } from "@/utils/formUtils"
+import { CnaeDto, EnumData } from "@anpd/shared-types"
 import {
   Autocomplete,
   Button,
@@ -44,7 +43,7 @@ export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProp
   const [siteError, setSiteError] = useState<string | undefined>(undefined)
 
   const [listas, setListas] = useState<{
-    cnaes: CNAE[]
+    cnaes: CnaeDto[]
     setores: EnumData[]
   }>({
     cnaes: [],
