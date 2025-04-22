@@ -90,7 +90,7 @@ const handlerPUT = withApiForId<{ id: string }>(
           ? body.temaRequerimento
           : [],
 
-        tipoRequerimento: body.tipoRequerimento ?? null,
+        tipoRequerimento: body.tipoRequerimento !== "" ? body.tipoRequerimento : null,
         requeridoFinalId: body.requeridoFinalId ?? null,
         dataVencimento: body.dataVencimento ? new Date(body.dataVencimento) : null,
       },
