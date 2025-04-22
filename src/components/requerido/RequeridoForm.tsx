@@ -3,7 +3,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import { RequeridoInput, RequeridoOutput } from "@/types/Requerido"
 import { validateEmail, validateSite } from "@/utils/formUtils"
-import { CnaeDto, EnumData } from "@anpd/shared-types"
+import { CnaeDto, EnumData, TipoControlador } from "@anpd/shared-types"
 import {
   Autocomplete,
   Button,
@@ -20,9 +20,14 @@ import { ChangeEvent, useEffect, useState } from "react"
 interface RequeridoFormProps {
   requeridoId: number | null
   onSave?: () => void
+  mutate?: () => void
 }
 
-export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProps) {
+export default function RequeridoForm({
+  requeridoId,
+  onSave,
+  mutate,
+}: RequeridoFormProps) {
   const [requerido, setRequerido] = useState<RequeridoOutput | null>(
     requeridoId
       ? null
@@ -34,6 +39,7 @@ export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProp
           email: "",
           cnae: undefined,
           setor: undefined,
+          tipo: TipoControlador.PESSOA_JURIDICA,
         }
   )
   const [loadingCNAE, setLoadingCNAE] = useState(false)
@@ -66,11 +72,12 @@ export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProp
             email: "",
             cnae: undefined,
             setor: undefined,
+            tipo: TipoControlador.PESSOA_JURIDICA,
           })
           return
         }
 
-        const response = await fetch(`/api/requeridos/${requeridoId}`, {
+        const response = await fetch(`/api/controladores/${requeridoId}`, {
           signal: abortController.signal,
         })
 
@@ -194,22 +201,23 @@ export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProp
 
     const payload: RequeridoInput = {
       nome: requerido.nome,
-      cnpj: requerido.cnpj,
+      cnpj: requerido.cnpj ?? "",
       cnaeId: requerido.cnae?.id ?? undefined,
       site: normalizedSite || undefined,
       email: requerido.email || undefined,
       setorId: requerido.setor?.id ?? undefined,
+      tipo: requerido.tipo ?? TipoControlador.PESSOA_JURIDICA,
     }
 
     let response
     if (requeridoId) {
-      response = await fetch(`/api/requeridos/${requeridoId}`, {
-        method: "PUT",
+      response = await fetch(`/api/controladores/${requeridoId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
     } else {
-      response = await fetch(`/api/requeridos`, {
+      response = await fetch(`/api/controladores`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -218,6 +226,7 @@ export default function RequeridoForm({ requeridoId, onSave }: RequeridoFormProp
 
     if (response.ok) {
       notify({ type: "success", message: "Requerido salvo com sucesso!" })
+      mutate?.()
       if (onSave) onSave()
     } else {
       notify({ type: "error", message: "Erro ao salvar o Requerido" })

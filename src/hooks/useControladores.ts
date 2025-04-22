@@ -1,6 +1,5 @@
-import { fetcher } from "@/lib/fetcher"
+import { useApi } from "@/lib/api"
 import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
-import useSWR from "swr"
 
 interface UseControladoresParams extends BaseQueryParams {
   cnpj?: string
@@ -12,6 +11,7 @@ interface UseControladoresResult {
   total: number
   isLoading: boolean
   error: unknown
+  mutate: () => void
 }
 
 export function useControladores(params: UseControladoresParams): UseControladoresResult {
@@ -26,23 +26,28 @@ export function useControladores(params: UseControladoresParams): UseControlador
   } = params
 
   const query = new URLSearchParams({
-    page: page.toString(),
-    pageSize: pageSize.toString(),
+    page: String(page),
+    pageSize: String(pageSize),
     search,
     orderBy,
-    ascending: ascending.toString(),
+    ascending: String(ascending),
   })
 
   if (cnpj) query.set("cnpj", cnpj)
   if (nome) query.set("nome", nome)
 
   const key = `/api/controladores?${query.toString()}`
-  const { data, error, isLoading } = useSWR(key, fetcher)
+
+  const { data, error, isLoading, mutate } = useApi<{
+    data: ControladorDto[]
+    total: number
+  }>(key)
 
   return {
-    data: Array.isArray(data?.data) ? data.data : [],
+    data: data?.data ?? [],
     total: data?.total ?? 0,
     isLoading,
     error,
+    mutate,
   }
 }

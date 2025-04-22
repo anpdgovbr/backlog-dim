@@ -1,13 +1,43 @@
 // src/app/api/controladores/route.ts
+import { withApi } from "@/lib/withApi"
+import { AcaoAuditoria } from "@anpd/shared-types"
 import { NextResponse } from "next/server"
+
+const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
+const endpoint = `${baseUrl}/controladores`
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
-  const url = `${baseUrl}/controladores?${searchParams.toString()}`
+  const url = `${endpoint}?${searchParams.toString()}`
 
   const resposta = await fetch(url)
   const dados = await resposta.json()
 
   return NextResponse.json(dados)
 }
+
+export const POST = withApi(
+  async ({ req }) => {
+    const body = await req.json()
+
+    const resposta = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+
+    const dados = await resposta.json()
+
+    return {
+      response: Response.json(dados, { status: resposta.status }),
+      audit: {
+        depois: dados,
+      },
+    }
+  },
+  {
+    tabela: "requerido",
+    acao: AcaoAuditoria.CREATE,
+    permissao: "Cadastrar_Responsavel",
+  }
+)
