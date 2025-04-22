@@ -60,8 +60,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <Box
             component="pre"
             sx={{
-              whiteSpace: "pre-wrap", // Permite quebra de linha
-              wordBreak: "break-word", // Quebra palavras longas (como URLs)
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
               backgroundColor: "grey.100",
               borderRadius: 2,
               p: 2,

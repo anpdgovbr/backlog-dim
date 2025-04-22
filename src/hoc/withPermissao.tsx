@@ -1,7 +1,7 @@
 "use client"
 
 import usePermissoes from "@/hooks/usePermissoes"
-import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
+import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@anpd/shared-types"
 import { Alert, AlertTitle, Button, Container, Typography } from "@mui/material"
 import { useRouter } from "next/navigation"
 import { ComponentType, useEffect } from "react"

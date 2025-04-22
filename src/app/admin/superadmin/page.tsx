@@ -3,7 +3,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
-import { Permissao } from "@/types/Permissao"
+import { PermissaoDto } from "@anpd/shared-types"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {
   Accordion,
@@ -46,7 +46,7 @@ const SuperAdminPage = () => {
 
   const { data: perfis, mutate: mutatePerfis } = useSWR<Perfil[]>("/api/perfis", fetcher)
 
-  const { data: permissoes, mutate: mutatePermissoes } = useSWR<Permissao[]>(
+  const { data: permissoes, mutate: mutatePermissoes } = useSWR<PermissaoDto[]>(
     perfilSelecionado !== null ? `/api/permissoes?perfilId=${perfilSelecionado}` : null,
     fetcher
   )
@@ -68,7 +68,7 @@ const SuperAdminPage = () => {
     }
   }
 
-  const handleTogglePermissao = async (permissao: Permissao) => {
+  const handleTogglePermissao = async (permissao: PermissaoDto) => {
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
     try {
@@ -174,7 +174,7 @@ const SuperAdminPage = () => {
                     acc[p.recurso].push(p)
                     return acc
                   },
-                  {} as Record<string, Permissao[]>
+                  {} as Record<string, PermissaoDto[]>
                 )
             ).map(([recurso, permissoesRecurso]) => (
               <Accordion
