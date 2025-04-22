@@ -1,5 +1,5 @@
 import { pode as podeFn } from "@/lib/permissoes"
-import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
+import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@anpd/shared-types"
 
 import usePermissoes from "./usePermissoes"
 

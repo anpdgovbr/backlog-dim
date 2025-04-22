@@ -62,7 +62,8 @@ const handlerPUT = withApiForId<{ id: string }>(
         { status: 404 }
       )
     }
-
+    const parseDate = (dateStr?: string) =>
+      dateStr ? new Date(`${dateStr}T00:00:00.000Z`) : null
     const processoAtualizado = await prisma.processo.update({
       where: { id: Number(id) },
       data: {
@@ -81,6 +82,17 @@ const handlerPUT = withApiForId<{ id: string }>(
         tipoReclamacaoId: body.tipoReclamacaoId ?? null,
         observacoes: body.observacoes,
         processoStatusId: body.processoStatusId ?? null,
+        resumo: body.resumo ?? null,
+        dataConclusao: parseDate(body.dataConclusao),
+        dataEnvioPedido: parseDate(body.dataEnvioPedido),
+        prazoPedido: body.prazoPedido ? Number(body.prazoPedido) : null,
+        temaRequerimento: Array.isArray(body.temaRequerimento)
+          ? body.temaRequerimento
+          : [],
+
+        tipoRequerimento: body.tipoRequerimento !== "" ? body.tipoRequerimento : null,
+        requeridoFinalId: body.requeridoFinalId ?? null,
+        dataVencimento: body.dataVencimento ? new Date(body.dataVencimento) : null,
       },
     })
 

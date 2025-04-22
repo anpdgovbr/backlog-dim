@@ -1,54 +1,4 @@
-import { EnumData } from "./EnumData"
-import { RequeridoOutput } from "./Requerido"
-import { Responsavel } from "./Responsavel"
-import { StatusInterno } from "./StatusInterno"
-
-export interface ProcessoInput {
-  numero: string
-  dataCriacao: string // Mantemos como string para receber no formato correto (ISO 8601)
-  requerente?: string
-  formaEntradaId?: number
-  responsavelId: number
-  requeridoId?: number
-  situacaoId?: number
-  pedidoManifestacaoId?: number
-  contatoPrevioId?: number
-  evidenciaId?: number
-  anonimo?: boolean
-  observacoes?: string
-  tipoReclamacaoId?: number
-  encaminhamentoId?: number
-}
-
-export interface ProcessoOutput {
-  id: number
-  numero: string
-  dataCriacao: Date
-  requerente?: string
-  formaEntrada?: EnumData
-  responsavel: Responsavel
-  requerido?: RequeridoOutput
-  situacao?: EnumData
-  encaminhamento?: EnumData
-  pedidoManifestacao?: EnumData
-  contatoPrevio?: EnumData
-  evidencia?: EnumData
-  anonimo?: boolean
-  observacoes?: string
-  tipoReclamacao?: EnumData
-  statusInterno?: StatusInterno
-}
-
-export interface ProcessoImportacao {
-  responsavelNome: string
-  numeroProcesso: string
-  dataCriacao: string
-  situacaoNome: string
-  formaEntradaNome: string
-  anonimoStr: string
-  requerenteNome: string | null
-  statusInterno: StatusInterno
-}
+import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 
 export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
   return {
@@ -59,6 +9,7 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         : processo.dataCriacao.toISOString(),
 
     requerente: processo.requerente ?? "",
+
     formaEntradaId:
       processo.formaEntrada?.id != null ? Number(processo.formaEntrada.id) : undefined,
     responsavelId: Number(processo.responsavel?.id ?? 0),
@@ -81,7 +32,27 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         : undefined,
     requeridoId:
       processo.requerido?.id != null ? Number(processo.requerido.id) : undefined,
+
     anonimo: processo.anonimo ?? false,
     observacoes: processo.observacoes ?? "",
+
+    temaRequerimento: processo.temaRequerimento ?? [],
+    tipoRequerimento: processo.tipoRequerimento ?? undefined,
+    resumo: processo.resumo ?? "",
+    dataEnvioPedido:
+      typeof processo.dataEnvioPedido === "string"
+        ? (processo.dataEnvioPedido as string).split("T")[0]
+        : undefined,
+
+    dataConclusao:
+      typeof processo.dataConclusao === "string"
+        ? (processo.dataConclusao as string).split("T")[0]
+        : undefined,
+
+    prazoPedido: processo.prazoPedido ?? undefined,
+    requeridoFinalId:
+      processo.requeridoFinal?.id != null
+        ? Number(processo.requeridoFinal.id)
+        : undefined,
   }
 }

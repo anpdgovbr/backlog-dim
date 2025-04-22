@@ -2,7 +2,7 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
-import { StatusInterno } from "@/types/StatusInterno"
+import { StatusInterno } from "@anpd/shared-types"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 import {
   Alert,

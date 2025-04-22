@@ -1,7 +1,7 @@
 // lib/withApiSlim.ts
 import { authOptions } from "@/config/next-auth.config"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import type { PermissaoConcedida } from "@/types/Permissao"
+import { PermissaoConcedida } from "@anpd/shared-types"
 import { getServerSession } from "next-auth"
 import type { NextRequest } from "next/server"
 

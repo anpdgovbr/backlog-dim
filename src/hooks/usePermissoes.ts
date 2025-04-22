@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/fetcher"
-import { Permissao, PermissaoConcedida } from "@/types/Permissao"
+import { PermissaoConcedida, PermissaoDto } from "@anpd/shared-types"
 import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
@@ -7,7 +7,7 @@ export default function usePermissoes() {
   const { data: session } = useSession()
   const email = session?.user?.email
 
-  const { data, error, isLoading } = useSWR<Permissao[]>(
+  const { data, error, isLoading } = useSWR<PermissaoDto[]>(
     email ? `/api/permissoes?email=${email}` : null,
     fetcher
   )
