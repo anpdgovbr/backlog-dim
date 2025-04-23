@@ -7,7 +7,7 @@ import useProcessoById from "@/hooks/useProcessoById"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import { toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
-import { ProcessoInput } from "@anpd/shared-types"
+import type { ProcessoInput } from "@anpd/shared-types"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
 import { useParams, useRouter } from "next/navigation"
@@ -80,7 +80,6 @@ export default function EditarProcessoPage() {
 
   useEffect(() => {
     if (processo) {
-      console.log("processo", processo)
       reset(toProcessoInput(processo))
     }
   }, [processo, reset])

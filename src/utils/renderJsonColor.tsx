@@ -1,5 +1,5 @@
 import { Box } from "@mui/material"
-import { JSX } from "react"
+import type { JSX } from "react"
 
 export function renderJsonColor(json: unknown): JSX.Element {
   if (typeof json === "string")

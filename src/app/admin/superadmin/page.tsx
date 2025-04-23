@@ -3,7 +3,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
-import { PermissaoDto } from "@anpd/shared-types"
+import type { PermissaoDto } from "@anpd/shared-types"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {
   Accordion,

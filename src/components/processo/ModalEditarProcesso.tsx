@@ -1,7 +1,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import { toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
-import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 

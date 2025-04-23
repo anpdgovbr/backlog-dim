@@ -1,5 +1,6 @@
 "use client"
 
+import type { SelectChangeEvent, Theme } from "@mui/material"
 import {
   Alert,
   AlertTitle,
@@ -8,8 +9,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
-  Theme,
   useMediaQuery,
 } from "@mui/material"
 import Grid from "@mui/material/Grid"
@@ -132,7 +131,12 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
     <Box sx={{ display: "flex" }}>
       <Grid container spacing={0} /* espaçamento de 2 entre o menu e o conteúdo */>
         {/* Menu lateral (ou Select) */}
-        <Grid item xs={12} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            md: 3,
+          }}
+        >
           {isUpMd ? (
             <>
               {sections.map((section) => {
@@ -176,7 +180,13 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
           )}
         </Grid>
 
-        <Grid item xs={12} md={9} sx={{ p: 0, m: 0 }}>
+        <Grid
+          sx={{ p: 0, m: 0 }}
+          size={{
+            xs: 12,
+            md: 9,
+          }}
+        >
           {renderSelectedSection()}
         </Grid>
       </Grid>

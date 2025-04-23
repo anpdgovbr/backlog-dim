@@ -1,16 +1,22 @@
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
+import { NextResponse } from "next/server"
 
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.setor.findMany({
-    where: { active: true },
-  })
+const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
+const endpoint = `${baseUrl}/setores`
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const url = `${endpoint}?${searchParams.toString()}`
 
+  const resposta = await fetch(url)
+  const dados = await resposta.json()
+
+  return NextResponse.json(dados)
+}
+
+// refazer com o endpoint correto
 export const POST = withApi(
   async ({ req }) => {
     try {

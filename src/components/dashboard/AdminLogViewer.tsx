@@ -2,12 +2,8 @@
 
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import { Box, MenuItem, Stack, TextField, Typography } from "@mui/material"
-import {
-  DataGrid,
-  GridColDef,
-  GridPaginationModel,
-  GridSortModel,
-} from "@mui/x-data-grid"
+import type { GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
 import dayjs from "dayjs"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"

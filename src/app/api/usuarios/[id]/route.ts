@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
 import { AcaoAuditoria } from "@prisma/client"
-import { Prisma } from "@prisma/client"
+import type { Prisma } from "@prisma/client"
 
 interface PatchRequestBody {
   perfilId?: number
