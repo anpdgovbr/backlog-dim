@@ -1,7 +1,7 @@
 # 📦 Changelog — Refactor e Migração para MUI v7
 
 **Data:** 23/04/2025  
-**Versão:** 0.2.0  
+**Versão:** 0..1.55  
 **Responsável:** Luciano Édipo
 
 ---
