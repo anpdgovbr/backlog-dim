@@ -4,8 +4,26 @@ import type { SxProps } from "@mui/material"
 export const dataGridStyles = {
   minHeight: 400,
   width: "100%",
-  backgroundColor: ANPDtheme.palette.background.default, // Usa a cor do theme
+  backgroundColor: ANPDtheme.palette.background.default,
   borderRadius: 2,
+
+  // 🔧 Força a largura mínima para ocupar o container
+  "& .MuiDataGrid-main": {
+    minWidth: "100% !important",
+  },
+  "& .MuiDataGrid-virtualScrollerContent": {
+    width: "100% !important",
+    minWidth: "100% !important",
+    flexGrow: 1,
+  },
+  "& .MuiDataGrid-virtualScroller": {
+    overflowX: "hidden", // evita scroll lateral falso
+  },
+  "& .MuiDataGrid-columnHeaders": {
+    minWidth: "100% !important",
+  },
+
+  // Restante dos estilos existentes
   "& .MuiDataGrid-row": { alignItems: "center" },
   "& .MuiDataGrid-cell": {
     display: "flex",
@@ -15,18 +33,18 @@ export const dataGridStyles = {
     whiteSpace: "nowrap",
   },
   "& .MuiDataGrid-root": {
-    backgroundColor: ANPDtheme.palette.background.paper, // Fundo branco do DataGrid
+    backgroundColor: ANPDtheme.palette.background.paper,
     borderRadius: 2,
   },
   "& .MuiDataGrid-columnHeader": {
-    backgroundColor: `${ANPDtheme.palette.primary.light} !important`, // Fundo escuro
+    backgroundColor: `${ANPDtheme.palette.primary.light} !important`,
     color: ANPDtheme.palette.primary.contrastText,
     fontWeight: "bold",
     borderBottom: `2px solid ${ANPDtheme.palette.primary.main}`,
     fontSize: "0.9rem",
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    color: ANPDtheme.palette.primary.contrastText, // Força o contraste nos títulos
+    color: ANPDtheme.palette.primary.contrastText,
     fontWeight: 700,
   },
   "& .MuiDataGrid-row:nth-of-type(even)": {
@@ -36,33 +54,33 @@ export const dataGridStyles = {
     backgroundColor: ANPDtheme.palette.secondary.light,
   },
   "& .MuiTablePagination-root": {
-    alignItems: "center", // Alinha verticalmente o footer
+    alignItems: "center",
     display: "flex",
     minHeight: "56px",
-    justifyContent: "flex-end", // Espaço entre os elementos
+    justifyContent: "flex-end",
   },
   "& .MuiTablePagination-toolbar": {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    padding: 0, // Remove padding extra
+    padding: 0,
     minHeight: "48px",
   },
   "& .MuiTablePagination-selectLabel": {
-    margin: 0, // Remove margens padrão para alinhar corretamente
+    margin: 0,
   },
   "& .MuiTablePagination-displayedRows": {
-    margin: 0, // Remove espaçamentos desnecessários
+    margin: 0,
   },
   "& .MuiTablePagination-actions": {
     display: "flex",
-    alignItems: "center", // Alinha os botões de navegação
+    alignItems: "center",
     justifyContent: "center",
   },
   "& .MuiInputBase-root": {
     display: "flex",
     alignItems: "center",
-    padding: 0, // Remove paddings extras do dropdown
+    padding: 0,
   },
 } as SxProps

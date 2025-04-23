@@ -2,8 +2,10 @@
 
 import { Typography } from "@mui/material"
 import dynamic from "next/dynamic"
+import { useRef } from "react"
 
 import GenericFormDialog from "../modal/GenericFormDialog"
+import type { RequeridoFormHandle } from "./RequeridoForm"
 
 const LazyRequeridoForm = dynamic(() => import("./RequeridoForm"), {
   ssr: false,
@@ -24,6 +26,7 @@ export default function RequeridoModalForm({
   mutate,
 }: Props) {
   const title = requeridoId ? "Editar Requerido" : "Novo Requerido"
+  const formRef = useRef<RequeridoFormHandle>(null)
   return (
     <GenericFormDialog
       open={open}
@@ -32,8 +35,14 @@ export default function RequeridoModalForm({
       contentSx={{ maxHeight: "70vh", overflowY: "auto" }}
       paperSx={{ overflowY: "visible" }}
       showDefaultActions
+      onSubmit={() => formRef.current?.submit()}
     >
-      <LazyRequeridoForm requeridoId={requeridoId} mutate={mutate} onSave={onClose} />
+      <LazyRequeridoForm
+        ref={formRef}
+        requeridoId={requeridoId}
+        mutate={mutate}
+        onSave={onClose}
+      />
     </GenericFormDialog>
   )
 }

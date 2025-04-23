@@ -1,13 +1,15 @@
 "use client"
 
+import CloseIcon from "@mui/icons-material/Close"
 import type { DialogProps, SxProps, Theme } from "@mui/material"
 import {
-  Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  Paper,
+  Typography,
 } from "@mui/material"
 import type { ReactNode } from "react"
 
@@ -30,11 +32,11 @@ export default function GenericFormDialog({
   open,
   onClose,
   onSubmit,
-  title,
+  title = "Título",
   children,
   actions,
   showDefaultActions = true,
-  maxWidth = "md",
+
   fullWidth = true,
   scroll = "paper",
   contentSx,
@@ -44,51 +46,75 @@ export default function GenericFormDialog({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
-      maxWidth={maxWidth}
-      fullWidth={fullWidth}
+      onClose={(_, reason) => {
+        if (reason !== "backdropClick") onClose()
+      }}
       scroll={scroll}
+      fullWidth={fullWidth}
+      aria-labelledby="generic-form-dialog-title"
       slotProps={{
         paper: {
+          component: Paper,
+          className: `br-modal `,
           sx: {
-            borderRadius: 2,
+            width: "auto",
+            minWidth: 350,
+
+            borderRadius: 1,
+            maxHeight: scroll === "paper" ? 600 : "unset",
+            display: "flex",
+            flexDirection: "column",
+            boxShadow: "var(--surface-shadow-sm)",
             ...paperSx,
+          },
+        },
+        backdrop: {
+          sx: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           },
         },
       }}
       {...rest}
     >
-      {title && (
-        <DialogTitle component={"h1"} variant="h4">
-          {title}
-        </DialogTitle>
-      )}
-
-      <DialogContent
-        dividers
-        sx={{
-          maxHeight: "70vh",
-          overflowY: "auto",
-          ...contentSx,
-        }}
+      <DialogTitle
+        id="generic-form-dialog-title"
+        className="br-modal-header"
+        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
+        <Typography variant="h6" component="div" className="modal-title">
+          {title}
+        </Typography>
+        <IconButton
+          aria-label="Fechar"
+          onClick={onClose}
+          size="small"
+          className="br-button circle small close"
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent className="br-modal-body" sx={{ px: 3, py: 2, ...contentSx }}>
         {children}
       </DialogContent>
 
       {(actions || showDefaultActions) && (
-        <DialogActions>
+        <DialogActions
+          className="br-modal-footer justify-content-end"
+          sx={{ gap: 1, px: 3, py: 2 }}
+        >
           {actions}
           {showDefaultActions && (
-            <Box flex={1} display="flex" justifyContent="flex-end" gap={1}>
-              <Button onClick={onClose} color="inherit">
+            <>
+              <button className="br-button secondary mr-2" onClick={onClose}>
                 Fechar
-              </Button>
+              </button>
               {onSubmit && (
-                <Button onClick={onSubmit} variant="contained">
+                <button className="br-button primary" onClick={onSubmit}>
                   Salvar
-                </Button>
+                </button>
               )}
-            </Box>
+            </>
           )}
         </DialogActions>
       )}

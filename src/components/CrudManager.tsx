@@ -142,13 +142,15 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         width: 60,
         align: "center",
         headerAlign: "center",
+        flex: 1,
       },
-      { field: "nome", headerName: "Nome", flex: 1 },
+      { field: "nome", headerName: "Nome", flex: 3 },
       {
         field: "acoes",
         headerName: "Ações",
         width: 150,
         sortable: false,
+        flex: 1,
         renderCell: (params) => (
           <Box>
             <IconButton
@@ -178,7 +180,17 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   if (loadingPerms) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg" sx={{ p: 0, m: 0 }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        p: 0,
+        m: 0,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        minWidth: { xs: "100%", md: "40vw" },
+      }}
+    >
       {!permissoes["Exibir_Metadados"] ? (
         <Alert severity="error" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
@@ -201,9 +213,34 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             </Button>
           </Box>
 
-          <Box sx={{ ...dataGridStyles, width: "100%", m: 0, mb: 2, p: 0 }}>
+          <Box
+            sx={{
+              ...dataGridStyles,
+              width: "100%",
+              minWidth: "100%",
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              flexShrink: 0,
+            }}
+          >
             <DataGrid
-              sx={{ minHeight: "45vh" }}
+              sx={{
+                flexGrow: 1,
+                minHeight: "45vh",
+                width: "100%",
+                minWidth: "100%",
+                "& .MuiDataGrid-main": {
+                  width: "100% !important", // força a área principal
+                },
+                "& .MuiDataGrid-virtualScrollerContent": {
+                  width: "100% !important",
+                  minWidth: "100% !important",
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  minWidth: "100% !important",
+                },
+              }}
               disableColumnMenu
               rows={items}
               columns={columns}
