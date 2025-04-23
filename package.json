@@ -1,6 +1,6 @@
 {
   "name": "backlog-dim",
-  "version": "0.1.58",
+  "version": "0.1.60",
   "private": true,
   "type": "module",
   "scripts": {
@@ -67,6 +67,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.1",
     "react-input-mask": "^2.0.4",
+    "remask": "^1.2.2",
     "sass": "^1.87.0",
     "swr": "^2.3.3",
     "text-mask-addons": "^3.8.0",
