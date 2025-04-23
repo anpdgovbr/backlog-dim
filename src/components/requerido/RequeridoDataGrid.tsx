@@ -93,9 +93,9 @@ export default function RequeridoDataGrid() {
   }
 
   const columns: GridColDef<RequeridoOutput>[] = [
-    { field: "nome", headerName: "Nome", flex: 1 },
-    { field: "cnpj", headerName: "CNPJ", width: 130 },
-    {
+    { field: "nome", headerName: "Nome/Razão Social", flex: 2 },
+    { field: "cnpj", headerName: "CNPJ/CPF", flex: 1 },
+    /*{
       field: "site",
       headerName: "Site",
       flex: 1,
@@ -108,7 +108,7 @@ export default function RequeridoDataGrid() {
           "N/A"
         ),
     },
-    { field: "email", headerName: "E-mail", flex: 1 },
+    { field: "email", headerName: "E-mail", flex: 1 },*/
     {
       field: "setor",
       headerName: "Setor",
@@ -118,7 +118,7 @@ export default function RequeridoDataGrid() {
     {
       field: "acoes",
       headerName: "Ações",
-      width: 180,
+      flex: 1,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
           <IconButton
