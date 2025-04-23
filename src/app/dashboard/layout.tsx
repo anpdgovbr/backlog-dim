@@ -1,6 +1,7 @@
 "use client"
 
-import SideMenu, { LinkItem } from "@/components/menu/SideMenu"
+import type { LinkItem } from "@/components/menu/SideMenu"
+import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 import {
   AdminPanelSettings,

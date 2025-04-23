@@ -1,5 +1,5 @@
 import ANPDtheme from "@/theme/theme"
-import { SxProps } from "@mui/material"
+import type { SxProps } from "@mui/material"
 
 export const dataGridStyles = {
   minHeight: 400,

@@ -1,5 +1,6 @@
 // lib/api.ts
-import useSWR, { SWRConfiguration, mutate as globalMutate } from "swr"
+import type { SWRConfiguration } from "swr"
+import useSWR, { mutate as globalMutate } from "swr"
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url)

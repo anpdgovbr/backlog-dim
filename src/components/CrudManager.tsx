@@ -15,7 +15,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useCallback, useMemo, useState } from "react"
 import useSWR from "swr"

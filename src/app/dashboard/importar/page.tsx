@@ -235,7 +235,12 @@ function ImportarProcessosContent() {
           </Typography>
           {!importado && (
             <Grid container spacing={1}>
-              <Grid item xs={6} md={3}>
+              <Grid
+                size={{
+                  xs: 6,
+                  md: 3,
+                }}
+              >
                 <Estatistica
                   titulo="Total"
                   valor={importado ? resumoImportacao.totalRegistros : dados.length}
@@ -243,7 +248,12 @@ function ImportarProcessosContent() {
                 />
               </Grid>
 
-              <Grid item xs={6} md={3}>
+              <Grid
+                size={{
+                  xs: 6,
+                  md: 3,
+                }}
+              >
                 <Estatistica
                   titulo="Anônimos"
                   valor={
@@ -255,7 +265,12 @@ function ImportarProcessosContent() {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                }}
+              >
                 <CategoriaResumo
                   titulo={
                     importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"
@@ -268,7 +283,12 @@ function ImportarProcessosContent() {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                }}
+              >
                 <CategoriaResumo
                   titulo={
                     importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"

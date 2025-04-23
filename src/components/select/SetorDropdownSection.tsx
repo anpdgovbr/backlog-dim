@@ -1,35 +1,38 @@
 "use client"
 
-import { useControladores } from "@/hooks/useControladores"
+import { useSetor } from "@/hooks/useSetor"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"
 import { FormDropdown } from "./FormDropdown"
 
-interface RequeridoDropdownSectionProps {
+interface SetorDropdownSectionProps {
   label: string
   name: string
   hasAllOption?: boolean
   defaultValue?: string | number
+  placeholder?: string
 }
 
-export function RequeridoDropdownSection({
+export function SetorDropdownSection({
   label,
   name,
+
   hasAllOption = false,
   defaultValue,
-}: Readonly<RequeridoDropdownSectionProps>) {
-  const { data, isLoading } = useControladores({
+  placeholder,
+}: Readonly<SetorDropdownSectionProps>) {
+  const { data, isLoading } = useSetor({
     page: 1,
-    pageSize: 1000, // pode ajustar esse limite conforme necessário
+    pageSize: 1000,
     orderBy: "nome",
     ascending: true,
   })
 
   const options = [
     ...(hasAllOption ? [{ nome: "Todos", id: "ALL" }] : []),
-    ...data.map((controlador) => ({
-      nome: controlador.nome,
-      id: controlador.id,
+    ...data.map((setor) => ({
+      nome: setor.nome,
+      id: setor.id,
     })),
   ]
 
@@ -40,6 +43,7 @@ export function RequeridoDropdownSection({
       label={label}
       name={name}
       options={options}
+      placeholder={placeholder}
       defaultValue={defaultValue ?? (hasAllOption ? "ALL" : undefined)}
     />
   )

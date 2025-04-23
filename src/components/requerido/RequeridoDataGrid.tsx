@@ -4,7 +4,7 @@ import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { RequeridoOutput } from "@/types/Requerido"
+import type { RequeridoOutput } from "@/types/Requerido"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
 import {
@@ -13,15 +13,18 @@ import {
   Button,
   Container,
   IconButton,
-  Modal,
   TextField,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 
-import RequeridoForm from "./RequeridoForm"
+const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
+  ssr: false,
+})
 
 export default function RequeridoDataGrid() {
   const [search, setSearch] = useState("")
@@ -199,37 +202,17 @@ export default function RequeridoDataGrid() {
             />
           </Box>
 
-          <Modal open={openModal} onClose={() => {}}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 500,
-                bgcolor: "background.paper",
-                p: 3,
-                borderRadius: 2,
-                minWidth: 900,
-                maxHeight: "80vh",
-                overflowY: "auto",
+          {openModal && (
+            <RequeridoModalForm
+              open
+              onClose={() => {
+                setOpenModal(false)
+                setSelectedRequeridoId(null)
               }}
-            >
-              <Box display="flex" justifyContent="flex-end">
-                <IconButton onClick={() => setOpenModal(false)} color="inherit">
-                  ✖
-                </IconButton>
-              </Box>
-              <RequeridoForm
-                requeridoId={selectedRequeridoId}
-                mutate={mutateRequeridos}
-                onSave={() => {
-                  setOpenModal(false)
-                  setSelectedRequeridoId(null)
-                }}
-              />
-            </Box>
-          </Modal>
+              requeridoId={selectedRequeridoId}
+              mutate={mutateRequeridos}
+            />
+          )}
         </>
       )}
     </Container>

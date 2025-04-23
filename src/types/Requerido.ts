@@ -1,4 +1,4 @@
-import { CnaeDto, EnumData, TipoControlador } from "@anpd/shared-types"
+import type { CnaeDto, EnumData, TipoControlador } from "@anpd/shared-types"
 
 export interface RequeridoInput {
   nome: string

@@ -1,6 +1,6 @@
 // hooks/usePerfis.ts
 import { fetcher } from "@/lib/fetcher"
-import { PerfilDto } from "@anpd/shared-types"
+import type { PerfilDto } from "@anpd/shared-types"
 import useSWR from "swr"
 
 export function usePerfis() {

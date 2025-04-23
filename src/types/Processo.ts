@@ -1,4 +1,4 @@
-import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 
 export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
   return {

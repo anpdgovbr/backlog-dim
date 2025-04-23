@@ -3,7 +3,7 @@
 import { calcIconCircleBg, parseThemeColor } from "@/utils/colorUtils"
 import { KeyboardArrowDown, KeyboardArrowRight } from "@mui/icons-material"
 import { Box, Typography } from "@mui/material"
-import { Theme } from "@mui/material/styles"
+import type { Theme } from "@mui/material/styles"
 import React from "react"
 
 interface IMenu25BaseProps {

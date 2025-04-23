@@ -6,7 +6,7 @@ import { usePerfis } from "@/hooks/usePerfis"
 import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { UsuarioComResponsavel } from "@/types/User"
+import type { UsuarioComResponsavel } from "@/types/User"
 import { LinkOff } from "@mui/icons-material"
 import {
   Box,
@@ -19,7 +19,8 @@ import {
   Select,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import type { GridColDef } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useSession } from "next-auth/react"
 import useSWR from "swr"

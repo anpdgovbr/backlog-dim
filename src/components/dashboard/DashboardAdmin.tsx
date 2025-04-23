@@ -9,9 +9,8 @@ import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestaca
 import ListarProcessos from "@/app/dashboard/processos/page"
 import GerenciarRequeridos from "@/app/dashboard/requeridos/page"
 import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
-import Dashboard25Wrapper, {
-  ISectionConfig,
-} from "@/components/dashboard/Dashboard25Wrapper"
+import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
+import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
 import {
   Business,

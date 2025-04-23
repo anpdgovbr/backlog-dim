@@ -4,7 +4,7 @@ import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { PerfilDto, PermissaoDto } from "@anpd/shared-types"
+import type { PerfilDto, PermissaoDto } from "@anpd/shared-types"
 import {
   Box,
   CircularProgress,
