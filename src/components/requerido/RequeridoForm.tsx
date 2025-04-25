@@ -2,13 +2,14 @@
 
 import { useNotification } from "@/context/NotificationProvider"
 import { validateEmail, validateSite } from "@/utils/formUtils"
-import type { CnaeDto, ControladorDto } from "@anpd/shared-types"
+import type { ControladorDto } from "@anpd/shared-types"
 import { TipoControlador } from "@anpd/shared-types"
-import { Autocomplete, Grid, MenuItem, Paper, TextField } from "@mui/material"
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
+import { Grid, MenuItem, Paper, TextField } from "@mui/material"
+import { forwardRef, useEffect, useImperativeHandle } from "react"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import { mask, unmask } from "remask"
 
+import { CnaeDropdownSection } from "../select/CnaeDropdownSection"
 import { SetorDropdownSection } from "../select/SetorDropdownSection"
 
 export interface RequeridoFormHandle {
@@ -51,9 +52,6 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
     const tipo = watch("tipo")
     const cnpj = watch("cnpj")
     const { notify } = useNotification()
-    const [cnaeSearch, setCnaeSearch] = useState("")
-    const [cnaes, setCnaes] = useState<CnaeDto[]>([])
-    const [loadingCNAE, setLoadingCNAE] = useState(false)
 
     useImperativeHandle(ref, () => ({
       submit: () => {
@@ -113,15 +111,6 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
         })
         .catch(() => notify({ type: "error", message: "Erro ao carregar o Requerido" }))
     }, [requeridoId, notify, setValue])
-
-    useEffect(() => {
-      if (cnaeSearch.length < 3) return
-      setLoadingCNAE(true)
-      fetch(`/api/cnaes?search=${cnaeSearch}&limit=50`)
-        .then((res) => res.json())
-        .then((data) => setCnaes(data))
-        .finally(() => setLoadingCNAE(false))
-    }, [cnaeSearch])
 
     useEffect(() => {
       setValue("cnpj", "")
@@ -364,23 +353,7 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
                   sm: 6,
                 }}
               >
-                <Controller
-                  name="cnaeId"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <Autocomplete
-                      options={cnaes}
-                      getOptionLabel={(o) => `${o.code} - ${o.nome}`}
-                      loading={loadingCNAE}
-                      value={cnaes.find((c) => c.id === value) || null}
-                      onInputChange={(_, val) => setCnaeSearch(val)}
-                      onChange={(_, newVal) => onChange(newVal?.id)}
-                      renderInput={(params) => (
-                        <TextField {...params} label="CNAE" size="small" />
-                      )}
-                    />
-                  )}
-                />
+                <CnaeDropdownSection name="cnaeId" label="CNAE" />
               </Grid>
 
               <Grid
