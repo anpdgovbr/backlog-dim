@@ -7,16 +7,33 @@ import { NextResponse } from "next/server"
 const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
 const endpoint = `${baseUrl}/cnaes`
 
-export const GET = withApiSlim(async (ctx) => {
-  const { req } = ctx
-  const { searchParams } = new URL(req.url)
-  const url = `${endpoint}?${searchParams.toString()}`
+const handlerGET = withApiSlim<{ id: string }>(
+  async ({ req: _req, email: _email, userId: _userId, params }) => {
+    const { id } = params
 
-  const resposta = await fetch(url)
-  const dados = await resposta.json()
+    const resposta = await fetch(`${endpoint}/${id}`)
 
-  return NextResponse.json(dados)
-}, "Exibir_Metadados")
+    if (!resposta.ok) {
+      return Response.json(
+        { error: "Recurso não encontrado" },
+        { status: resposta.status }
+      )
+    }
+
+    const dados = await resposta.json()
+
+    return NextResponse.json(dados)
+  },
+  "Exibir_Metadados" // <- Sua permissão associada
+)
+
+// Aqui é a exportação correta exigida pelo Next.js 15.3+
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  return handlerGET(req, context)
+}
 
 export const POST = withApi(
   async ({ req }) => {
