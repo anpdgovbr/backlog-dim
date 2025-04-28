@@ -843,6 +843,15 @@ async function main() {
         perfilId: perfis.administrador.id,
       },
     }),
+    prisma.user.upsert({
+      where: { email: "jorge.lima@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "jorge.lima@anpd.gov.br",
+        nome: "Jorge Andre Ferreira Fontelles de Lima",
+        perfilId: perfis.administrador.id,
+      },
+    }),
   ])
 
   console.log("🔹 Criando CNAE...")
