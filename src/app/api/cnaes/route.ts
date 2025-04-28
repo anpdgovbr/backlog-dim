@@ -1,5 +1,4 @@
 // src/app/api/cnaes/route.ts
-import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlim } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
@@ -24,13 +23,22 @@ export const POST = withApi(
     try {
       const data = await req.json()
 
-      const novoDado = await prisma.cNAE.create({
-        data: {
-          ...data,
-          active: true,
-          exclusionDate: null,
-        },
+      const resposta = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       })
+
+      if (!resposta.ok) {
+        const errorData = await resposta.json()
+        console.error("Erro ao criar CNAE na API externa:", errorData)
+        return Response.json(
+          { error: "Erro ao criar CNAE", detalhes: errorData },
+          { status: resposta.status }
+        )
+      }
+
+      const novoDado = await resposta.json()
 
       return {
         response: Response.json(novoDado, { status: 201 }),
@@ -39,7 +47,7 @@ export const POST = withApi(
         },
       }
     } catch (error) {
-      console.error("Erro ao criar CNAE:", error)
+      console.error("Erro interno ao criar CNAE:", error)
       return Response.json({ error: "Erro interno do servidor" }, { status: 500 })
     }
   },
