@@ -5,6 +5,8 @@ import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import type { RequeridoOutput } from "@/types/Requerido"
+import { formatCpfCnpj } from "@/utils/formUtils"
+import { Clear } from "@mui/icons-material"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
 import {
@@ -28,12 +30,12 @@ const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
 
 export default function RequeridoDataGrid() {
   const [search, setSearch] = useState("")
-  const [filteredData, setFilteredData] = useState<RequeridoOutput[]>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   })
   const [openModal, setOpenModal] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
 
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
@@ -50,6 +52,7 @@ export default function RequeridoDataGrid() {
     pageSize: paginationModel.pageSize,
     orderBy: "nome",
     ascending: true,
+    search,
   })
 
   useEffect(() => {
@@ -62,17 +65,6 @@ export default function RequeridoDataGrid() {
     }
   }, [error, notify])
 
-  useEffect(() => {
-    const lower = search.toLowerCase()
-    const filtered = requeridos.filter(
-      (item) =>
-        item.nome.toLowerCase().includes(lower) ||
-        item.cnpj?.includes(lower) ||
-        item.site?.toLowerCase().includes(lower)
-    )
-    setFilteredData(filtered)
-  }, [search, requeridos])
-
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este requerido?")) {
       try {
@@ -82,6 +74,7 @@ export default function RequeridoDataGrid() {
         const data = await response.json()
 
         if (response.ok) {
+          mutateRequeridos()
           notify({ type: "success", message: "Requerido excluído com sucesso" })
         } else {
           notify({ type: "error", message: `Erro ao excluir requerido: ${data.error}` })
@@ -94,7 +87,12 @@ export default function RequeridoDataGrid() {
 
   const columns: GridColDef<RequeridoOutput>[] = [
     { field: "nome", headerName: "Nome/Razão Social", flex: 2 },
-    { field: "cnpj", headerName: "CNPJ/CPF", flex: 1 },
+    {
+      field: "cnpj",
+      headerName: "CNPJ/CPF",
+      flex: 1,
+      renderCell: (params) => formatCpfCnpj(params.value || ""),
+    },
     /*{
       field: "site",
       headerName: "Site",
@@ -171,14 +169,34 @@ export default function RequeridoDataGrid() {
             </Button>
           </Box>
 
-          <TextField
-            label="Buscar..."
-            variant="outlined"
-            fullWidth
-            sx={{ mb: 2 }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <Box display="flex" gap={1} mb={2}>
+            <TextField
+              label="Buscar por nome, CNPJ ou CPF"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearch(searchInput)
+                }
+              }}
+            />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSearchInput("")
+                setSearch("")
+                setPaginationModel({ page: 0, pageSize: 10 }) // 🔥 Resetar para primeira página também
+              }}
+              sx={{ minWidth: "auto", px: 2 }}
+              startIcon={<Clear />}
+            >
+              Limpar
+            </Button>
+          </Box>
 
           <Box
             sx={{
@@ -190,7 +208,7 @@ export default function RequeridoDataGrid() {
           >
             <DataGrid
               sx={{ minHeight: "45vh" }}
-              rows={filteredData}
+              rows={requeridos}
               columns={columns}
               pageSizeOptions={[5, 10, 20]}
               loading={loading}

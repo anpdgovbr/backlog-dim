@@ -58,7 +58,7 @@ export default function SideMenu({
         paper: {
           sx: {
             position: "relative",
-            width: drawerOpen ? 240 : 72,
+            width: drawerOpen ? 200 : 60,
             bgcolor: "background.paper",
             borderRight: 1,
             borderColor: "divider",
