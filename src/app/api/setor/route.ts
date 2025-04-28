@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { AcaoAuditoria } from "@prisma/client"
 import { NextResponse } from "next/server"
@@ -16,19 +15,27 @@ export async function GET(req: Request) {
   return NextResponse.json(dados)
 }
 
-// refazer com o endpoint correto
 export const POST = withApi(
   async ({ req }) => {
     try {
       const data = await req.json()
 
-      const novoDado = await prisma.setor.create({
-        data: {
-          ...data,
-          active: true,
-          exclusionDate: null,
-        },
+      const resposta = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       })
+
+      if (!resposta.ok) {
+        const errorData = await resposta.json()
+        console.error("Erro ao criar Setor na API externa:", errorData)
+        return Response.json(
+          { error: "Erro ao criar Setor", detalhes: errorData },
+          { status: resposta.status }
+        )
+      }
+
+      const novoDado = await resposta.json()
 
       return {
         response: Response.json(novoDado, { status: 201 }),
@@ -37,7 +44,7 @@ export const POST = withApi(
         },
       }
     } catch (error) {
-      console.error("Erro ao criar setor:", error)
+      console.error("Erro interno ao criar Setor:", error)
       return Response.json({ error: "Erro interno do servidor" }, { status: 500 })
     }
   },

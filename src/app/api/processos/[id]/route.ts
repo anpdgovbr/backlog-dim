@@ -12,7 +12,6 @@ const handlerGET = withApiForId<{ id: string }>(
       include: {
         formaEntrada: true,
         responsavel: true,
-        requerido: { include: { setor: true, cnae: true } },
         situacao: true,
         encaminhamento: true,
         pedidoManifestacao: true,
