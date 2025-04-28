@@ -47,7 +47,7 @@ export default function ModalEditarProcesso({
       requeridoId: parseId(dataFromForm.requeridoId),
       observacoes: dataFromForm.observacoes,
     }
-
+    console.warn("payload", payload)
     fetch(`/api/processos/${processo.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

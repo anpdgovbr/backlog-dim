@@ -46,8 +46,6 @@ model Processo {
   evidencia              Evidencia?          @relation(fields: [evidenciaId], references: [id])
   formaEntrada           FormaEntrada        @relation(fields: [formaEntradaId], references: [id])
   pedidoManifestacao     PedidoManifestacao? @relation(fields: [pedidoManifestacaoId], references: [id])
-  requerido              Requerido?          @relation(fields: [requeridoId], references: [id])
-  requeridoFinal         Requerido?          @relation("RequeridoFinal", fields: [requeridoFinalId], references: [id])
   responsavel            Responsavel         @relation(fields: [responsavelId], references: [id])
   situacao               Situacao            @relation(fields: [situacaoId], references: [id])
   processoStatus         ProcessoStatus?     @relation(fields: [processoStatusId], references: [id])
@@ -92,46 +90,6 @@ enum StatusInterno {
   CONSOLIDADO
 }
 
-enum TipoRequerido {
-  PESSOA_FISICA
-  PESSOA_JURIDICA
-  ESTRANGEIRO
-}
-
-model Requerido {
-  id                     Int            @id @default(autoincrement())
-  nome                   String
-  tipo                   TipoRequerido  @default(PESSOA_JURIDICA) 
-  cnpj                   String?        @unique
-  cpf                    String?        @unique
-  site                   String?
-  email                  String?
-  politicaPrivacidadeUrl String?
-  setorId                Int?
-  cnaeId                 Int?
-  processos              Processo[]
-  processosComoRequeridoFinal Processo[] @relation("RequeridoFinal")
-  cnae                   CNAE?          @relation(fields: [cnaeId], references: [id])
-  setor                  Setor?         @relation(fields: [setorId], references: [id])
-  active                 Boolean        @default(true)
-  exclusionDate          DateTime?
-
-  @@map("Requerido")
-  @@index([active])
-}
-
-model CNAE {
-  id            Int         @id @default(autoincrement())
-  active        Boolean     @default(true)
-  code          String      @unique @db.VarChar(10)
-  nome          String      @db.VarChar(255)
-  requeridos    Requerido[]
-  exclusionDate DateTime? 
-
-  @@map("CNAE")
-  @@index([active])
-}
-
 model FormaEntrada {
   id            Int        @id @default(autoincrement())
   nome          String     @unique
@@ -140,17 +98,6 @@ model FormaEntrada {
   exclusionDate DateTime?  
 
   @@map("FormaEntrada")
-  @@index([active])
-}
-
-model Setor {
-  id            Int         @id @default(autoincrement())
-  nome          String      @unique
-  requeridos    Requerido[]
-  active        Boolean     @default(true) 
-  exclusionDate DateTime?  
-
-  @@map("Setor")
   @@index([active])
 }
 
