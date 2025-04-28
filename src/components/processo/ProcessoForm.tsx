@@ -1,6 +1,7 @@
 "use client"
 
 import { adicionarDiasUteis } from "@/utils/date"
+import { definirCorStatusInterno, formatarStatusInterno } from "@/utils/statusInterno"
 import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 import {
   Checkbox,
@@ -8,6 +9,7 @@ import {
   FormControlLabel,
   Grid,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material"
@@ -45,19 +47,29 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
   return (
     <FormProvider {...methods}>
       <form noValidate>
-        {emModoEdicao ? (
+        <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+          {emModoEdicao ? (
+            <Chip
+              sx={{ boxShadow: 2 }}
+              label={processo?.anonimo ? "Denúncia Anônima" : "Identificado"}
+              color={processo?.anonimo ? "error" : "primary"}
+            />
+          ) : (
+            <FormControlLabel
+              control={<Checkbox {...register("anonimo")} />}
+              label="Denúncia Anônima?"
+            />
+          )}
+
+          {/* Chip de Status Interno */}
           <Chip
-            label={processo?.anonimo ? "Denúncia Anônima" : "Identificado"}
-            color={processo?.anonimo ? "error" : "primary"}
-            sx={{ mb: 1 }}
+            sx={{ boxShadow: 2 }}
+            label={formatarStatusInterno(emModoEdicao ? processo?.statusInterno : "NOVO")}
+            color={definirCorStatusInterno(
+              emModoEdicao ? processo?.statusInterno : "NOVO"
+            )}
           />
-        ) : (
-          <FormControlLabel
-            control={<Checkbox {...register("anonimo")} />}
-            label="Denúncia Anônima?"
-            sx={{ mb: 1 }}
-          />
-        )}
+        </Stack>
 
         {/* Seção de Dados Principais */}
         <Paper elevation={2} sx={{ p: 1, mb: 1 }}>

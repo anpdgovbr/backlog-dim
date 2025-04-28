@@ -1,8 +1,7 @@
 import { useApi } from "@/lib/api"
 import type { BaseQueryParams, SetorDto } from "@anpd/shared-types"
 
-interface UseControladoresParams extends BaseQueryParams {
-  cnpj?: string
+interface UseSetorParams extends BaseQueryParams {
   nome?: string
 }
 
@@ -14,7 +13,7 @@ interface UseSetorResult {
   mutate: () => void
 }
 
-export function useSetor(params: UseControladoresParams): UseSetorResult {
+export function useSetor(params: UseSetorParams): UseSetorResult {
   const {
     page = 1,
     pageSize = 10,

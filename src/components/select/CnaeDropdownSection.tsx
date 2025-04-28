@@ -1,5 +1,6 @@
 "use client"
 
+import { useCnae } from "@/hooks/useCnae"
 import type { CnaeDto } from "@anpd/shared-types"
 import { Autocomplete, CircularProgress, TextField } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -15,41 +16,53 @@ export function CnaeDropdownSection({
   label = "CNAE",
 }: Readonly<CnaeDropdownSectionProps>) {
   const { control } = useFormContext()
-  const selectedId = useWatch({ control, name }) // observa o valor atual
+  const selectedId = useWatch({ control, name })
   const [searchTerm, setSearchTerm] = useState("")
-  const [cnaes, setCnaes] = useState<CnaeDto[]>([])
-  const [loading, setLoading] = useState(false)
+  const [extraCnae, setExtraCnae] = useState<CnaeDto | null>(null)
 
-  // 🔁 Busca por nome com debounce
+  const shouldFetchList = searchTerm.length >= 3
+
+  const {
+    data: cnaes,
+    isLoading,
+    getById,
+  } = useCnae({
+    search: shouldFetchList ? searchTerm : "",
+    page: 1,
+    pageSize: 50,
+    orderBy: "code",
+    ascending: true,
+  })
+
   useEffect(() => {
-    if (searchTerm.length < 3) {
-      setCnaes([])
-      return
+    async function buscarExtra() {
+      if (!selectedId) {
+        if (extraCnae !== null) setExtraCnae(null)
+        return
+      }
+
+      const existsInOptions = cnaes.some((c) => c.id === selectedId)
+      const existsInExtra = extraCnae?.id === selectedId
+
+      if (existsInOptions || existsInExtra) return
+
+      const result = await getById(selectedId)
+      if (result && result.id !== extraCnae?.id) {
+        setExtraCnae(result)
+      }
     }
 
-    const timeout = setTimeout(() => {
-      setLoading(true)
-      fetch(`/api/cnaes?search=${encodeURIComponent(searchTerm)}&limit=50`)
-        .then((res) => res.json())
-        .then((data: CnaeDto[]) => setCnaes(data))
-        .catch(() => setCnaes([]))
-        .finally(() => setLoading(false))
-    }, 400)
+    buscarExtra()
+    // ⚡ Dependendo só do selectedId e extraCnae agora, sem perigo de ciclo!
+  }, [selectedId, extraCnae, cnaes, getById])
 
-    return () => clearTimeout(timeout)
-  }, [searchTerm])
-
-  // ✅ Carrega o CNAE selecionado se ainda não estiver na lista
-  useEffect(() => {
-    if (!selectedId || cnaes.some((c) => c.id === selectedId)) return
-
-    fetch(`/api/cnaes/${selectedId}`)
-      .then((res) => res.json())
-      .then((data: CnaeDto) => {
-        setCnaes((prev) => [...prev, data])
-      })
-      .catch(() => {})
-  }, [selectedId, cnaes])
+  const options = shouldFetchList
+    ? extraCnae
+      ? [...cnaes, extraCnae]
+      : cnaes
+    : extraCnae
+      ? [extraCnae]
+      : []
 
   return (
     <Controller
@@ -57,9 +70,9 @@ export function CnaeDropdownSection({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <Autocomplete
-          options={cnaes}
-          loading={loading}
-          value={cnaes.find((c) => c.id === value) || null}
+          options={options}
+          loading={isLoading}
+          value={options.length > 0 ? options.find((c) => c.id === value) || null : null}
           onChange={(_, newValue) => onChange(newValue?.id ?? null)}
           onInputChange={(_, inputValue) => setSearchTerm(inputValue)}
           getOptionLabel={(option) => `${option.code} - ${option.nome}`}
@@ -79,8 +92,8 @@ export function CnaeDropdownSection({
                 ...params.InputProps,
                 endAdornment: (
                   <>
-                    {loading ? <CircularProgress color="inherit" size={18} /> : null}
-                    {params.InputProps.endAdornment}
+                    {isLoading ? <CircularProgress color="inherit" size={18} /> : null}
+                    {params.InputProps?.endAdornment}
                   </>
                 ),
               }}

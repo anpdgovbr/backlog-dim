@@ -1,13 +1,22 @@
+// src/app/api/cnaes/route.ts
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApiSlim } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
+import { NextResponse } from "next/server"
 
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.cNAE.findMany({
-    where: { active: true },
-  })
-  return Response.json(dados)
+const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
+const endpoint = `${baseUrl}/cnaes`
+
+export const GET = withApiSlim(async (ctx) => {
+  const { req } = ctx
+  const { searchParams } = new URL(req.url)
+  const url = `${endpoint}?${searchParams.toString()}`
+
+  const resposta = await fetch(url)
+  const dados = await resposta.json()
+
+  return NextResponse.json(dados)
 }, "Exibir_Metadados")
 
 export const POST = withApi(

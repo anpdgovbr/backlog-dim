@@ -149,6 +149,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
       ),
       audit: {
         antes: processo,
+        depois: { ...processo, active: false, exclusionDate: new Date() },
       },
     }
   },
