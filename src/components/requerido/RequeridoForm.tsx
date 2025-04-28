@@ -1,6 +1,7 @@
 "use client"
 
 import { useNotification } from "@/context/NotificationProvider"
+import { useBuscarCnpj } from "@/hooks/useBuscarCnpj"
 import { validateEmail, validateSite, validateTelefone } from "@/utils/formUtils"
 import type { ControladorDto } from "@anpd/shared-types"
 import { TipoControlador } from "@anpd/shared-types"
@@ -162,24 +163,24 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
       setValue("cpf", "")
     }, [tipo, setValue])
 
+    const { buscarCnpj } = useBuscarCnpj()
+
     useEffect(() => {
       if (tipo !== TipoControlador.PESSOA_JURIDICA || !cnpj || cnpj.length !== 14) return
 
-      fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.razao_social) setValue("nome", data.razao_social)
-          if (data.email) setValue("email", data.email)
-          if (data.telefone) setValue("telefone", data.telefone)
-          if (data.site) setValue("site", data.site)
-        })
-        .catch(() => {
-          notify({
-            type: "warning",
-            message: "Não foi possível buscar dados do CNPJ informado.",
-          })
-        })
-    }, [cnpj, tipo, setValue, notify])
+      async function preencherCampos() {
+        if (!cnpj) return
+        const dados = await buscarCnpj(cnpj)
+        if (dados) {
+          if (dados.razao_social) setValue("nome", dados.razao_social)
+          if (dados.email) setValue("email", dados.email)
+          if (dados.telefone) setValue("telefone", dados.telefone)
+          if (dados.site) setValue("site", dados.site)
+        }
+      }
+
+      preencherCampos()
+    }, [cnpj, tipo, setValue, buscarCnpj])
 
     const onSubmit = async (data: ControladorDto) => {
       try {
