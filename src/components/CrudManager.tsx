@@ -73,7 +73,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedItem),
       })
-
       mutate()
       notify({
         type: "success",
@@ -114,7 +113,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         const errorMessage = await response.json()
         throw new Error(errorMessage.error || "Erro desconhecido ao excluir.")
       }
-
       mutate()
       notify({
         type: "success",
@@ -139,16 +137,14 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       {
         field: "id",
         headerName: "ID",
-        width: 60,
         align: "center",
         headerAlign: "center",
-        flex: 1,
+        flex: 0.4,
       },
-      { field: "nome", headerName: "Nome", flex: 3 },
+      { field: "nome", headerName: "Nome", flex: 2 },
       {
         field: "acoes",
         headerName: "Ações",
-        width: 150,
         sortable: false,
         flex: 1,
         renderCell: (params) => (
@@ -229,10 +225,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
                 flexGrow: 1,
                 minHeight: "45vh",
                 width: "100%",
-                minWidth: "100%",
-                "& .MuiDataGrid-main": {
-                  width: "100% !important", // força a área principal
-                },
+
                 "& .MuiDataGrid-virtualScrollerContent": {
                   width: "100% !important",
                   minWidth: "100% !important",

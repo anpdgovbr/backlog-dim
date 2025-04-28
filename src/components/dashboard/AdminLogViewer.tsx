@@ -20,14 +20,13 @@ interface AuditLogEntry {
 }
 
 const colunas: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 80 },
-  { field: "tabela", headerName: "Tabela", width: 120 },
-  { field: "acao", headerName: "Ação", width: 120 },
+  { field: "tabela", headerName: "Entidade", width: 120 },
+  { field: "acao", headerName: "Ação", width: 100 },
   { field: "email", headerName: "Usuário", width: 200 },
   {
     field: "criadoEm",
     headerName: "Data/Hora",
-    width: 180,
+    width: 160,
     valueFormatter: ({ value }) => dayjs(value).format("DD/MM/YYYY HH:mm:ss"),
   },
   { field: "contexto", headerName: "Contexto", flex: 1 },
@@ -119,7 +118,7 @@ export default function AdminLogViewer() {
       <Box sx={{ ...dataGridStyles, height: "100%", width: "100%", display: "flex" }}>
         <DataGrid
           sx={{
-            minHeight: "30vh",
+            minHeight: "50vh",
             "& .MuiDataGrid-row:hover": {
               cursor: "pointer",
               backgroundColor: "rgba(0, 0, 0, 0.04)",

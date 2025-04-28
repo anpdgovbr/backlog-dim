@@ -7,7 +7,6 @@ export const dataGridStyles = {
   backgroundColor: ANPDtheme.palette.background.default,
   borderRadius: 2,
 
-  // 🔧 Força a largura mínima para ocupar o container
   "& .MuiDataGrid-main": {
     minWidth: "100% !important",
   },
@@ -17,13 +16,12 @@ export const dataGridStyles = {
     flexGrow: 1,
   },
   "& .MuiDataGrid-virtualScroller": {
-    overflowX: "hidden", // evita scroll lateral falso
+    overflowX: "hidden",
   },
   "& .MuiDataGrid-columnHeaders": {
     minWidth: "100% !important",
   },
 
-  // Restante dos estilos existentes
   "& .MuiDataGrid-row": { alignItems: "center" },
   "& .MuiDataGrid-cell": {
     display: "flex",

@@ -1,7 +1,7 @@
 "use client"
 
 import { useNotification } from "@/context/NotificationProvider"
-import { validateEmail, validateSite } from "@/utils/formUtils"
+import { validateEmail, validateSite, validateTelefone } from "@/utils/formUtils"
 import type { ControladorDto } from "@anpd/shared-types"
 import { TipoControlador } from "@anpd/shared-types"
 import { Grid, MenuItem, Paper, TextField } from "@mui/material"
@@ -56,28 +56,58 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
     useImperativeHandle(ref, () => ({
       submit: () => {
         handleSubmit((data) => {
+          let hasErrors = false
+
           const emailVal = data.email ? validateEmail(data.email) : null
           const siteVal = data.site ? validateSite(data.site) : null
+          const telefoneVal = data.telefone ? validateTelefone(data.telefone) : null
+          const politicaUrlVal = data.politicaPrivacidadeUrl
+            ? validateSite(data.politicaPrivacidadeUrl)
+            : null
 
-          if (emailVal) setError("email", { message: emailVal })
-          else clearErrors("email")
+          if (!data.nome) {
+            setError("nome", { message: "Nome é obrigatório" })
+            hasErrors = true
+          }
 
-          if (siteVal) setError("site", { message: siteVal })
-          else clearErrors("site")
+          if (emailVal) {
+            setError("email", { message: emailVal })
+            hasErrors = true
+          } else {
+            clearErrors("email")
+          }
+
+          if (siteVal) {
+            setError("site", { message: siteVal })
+            hasErrors = true
+          } else {
+            clearErrors("site")
+          }
+
+          if (telefoneVal) {
+            setError("telefone", { message: telefoneVal })
+            hasErrors = true
+          } else {
+            clearErrors("telefone")
+          }
+
+          if (politicaUrlVal) {
+            setError("politicaPrivacidadeUrl", { message: politicaUrlVal })
+            hasErrors = true
+          } else {
+            clearErrors("politicaPrivacidadeUrl")
+          }
 
           if (data.tipo === TipoControlador.PESSOA_JURIDICA && !data.cnpj) {
             setError("cnpj", { message: "CNPJ é obrigatório para Pessoa Jurídica" })
+            hasErrors = true
           }
           if (data.tipo === TipoControlador.PESSOA_NATURAL && !data.cpf) {
             setError("cpf", { message: "CPF é obrigatório para Pessoa Física" })
+            hasErrors = true
           }
 
-          if (
-            emailVal ||
-            siteVal ||
-            (data.tipo === TipoControlador.PESSOA_JURIDICA && !data.cnpj) ||
-            (data.tipo === TipoControlador.PESSOA_NATURAL && !data.cpf)
-          ) {
+          if (hasErrors) {
             notify({ type: "warning", message: "Corrija os erros antes de salvar." })
             return
           }
@@ -95,8 +125,18 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
 
     useEffect(() => {
       if (!requeridoId) return
+
       fetch(`/api/controladores/${requeridoId}`)
-        .then((res) => res.json())
+        .then(async (res) => {
+          if (!res.ok) {
+            const errorData = await res.json()
+            const errorMessage = Array.isArray(errorData.message)
+              ? errorData.message.join(", ")
+              : errorData.message || "Erro desconhecido"
+            throw new Error(errorMessage)
+          }
+          return res.json()
+        })
         .then((data: ControladorDto) => {
           setValue("nome", data.nome ?? "")
           setValue("tipo", data.tipo)
@@ -109,7 +149,12 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
           setValue("cnaeId", data.cnaeId ?? undefined)
           setValue("setorId", data.setorId ?? undefined)
         })
-        .catch(() => notify({ type: "error", message: "Erro ao carregar o Requerido" }))
+        .catch((error: Error) => {
+          notify({
+            type: "error",
+            message: `Erro ao carregar o Requerido: ${error.message}`,
+          })
+        })
     }, [requeridoId, notify, setValue])
 
     useEffect(() => {
@@ -137,21 +182,37 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
     }, [cnpj, tipo, setValue, notify])
 
     const onSubmit = async (data: ControladorDto) => {
-      const response = await fetch(
-        `/api/controladores${requeridoId ? `/${requeridoId}` : ""}`,
-        {
-          method: requeridoId ? "PATCH" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      )
+      try {
+        const response = await fetch(
+          `/api/controladores${requeridoId ? `/${requeridoId}` : ""}`,
+          {
+            method: requeridoId ? "PATCH" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        )
 
-      if (response.ok) {
-        notify({ type: "success", message: "Requerido salvo com sucesso!" })
-        mutate?.()
-        onSave?.()
-      } else {
-        notify({ type: "error", message: "Erro ao salvar o Requerido" })
+        if (response.ok) {
+          notify({ type: "success", message: "Requerido salvo com sucesso!" })
+          mutate?.()
+          onSave?.()
+        } else {
+          const errorData = await response.json()
+          const errorMessage = Array.isArray(errorData.message)
+            ? errorData.message.join(", ")
+            : errorData.message || "Erro desconhecido"
+          notify({
+            type: "error",
+            message: `Erro ao salvar o Requerido: ${errorMessage}`,
+          })
+        }
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Erro inesperado"
+
+        notify({
+          type: "error",
+          message: `Erro ao salvar o Requerido: ${errorMessage}`,
+        })
       }
     }
 
@@ -342,6 +403,8 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
                       label="Política de Privacidade (URL)"
                       fullWidth
                       size="small"
+                      error={!!errors.politicaPrivacidadeUrl}
+                      helperText={errors.politicaPrivacidadeUrl?.message}
                     />
                   )}
                 />
