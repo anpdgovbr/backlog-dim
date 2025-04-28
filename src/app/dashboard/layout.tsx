@@ -105,12 +105,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <Box
           sx={{
             flexGrow: 1,
-            minHeight: "60vh",
             bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 1,
-            pl: 1,
-            py: 2,
+            p: 2,
             transition: "margin 0.3s ease",
           }}
         >
