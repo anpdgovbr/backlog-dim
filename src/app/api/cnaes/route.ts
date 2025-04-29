@@ -4,7 +4,7 @@ import { withApiSlim } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
 import { NextResponse } from "next/server"
 
-const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
+const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/cnaes`
 
 const handlerGET = withApiSlim<{ id: string }>(
