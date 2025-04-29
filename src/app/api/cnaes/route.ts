@@ -1,38 +1,19 @@
 // src/app/api/cnaes/route.ts
 import { withApi } from "@/lib/withApi"
-import { withApiSlim } from "@/lib/withApiSlim"
 import { AcaoAuditoria } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/cnaes`
 
-const handlerGET = withApiSlim<{ id: string }>(
-  async ({ req: _req, email: _email, userId: _userId, params }) => {
-    const { id } = params
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const url = `${endpoint}?${searchParams.toString()}`
 
-    const resposta = await fetch(`${endpoint}/${id}`)
+  const resposta = await fetch(url)
+  const dados = await resposta.json()
 
-    if (!resposta.ok) {
-      return Response.json(
-        { error: "Recurso não encontrado" },
-        { status: resposta.status }
-      )
-    }
-
-    const dados = await resposta.json()
-
-    return NextResponse.json(dados)
-  },
-  "Exibir_Metadados" // <- Sua permissão associada
-)
-
-// Aqui é a exportação correta exigida pelo Next.js 15.3+
-export async function GET(
-  req: Request,
-  context: { params: Promise<{ id: string }> }
-): Promise<Response> {
-  return handlerGET(req, context)
+  return NextResponse.json(dados)
 }
 
 export const POST = withApi(
