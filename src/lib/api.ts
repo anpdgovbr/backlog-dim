@@ -11,9 +11,11 @@ export const fetcher = async (url: string) => {
 
 export function useApi<Data>(path: string | null, config?: SWRConfiguration) {
   const finalUrl = path
-    ? path.startsWith("http") // Se já for URL absoluta, usa direto
-      ? path
-      : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`
+    ? path.startsWith("/api/")
+      ? path // Se for API interna, usa o caminho como está
+      : path.startsWith("http")
+        ? path // Se for uma URL absoluta, usa também
+        : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`
     : null
 
   const { data, error, isLoading, mutate } = useSWR<Data>(finalUrl, fetcher, config)
