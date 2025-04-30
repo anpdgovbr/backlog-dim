@@ -2,11 +2,14 @@
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 import { DashboardCard } from "@/components/ui/dashboard-card"
+import ImportarDashboardCard from "@/container/cards/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/container/cards/MetadadosDashboardCard"
 import ProcessDashboardCard from "@/container/cards/ProcessDashboardCard"
+import RequeridosDashboardCard from "@/container/cards/RequeridosDashboardCard"
+import ResponsaveisDashboardCard from "@/container/cards/ResponsaveisDashboardCard"
 import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
-import { Assessment, Business, Person } from "@mui/icons-material"
+import { Assessment } from "@mui/icons-material"
 import { Box, Grid, Stack } from "@mui/material"
 import { useRouter } from "next/navigation"
 
@@ -41,7 +44,7 @@ function DashboardBacklog() {
           >
             <Stack direction="row" spacing={2} alignItems="center">
               <Assessment sx={{ fontSize: 40, color: "warning.main" }} />
-              <DashboardCard.Title variant="h6">Estatísticas</DashboardCard.Title>
+              <DashboardCard.Title>Estatísticas</DashboardCard.Title>
             </Stack>
             <DashboardCard.Description variant="body2">
               Veja relatórios e métricas do processamento de dados.
@@ -50,47 +53,30 @@ function DashboardBacklog() {
         </Grid>
       )}
 
-      {/* ===== Metadados ===== */}
+      {/* ===== Metadados ===== 
+      ajustar futuramente
+      */}
       {permissoes["Exibir_Metadados"] && (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div">
-          <MetadadosDashboardCard />
+        <Grid container spacing={2} columns={12} size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid size={{ xs: 12 }} component="div">
+            <MetadadosDashboardCard />
+          </Grid>
+          <Grid size={{ xs: 12 }} component="div">
+            <ImportarDashboardCard />
+          </Grid>
         </Grid>
       )}
 
       {/* ===== Responsáveis ===== */}
       {permissoes["Exibir_Responsavel"] && (
         <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div">
-          <DashboardCard
-            hasAction
-            action={() => router.push("/dashboard/responsaveis")}
-            sx={{ bgcolor: "background.paper" }}
-          >
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Person sx={{ fontSize: 40, color: "success.main" }} />
-              <DashboardCard.Title variant="h6">Responsáveis</DashboardCard.Title>
-            </Stack>
-            <DashboardCard.Description variant="body2">
-              Controle de usuários responsáveis por processos.
-            </DashboardCard.Description>
-          </DashboardCard>
+          <ResponsaveisDashboardCard />
         </Grid>
       )}
       {/* ===== Requeridos ===== */}
       {permissoes["Exibir_Responsavel"] && (
-        <Grid size={{ xs: 12, md: 4 }} component="div">
-          <DashboardCard
-            hasAction
-            action={() => router.push("/dashboard/requeridos")}
-            sx={{ bgcolor: "background.paper" }}
-          >
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Business sx={{ fontSize: 40, color: "secondary.main" }} />
-              <DashboardCard.Title variant="h6">Requeridos</DashboardCard.Title>
-            </Stack>
-            <DashboardCard.Description variant="body2">
-              Acesse e gerencie os requeridos cadastrados.
-            </DashboardCard.Description>
-          </DashboardCard>
+        <Grid size={{ xs: 12, md: 4 }} component="div" minWidth={0}>
+          <RequeridosDashboardCard />
         </Grid>
       )}
     </Grid>

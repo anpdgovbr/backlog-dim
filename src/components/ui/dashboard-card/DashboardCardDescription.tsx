@@ -1,13 +1,17 @@
-import { Typography } from "@mui/material"
-import type { TypographyProps } from "@mui/material"
+import { Typography, type TypographyProps } from "@mui/material"
 
-interface DashboardCardDescriptionProps {
-  variant?: TypographyProps["variant"]
+interface DashboardCardDescriptionProps extends TypographyProps {
   children: React.ReactNode
 }
+
 export function DashboardCardDescription({
   variant = "body2",
   children,
+  ...props
 }: Readonly<DashboardCardDescriptionProps>) {
-  return <Typography variant={variant}>{children}</Typography>
+  return (
+    <Typography variant={variant} {...props}>
+      {children}
+    </Typography>
+  )
 }

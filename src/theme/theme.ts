@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles"
+import { createTheme } from "@mui/material"
 import { ptBR } from "@mui/x-data-grid/locales"
 
 // Cores institucionais da ANPD
@@ -13,7 +13,7 @@ const anpdColors = {
     main: "#00AEEF", // Azul ANPD
     light: "#5FCCFF",
     dark: "#0079B0",
-    contrastText: "#FFFFFF",
+    contrastText: "#000000",
   },
   accent: {
     main: "#FAA61A", // Laranja ANPD para destaques e alertas
@@ -54,6 +54,7 @@ let ANPDtheme = createTheme({
     warning: anpdColors.warning,
     info: anpdColors.info,
     success: anpdColors.success,
+    accent: anpdColors.accent,
   },
   typography: {
     fontFamily: ["Rubik", "Arial", "sans-serif"].join(","),

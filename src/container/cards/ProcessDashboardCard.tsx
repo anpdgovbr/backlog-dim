@@ -14,7 +14,7 @@ export function ProcessDashboardCard() {
     >
       <Stack direction="row" spacing={2} alignItems="center">
         <EngineeringOutlined sx={{ fontSize: 40, color: "secondary.contrastText" }} />
-        <DashboardCard.Title variant="h5">Processos</DashboardCard.Title>
+        <DashboardCard.Title>Processos</DashboardCard.Title>
       </Stack>
       <DashboardCard.Description variant="body2">
         Gerencie os processos cadastrados no sistema. Gerencie os processos cadastrados no
@@ -28,7 +28,7 @@ export function ProcessDashboardCard() {
         <Button
           variant="outlined"
           size="small"
-          color="inherit" // Inherit para ficar legível sobre fundo colorido
+          color="inherit"
           onClick={() => router.push("/dashboard/processos")}
         >
           Ver Processos

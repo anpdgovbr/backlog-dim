@@ -13,7 +13,7 @@ function MetadadosDashboardCard() {
     >
       <Stack direction="row" spacing={2} alignItems="center">
         <TableChart sx={{ fontSize: 40, color: "info.main" }} />
-        <DashboardCard.Title variant="h6">Metadados</DashboardCard.Title>
+        <DashboardCard.Title>Metadados</DashboardCard.Title>
       </Stack>
       <DashboardCard.Description variant="body2">
         Gerencie tipos de encaminhamento, evidências e outras categorias auxiliares.
