@@ -21,6 +21,10 @@ const StyledCardContent = styled(CardContent)({
   flexDirection: "column",
   alignItems: "flex-start",
   height: "100%",
+  width: "100%",
+  boxSizing: "border-box",
+  overflow: "hidden",
+  minWidth: 0,
 })
 
 export function DashboardCard({
@@ -46,14 +50,10 @@ export function DashboardCard({
     >
       {hasAction ? (
         <CardActionArea onClick={action} sx={{ height: "100%" }} id={id}>
-          <StyledCardContent sx={sx} id={id}>
-            {children}
-          </StyledCardContent>
+          <StyledCardContent sx={sx}>{children}</StyledCardContent>
         </CardActionArea>
       ) : (
-        <StyledCardContent sx={sx} id={id}>
-          {children}
-        </StyledCardContent>
+        <StyledCardContent sx={sx}>{children}</StyledCardContent>
       )}
     </Card>
   )

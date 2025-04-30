@@ -1,0 +1,136 @@
+import { DashboardCard } from "@/components/ui/dashboard-card"
+import type { TopRequerido } from "@/types/TopRequeridos"
+import { Business } from "@mui/icons-material"
+import {
+  Box,
+  Button,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
+const MAX_REQUERIDOS = 5
+
+interface RequeridosDashboardCardProps {
+  limit?: number
+}
+
+function RequeridosDashboardCard({
+  limit = MAX_REQUERIDOS,
+}: RequeridosDashboardCardProps) {
+  const router = useRouter()
+  const [topRequeridos, setTopRequeridos] = useState<TopRequerido[] | null>(null)
+
+  useEffect(() => {
+    const carregarTop = async () => {
+      try {
+        const res = await fetch(`/api/relatorios/top-requeridos?limit=${limit}`, {
+          cache: "no-store",
+        })
+        const data = await res.json()
+        setTopRequeridos(data)
+      } catch (error) {
+        console.error("Erro ao carregar top requeridos:", error)
+      }
+    }
+
+    carregarTop()
+  }, [limit])
+
+  return (
+    <DashboardCard sx={{ height: "100%", bgcolor: "background.paper" }}>
+      <Box
+        display="flex" // Adicione isso para tornar a Box um flex container
+        flexDirection="column" // Organize os itens em coluna
+        justifyContent="space-between" // Distribua o espaço entre os itens
+        sx={{ height: "100%" }}
+      >
+        <Box>
+          <Stack direction="row" spacing={2} alignItems="center" mb={1}>
+            <Business sx={{ fontSize: 40, color: "secondary.dark" }} />
+            <DashboardCard.Title>Requeridos</DashboardCard.Title>
+          </Stack>
+
+          <DashboardCard.Description variant="body2" sx={{ mb: 1 }}>
+            Acesse os principais requeridos com mais processos.
+          </DashboardCard.Description>
+
+          {topRequeridos === null ? (
+            <List dense disablePadding>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ListItem key={i} disableGutters>
+                  <ListItemText
+                    primary={<Skeleton width="80%" />}
+                    secondary={<Skeleton width="40%" />}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Grid container spacing={1} sx={{ mt: 1 }}>
+              {topRequeridos.map((r) => (
+                <Grid
+                  key={r.id}
+                  size={{ xs: 12 }}
+                  sx={{
+                    px: 1.5,
+                    py: 1,
+                    bgcolor: "secondary.light",
+                    borderRadius: 1,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    overflow: "hidden",
+                    width: "100%",
+                    maxWidth: "100%",
+                  }}
+                >
+                  <Tooltip title={r.nome}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                        overflow: "hidden",
+                        color: "secondary.contrastText",
+                      }}
+                    >
+                      {r.nome}
+                    </Typography>
+                  </Tooltip>
+                  <Typography variant="caption" color="secondary.contrastText">
+                    Processos: {r.totalProcessos}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Box>
+
+        <Box>
+          <Button
+            fullWidth
+            sx={{
+              textTransform: "uppercase",
+            }}
+            size="small"
+            variant="outlined"
+            color="secondary"
+            onClick={() => router.push("/dashboard/requeridos")}
+          >
+            Ver todos
+          </Button>
+        </Box>
+      </Box>
+    </DashboardCard>
+  )
+}
+
+export default RequeridosDashboardCard

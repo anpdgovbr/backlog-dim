@@ -7,7 +7,7 @@ interface DashboardCardTitleProps {
 }
 
 export function DashboardCardTitle({
-  variant = "h5",
+  variant = "h4",
   children,
   sx,
 }: Readonly<DashboardCardTitleProps>) {
