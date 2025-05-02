@@ -16,7 +16,7 @@ function ImportarDashboardCard() {
     >
       <Stack direction="row" spacing={2} alignItems="center" mb={1}>
         <UploadFile sx={{ fontSize: 40, color: "accent.dark" }} />
-        <DashboardCard.Title variant="h6">Importar processos</DashboardCard.Title>
+        <DashboardCard.Title variant="h4">Importar processos</DashboardCard.Title>
       </Stack>
 
       <DashboardCard.Description variant="body2">
