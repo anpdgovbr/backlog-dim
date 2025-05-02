@@ -75,7 +75,7 @@ function DashboardBacklog() {
       )}
       {/* ===== Requeridos ===== */}
       {permissoes["Exibir_Responsavel"] && (
-        <Grid size={{ xs: 12, md: 4 }} component="div" minWidth={0}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div" minWidth={0}>
           <RequeridosDashboardCard />
         </Grid>
       )}

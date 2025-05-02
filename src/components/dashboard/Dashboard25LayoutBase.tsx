@@ -84,9 +84,9 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
       <Box
         sx={{
           flexShrink: 0,
-          width: { xs: "100%", md: 280 }, // largura do menu em telas grandes
+          width: { xs: "100%", md: 280 },
           bgcolor: "background.paper",
-          p: 1,
+          pr: { xs: 0, md: 2 },
         }}
       >
         {isUpMd ? (
@@ -131,10 +131,11 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
       <Box
         sx={{
           flexGrow: 1,
-          minWidth: 0, // obrigatório para não estourar
-          p: 2,
-          overflow: "auto", // se o conteúdo crescer muito, cria scroll interno
-          height: "100%", // opcional, depende do seu layout geral
+          minWidth: 0,
+          overflow: "auto",
+          height: "100%",
+          width: "100%",
+          maxWidth: "100%",
         }}
       >
         {renderSelectedSection()}

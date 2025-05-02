@@ -77,7 +77,7 @@ export default function AdminLogViewer() {
 
   return (
     <Stack spacing={2} p={2}>
-      <Typography variant="h6">Auditoria</Typography>
+      <Typography variant="h4">Auditoria</Typography>
       <Stack direction="row" spacing={2}>
         <TextField
           label="Usuário"

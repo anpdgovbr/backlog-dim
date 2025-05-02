@@ -9,15 +9,7 @@ import { formatCpfCnpj } from "@/utils/formUtils"
 import { Clear } from "@mui/icons-material"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
 import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
@@ -144,7 +136,7 @@ export default function RequeridoDataGrid() {
   if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 2 }}>
+    <Box>
       {!permissoes["Exibir_Responsavel"] ? (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
@@ -152,7 +144,7 @@ export default function RequeridoDataGrid() {
       ) : (
         <>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h4" component="h1">
+            <Typography variant="h4" component="h4">
               Lista de Requeridos
             </Typography>
 
@@ -189,7 +181,7 @@ export default function RequeridoDataGrid() {
               onClick={() => {
                 setSearchInput("")
                 setSearch("")
-                setPaginationModel({ page: 0, pageSize: 10 }) // 🔥 Resetar para primeira página também
+                setPaginationModel({ page: 0, pageSize: 10 })
               }}
               sx={{ minWidth: "auto", px: 2 }}
               startIcon={<Clear />}
@@ -233,6 +225,6 @@ export default function RequeridoDataGrid() {
           )}
         </>
       )}
-    </Container>
+    </Box>
   )
 }

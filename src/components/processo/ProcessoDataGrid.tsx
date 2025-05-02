@@ -14,7 +14,6 @@ import {
   Alert,
   Box,
   Button,
-  Container,
   FormControlLabel,
   IconButton,
   Stack,
@@ -158,7 +157,7 @@ export default function ProcessoDataGrid() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
+    <>
       {!pode("Exibir", "Processo") ? (
         <Alert severity="warning" sx={{ mt: 2 }}>
           Você não tem permissão para visualizar os processos.
@@ -227,7 +226,7 @@ export default function ProcessoDataGrid() {
               rows={processos}
               columns={columns}
               loading={isLoading}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50]}
               paginationMode="server"
               rowCount={total}
               paginationModel={paginationModel}
@@ -237,6 +236,6 @@ export default function ProcessoDataGrid() {
           </Box>
         </Box>
       )}
-    </Container>
+    </>
   )
 }

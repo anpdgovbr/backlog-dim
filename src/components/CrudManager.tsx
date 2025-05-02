@@ -6,15 +6,7 @@ import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
 import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
@@ -141,12 +133,12 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         headerAlign: "center",
         flex: 0.4,
       },
-      { field: "nome", headerName: "Nome", flex: 2 },
+      { field: "nome", headerName: "Nome", flex: 1 },
       {
         field: "acoes",
         headerName: "Ações",
         sortable: false,
-        flex: 1,
+        flex: 0.6,
         renderCell: (params) => (
           <Box>
             <IconButton
@@ -176,8 +168,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   if (loadingPerms) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container
-      maxWidth="lg"
+    <Box
       sx={{
         p: 0,
         m: 0,
@@ -238,7 +229,7 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
               rows={items}
               columns={columns}
               loading={isLoading}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50]}
               paginationMode="server"
               rowCount={totalRows}
               paginationModel={paginationModel}
@@ -287,6 +278,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         cancelText="Cancelar"
         severity="danger"
       />
-    </Container>
+    </Box>
   )
 }

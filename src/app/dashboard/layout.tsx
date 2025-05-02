@@ -1,5 +1,6 @@
 "use client"
 
+import MobileMenu from "@/components/menu/MobileMenu"
 import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
@@ -15,17 +16,20 @@ import {
   UploadFile,
 } from "@mui/icons-material"
 import { Box, CircularProgress, Container } from "@mui/material"
+import { useMediaQuery, useTheme } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession()
+  const theme = useTheme()
   const pathname = usePathname()
   const router = useRouter()
   const email = session?.user?.email
   const [perfilId, setPerfilId] = useState<number | null>(null)
   const [loadingPerfil, setLoadingPerfil] = useState(true)
+  const isXs = useMediaQuery(theme.breakpoints.only("xs"))
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/auth/login")
@@ -93,15 +97,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 1 }}>
-      <GovBrBreadcrumb basePath="/dashboard" />
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-        <SideMenu
-          links={links}
-          pathname={pathname}
-          title="Dashboard"
-          storageKey="drawerDashboard"
-        />
+    <Container maxWidth="lg">
+      {!isXs && <GovBrBreadcrumb basePath="/dashboard" />}
+
+      {/* AppBar no topo - sempre fora do Box flex */}
+      {isXs ? <MobileMenu links={links} pathname={pathname} title="Dashboard" /> : null}
+
+      {/* Layout principal */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isXs ? "column" : "row",
+          alignItems: "flex-start",
+          gap: 2,
+        }}
+      >
+        {!isXs && (
+          <SideMenu
+            links={links}
+            pathname={pathname}
+            title="Dashboard"
+            storageKey="drawerDashboard"
+          />
+        )}
+
         <Box
           sx={{
             flexGrow: 1,
@@ -109,7 +128,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             borderRadius: 2,
             boxShadow: 1,
             p: 2,
-            transition: "margin 0.3s ease",
+            width: "100%",
+            maxWidth: { xs: "100%" },
+            minWidth: { xs: "auto", sm: 400 },
           }}
         >
           {children}

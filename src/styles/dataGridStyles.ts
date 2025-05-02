@@ -2,7 +2,6 @@ import ANPDtheme from "@/theme/theme"
 import type { SxProps } from "@mui/material"
 
 export const dataGridStyles = {
-  minHeight: 400,
   width: "100%",
   backgroundColor: ANPDtheme.palette.background.default,
   borderRadius: 2,

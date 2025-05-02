@@ -31,14 +31,15 @@ export const GET = withApiSlimNoParams(async ({ req }) => {
     take: limit,
   })
 
+  const isHttps = baseUrl.startsWith("https://")
   const httpsAgent = new https.Agent({ rejectUnauthorized: false })
-
   const resultados = await Promise.all(
     agregados.map(async ({ requeridoId, _count }) => {
       try {
         const res = await fetch(`${baseUrl}/controladores/${requeridoId}`, {
-          agent: httpsAgent,
+          ...(isHttps ? { agent: httpsAgent } : {}), // usa agent só se HTTPS
         })
+
         if (!res.ok) throw new Error(`Erro ao buscar requerido ${requeridoId}`)
         const data = (await res.json()) as ControladorDto
 
