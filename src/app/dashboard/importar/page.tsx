@@ -10,7 +10,6 @@ import {
   Button,
   Card,
   Chip,
-  Container,
   Grid,
   IconButton,
   LinearProgress,
@@ -203,200 +202,190 @@ function ImportarProcessosContent() {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Box>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Importação de Processos
-        </Typography>
+    <Box>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Importação de Processos
+      </Typography>
 
-        <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-          <Button variant="contained" component="label" disabled={loading}>
-            Selecionar CSV
-            <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
-          </Button>
+      <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+        <Button variant="contained" component="label" disabled={loading}>
+          Selecionar CSV
+          <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
+        </Button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleImport}
-            disabled={loading || !dados.length || importado}
-          >
-            {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
-          </Button>
-        </Box>
-
-        {loading && (
-          <LinearProgress variant="determinate" value={progresso} sx={{ mb: 1 }} />
-        )}
-
-        <Card sx={{ p: 1, mb: 1, bgcolor: "background.paper" }}>
-          <Typography variant="h6" gutterBottom>
-            {importado ? "Resultado da Importação" : "Análise do Arquivo"}
-          </Typography>
-          {!importado && (
-            <Grid container spacing={1}>
-              <Grid
-                size={{
-                  xs: 6,
-                  md: 3,
-                }}
-              >
-                <Estatistica
-                  titulo="Total"
-                  valor={importado ? resumoImportacao.totalRegistros : dados.length}
-                  cor="primary"
-                />
-              </Grid>
-
-              <Grid
-                size={{
-                  xs: 6,
-                  md: 3,
-                }}
-              >
-                <Estatistica
-                  titulo="Anônimos"
-                  valor={
-                    importado
-                      ? resumoImportacao.totalAnonimos
-                      : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
-                  }
-                  cor="secondary"
-                />
-              </Grid>
-
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                }}
-              >
-                <CategoriaResumo
-                  titulo={
-                    importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"
-                  }
-                  dados={
-                    importado
-                      ? resumoImportacao.responsaveis
-                      : contarOcorrencias(dados, 0)
-                  }
-                />
-              </Grid>
-
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                }}
-              >
-                <CategoriaResumo
-                  titulo={
-                    importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"
-                  }
-                  dados={
-                    importado
-                      ? resumoImportacao.formasEntrada
-                      : contarOcorrencias(dados, 4)
-                  }
-                  cor="secondary"
-                />
-              </Grid>
-            </Grid>
-          )}
-        </Card>
-
-        {!importado && !!dados.length && (
-          <Card sx={{ mb: 1 }}>
-            <TableContainer>
-              <Typography variant="h6" sx={{ p: 1 }}>
-                Pré-visualização dos Dados ({dados.length} registros)
-              </Typography>
-
-              <Table size="small" stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    {cabecalho.map((coluna, i) => (
-                      <TableCell key={i} sx={{ fontWeight: "bold" }}>
-                        {coluna}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {dados
-                    .slice(
-                      pagina * linhasPorPagina,
-                      pagina * linhasPorPagina + linhasPorPagina
-                    )
-                    .map((linha, i) => (
-                      <TableRow key={i}>
-                        {linha.map((celula, j) => (
-                          <TableCell key={j}>{celula || <em>vazio</em>}</TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                </TableBody>
-
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25, { label: "Todos", value: -1 }]}
-                      count={dados.length}
-                      rowsPerPage={linhasPorPagina}
-                      page={pagina}
-                      onPageChange={handleMudarPagina}
-                      onRowsPerPageChange={handleMudarLinhasPorPagina}
-                      ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => (
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton
-                            onClick={() => onPageChange(null, page - 1)}
-                            disabled={page === 0}
-                          >
-                            <NavigateBefore />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => onPageChange(null, page + 1)}
-                            disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                          >
-                            <NavigateNext />
-                          </IconButton>
-                        </Box>
-                      )}
-                    />
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
-          </Card>
-        )}
-
-        {importado && (
-          <Box sx={{ mt: 2 }}>
-            {relatorio.sucesso > 0 && (
-              <Alert severity="success" sx={{ mb: 2 }}>
-                {relatorio.sucesso} processos importados com sucesso
-              </Alert>
-            )}
-
-            {relatorio.falhas.length > 0 && (
-              <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  {relatorio.falhas.length} erro(s) encontrados:
-                </Typography>
-                <Box component="ol" sx={{ maxHeight: 400, overflowY: "auto" }}>
-                  {relatorio.falhas.map((falha, i) => (
-                    <li key={i}>
-                      <Typography variant="body2">{falha}</Typography>
-                    </li>
-                  ))}
-                </Box>
-              </Alert>
-            )}
-          </Box>
-        )}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleImport}
+          disabled={loading || !dados.length || importado}
+        >
+          {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
+        </Button>
       </Box>
-    </Container>
+
+      {loading && (
+        <LinearProgress variant="determinate" value={progresso} sx={{ mb: 1 }} />
+      )}
+
+      <Card sx={{ p: 1, mb: 1, bgcolor: "background.paper" }}>
+        <Typography variant="h6" gutterBottom>
+          {importado ? "Resultado da Importação" : "Análise do Arquivo"}
+        </Typography>
+        {!importado && (
+          <Grid container spacing={1}>
+            <Grid
+              size={{
+                xs: 6,
+                md: 3,
+              }}
+            >
+              <Estatistica
+                titulo="Total"
+                valor={importado ? resumoImportacao.totalRegistros : dados.length}
+                cor="primary"
+              />
+            </Grid>
+
+            <Grid
+              size={{
+                xs: 6,
+                md: 3,
+              }}
+            >
+              <Estatistica
+                titulo="Anônimos"
+                valor={
+                  importado
+                    ? resumoImportacao.totalAnonimos
+                    : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
+                }
+                cor="secondary"
+              />
+            </Grid>
+
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+              }}
+            >
+              <CategoriaResumo
+                titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
+                dados={
+                  importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
+                }
+              />
+            </Grid>
+
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+              }}
+            >
+              <CategoriaResumo
+                titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
+                dados={
+                  importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
+                }
+                cor="secondary"
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Card>
+
+      {!importado && !!dados.length && (
+        <Card sx={{ mb: 1 }}>
+          <TableContainer>
+            <Typography variant="h6" sx={{ p: 1 }}>
+              Pré-visualização dos Dados ({dados.length} registros)
+            </Typography>
+
+            <Table size="small" stickyHeader>
+              <TableHead>
+                <TableRow>
+                  {cabecalho.map((coluna, i) => (
+                    <TableCell key={i} sx={{ fontWeight: "bold" }}>
+                      {coluna}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {dados
+                  .slice(
+                    pagina * linhasPorPagina,
+                    pagina * linhasPorPagina + linhasPorPagina
+                  )
+                  .map((linha, i) => (
+                    <TableRow key={i}>
+                      {linha.map((celula, j) => (
+                        <TableCell key={j}>{celula || <em>vazio</em>}</TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25, { label: "Todos", value: -1 }]}
+                    count={dados.length}
+                    rowsPerPage={linhasPorPagina}
+                    page={pagina}
+                    onPageChange={handleMudarPagina}
+                    onRowsPerPageChange={handleMudarLinhasPorPagina}
+                    ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => (
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <IconButton
+                          onClick={() => onPageChange(null, page - 1)}
+                          disabled={page === 0}
+                        >
+                          <NavigateBefore />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => onPageChange(null, page + 1)}
+                          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+                        >
+                          <NavigateNext />
+                        </IconButton>
+                      </Box>
+                    )}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Card>
+      )}
+
+      {importado && (
+        <Box sx={{ mt: 2 }}>
+          {relatorio.sucesso > 0 && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {relatorio.sucesso} processos importados com sucesso
+            </Alert>
+          )}
+
+          {relatorio.falhas.length > 0 && (
+            <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
+              <Typography variant="subtitle1" gutterBottom>
+                {relatorio.falhas.length} erro(s) encontrados:
+              </Typography>
+              <Box component="ol" sx={{ maxHeight: 400, overflowY: "auto" }}>
+                {relatorio.falhas.map((falha, i) => (
+                  <li key={i}>
+                    <Typography variant="body2">{falha}</Typography>
+                  </li>
+                ))}
+              </Box>
+            </Alert>
+          )}
+        </Box>
+      )}
+    </Box>
   )
 }
 

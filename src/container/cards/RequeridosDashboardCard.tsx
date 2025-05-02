@@ -47,9 +47,9 @@ function RequeridosDashboardCard({
   return (
     <DashboardCard sx={{ height: "100%", bgcolor: "background.paper" }}>
       <Box
-        display="flex" // Adicione isso para tornar a Box um flex container
-        flexDirection="column" // Organize os itens em coluna
-        justifyContent="space-between" // Distribua o espaço entre os itens
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
         sx={{ height: "100%" }}
       >
         <Box>
@@ -100,6 +100,7 @@ function RequeridosDashboardCard({
                         WebkitLineClamp: 2,
                         overflow: "hidden",
                         color: "secondary.contrastText",
+                        fontWeight: 600,
                       }}
                     >
                       {r.nome}
@@ -114,7 +115,7 @@ function RequeridosDashboardCard({
           )}
         </Box>
 
-        <Box>
+        <Box mt={2}>
           <Button
             fullWidth
             sx={{

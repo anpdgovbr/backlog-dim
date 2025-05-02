@@ -13,6 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material"
+import { useMediaQuery, useTheme } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
@@ -37,6 +38,8 @@ export default function SideMenu({
 }: SideMenuProps) {
   const [drawerOpen, setDrawerOpen] = useState(true)
   const [loaded, setLoaded] = useState(false)
+  const theme = useTheme()
+  const isXs = useMediaQuery(theme.breakpoints.down("md"))
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey)
@@ -49,6 +52,12 @@ export default function SideMenu({
       localStorage.setItem(storageKey, String(drawerOpen))
     }
   }, [drawerOpen, loaded, storageKey])
+
+  useEffect(() => {
+    if (loaded && isXs) {
+      setDrawerOpen(false)
+    }
+  }, [isXs, loaded])
 
   return (
     <Drawer

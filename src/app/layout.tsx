@@ -20,7 +20,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="br-body">
+      <body className="br-body" style={{ minWidth: "300px" }}>
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>

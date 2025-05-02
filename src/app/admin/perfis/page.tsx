@@ -158,8 +158,13 @@ function GerenciarPerfisContent() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
-      <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+    <Box mx={2}>
+      <Typography
+        className="header-title"
+        variant="h4"
+        fontWeight="medium"
+        sx={{ my: 2 }}
+      >
         Gerenciar Perfis
       </Typography>
 
@@ -181,7 +186,7 @@ function GerenciarPerfisContent() {
           localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
         />
       </Box>
-    </Container>
+    </Box>
   )
 }
 
