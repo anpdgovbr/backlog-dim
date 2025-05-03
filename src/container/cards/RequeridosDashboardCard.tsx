@@ -62,6 +62,7 @@ function RequeridosDashboardCard({
             Acesse os principais requeridos com mais processos.
           </DashboardCard.Description>
 
+          {/** inicio principal */}
           {topRequeridos === null ? (
             <List dense disablePadding>
               {Array.from({ length: 3 }).map((_, i) => (
@@ -88,7 +89,6 @@ function RequeridosDashboardCard({
                     borderColor: "divider",
                     overflow: "hidden",
                     width: "100%",
-                    maxWidth: "100%",
                   }}
                 >
                   <Tooltip title={r.nome}>
@@ -114,6 +114,8 @@ function RequeridosDashboardCard({
             </Grid>
           )}
         </Box>
+
+        {/** fim principal */}
 
         <Box mt={2}>
           <Button

@@ -56,3 +56,18 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         : undefined,
   }
 }
+
+export interface TemaCount {
+  tema: string
+  total: number
+}
+
+export interface IndicadoresProcesso {
+  total: number
+  atrasados: number
+  noMes: number
+  atribuidosAoUsuario: number
+  porStatusInterno: Record<string, number>
+  porTipoRequerimento: Record<string, number>
+  topTemas: TemaCount[]
+}
