@@ -23,7 +23,7 @@ import {
   YAxis,
 } from "recharts"
 
-const COLORS = ["#0288D1", "#43A047", "#FB8C00", "#8E24AA", "#F4511E"]
+const COLORS = ["#1565C0", "#00897B", "#6A1B9A", "#546E7A", "#FFB300"]
 
 export function ProcessDashboardCard() {
   const router = useRouter()
@@ -65,15 +65,13 @@ export function ProcessDashboardCard() {
       (tab === 0 && (
         <>
           <Stack spacing={0.5}>
-            <Typography variant="body2">Total: {dados.total}</Typography>
-            <Typography variant="body2">Criados no mês: {dados.noMes}</Typography>
-            <Typography variant="body2">Atrasados: {dados.atrasados}</Typography>
-          </Stack>
-          <Stack spacing={0.5} mt={1}>
-            <Typography variant="body2" sx={{ color: COLORS[0] }}>
+            <Typography variant="body1">Total: {dados.total}</Typography>
+            <Typography variant="body1">Criados no mês: {dados.noMes}</Typography>
+            <Typography variant="body1">Atrasados: {dados.atrasados}</Typography>
+            <Typography variant="body1" sx={{ color: COLORS[0] }}>
               ● Atribuídos a mim: {dados.atribuidosAoUsuario}
             </Typography>
-            <Typography variant="body2" sx={{ color: COLORS[1] }}>
+            <Typography variant="body1" sx={{ color: COLORS[1] }}>
               ● Outros processos: {dados.total - dados.atribuidosAoUsuario}
             </Typography>
           </Stack>
@@ -111,7 +109,7 @@ export function ProcessDashboardCard() {
 
     const chartContent =
       (tab === 0 && (
-        <ResponsiveContainer width="100%" height={180}>
+        <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
               data={[
@@ -125,7 +123,7 @@ export function ProcessDashboardCard() {
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius="80%"
+              outerRadius="100%"
               labelLine={false}
             >
               {[0, 1].map((index) => (
@@ -193,8 +191,8 @@ export function ProcessDashboardCard() {
 
     return (
       <Box display="grid" gridTemplateColumns="7fr 5fr" gap={2} alignItems="start">
-        <Box sx={{ border: "green solid 1px" }}>{textContent}</Box>
-        <Box display="flex" justifyContent="center" sx={{ border: "yellow solid 1px" }}>
+        <Box>{textContent}</Box>
+        <Box display="flex" justifyContent="center">
           {chartContent}
         </Box>
       </Box>
@@ -233,7 +231,11 @@ export function ProcessDashboardCard() {
             <Tab icon={<CategoryOutlined />} iconPosition="start" label="Tipos" />
           </Tabs>
 
-          <Box mt={2} width="100%" sx={{ border: "red solid 1px" }}>
+          <Box
+            mt={2}
+            width="100%"
+            sx={{ backgroundColor: "#FFFFFF44", borderRadius: 1, p: 1 }}
+          >
             {renderTabContent()}
           </Box>
         </Box>
