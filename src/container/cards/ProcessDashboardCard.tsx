@@ -2,7 +2,6 @@ import { DashboardCard } from "@/components/ui/dashboard-card"
 import type { IndicadoresProcesso } from "@/types/Processo"
 import {
   AssessmentOutlined,
-  CategoryOutlined,
   EngineeringOutlined,
   InfoOutlined,
   LabelOutlined,
@@ -193,8 +192,8 @@ export function ProcessDashboardCard() {
 
     return (
       <Box display="grid" gridTemplateColumns="7fr 5fr" gap={2} alignItems="start">
-        <Box sx={{ border: "green solid 1px" }}>{textContent}</Box>
-        <Box display="flex" justifyContent="center" sx={{ border: "yellow solid 1px" }}>
+        <Box>{textContent}</Box>
+        <Box display="flex" justifyContent="center">
           {chartContent}
         </Box>
       </Box>
@@ -226,14 +225,39 @@ export function ProcessDashboardCard() {
             Visão geral e indicadores de processos cadastrados no sistema.
           </DashboardCard.Description>
 
-          <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
-            <Tab icon={<InfoOutlined />} iconPosition="start" label="Resumo" />
-            <Tab icon={<AssessmentOutlined />} iconPosition="start" label="Status" />
-            <Tab icon={<LabelOutlined />} iconPosition="start" label="Temas" />
-            <Tab icon={<CategoryOutlined />} iconPosition="start" label="Tipos" />
+          <Tabs
+            value={tab}
+            onChange={handleTabChange}
+            variant="fullWidth"
+            sx={{ minHeight: 32 }}
+          >
+            <Tab
+              icon={<InfoOutlined />}
+              iconPosition="start"
+              label="Resumo"
+              sx={{ minHeight: 32, py: 0.5 }}
+            />
+            <Tab
+              icon={<AssessmentOutlined />}
+              iconPosition="start"
+              label="Status"
+              sx={{ minHeight: 32, py: 0.5 }}
+            />
+            <Tab
+              icon={<LabelOutlined />}
+              iconPosition="start"
+              label="Temas"
+              sx={{ minHeight: 32, py: 0.5 }}
+            />
+            {/*<Tab
+              icon={<CategoryOutlined />}
+              iconPosition="start"
+              label="Tipos"
+              sx={{ minHeight: 32, py: 0.5 }}
+            />*/}
           </Tabs>
 
-          <Box mt={2} width="100%" sx={{ border: "red solid 1px" }}>
+          <Box mt={2} width="100%">
             {renderTabContent()}
           </Box>
         </Box>
