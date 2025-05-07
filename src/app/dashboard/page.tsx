@@ -1,20 +1,17 @@
 "use client"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
-import { DashboardCard } from "@/components/ui/dashboard-card"
 import ImportarDashboardCard from "@/container/cards/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/container/cards/MetadadosDashboardCard"
 import ProcessDashboardCard from "@/container/cards/ProcessDashboardCard"
 import RequeridosDashboardCard from "@/container/cards/RequeridosDashboardCard"
 import ResponsaveisDashboardCard from "@/container/cards/ResponsaveisDashboardCard"
+import StatsDashboardCard from "@/container/cards/StatsDashboardCard"
 import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
-import { Assessment } from "@mui/icons-material"
-import { Box, Grid, Stack } from "@mui/material"
-import { useRouter } from "next/navigation"
+import { Box, Grid } from "@mui/material"
 
 function DashboardBacklog() {
-  const router = useRouter()
   const { permissoes, loading } = usePermissoes()
 
   if (loading) {
@@ -29,27 +26,15 @@ function DashboardBacklog() {
     <Grid container spacing={2} sx={{ width: "100%" }}>
       {/* ===== Processos (principal) ===== */}
       {permissoes["Exibir_Processo"] && (
-        <Grid size={{ xs: 12, md: 8 }} component="div">
+        <Grid size={{ xs: 12, md: 6 }} component="div">
           <ProcessDashboardCard />
         </Grid>
       )}
 
       {/* ===== Estatísticas ===== */}
       {permissoes["Exibir_Relatorios"] && (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div">
-          <DashboardCard
-            hasAction
-            action={() => router.push("/dashboard/estatisticas")}
-            sx={{ bgcolor: "background.paper" }}
-          >
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Assessment sx={{ fontSize: 40, color: "warning.main" }} />
-              <DashboardCard.Title>Estatísticas</DashboardCard.Title>
-            </Stack>
-            <DashboardCard.Description variant="body2">
-              Veja relatórios e métricas do processamento de dados.
-            </DashboardCard.Description>
-          </DashboardCard>
+        <Grid size={{ xs: 12, md: 6 }} component="div">
+          <StatsDashboardCard />
         </Grid>
       )}
 
