@@ -35,10 +35,10 @@ export function ProcessDashboardCard() {
             direction="row"
             spacing={2}
             mt={1}
-            sx={{ width: "100%", height: "100%", border: "red solid 1px" }}
+            sx={{ width: "100%", height: "100%" }}
           >
-            <Card sx={{ width: "50%", height: "100%" }}>A</Card>
-            <Card sx={{ width: "50%", height: "100%" }}>B</Card>
+            <Card sx={{ width: "50%", height: "100%", boxShadow: 1 }}>A</Card>
+            <Card sx={{ width: "50%", height: "100%", boxShadow: 1 }}>B</Card>
           </Stack>
         </Box>
 
