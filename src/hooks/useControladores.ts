@@ -29,8 +29,6 @@ export function useControladores(params: UseControladoresParams): UseControlador
     nome,
   } = params
 
- 
-
   const query = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),

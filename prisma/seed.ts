@@ -804,7 +804,7 @@ async function main() {
         perfilId: perfis.administrador.id,
       },
     }),
-        prisma.user.upsert({
+    prisma.user.upsert({
       where: { email: "gustavo.lima@anpd.gov.br" },
       update: {},
       create: {
