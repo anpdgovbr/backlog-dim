@@ -3,7 +3,6 @@
 import { useApi } from "@/lib/api"
 import { replaceNumbers } from "@/utils/stringUtils"
 import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
-import { useEffect } from "react"
 
 interface UseControladoresParams extends BaseQueryParams {
   cnpj?: string
@@ -39,10 +38,6 @@ export function useControladores(params: UseControladoresParams): UseControlador
     orderBy,
     ascending: String(ascending),
   })
-
-   useEffect(() => {
-    console.log("useControladores params:", query.toString())
-    }, [params])
 
   if (cnpj) query.set("cnpj", cnpj)
   if (nome) query.set("nome", nome)
