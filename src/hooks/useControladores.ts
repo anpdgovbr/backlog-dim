@@ -1,7 +1,9 @@
 "use client"
 
 import { useApi } from "@/lib/api"
+import { replaceNumbers } from "@/utils/stringUtils"
 import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
+import { useEffect } from "react"
 
 interface UseControladoresParams extends BaseQueryParams {
   cnpj?: string
@@ -28,13 +30,19 @@ export function useControladores(params: UseControladoresParams): UseControlador
     nome,
   } = params
 
+ 
+
   const query = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
-    search,
+    search: replaceNumbers(search),
     orderBy,
     ascending: String(ascending),
   })
+
+   useEffect(() => {
+    console.log("useControladores params:", query.toString())
+    }, [params])
 
   if (cnpj) query.set("cnpj", cnpj)
   if (nome) query.set("nome", nome)
