@@ -1,6 +1,7 @@
 "use client"
 
 import { useApi } from "@/lib/api"
+import { replaceNumbers } from "@/utils/stringUtils"
 import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
 
 interface UseControladoresParams extends BaseQueryParams {
@@ -31,7 +32,7 @@ export function useControladores(params: UseControladoresParams): UseControlador
   const query = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
-    search,
+    search: replaceNumbers(search),
     orderBy,
     ascending: String(ascending),
   })
