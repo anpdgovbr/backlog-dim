@@ -25,27 +25,35 @@ export default function ClientRootLayout({
                 flexDirection: "column",
                 minHeight: "100vh",
                 position: "relative",
+                overflowX: "hidden",
               }}
             >
               <Box
                 component="header"
                 sx={{
                   display: "flex",
+                  flexWrap: "wrap",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  px: 2,
-                  py: 1,
+                  px: { xs: 1, sm: 2 },
+                  py: { xs: 0.5, sm: 1 },
                   backgroundImage:
                     "linear-gradient(135deg, #307244 0%, #00AEEF 50%, #FAA61A 100%)",
                   color: "white",
                   boxShadow: 2,
                   position: "relative",
                   zIndex: 1200,
+                  gap: 1,
+                  width: "100%",
+                  overflowX: "visible",
                 }}
               >
-                <SystemTitle />
-
-                <Box sx={{ position: "relative", display: "inline-block" }}>
+                <Box sx={{ minWidth: 0, flexShrink: 1 }}>
+                  <SystemTitle />
+                </Box>
+                <Box
+                  sx={{ position: "relative", display: "inline-block", maxWidth: "100%" }}
+                >
                   <GovBRAvatar />
                 </Box>
               </Box>
@@ -56,6 +64,7 @@ export default function ClientRootLayout({
                   display: "flex",
                   flexDirection: "row",
                   position: "relative",
+                  overflowX: "auto",
                   pb: 5,
                 }}
               >
@@ -76,11 +85,15 @@ export default function ClientRootLayout({
                 sx={{
                   mt: "auto",
                   textAlign: "center",
-                  py: 2,
+                  py: { xs: 1, sm: 2 },
+                  px: 1,
+                  width: "100%",
                   backgroundImage:
                     "linear-gradient(135deg, rgba(48, 114, 68, 0.5) 0%, rgba(0, 174, 239, 0.5) 50%, rgba(250, 166, 26, 0.5) 100%)",
                   borderTop: "1px solid rgba(0, 0, 0, 0.2)",
                   color: "#000000",
+                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  overflowWrap: "break-word",
                 }}
               >
                 <Typography variant="body2" color="inherit">

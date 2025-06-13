@@ -1,68 +1,4 @@
-import { EnumData } from "./EnumData"
-import { RequeridoOutput } from "./Requerido"
-import { Responsavel } from "./Responsavel"
-import { StatusInterno } from "./StatusInterno"
-
-export interface ProcessoInput {
-  numero: string
-  dataCriacao: string
-  requerente?: string
-  formaEntradaId?: number
-  responsavelId: number
-  requeridoId?: number
-  situacaoId?: number
-  pedidoManifestacaoId?: number
-  contatoPrevioId?: number
-  evidenciaId?: number
-  anonimo?: boolean
-  observacoes?: string
-  tipoReclamacaoId?: number
-  encaminhamentoId?: number
-  temaRequerimento?: string[]
-  tipoRequerimento?: "PETICAO_TITULAR" | "DENUNCIA_LGPD"
-  resumo?: string
-  dataConclusao?: string
-  dataEnvioPedido?: string
-  prazoPedido?: number
-  requeridoFinalId?: number
-}
-
-export interface ProcessoOutput {
-  id: number
-  numero: string
-  dataCriacao: Date
-  requerente?: string
-  formaEntrada?: EnumData
-  responsavel: Responsavel
-  requerido?: RequeridoOutput
-  situacao?: EnumData
-  encaminhamento?: EnumData
-  pedidoManifestacao?: EnumData
-  contatoPrevio?: EnumData
-  evidencia?: EnumData
-  anonimo?: boolean
-  observacoes?: string
-  tipoReclamacao?: EnumData
-  statusInterno?: StatusInterno
-  temaRequerimento: string[]
-  tipoRequerimento?: "PETICAO_TITULAR" | "DENUNCIA_LGPD"
-  resumo?: string
-  dataConclusao?: Date
-  dataEnvioPedido?: Date
-  prazoPedido?: number
-  requeridoFinal?: RequeridoOutput
-}
-
-export interface ProcessoImportacao {
-  responsavelNome: string
-  numeroProcesso: string
-  dataCriacao: string
-  situacaoNome: string
-  formaEntradaNome: string
-  anonimoStr: string
-  requerenteNome: string | null
-  statusInterno: StatusInterno
-}
+import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 
 export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
   return {
@@ -119,4 +55,19 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         ? Number(processo.requeridoFinal.id)
         : undefined,
   }
+}
+
+export interface TemaCount {
+  tema: string
+  total: number
+}
+
+export interface IndicadoresProcesso {
+  total: number
+  atrasados: number
+  noMes: number
+  atribuidosAoUsuario: number
+  porStatusInterno: Record<string, number>
+  porTipoRequerimento: Record<string, number>
+  topTemas: TemaCount[]
 }

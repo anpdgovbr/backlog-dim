@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { getOrRestoreByName } from "@/lib/prisma/getOrRestoreByName"
 import { withApi } from "@/lib/withApi"
-import { ProcessoImportacao } from "@/types/Processo"
-import { AcaoAuditoria } from "@prisma/client"
+import type { ProcessoImportacao } from "@anpd/shared-types"
+import { AcaoAuditoria } from "@anpd/shared-types"
 
 const formatarData = (data: string): string => {
   const [dia, mes, ano] = data.split("/")

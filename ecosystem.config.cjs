@@ -1,3 +1,4 @@
+// ecosystem.config.cjs
 module.exports = {
   apps: [
     {
@@ -12,6 +13,7 @@ module.exports = {
       },
       env_production: {
         NODE_ENV: "production",
+        NODE_EXTRA_CA_CERTS: "/etc/ssl/certs/ca-certificates.crt",
       },
       log_file: "./logs/combined.log",
       out_file: "./logs/out.log",

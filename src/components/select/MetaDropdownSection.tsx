@@ -1,7 +1,7 @@
 "use client"
 
-import { EnumData } from "@/types/EnumData"
-import { MetaEntidade } from "@/types/MetaEntidades"
+import type { MetaEntidade } from "@/types/MetaEntidades"
+import type { EnumData } from "@anpd/shared-types"
 import { useEffect, useState } from "react"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"
@@ -20,7 +20,6 @@ export function MetaDropdownSection({
   entidade,
   label,
   name,
-  tooltip,
   hasAllOption = false,
   defaultValue,
 }: Readonly<MetaDropdownSectionProps>) {
@@ -63,17 +62,7 @@ export function MetaDropdownSection({
       label={label}
       name={name}
       options={options}
-      tooltip={tooltip}
       defaultValue={defaultValue ?? (hasAllOption ? "ALL" : undefined)}
-      menuProps={{
-        PaperProps: {
-          style: {
-            maxWidth: 400,
-            whiteSpace: "normal",
-            wordWrap: "break-word",
-          },
-        },
-      }}
     />
   )
 }

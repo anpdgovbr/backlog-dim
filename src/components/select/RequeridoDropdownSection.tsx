@@ -1,67 +1,114 @@
 "use client"
 
-import { EnumData } from "@/types/EnumData"
+import { useControladores } from "@/hooks/useControladores"
+import { Autocomplete, CircularProgress, TextField } from "@mui/material"
 import { useEffect, useState } from "react"
-
-import { FormSkeleton } from "../skeleton/FormSkeleton"
-import { FormDropdown } from "./FormDropdown"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 interface RequeridoDropdownSectionProps {
   label: string
   name: string
-  tooltip?: string
   hasAllOption?: boolean
-  defaultValue?: string | number
 }
 
 export function RequeridoDropdownSection({
   label,
   name,
-  tooltip,
   hasAllOption = false,
-  defaultValue,
 }: Readonly<RequeridoDropdownSectionProps>) {
-  const [options, setOptions] = useState<{ nome: string; id: number | string }[]>([])
-  const [loading, setLoading] = useState(true)
+  const { control } = useFormContext()
+  const selectedId = useWatch({ control, name })
+  const [searchTerm, setSearchTerm] = useState("")
+  const [extraRequerido, setExtraRequerido] = useState<{
+    id: number | string
+    nome: string
+  } | null>(null)
+
+  const shouldFetchList = searchTerm.length >= 3
+
+  const {
+    data: controladores,
+    isLoading,
+    getById,
+  } = useControladores({
+    search: shouldFetchList ? searchTerm : "",
+    page: 1,
+    pageSize: 50,
+    orderBy: "nome",
+    ascending: true,
+  })
 
   useEffect(() => {
-    const fetchOptions = async () => {
-      setLoading(true)
-      try {
-        const res = await fetch(`/api/requeridos`)
-        const json = await res.json()
-        const data: EnumData[] = json.data ?? []
+    async function carregarExtra() {
+      if (!selectedId) {
+        setExtraRequerido(null)
+        return
+      }
 
-        const parsed = data.map((item) => ({
-          nome: item.nome,
-          id: item.id,
-        }))
+      const existe = controladores.some((c) => c.id === selectedId)
+      if (existe) {
+        setExtraRequerido(null)
+        return
+      }
 
-        if (hasAllOption) {
-          setOptions([{ nome: "Todos", id: "ALL" }, ...parsed])
-        } else {
-          setOptions(parsed)
-        }
-      } catch (error) {
-        console.error(`Erro ao carregar requerido:`, error)
-        setOptions([])
-      } finally {
-        setLoading(false)
+      const result = await getById(Number(selectedId))
+      if (result) {
+        setExtraRequerido({ id: result.id, nome: result.nome })
       }
     }
 
-    fetchOptions()
-  }, [hasAllOption])
+    carregarExtra()
+  }, [selectedId, controladores, getById])
 
-  if (loading) return <FormSkeleton numberOfFields={1} />
+  const options = shouldFetchList
+    ? hasAllOption
+      ? [{ id: "ALL", nome: "Todos" }, ...controladores]
+      : [...controladores]
+    : extraRequerido
+      ? hasAllOption
+        ? [{ id: "ALL", nome: "Todos" }, extraRequerido]
+        : [extraRequerido]
+      : hasAllOption
+        ? [{ id: "ALL", nome: "Todos" }]
+        : []
 
   return (
-    <FormDropdown
-      label={label}
+    <Controller
       name={name}
-      options={options}
-      tooltip={tooltip}
-      defaultValue={defaultValue ?? (hasAllOption ? "ALL" : undefined)}
+      control={control}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Autocomplete
+          options={options}
+          loading={isLoading}
+          value={options.find((c) => c.id === value) || null}
+          onChange={(_, newValue) => onChange(newValue?.id ?? null)}
+          onInputChange={(_, inputValue) => setSearchTerm(inputValue)}
+          getOptionLabel={(option) => option.nome}
+          isOptionEqualToValue={(option, val) => option.id === val?.id}
+          noOptionsText="Nenhum resultado"
+          loadingText="Buscando Requeridos..."
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={label}
+              variant="outlined"
+              size="small"
+              fullWidth
+              error={!!error}
+              helperText={error?.message}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {isLoading ? <CircularProgress color="inherit" size={18} /> : null}
+                    {params.InputProps?.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+        />
+      )}
     />
   )
 }

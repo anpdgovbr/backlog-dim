@@ -1,4 +1,4 @@
-import { ProcessoOutput } from "@/types/Processo"
+import type { ProcessoOutput } from "@anpd/shared-types"
 import useSWR from "swr"
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())

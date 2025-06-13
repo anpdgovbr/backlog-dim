@@ -1,6 +1,8 @@
 "use client"
 
-import SideMenu, { LinkItem } from "@/components/menu/SideMenu"
+import MobileMenu from "@/components/menu/MobileMenu"
+import type { LinkItem } from "@/components/menu/SideMenu"
+import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 import withPermissao from "@/hoc/withPermissao"
 import {
@@ -11,7 +13,7 @@ import {
   SupervisedUserCircleOutlined,
   ViewCompactAltOutlined,
 } from "@mui/icons-material"
-import { Box, Container } from "@mui/material"
+import { Box, Container, useMediaQuery, useTheme } from "@mui/material"
 import { usePathname } from "next/navigation"
 
 const links: LinkItem[] = [
@@ -25,17 +27,33 @@ const links: LinkItem[] = [
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const theme = useTheme()
+  const isXs = useMediaQuery(theme.breakpoints.only("xs"))
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 1 }}>
-      <GovBrBreadcrumb basePath="/admin" />
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-        <SideMenu
-          links={links}
-          pathname={pathname}
-          title="Admin"
-          storageKey="drawerAdmin"
-        />
+    <Container maxWidth="lg">
+      {!isXs && <GovBrBreadcrumb basePath="/admin" />}
+
+      {isXs ? (
+        <MobileMenu links={links} pathname={pathname} title="Admin Dashboard" />
+      ) : null}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isXs ? "column" : "row",
+          alignItems: "flex-start",
+          gap: 2,
+        }}
+      >
+        {!isXs && (
+          <SideMenu
+            links={links}
+            pathname={pathname}
+            title="Admin"
+            storageKey="drawerDashboard"
+          />
+        )}
         <Box
           sx={{
             flexGrow: 1,
@@ -46,6 +64,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             pl: 1,
             py: 2,
             transition: "margin 0.3s ease",
+            width: "100%",
+            maxWidth: { xs: "100%", sm: "calc(100% - 60px)", md: "calc(100% - 60px)" },
+            minWidth: { xs: "auto", sm: 400 },
           }}
         >
           {children}

@@ -1,14 +1,7 @@
 // components/notification/TopNotification.tsx
 import { CheckCircle, Close, Error, Info, Warning } from "@mui/icons-material"
-import {
-  Box,
-  IconButton,
-  Slide,
-  SlideProps,
-  Snackbar,
-  Typography,
-  alpha,
-} from "@mui/material"
+import type { SlideProps } from "@mui/material"
+import { Box, IconButton, Slide, Snackbar, Typography, alpha } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 
 type NotificationType = "success" | "error" | "info" | "warning"

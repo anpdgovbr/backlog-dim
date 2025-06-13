@@ -1,7 +1,6 @@
 // hooks/useProcessos.ts
 import { fetcher } from "@/lib/fetcher"
-import { BaseQueryParams } from "@/types/BaseQueryParams"
-import { ProcessoOutput } from "@/types/Processo"
+import type { BaseQueryParams, ProcessoOutput } from "@anpd/shared-types"
 import useSWR from "swr"
 
 interface UseProcessosParams extends BaseQueryParams {

@@ -2,7 +2,7 @@ import { getPermissoesPorPerfil } from "@/lib/helpers/permissoes-utils"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
-import { PermissaoPayload } from "@/types/Permissao"
+import type { PermissaoPayload } from "@anpd/shared-types"
 import { AcaoAuditoria } from "@prisma/client"
 
 export const GET = withApiSlimNoParams(async ({ req, email }) => {

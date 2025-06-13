@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma"
-import { AcaoPermissao, PermissaoConcedida, RecursoPermissao } from "@/types/Permissao"
+import type {
+  AcaoPermissao,
+  PermissaoConcedida,
+  RecursoPermissao,
+} from "@anpd/shared-types"
 
 export function pode(
   permissoes: Partial<Record<PermissaoConcedida, boolean>>,
