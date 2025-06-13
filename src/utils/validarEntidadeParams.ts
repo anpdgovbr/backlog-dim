@@ -1,5 +1,6 @@
-import { MetaEntidade, allowedEntities } from "@/types/MetaEntidades"
-import { Prisma } from "@prisma/client"
+import type { MetaEntidade } from "@/types/MetaEntidades"
+import { allowedEntities } from "@/types/MetaEntidades"
+import type { Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 type PrismaDelegate<T> = {

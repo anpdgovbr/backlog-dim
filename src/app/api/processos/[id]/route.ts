@@ -12,7 +12,6 @@ const handlerGET = withApiForId<{ id: string }>(
       include: {
         formaEntrada: true,
         responsavel: true,
-        requerido: { include: { setor: true, cnae: true } },
         situacao: true,
         encaminhamento: true,
         pedidoManifestacao: true,
@@ -90,7 +89,7 @@ const handlerPUT = withApiForId<{ id: string }>(
           ? body.temaRequerimento
           : [],
 
-        tipoRequerimento: body.tipoRequerimento ?? null,
+        tipoRequerimento: body.tipoRequerimento !== "" ? body.tipoRequerimento : null,
         requeridoFinalId: body.requeridoFinalId ?? null,
         dataVencimento: body.dataVencimento ? new Date(body.dataVencimento) : null,
       },
@@ -149,6 +148,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
       ),
       audit: {
         antes: processo,
+        depois: { ...processo, active: false, exclusionDate: new Date() },
       },
     }
   },

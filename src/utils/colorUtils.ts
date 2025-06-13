@@ -1,4 +1,5 @@
-import { Theme, alpha } from "@mui/material/styles"
+import type { Theme } from "@mui/material/styles"
+import { alpha } from "@mui/material/styles"
 
 /**
  * Lista de possíveis chaves (shades) que podem existir em SimplePaletteColorOptions.

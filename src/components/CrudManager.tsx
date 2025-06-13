@@ -6,16 +6,9 @@ import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material"
-import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useCallback, useMemo, useState } from "react"
 import useSWR from "swr"
@@ -72,7 +65,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedItem),
       })
-
       mutate()
       notify({
         type: "success",
@@ -113,7 +105,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         const errorMessage = await response.json()
         throw new Error(errorMessage.error || "Erro desconhecido ao excluir.")
       }
-
       mutate()
       notify({
         type: "success",
@@ -138,16 +129,16 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
       {
         field: "id",
         headerName: "ID",
-        width: 60,
         align: "center",
         headerAlign: "center",
+        flex: 0.4,
       },
       { field: "nome", headerName: "Nome", flex: 1 },
       {
         field: "acoes",
         headerName: "Ações",
-        width: 150,
         sortable: false,
+        flex: 0.6,
         renderCell: (params) => (
           <Box>
             <IconButton
@@ -177,7 +168,16 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
   if (loadingPerms) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg" sx={{ p: 0, m: 0 }}>
+    <Box
+      sx={{
+        p: 0,
+        m: 0,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        minWidth: { xs: "100%", md: "40vw" },
+      }}
+    >
       {!permissoes["Exibir_Metadados"] ? (
         <Alert severity="error" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
@@ -200,14 +200,36 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
             </Button>
           </Box>
 
-          <Box sx={{ ...dataGridStyles, width: "100%", m: 0, mb: 2, p: 0 }}>
+          <Box
+            sx={{
+              ...dataGridStyles,
+              width: "100%",
+              minWidth: "100%",
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              flexShrink: 0,
+            }}
+          >
             <DataGrid
-              sx={{ minHeight: "45vh" }}
+              sx={{
+                flexGrow: 1,
+                minHeight: "45vh",
+                width: "100%",
+
+                "& .MuiDataGrid-virtualScrollerContent": {
+                  width: "100% !important",
+                  minWidth: "100% !important",
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  minWidth: "100% !important",
+                },
+              }}
               disableColumnMenu
               rows={items}
               columns={columns}
               loading={isLoading}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50]}
               paginationMode="server"
               rowCount={totalRows}
               paginationModel={paginationModel}
@@ -256,6 +278,6 @@ export default function CrudManager({ entityName, tableName }: CrudManagerProps)
         cancelText="Cancelar"
         severity="danger"
       />
-    </Container>
+    </Box>
   )
 }

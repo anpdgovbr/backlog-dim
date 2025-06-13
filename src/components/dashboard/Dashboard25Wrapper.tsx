@@ -1,12 +1,10 @@
 "use client"
 
-import { PermissaoConcedida } from "@/types/Permissao"
+import type { PermissaoConcedida } from "@anpd/shared-types"
 import React from "react"
 
-import Dashboard25LayoutBase, {
-  ILayoutSection,
-  NonEmptyArray,
-} from "./Dashboard25LayoutBase"
+import type { ILayoutSection, NonEmptyArray } from "./Dashboard25LayoutBase"
+import Dashboard25LayoutBase from "./Dashboard25LayoutBase"
 
 /**
  * Caso você queira que quem use o wrapper

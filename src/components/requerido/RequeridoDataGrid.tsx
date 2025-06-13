@@ -1,116 +1,91 @@
 "use client"
 
 import { useNotification } from "@/context/NotificationProvider"
+import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { RequeridoOutput } from "@/types/Requerido"
+import type { RequeridoOutput } from "@/types/Requerido"
+import { formatCpfCnpj } from "@/utils/formUtils"
+import { Clear } from "@mui/icons-material"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material"
-import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 
-import RequeridoForm from "./RequeridoForm"
+const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
+  ssr: false,
+})
 
 export default function RequeridoDataGrid() {
-  const [requeridos, setRequeridos] = useState<RequeridoOutput[]>([])
-  const [filteredData, setFilteredData] = useState<RequeridoOutput[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   })
-  const [totalRows, setTotalRows] = useState(0)
   const [openModal, setOpenModal] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
+
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
   const { notify } = useNotification()
 
+  const {
+    data: requeridos,
+    total: totalRows,
+    isLoading: loading,
+    error,
+    mutate: mutateRequeridos,
+  } = useControladores({
+    page: paginationModel.page + 1,
+    pageSize: paginationModel.pageSize,
+    orderBy: "nome",
+    ascending: true,
+    search,
+  })
+
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true)
-      try {
-        const response = await fetch(
-          `/api/requeridos?page=${paginationModel.page + 1}&pageSize=${paginationModel.pageSize}`
-        )
-
-        if (!response.ok) {
-          throw new Error(`Erro HTTP: ${response.status} - ${await response.text()}`)
-        }
-
-        const responseData = await response.json()
-
-        if (!responseData.data || !Array.isArray(responseData.data)) {
-          throw new Error("Estrutura de dados inválida na resposta da API")
-        }
-
-        setRequeridos(responseData.data)
-        setFilteredData(responseData.data)
-        setTotalRows(responseData.total || 0)
-      } catch (error) {
-        console.error("Erro ao buscar requeridos:", error)
-        notify({
-          message: "Erro ao carregar dados. Verifique o console para mais detalhes.",
-          type: "error",
-        })
-        setRequeridos([])
-        setFilteredData([])
-        setTotalRows(0)
-      }
-      setLoading(false)
+    if (error) {
+      console.error("Erro ao buscar requeridos:", error)
+      notify({
+        message: "Erro ao carregar dados. Verifique o console para mais detalhes.",
+        type: "error",
+      })
     }
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationModel])
-
-  useEffect(() => {
-    const lowercasedFilter = search.toLowerCase()
-    const filtered = requeridos.filter(
-      (item) =>
-        item.nome.toLowerCase().includes(lowercasedFilter) ||
-        item.cnpj?.includes(lowercasedFilter) ||
-        item.site?.toLowerCase().includes(lowercasedFilter)
-    )
-    setFilteredData(filtered)
-  }, [search, requeridos])
+  }, [error, notify])
 
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este requerido?")) {
       try {
-        const response = await fetch(`/api/requeridos/${id}`, {
+        const response = await fetch(`/api/controladores/${id}`, {
           method: "DELETE",
         })
         const data = await response.json()
 
         if (response.ok) {
-          setRequeridos((prev) => prev.filter((item) => item.id !== id))
-          setTotalRows((prev) => prev - 1)
+          mutateRequeridos()
+          notify({ type: "success", message: "Requerido excluído com sucesso" })
         } else {
           notify({ type: "error", message: `Erro ao excluir requerido: ${data.error}` })
-          console.error("Erro ao excluir requerido:", data.error)
         }
       } catch (error) {
         notify({ type: "error", message: `Erro ao excluir requerido: ${error}` })
-        console.error("Erro ao excluir requerido:", error)
       }
     }
   }
 
   const columns: GridColDef<RequeridoOutput>[] = [
-    { field: "nome", headerName: "Nome", flex: 1 },
-    { field: "cnpj", headerName: "CNPJ", width: 130 },
+    { field: "nome", headerName: "Nome/Razão Social", flex: 2 },
     {
+      field: "cnpj",
+      headerName: "CNPJ/CPF",
+      flex: 1,
+      renderCell: (params) => formatCpfCnpj(params.value || ""),
+    },
+    /*{
       field: "site",
       headerName: "Site",
       flex: 1,
@@ -123,7 +98,7 @@ export default function RequeridoDataGrid() {
           "N/A"
         ),
     },
-    { field: "email", headerName: "E-mail", flex: 1 },
+    { field: "email", headerName: "E-mail", flex: 1 },*/
     {
       field: "setor",
       headerName: "Setor",
@@ -133,12 +108,12 @@ export default function RequeridoDataGrid() {
     {
       field: "acoes",
       headerName: "Ações",
-      width: 180,
+      flex: 1,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
-            disabled={!permissoes["Editar_Responsavel"]} // 🔹 Bloqueia edição se não permitido. Requerido é o mesmo que Responsavel no quesito Permissão
+            disabled={!permissoes["Editar_Responsavel"]}
             onClick={() => {
               setSelectedRequeridoId(params.row.id)
               setOpenModal(true)
@@ -148,7 +123,7 @@ export default function RequeridoDataGrid() {
           </IconButton>
           <IconButton
             color="error"
-            disabled={!permissoes["Desabilitar_Responsavel"]} // 🔹 Bloqueia exclusão se não permitido. Requerido é o mesmo que Responsavel no quesito Permissão
+            disabled={!permissoes["Desabilitar_Responsavel"]}
             onClick={() => handleDelete(params.row.id)}
           >
             <GridDeleteIcon />
@@ -161,17 +136,15 @@ export default function RequeridoDataGrid() {
   if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 2 }}>
-      {!permissoes["Exibir_Responsavel"] && (
+    <Box>
+      {!permissoes["Exibir_Responsavel"] ? (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
         </Alert>
-      )}
-
-      {permissoes["Exibir_Responsavel"] && (
+      ) : (
         <>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h4" component="h1">
+            <Typography variant="h4" component="h4">
               Lista de Requeridos
             </Typography>
 
@@ -180,7 +153,7 @@ export default function RequeridoDataGrid() {
               startIcon={<GridAddIcon />}
               disabled={!permissoes["Cadastrar_Responsavel"]}
               onClick={() => {
-                setSelectedRequeridoId(null) // Garante que abrirá para adicionar novo
+                setSelectedRequeridoId(null)
                 setOpenModal(true)
               }}
             >
@@ -188,14 +161,34 @@ export default function RequeridoDataGrid() {
             </Button>
           </Box>
 
-          <TextField
-            label="Buscar..."
-            variant="outlined"
-            fullWidth
-            sx={{ mb: 2 }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <Box display="flex" gap={1} mb={2}>
+            <TextField
+              label="Buscar por nome, CNPJ ou CPF"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearch(searchInput)
+                }
+              }}
+            />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSearchInput("")
+                setSearch("")
+                setPaginationModel({ page: 0, pageSize: 10 })
+              }}
+              sx={{ minWidth: "auto", px: 2 }}
+              startIcon={<Clear />}
+            >
+              Limpar
+            </Button>
+          </Box>
 
           <Box
             sx={{
@@ -207,7 +200,7 @@ export default function RequeridoDataGrid() {
           >
             <DataGrid
               sx={{ minHeight: "45vh" }}
-              rows={filteredData}
+              rows={requeridos}
               columns={columns}
               pageSizeOptions={[5, 10, 20]}
               loading={loading}
@@ -219,36 +212,19 @@ export default function RequeridoDataGrid() {
             />
           </Box>
 
-          <Modal open={openModal} onClose={() => {}}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 500,
-                bgcolor: "background.paper",
-                p: 3,
-                borderRadius: 2,
-                minWidth: 900,
-                maxHeight: "80vh",
-                overflowY: "auto",
+          {openModal && (
+            <RequeridoModalForm
+              open
+              onClose={() => {
+                setOpenModal(false)
+                setSelectedRequeridoId(null)
               }}
-            >
-              <Box display="flex" justifyContent="flex-end">
-                <IconButton onClick={() => setOpenModal(false)} color="inherit">
-                  ✖
-                </IconButton>
-              </Box>
-              {selectedRequeridoId ? (
-                <RequeridoForm requeridoId={selectedRequeridoId} />
-              ) : (
-                <RequeridoForm requeridoId={null} />
-              )}
-            </Box>
-          </Modal>
+              requeridoId={selectedRequeridoId}
+              mutate={mutateRequeridos}
+            />
+          )}
         </>
       )}
-    </Container>
+    </Box>
   )
 }

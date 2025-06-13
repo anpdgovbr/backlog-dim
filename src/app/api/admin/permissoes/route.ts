@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { PermissaoPayload } from "@/types/Permissao"
+import type { PermissaoPayload } from "@anpd/shared-types"
 import { AcaoAuditoria } from "@prisma/client"
 
 export const PATCH = withApi(

@@ -11,8 +11,34 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
   {
-    ignores: ["node_modules/", ".next/", "public/", "prisma/", "supabase/"],
+    ignores: [
+      "node_modules/",
+      ".next/",
+      "public/",
+      "prisma/",
+      "supabase/",
+      "scripts/*.cjs",
+    ],
+  },
+
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        project: "./tsconfig.eslint.json",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-debugger": "warn",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
   },
 ]
 

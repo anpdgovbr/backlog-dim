@@ -77,7 +77,16 @@ export default function GovBRAvatar() {
             </span>
           </span>
         )}
-        <span className="ml-2 text-gray-80 text-weight-regular">
+        <span
+          className="ml-2 text-gray-80 text-weight-regular"
+          style={{
+            display: "inline-block",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            maxWidth: "300px",
+          }}
+        >
           Olá,{" "}
           <span className="text-weight-semi-bold">
             {session?.user?.name || "Usuário"}

@@ -3,7 +3,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
-import { Permissao } from "@/types/Permissao"
+import type { PermissaoDto } from "@anpd/shared-types"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import {
   Accordion,
@@ -11,7 +11,6 @@ import {
   AccordionSummary,
   Box,
   Button,
-  Container,
   List,
   ListItem,
   ListItemText,
@@ -46,7 +45,7 @@ const SuperAdminPage = () => {
 
   const { data: perfis, mutate: mutatePerfis } = useSWR<Perfil[]>("/api/perfis", fetcher)
 
-  const { data: permissoes, mutate: mutatePermissoes } = useSWR<Permissao[]>(
+  const { data: permissoes, mutate: mutatePermissoes } = useSWR<PermissaoDto[]>(
     perfilSelecionado !== null ? `/api/permissoes?perfilId=${perfilSelecionado}` : null,
     fetcher
   )
@@ -68,7 +67,7 @@ const SuperAdminPage = () => {
     }
   }
 
-  const handleTogglePermissao = async (permissao: Permissao) => {
+  const handleTogglePermissao = async (permissao: PermissaoDto) => {
     const novaPermissao = { ...permissao, permitido: !permissao.permitido }
 
     try {
@@ -108,8 +107,8 @@ const SuperAdminPage = () => {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+    <Box>
+      <Typography variant="h4" fontWeight="medium" sx={{ m: 2 }}>
         Dashboard SuperAdmin
       </Typography>
 
@@ -128,6 +127,7 @@ const SuperAdminPage = () => {
             sx={{ display: "flex", gap: 2 }}
           >
             <TextField
+              size="small"
               label="Nome do Perfil"
               value={novoPerfil}
               onChange={(e) => setNovoPerfil(e.target.value)}
@@ -150,6 +150,7 @@ const SuperAdminPage = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Select
+            size="small"
             value={perfilSelecionado ?? ""}
             onChange={(e) => setPerfilSelecionado(Number(e.target.value))}
             displayEmpty
@@ -174,7 +175,7 @@ const SuperAdminPage = () => {
                     acc[p.recurso].push(p)
                     return acc
                   },
-                  {} as Record<string, Permissao[]>
+                  {} as Record<string, PermissaoDto[]>
                 )
             ).map(([recurso, permissoesRecurso]) => (
               <Accordion
@@ -231,6 +232,7 @@ const SuperAdminPage = () => {
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
             <Select
+              size="small"
               value={novaPermissao.perfilId}
               onChange={(e) =>
                 setNovaPermissao({ ...novaPermissao, perfilId: e.target.value })
@@ -247,6 +249,7 @@ const SuperAdminPage = () => {
             </Select>
 
             <TextField
+              size="small"
               label="Ação"
               required
               value={novaPermissao.acao}
@@ -255,6 +258,7 @@ const SuperAdminPage = () => {
               }
             />
             <TextField
+              size="small"
               label="Recurso"
               required
               value={novaPermissao.recurso}
@@ -269,7 +273,7 @@ const SuperAdminPage = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-    </Container>
+    </Box>
   )
 }
 

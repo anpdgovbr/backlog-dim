@@ -1,1 +1,4 @@
-{}
+{
+  "eslint.useFlatConfig": true,
+  "references.preferredLocation": "view"
+}

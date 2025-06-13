@@ -1,6 +1,6 @@
 // lib/auditoria-server.ts
 import { prisma } from "@/lib/prisma"
-import { AcaoAuditoria } from "@prisma/client"
+import type { AcaoAuditoria } from "@prisma/client"
 
 type LogProps = {
   tabela: string
