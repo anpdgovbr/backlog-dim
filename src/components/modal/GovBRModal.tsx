@@ -1,6 +1,7 @@
 "use client"
 
 import CloseIcon from "@mui/icons-material/Close"
+import type { SxProps } from "@mui/material"
 import {
   Dialog,
   DialogActions,
@@ -8,10 +9,9 @@ import {
   DialogTitle,
   IconButton,
   Paper,
-  SxProps,
   Typography,
 } from "@mui/material"
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
 
 interface GovBRModalProps {
   open: boolean

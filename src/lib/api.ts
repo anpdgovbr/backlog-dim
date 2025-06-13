@@ -1,5 +1,7 @@
-// lib/api.ts
-import useSWR, { SWRConfiguration, mutate as globalMutate } from "swr"
+import type { SWRConfiguration } from "swr"
+import useSWR, { mutate as globalMutate } from "swr"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_CONTROLADORES_API_URL ?? ""
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -8,7 +10,15 @@ export const fetcher = async (url: string) => {
 }
 
 export function useApi<Data>(path: string | null, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR<Data>(path, fetcher, config)
+  const finalUrl = path
+    ? path.startsWith("/api/")
+      ? path // Se for API interna, usa o caminho como está
+      : path.startsWith("http")
+        ? path // Se for uma URL absoluta, usa também
+        : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`
+    : null
+
+  const { data, error, isLoading, mutate } = useSWR<Data>(finalUrl, fetcher, config)
 
   return {
     data,

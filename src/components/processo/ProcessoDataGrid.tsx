@@ -5,7 +5,7 @@ import usePode from "@/hooks/usePode"
 import { useProcessos } from "@/hooks/useProcessos"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoOutput } from "@anpd/shared-types"
 import AddIcon from "@mui/icons-material/Add"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
@@ -14,7 +14,6 @@ import {
   Alert,
   Box,
   Button,
-  Container,
   FormControlLabel,
   IconButton,
   Stack,
@@ -23,7 +22,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material"
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -157,7 +157,7 @@ export default function ProcessoDataGrid() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ m: 0, p: 0 }}>
+    <>
       {!pode("Exibir", "Processo") ? (
         <Alert severity="warning" sx={{ mt: 2 }}>
           Você não tem permissão para visualizar os processos.
@@ -226,7 +226,7 @@ export default function ProcessoDataGrid() {
               rows={processos}
               columns={columns}
               loading={isLoading}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50]}
               paginationMode="server"
               rowCount={total}
               paginationModel={paginationModel}
@@ -236,6 +236,6 @@ export default function ProcessoDataGrid() {
           </Box>
         </Box>
       )}
-    </Container>
+    </>
   )
 }

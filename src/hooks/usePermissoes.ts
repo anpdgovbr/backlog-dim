@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/fetcher"
-import { PermissaoConcedida, PermissaoDto } from "@anpd/shared-types"
+import type { PermissaoConcedida, PermissaoDto } from "@anpd/shared-types"
 import { useSession } from "next-auth/react"
 import useSWR from "swr"
 

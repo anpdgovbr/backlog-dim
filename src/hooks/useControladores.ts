@@ -1,4 +1,7 @@
+"use client"
+
 import { useApi } from "@/lib/api"
+import { replaceNumbers } from "@/utils/stringUtils"
 import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
 
 interface UseControladoresParams extends BaseQueryParams {
@@ -12,6 +15,7 @@ interface UseControladoresResult {
   isLoading: boolean
   error: unknown
   mutate: () => void
+  getById: (id: number) => Promise<ControladorDto | null>
 }
 
 export function useControladores(params: UseControladoresParams): UseControladoresResult {
@@ -28,7 +32,7 @@ export function useControladores(params: UseControladoresParams): UseControlador
   const query = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
-    search,
+    search: replaceNumbers(search),
     orderBy,
     ascending: String(ascending),
   })
@@ -43,11 +47,28 @@ export function useControladores(params: UseControladoresParams): UseControlador
     total: number
   }>(key)
 
+  // 🛠 Função nova para buscar um único Controlador por ID
+  async function getById(id: number): Promise<ControladorDto | null> {
+    try {
+      const resposta = await fetch(`/api/controladores/${id}`)
+      if (!resposta.ok) {
+        console.error(`Erro ao buscar Controlador id ${id}:`, resposta.status)
+        return null
+      }
+      const data: ControladorDto = await resposta.json()
+      return data
+    } catch (err) {
+      console.error("Erro inesperado ao buscar Controlador por ID:", err)
+      return null
+    }
+  }
+
   return {
     data: data?.data ?? [],
     total: data?.total ?? 0,
     isLoading,
     error,
     mutate,
+    getById,
   }
 }

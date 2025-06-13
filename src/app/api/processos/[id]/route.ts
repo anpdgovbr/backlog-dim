@@ -12,7 +12,6 @@ const handlerGET = withApiForId<{ id: string }>(
       include: {
         formaEntrada: true,
         responsavel: true,
-        requerido: { include: { setor: true, cnae: true } },
         situacao: true,
         encaminhamento: true,
         pedidoManifestacao: true,
@@ -149,6 +148,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
       ),
       audit: {
         antes: processo,
+        depois: { ...processo, active: false, exclusionDate: new Date() },
       },
     }
   },

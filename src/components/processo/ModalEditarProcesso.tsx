@@ -1,7 +1,7 @@
 import { useNotification } from "@/context/NotificationProvider"
 import { toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
-import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -47,7 +47,7 @@ export default function ModalEditarProcesso({
       requeridoId: parseId(dataFromForm.requeridoId),
       observacoes: dataFromForm.observacoes,
     }
-
+    console.warn("payload", payload)
     fetch(`/api/processos/${processo.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
