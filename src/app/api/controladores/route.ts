@@ -3,7 +3,7 @@ import { withApi } from "@/lib/withApi"
 import { AcaoAuditoria } from "@anpd/shared-types"
 import { NextResponse } from "next/server"
 
-const baseUrl = process.env.CONTROLADORES_API_URL || "http://localhost:3001"
+const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/controladores`
 
 export async function GET(req: Request) {

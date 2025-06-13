@@ -1,90 +1,82 @@
-import { EnumData } from "@anpd/shared-types"
-import { MenuItem, SelectProps, TextField, TextFieldProps, Tooltip } from "@mui/material"
+import type { EnumData } from "@anpd/shared-types"
+import type { SelectChangeEvent } from "@mui/material"
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from "@mui/material"
 import { Controller, useFormContext } from "react-hook-form"
 
-type FormDropdown = TextFieldProps & {
+type FormDropdownProps = {
   name: string
   label: string
-  tooltip?: string
   options: EnumData[]
   defaultValue?: string | number
-  menuProps?: Partial<SelectProps>["MenuProps"]
+  placeholder?: string
 }
 
 export function FormDropdown({
-  label,
-  tooltip,
   name,
-  options = [],
+  label,
+  options,
   defaultValue,
-  menuProps,
-  ...rest
-}: FormDropdown) {
+  placeholder,
+}: FormDropdownProps) {
   const { control } = useFormContext()
-
-  function renderOptions() {
-    return options.map((option) => (
-      <MenuItem
-        key={option.id}
-        value={option.id}
-        sx={{
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          maxWidth: "100%",
-        }}
-      >
-        <Tooltip title={option.nome} placement="right" arrow>
-          <span>
-            {option.nome.length > 50
-              ? `${option.nome.slice(0, 50).trim()}...`
-              : option.nome}
-          </span>
-        </Tooltip>
-      </MenuItem>
-    ))
-  }
 
   return (
     <Controller
-      defaultValue={defaultValue ?? ""}
       control={control}
       name={name}
+      defaultValue={defaultValue ?? ""}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <Tooltip title={tooltip ?? label} placement="top">
-          <TextField
-            select
-            id={`input-${name}`}
-            helperText={error ? error.message : null}
-            error={!!error}
-            onChange={onChange}
-            value={options.length !== 0 ? value : ""}
+        <FormControl fullWidth size="small" error={!!error}>
+          <InputLabel id={`${name}-label`} shrink>
+            {label}
+          </InputLabel>
+          <Select
+            labelId={`${name}-label`}
+            id={`select-${name}`}
+            value={value ?? ""}
             label={label}
-            InputLabelProps={{ shrink: true }}
-            size="small"
-            fullWidth
-            sx={{
-              "& .MuiInputBase-root": {
-                borderRadius: 1,
-              },
+            onChange={onChange as (event: SelectChangeEvent<unknown>) => void}
+            displayEmpty
+            renderValue={(selected) => {
+              if (!selected) {
+                return (
+                  <span style={{ color: "#888" }}>{placeholder ?? "Selecione..."}</span>
+                )
+              }
+              const selectedOption = options.find((o) => o.id === selected)
+              return selectedOption?.nome || ""
             }}
-            SelectProps={{
-              MenuProps: {
-                PaperProps: {
-                  style: {
-                    maxWidth: 400,
-                    whiteSpace: "normal",
-                    wordWrap: "break-word",
-                  },
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxWidth: 400,
+                  whiteSpace: "normal",
+                  wordWrap: "break-word",
                 },
-                ...menuProps,
               },
             }}
-            {...rest}
           >
-            {renderOptions()}
-          </TextField>
-        </Tooltip>
+            {options.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                <Tooltip title={option.nome} placement="right" arrow>
+                  <span>
+                    {option.nome.length > 50
+                      ? `${option.nome.slice(0, 50)}...`
+                      : option.nome}
+                  </span>
+                </Tooltip>
+              </MenuItem>
+            ))}
+          </Select>
+          {error && <FormHelperText>{error.message}</FormHelperText>}
+        </FormControl>
       )}
     />
   )

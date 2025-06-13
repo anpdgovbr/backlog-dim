@@ -4,11 +4,10 @@ import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { PerfilDto, PermissaoDto } from "@anpd/shared-types"
+import type { PerfilDto, PermissaoDto } from "@anpd/shared-types"
 import {
   Box,
   CircularProgress,
-  Container,
   FormControl,
   InputLabel,
   MenuItem,
@@ -76,8 +75,8 @@ function GerenciarPermissoesContent() {
   }, [permissoes])
 
   return (
-    <Container maxWidth="lg" sx={{ p: 0 }}>
-      <Typography variant="h5" fontWeight="medium" sx={{ mb: 2 }}>
+    <Box p={2}>
+      <Typography variant="h4" fontWeight="medium" sx={{ mb: 2 }}>
         Gerenciar Permissões
       </Typography>
 
@@ -151,7 +150,7 @@ function GerenciarPermissoesContent() {
           Nenhuma permissão cadastrada para este perfil.
         </Typography>
       )}
-    </Container>
+    </Box>
   )
 }
 

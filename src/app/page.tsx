@@ -30,6 +30,10 @@ export default function HomePage() {
             Acessar Sistema
           </Button>
 
+          <Button variant="outlined" size="large" component={Link} href="/publico">
+            Dashboard Público
+          </Button>
+
           <Button variant="outlined" size="large" component={Link} href="/sobre">
             Saiba Mais
           </Button>

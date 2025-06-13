@@ -6,9 +6,8 @@ import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
 import FormaEntradaPage from "@/app/dashboard/metadados/forma-entrada/page"
 import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestacao/page"
 import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
-import Dashboard25Wrapper, {
-  ISectionConfig,
-} from "@/components/dashboard/Dashboard25Wrapper"
+import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
+import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
 import {
   AssignmentTurnedIn,

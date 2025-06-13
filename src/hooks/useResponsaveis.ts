@@ -1,6 +1,6 @@
 // hooks/useResponsaveis.ts
 import { fetcher } from "@/lib/fetcher"
-import { ResponsavelDto } from "@anpd/shared-types"
+import type { ResponsavelDto } from "@anpd/shared-types"
 import useSWR from "swr"
 
 export function useResponsaveis() {

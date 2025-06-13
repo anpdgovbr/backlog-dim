@@ -1,4 +1,4 @@
-import { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
 
 export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
   return {
@@ -55,4 +55,19 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoInput {
         ? Number(processo.requeridoFinal.id)
         : undefined,
   }
+}
+
+export interface TemaCount {
+  tema: string
+  total: number
+}
+
+export interface IndicadoresProcesso {
+  total: number
+  atrasados: number
+  noMes: number
+  atribuidosAoUsuario: number
+  porStatusInterno: Record<string, number>
+  porTipoRequerimento: Record<string, number>
+  topTemas: TemaCount[]
 }

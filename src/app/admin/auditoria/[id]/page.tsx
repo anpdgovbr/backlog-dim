@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { renderJsonColor } from "@/utils/renderJsonColor"
 import { Box, Container, Divider, Typography } from "@mui/material"
-import { AuditLog } from "@prisma/client"
-import { JsonObject } from "@prisma/client/runtime/library"
+import type { AuditLog } from "@prisma/client"
+import type { JsonObject } from "@prisma/client/runtime/library"
 import { notFound } from "next/navigation"
 
 type AuditLogTyped = Omit<AuditLog, "antes" | "depois"> & {

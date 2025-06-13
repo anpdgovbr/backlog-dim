@@ -4,33 +4,30 @@ import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import { RequeridoOutput } from "@/types/Requerido"
+import type { RequeridoOutput } from "@/types/Requerido"
+import { formatCpfCnpj } from "@/utils/formUtils"
+import { Clear } from "@mui/icons-material"
 import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material"
-import { DataGrid, GridAddIcon, GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 
-import RequeridoForm from "./RequeridoForm"
+const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
+  ssr: false,
+})
 
 export default function RequeridoDataGrid() {
   const [search, setSearch] = useState("")
-  const [filteredData, setFilteredData] = useState<RequeridoOutput[]>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   })
   const [openModal, setOpenModal] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
   const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
 
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
@@ -47,6 +44,7 @@ export default function RequeridoDataGrid() {
     pageSize: paginationModel.pageSize,
     orderBy: "nome",
     ascending: true,
+    search,
   })
 
   useEffect(() => {
@@ -59,17 +57,6 @@ export default function RequeridoDataGrid() {
     }
   }, [error, notify])
 
-  useEffect(() => {
-    const lower = search.toLowerCase()
-    const filtered = requeridos.filter(
-      (item) =>
-        item.nome.toLowerCase().includes(lower) ||
-        item.cnpj?.includes(lower) ||
-        item.site?.toLowerCase().includes(lower)
-    )
-    setFilteredData(filtered)
-  }, [search, requeridos])
-
   const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este requerido?")) {
       try {
@@ -79,6 +66,7 @@ export default function RequeridoDataGrid() {
         const data = await response.json()
 
         if (response.ok) {
+          mutateRequeridos()
           notify({ type: "success", message: "Requerido excluído com sucesso" })
         } else {
           notify({ type: "error", message: `Erro ao excluir requerido: ${data.error}` })
@@ -90,9 +78,14 @@ export default function RequeridoDataGrid() {
   }
 
   const columns: GridColDef<RequeridoOutput>[] = [
-    { field: "nome", headerName: "Nome", flex: 1 },
-    { field: "cnpj", headerName: "CNPJ", width: 130 },
+    { field: "nome", headerName: "Nome/Razão Social", flex: 2 },
     {
+      field: "cnpj",
+      headerName: "CNPJ/CPF",
+      flex: 1,
+      renderCell: (params) => formatCpfCnpj(params.value || ""),
+    },
+    /*{
       field: "site",
       headerName: "Site",
       flex: 1,
@@ -105,7 +98,7 @@ export default function RequeridoDataGrid() {
           "N/A"
         ),
     },
-    { field: "email", headerName: "E-mail", flex: 1 },
+    { field: "email", headerName: "E-mail", flex: 1 },*/
     {
       field: "setor",
       headerName: "Setor",
@@ -115,7 +108,7 @@ export default function RequeridoDataGrid() {
     {
       field: "acoes",
       headerName: "Ações",
-      width: 180,
+      flex: 1,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
           <IconButton
@@ -143,7 +136,7 @@ export default function RequeridoDataGrid() {
   if (loadingPermissoes) return <Typography>Carregando permissões...</Typography>
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 2 }}>
+    <Box>
       {!permissoes["Exibir_Responsavel"] ? (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
@@ -151,7 +144,7 @@ export default function RequeridoDataGrid() {
       ) : (
         <>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h4" component="h1">
+            <Typography variant="h4" component="h4">
               Lista de Requeridos
             </Typography>
 
@@ -168,14 +161,34 @@ export default function RequeridoDataGrid() {
             </Button>
           </Box>
 
-          <TextField
-            label="Buscar..."
-            variant="outlined"
-            fullWidth
-            sx={{ mb: 2 }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <Box display="flex" gap={1} mb={2}>
+            <TextField
+              label="Buscar por nome, CNPJ ou CPF"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearch(searchInput)
+                }
+              }}
+            />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSearchInput("")
+                setSearch("")
+                setPaginationModel({ page: 0, pageSize: 10 })
+              }}
+              sx={{ minWidth: "auto", px: 2 }}
+              startIcon={<Clear />}
+            >
+              Limpar
+            </Button>
+          </Box>
 
           <Box
             sx={{
@@ -187,7 +200,7 @@ export default function RequeridoDataGrid() {
           >
             <DataGrid
               sx={{ minHeight: "45vh" }}
-              rows={filteredData}
+              rows={requeridos}
               columns={columns}
               pageSizeOptions={[5, 10, 20]}
               loading={loading}
@@ -199,39 +212,19 @@ export default function RequeridoDataGrid() {
             />
           </Box>
 
-          <Modal open={openModal} onClose={() => {}}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 500,
-                bgcolor: "background.paper",
-                p: 3,
-                borderRadius: 2,
-                minWidth: 900,
-                maxHeight: "80vh",
-                overflowY: "auto",
+          {openModal && (
+            <RequeridoModalForm
+              open
+              onClose={() => {
+                setOpenModal(false)
+                setSelectedRequeridoId(null)
               }}
-            >
-              <Box display="flex" justifyContent="flex-end">
-                <IconButton onClick={() => setOpenModal(false)} color="inherit">
-                  ✖
-                </IconButton>
-              </Box>
-              <RequeridoForm
-                requeridoId={selectedRequeridoId}
-                mutate={mutateRequeridos}
-                onSave={() => {
-                  setOpenModal(false)
-                  setSelectedRequeridoId(null)
-                }}
-              />
-            </Box>
-          </Modal>
+              requeridoId={selectedRequeridoId}
+              mutate={mutateRequeridos}
+            />
+          )}
         </>
       )}
-    </Container>
+    </Box>
   )
 }
