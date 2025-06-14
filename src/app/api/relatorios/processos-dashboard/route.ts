@@ -3,6 +3,13 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 
+function normalizarTexto(texto: string): string {
+  return texto
+    .normalize("NFD") // separa acento das letras
+    .replace(/[\u0300-\u036f]/g, "") // remove os acentos
+    .toLowerCase()
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions)
 
@@ -66,11 +73,12 @@ export async function GET() {
       porStatusInterno[p.statusInterno] = (porStatusInterno[p.statusInterno] || 0) + 1
     }
     if (p.tipoRequerimento) {
-      porTipoRequerimento[p.tipoRequerimento] =
-        (porTipoRequerimento[p.tipoRequerimento] || 0) + 1
+      const tipo = normalizarTexto(p.tipoRequerimento)
+      porTipoRequerimento[tipo] = (porTipoRequerimento[tipo] || 0) + 1
     }
     for (const tema of p.temaRequerimento ?? []) {
-      temas[tema] = (temas[tema] || 0) + 1
+      const temaNormalizado = normalizarTexto(tema)
+      temas[temaNormalizado] = (temas[temaNormalizado] || 0) + 1
     }
   }
 
@@ -83,7 +91,7 @@ export async function GET() {
     total,
     noMes,
     atrasados,
-    atribuidosAoUsuario, // Agora deve retornar o valor correto
+    atribuidosAoUsuario,
     porStatusInterno,
     porTipoRequerimento,
     topTemas,

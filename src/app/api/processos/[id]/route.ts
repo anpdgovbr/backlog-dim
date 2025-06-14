@@ -53,7 +53,9 @@ const handlerPUT = withApiForId<{ id: string }>(
     const { id } = params
     const body = await req.json()
 
-    const processoAtual = await prisma.processo.findUnique({ where: { id: Number(id) } })
+    const processoAtual = await prisma.processo.findUnique({
+      where: { id: Number(id) },
+    })
 
     if (!processoAtual || !processoAtual.active) {
       return Response.json(
@@ -61,8 +63,45 @@ const handlerPUT = withApiForId<{ id: string }>(
         { status: 404 }
       )
     }
+
     const parseDate = (dateStr?: string) =>
       dateStr ? new Date(`${dateStr}T00:00:00.000Z`) : null
+
+    const camposComparaveis: (keyof typeof body)[] = [
+      "requerente",
+      "formaEntradaId",
+      "responsavelId",
+      "requeridoId",
+      "situacaoId",
+      "encaminhamentoId",
+      "pedidoManifestacaoId",
+      "contatoPrevioId",
+      "evidenciaId",
+      "anonimo",
+      "tipoReclamacaoId",
+      "observacoes",
+      "temaRequerimento",
+      "tipoRequerimento",
+      "resumo",
+      "dataConclusao",
+      "dataEnvioPedido",
+      "prazoPedido",
+      "requeridoFinalId",
+    ]
+
+    const houveAlteracao = camposComparaveis.some((campo) => {
+      const valorNovo = JSON.stringify(body[campo] ?? null)
+      const valorAntigo = JSON.stringify((processoAtual as any)[campo] ?? null)
+      return valorNovo !== valorAntigo
+    })
+
+    const novoStatusInterno =
+      (processoAtual.statusInterno === "IMPORTADO" ||
+        processoAtual.statusInterno === "NOVO") &&
+      houveAlteracao
+        ? "EM_PROCESSAMENTO"
+        : processoAtual.statusInterno
+
     const processoAtualizado = await prisma.processo.update({
       where: { id: Number(id) },
       data: {
@@ -88,10 +127,10 @@ const handlerPUT = withApiForId<{ id: string }>(
         temaRequerimento: Array.isArray(body.temaRequerimento)
           ? body.temaRequerimento
           : [],
-
         tipoRequerimento: body.tipoRequerimento !== "" ? body.tipoRequerimento : null,
         requeridoFinalId: body.requeridoFinalId ?? null,
         dataVencimento: body.dataVencimento ? new Date(body.dataVencimento) : null,
+        statusInterno: novoStatusInterno,
       },
     })
 

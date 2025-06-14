@@ -10,6 +10,7 @@ import { parseId } from "@/utils/parseId"
 import type { ProcessoInput } from "@anpd/shared-types"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
+import { isEqual } from "lodash"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
@@ -30,6 +31,8 @@ export default function EditarProcessoPage() {
   const methods = useForm<ProcessoInput>({ defaultValues })
   const { reset } = methods
 
+  const isAlterado = !isEqual(methods.getValues(), defaultValues)
+
   const podeEditar =
     pode("EditarGeral", "Processo") ||
     (pode("EditarProprio", "Processo") &&
@@ -38,6 +41,11 @@ export default function EditarProcessoPage() {
 
   const handleSubmit = methods.handleSubmit(async (dataFromForm) => {
     if (!processo) return
+
+    // Atualiza statusInterno se o processo estiver em fase inicial
+    const atualizarStatusInterno =
+      isAlterado &&
+      (processo.statusInterno === "IMPORTADO" || processo.statusInterno === "NOVO")
 
     const payload = {
       ...dataFromForm,
@@ -61,6 +69,9 @@ export default function EditarProcessoPage() {
       prazoPedido: dataFromForm.prazoPedido,
       temaRequerimento: dataFromForm.temaRequerimento ?? [],
       observacoes: dataFromForm.observacoes,
+      ...(atualizarStatusInterno && {
+        statusInterno: "EM_PROCESSAMENTO",
+      }),
     }
 
     const res = await fetch(`/api/processos/${id}`, {
