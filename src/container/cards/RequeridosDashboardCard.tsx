@@ -1,3 +1,5 @@
+"use client"
+
 import { DashboardCard } from "@/components/ui/dashboard-card"
 import type { TopRequerido } from "@/types/TopRequeridos"
 import { Business } from "@mui/icons-material"
@@ -27,6 +29,7 @@ function RequeridosDashboardCard({
 }: RequeridosDashboardCardProps) {
   const router = useRouter()
   const [topRequeridos, setTopRequeridos] = useState<TopRequerido[] | null>(null)
+  const [erro, setErro] = useState(false)
 
   useEffect(() => {
     const carregarTop = async () => {
@@ -34,10 +37,27 @@ function RequeridosDashboardCard({
         const res = await fetch(`/api/relatorios/top-requeridos?limit=${limit}`, {
           cache: "no-store",
         })
+
+        if (!res.ok) {
+          console.warn("Erro ao buscar dados dos requeridos:", res.status)
+          setErro(true)
+          setTopRequeridos([])
+          return
+        }
+
         const data = await res.json()
-        setTopRequeridos(data)
+
+        if (Array.isArray(data)) {
+          setTopRequeridos(data)
+        } else {
+          console.warn("Resposta inesperada:", data)
+          setErro(true)
+          setTopRequeridos([])
+        }
       } catch (error) {
         console.error("Erro ao carregar top requeridos:", error)
+        setErro(true)
+        setTopRequeridos([])
       }
     }
 
@@ -62,7 +82,12 @@ function RequeridosDashboardCard({
             Acesse os principais requeridos com mais processos.
           </DashboardCard.Description>
 
-          {/** inicio principal */}
+          {erro && (
+            <Typography variant="body2" color="error" mb={1}>
+              Não foi possível carregar os requeridos. Verifique se está autenticado.
+            </Typography>
+          )}
+
           {topRequeridos === null ? (
             <List dense disablePadding>
               {Array.from({ length: 3 }).map((_, i) => (
@@ -76,7 +101,7 @@ function RequeridosDashboardCard({
             </List>
           ) : (
             <Grid container spacing={1} sx={{ mt: 1 }}>
-              {topRequeridos.map((r) => (
+              {(topRequeridos ?? []).map((r) => (
                 <Grid
                   key={r.id}
                   size={{ xs: 12 }}
@@ -115,14 +140,10 @@ function RequeridosDashboardCard({
           )}
         </Box>
 
-        {/** fim principal */}
-
         <Box mt={2}>
           <Button
             fullWidth
-            sx={{
-              textTransform: "uppercase",
-            }}
+            sx={{ textTransform: "uppercase" }}
             size="small"
             variant="outlined"
             color="secondary"

@@ -53,7 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (status === "loading" || loadingPerfil) {
     return (
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Box display="flex" justifyContent="center" mt={5}>
           <CircularProgress />
         </Box>
@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       {!isXs && <GovBrBreadcrumb basePath="/dashboard" />}
 
       {/* AppBar no topo - sempre fora do Box flex */}

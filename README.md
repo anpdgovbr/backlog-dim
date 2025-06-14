@@ -3,6 +3,15 @@
 Este projeto é uma **aplicação CRUD** para gerenciar **processamentos administrativos**.  
 Os dados são carregados via **formulário** ou **importação de CSV**, e armazenados no **Supabase**.
 
+## 📑 Sumário
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Instalação e Configuração](#-instalação-e-configuração)
+- [Importação de CSV](#-importação-de-csv)
+- [Prisma - Gerenciamento do Banco](#-prisma---gerenciamento-do-banco)
+- [Licença](#-licença)
+
 ## 🚀 Funcionalidades
 
 - 📌 **Cadastro de Processamentos**
@@ -118,13 +127,17 @@ npx prisma migrate dev --name init
 npx prisma db seed  # Popula o banco de dados com informações iniciais
 ```
 
-### 5️⃣ Rodando o Projeto
+### 6️⃣ Rodando o Projeto
 
 ```sh
 npm run dev
 ```
 
 Acesse em: [http://localhost:3000](http://localhost:3000)
+
+## 🔐 Autenticação
+
+O login é realizado via Entra ID (NextAuth). Certifique-se de configurar as variáveis de ambiente corretamente e que o usuário tenha permissão de acesso.
 
 ## 📤 Importação de CSV
 
@@ -143,14 +156,14 @@ Para importar:
 
 ## 🔧 Prisma - Gerenciamento do Banco
 
-| Comando                                  | Descrição                                       |
-|-----------------------------------------|-----------------------------------------------|
-| `npx prisma migrate dev --name init`   | Cria e aplica migrações no banco             |
-| `npx prisma db push`                    | Atualiza o esquema do banco                  |
-| `npx prisma db seed`                     | Popula o banco com dados iniciais            |
-| `npx prisma generate`                    | Gera o cliente Prisma                        |
-| `npx prisma studio`                      | Abre o Prisma Studio (interface gráfica)    |
-| `npx prisma migrate reset --force`       | Reseta completamente o banco de dados       |
+| Comando                                  | Descrição                                     |
+|------------------------------------------|-----------------------------------------------|
+| `npx prisma migrate dev --name init`     | Cria e aplica migrações no banco              |
+| `npx prisma db push`                     | Atualiza o esquema do banco                   |
+| `npx prisma db seed`                     | Popula o banco com dados iniciais             |
+| `npx prisma generate`                    | Gera o cliente Prisma                         |
+| `npx prisma studio`                      | Abre o Prisma Studio (interface gráfica)      |
+| `npx prisma migrate reset --force`       | Reseta completamente o banco de dados         |
 
 ## 📜 Licença
 
@@ -158,4 +171,4 @@ Este projeto é open-source e segue a licença **MIT**.
 
 ---
 
-🚀 **Desenvolvido para otimizar a gestão de processamentos administrativos de requerimentos da DIM!**  
+🚀 **Desenvolvido para otimizar a gestão de processamentos administrativos de requerimentos da DIM!**
