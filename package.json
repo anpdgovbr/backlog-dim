@@ -1,6 +1,6 @@
 {
   "name": "backlog-dim",
-  "version": "0.1.89",
+  "version": "0.1.99",
   "private": true,
   "type": "module",
   "scripts": {
@@ -54,6 +54,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@govbr-ds/core": "^3.6.2",
+    "@hookform/resolvers": "^5.1.1",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
     "@mui/x-data-grid": "^8.5.1",
@@ -74,7 +75,8 @@
     "sass": "^1.89.1",
     "swr": "^2.3.3",
     "text-mask-addons": "^3.8.0",
-    "tsx": "^4.19.4"
+    "tsx": "^4.19.4",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

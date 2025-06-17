@@ -5,13 +5,16 @@ import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import useProcessoById from "@/hooks/useProcessoById"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import { toProcessoInput } from "@/types/Processo"
-import { parseId } from "@/utils/parseId"
+import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
+import { processoSchema } from "@/schemas/ProcessoSchema"
 import type { ProcessoInput } from "@anpd/shared-types"
+import type { StatusInterno } from "@anpd/shared-types"
+import { yupResolver } from "@hookform/resolvers/yup"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
+import type { TipoRequerimento } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 export default function EditarProcessoPage() {
@@ -20,15 +23,12 @@ export default function EditarProcessoPage() {
   const { notify } = useNotification()
   const { pode, loading: loadingPerms } = usePode()
   const { userId, loading: loadingUserId } = useUsuarioIdLogado()
-
   const { processo, isLoading, mutate } = useProcessoById(id)
 
-  const defaultValues = useMemo(() => {
-    return processo ? toProcessoInput(processo) : undefined
-  }, [processo])
-
-  const methods = useForm<ProcessoInput>({ defaultValues })
-  const { reset } = methods
+  const methods = useForm<ProcessoFormData>({
+    resolver: yupResolver(processoSchema),
+  })
+  const { reset, handleSubmit } = methods
 
   const podeEditar =
     pode("EditarGeral", "Processo") ||
@@ -36,31 +36,41 @@ export default function EditarProcessoPage() {
       userId != null &&
       processo?.responsavel?.userId === userId)
 
-  const handleSubmit = methods.handleSubmit(async (dataFromForm) => {
+  const onSubmit = handleSubmit(async (dataFromForm) => {
     if (!processo) return
 
-    const payload = {
-      ...dataFromForm,
+    // Monta o payload atualizado com dados do formulário e do processo original
+    const payload: ProcessoInput = {
       numero: processo.numero,
       dataCriacao: new Date(processo.dataCriacao).toISOString(),
       anonimo: processo.anonimo,
-      formaEntradaId: parseId(dataFromForm.formaEntradaId),
-      responsavelId: parseId(dataFromForm.responsavelId),
-      situacaoId: parseId(dataFromForm.situacaoId),
-      encaminhamentoId: parseId(dataFromForm.encaminhamentoId),
-      pedidoManifestacaoId: parseId(dataFromForm.pedidoManifestacaoId),
-      contatoPrevioId: parseId(dataFromForm.contatoPrevioId),
-      evidenciaId: parseId(dataFromForm.evidenciaId),
-      tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
-      requeridoId: parseId(dataFromForm.requeridoId),
-      requeridoFinalId: parseId(dataFromForm.requeridoFinalId),
-      tipoRequerimento: dataFromForm.tipoRequerimento,
+
+      tipoRequerimento: dataFromForm.tipoRequerimento as TipoRequerimento,
+      responsavelId: dataFromForm.responsavelId ?? 0,
+      formaEntradaId: dataFromForm.formaEntradaId ?? undefined,
+      situacaoId: dataFromForm.situacaoId ?? undefined,
+
+      requerente: dataFromForm.requerente,
       resumo: dataFromForm.resumo,
-      dataConclusao: dataFromForm.dataConclusao,
-      dataEnvioPedido: dataFromForm.dataEnvioPedido,
-      prazoPedido: dataFromForm.prazoPedido,
-      temaRequerimento: dataFromForm.temaRequerimento ?? [],
       observacoes: dataFromForm.observacoes,
+      statusInterno: dataFromForm.statusInterno as undefined | StatusInterno,
+      temaRequerimento: dataFromForm.temaRequerimento,
+
+      requeridoId: dataFromForm.requeridoId ?? undefined,
+      requeridoFinalId: dataFromForm.requeridoFinalId ?? undefined,
+      pedidoManifestacaoId: dataFromForm.pedidoManifestacaoId ?? undefined,
+      contatoPrevioId: dataFromForm.contatoPrevioId ?? undefined,
+      evidenciaId: dataFromForm.evidenciaId ?? undefined,
+      encaminhamentoId: dataFromForm.encaminhamentoId ?? undefined,
+      tipoReclamacaoId: dataFromForm.tipoReclamacaoId ?? undefined,
+      prazoPedido: dataFromForm.prazoPedido ?? undefined,
+
+      dataEnvioPedido: dataFromForm.dataEnvioPedido
+        ? new Date(dataFromForm.dataEnvioPedido).toISOString()
+        : undefined,
+      dataConclusao: dataFromForm.dataConclusao
+        ? new Date(dataFromForm.dataConclusao).toISOString()
+        : undefined,
     }
 
     const res = await fetch(`/api/processos/${id}`, {
@@ -80,12 +90,50 @@ export default function EditarProcessoPage() {
 
   useEffect(() => {
     if (processo) {
-      reset(toProcessoInput(processo))
+      const toNumberOrNull = (value: unknown): number | null =>
+        value == null || value === "" ? null : Number(value)
+
+      // Popula o formulário com os dados do processo carregado
+      const formData: ProcessoFormData = {
+        numero: processo.numero,
+        requerente: processo.requerente ?? "",
+        anonimo: processo.anonimo ?? false,
+        resumo: processo.resumo ?? "",
+        observacoes: processo.observacoes ?? "",
+        temaRequerimento: processo.temaRequerimento ?? [],
+        statusInterno: processo.statusInterno ?? null,
+        tipoRequerimento: processo.tipoRequerimento ?? "",
+        formaEntradaId: toNumberOrNull(processo.formaEntrada?.id),
+        responsavelId: toNumberOrNull(processo.responsavel?.id),
+        situacaoId: toNumberOrNull(processo.situacao?.id),
+        requeridoId: toNumberOrNull(processo.requerido?.id),
+        requeridoFinalId: toNumberOrNull(processo.requeridoFinal?.id),
+        encaminhamentoId: toNumberOrNull(processo.encaminhamento?.id),
+        pedidoManifestacaoId: toNumberOrNull(processo.pedidoManifestacao?.id),
+        contatoPrevioId: toNumberOrNull(processo.contatoPrevio?.id),
+        evidenciaId: toNumberOrNull(processo.evidencia?.id),
+        tipoReclamacaoId: toNumberOrNull(processo.tipoReclamacao?.id),
+        prazoPedido: processo.prazoPedido ?? null,
+        dataEnvioPedido: processo.dataEnvioPedido
+          ? new Date(processo.dataEnvioPedido)
+          : null,
+        dataConclusao: processo.dataConclusao ? new Date(processo.dataConclusao) : null,
+      }
+
+      reset(formData)
     }
   }, [processo, reset])
 
-  if (isLoading || loadingUserId || loadingPerms || !processo) {
+  if (isLoading || loadingUserId || loadingPerms) {
     return <Typography>Carregando...</Typography>
+  }
+
+  if (!processo) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 2 }}>
+        <Alert severity="error">Processo não encontrado.</Alert>
+      </Container>
+    )
   }
 
   if (!podeEditar) {
@@ -113,12 +161,11 @@ export default function EditarProcessoPage() {
         >
           Voltar aos processos
         </Button>
-
         <Button
           startIcon={<SaveOutlined />}
           variant="contained"
           color="primary"
-          onClick={handleSubmit}
+          onClick={onSubmit}
         >
           Salvar Alterações
         </Button>

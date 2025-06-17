@@ -4,12 +4,17 @@ import ProcessoForm from "@/components/processo/ProcessoForm"
 import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import { parseId } from "@/utils/parseId"
-import type { ProcessoInput } from "@anpd/shared-types"
+import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
+import { processoSchema } from "@/schemas/ProcessoSchema"
+import { type ProcessoInput, StatusInterno } from "@anpd/shared-types"
+import { yupResolver } from "@hookform/resolvers/yup"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
+import type { TipoRequerimento } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+
+const defaultValues = processoSchema.getDefault()
 
 export default function NovoProcessoPage() {
   const router = useRouter()
@@ -17,25 +22,45 @@ export default function NovoProcessoPage() {
   const { pode, loading: loadingPerms } = usePode()
   const { loading: loadingUserId } = useUsuarioIdLogado()
 
-  const methods = useForm<ProcessoInput>()
-  const { handleSubmit } = methods
+  const methods = useForm<ProcessoFormData>({
+    resolver: yupResolver(processoSchema),
+    defaultValues,
+  })
 
   const podeCadastrar = pode("Cadastrar", "Processo")
 
-  const onSubmit = handleSubmit(async (dataFromForm) => {
-    const payload = {
-      ...dataFromForm,
+  const onSubmit = methods.handleSubmit(async (data) => {
+    // Monta o payload do processo com os dados do formulário
+    const payload: ProcessoInput = {
+      numero: data.numero,
+      tipoRequerimento: data.tipoRequerimento as TipoRequerimento,
+      responsavelId: data.responsavelId ?? 0,
+      formaEntradaId: data.formaEntradaId ?? undefined,
+      situacaoId: data.situacaoId ?? undefined,
       dataCriacao: new Date().toISOString(),
-      formaEntradaId: parseId(dataFromForm.formaEntradaId),
-      responsavelId: parseId(dataFromForm.responsavelId),
-      situacaoId: parseId(dataFromForm.situacaoId),
-      encaminhamentoId: parseId(dataFromForm.encaminhamentoId),
-      pedidoManifestacaoId: parseId(dataFromForm.pedidoManifestacaoId),
-      contatoPrevioId: parseId(dataFromForm.contatoPrevioId),
-      evidenciaId: parseId(dataFromForm.evidenciaId),
-      tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
-      requeridoId: parseId(dataFromForm.requeridoId),
-      statusInterno: "NOVO", // ou "IMPORTADO" se vier do CSV
+      statusInterno: StatusInterno.NOVO,
+
+      requerente: data.requerente,
+      anonimo: data.anonimo,
+      resumo: data.resumo,
+      observacoes: data.observacoes,
+      temaRequerimento: data.temaRequerimento,
+
+      requeridoId: data.requeridoId ?? undefined,
+      requeridoFinalId: data.requeridoFinalId ?? undefined,
+      pedidoManifestacaoId: data.pedidoManifestacaoId ?? undefined,
+      contatoPrevioId: data.contatoPrevioId ?? undefined,
+      evidenciaId: data.evidenciaId ?? undefined,
+      encaminhamentoId: data.encaminhamentoId ?? undefined,
+      tipoReclamacaoId: data.tipoReclamacaoId ?? undefined,
+      prazoPedido: data.prazoPedido ?? undefined,
+
+      dataEnvioPedido: data.dataEnvioPedido
+        ? new Date(data.dataEnvioPedido).toISOString()
+        : undefined,
+      dataConclusao: data.dataConclusao
+        ? new Date(data.dataConclusao).toISOString()
+        : undefined,
     }
 
     const res = await fetch("/api/processos", {
@@ -82,7 +107,6 @@ export default function NovoProcessoPage() {
         >
           Cancelar
         </Button>
-
         <Button
           startIcon={<SaveOutlined />}
           variant="contained"
