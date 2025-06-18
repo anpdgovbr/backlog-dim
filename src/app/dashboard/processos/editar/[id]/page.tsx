@@ -7,14 +7,16 @@ import useProcessoById from "@/hooks/useProcessoById"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { processoSchema } from "@/schemas/ProcessoSchema"
+import { toProcessoInput } from "@/types/Processo"
 import type { ProcessoInput } from "@anpd/shared-types"
-import type { StatusInterno } from "@anpd/shared-types"
+import { StatusInterno } from "@anpd/shared-types"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
 import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
 import type { TipoRequerimento } from "@prisma/client"
+import { isEqual } from "lodash"
 import { useParams, useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
 
 export default function EditarProcessoPage() {
@@ -29,6 +31,11 @@ export default function EditarProcessoPage() {
     resolver: yupResolver(processoSchema),
   })
   const { reset, handleSubmit } = methods
+  const defaultValues = useMemo(() => {
+    return processo ? toProcessoInput(processo) : undefined
+  }, [processo])
+
+  const isAlterado = !isEqual(methods.getValues(), defaultValues)
 
   const podeEditar =
     pode("EditarGeral", "Processo") ||
@@ -39,8 +46,13 @@ export default function EditarProcessoPage() {
   const onSubmit = handleSubmit(async (dataFromForm) => {
     if (!processo) return
 
-    // Monta o payload atualizado com dados do formulário e do processo original
+    // Atualiza statusInterno se o processo estiver em fase inicial
+    const atualizarStatusInterno =
+      isAlterado &&
+      (processo.statusInterno === "IMPORTADO" || processo.statusInterno === "NOVO")
+
     const payload: ProcessoInput = {
+      ...dataFromForm,
       numero: processo.numero,
       dataCriacao: new Date(processo.dataCriacao).toISOString(),
       anonimo: processo.anonimo,
@@ -71,6 +83,9 @@ export default function EditarProcessoPage() {
       dataConclusao: dataFromForm.dataConclusao
         ? new Date(dataFromForm.dataConclusao).toISOString()
         : undefined,
+      ...(atualizarStatusInterno && {
+        statusInterno: StatusInterno.EM_PROCESSAMENTO,
+      }),
     }
 
     const res = await fetch(`/api/processos/${id}`, {
