@@ -1,7 +1,8 @@
 import { useNotification } from "@/context/NotificationProvider"
+import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
-import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoOutput } from "@anpd/shared-types"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -25,7 +26,7 @@ export default function ModalEditarProcesso({
 
   const { notify } = useNotification()
 
-  const methods = useForm<ProcessoInput>({ defaultValues })
+  const methods = useForm<ProcessoFormData>({ defaultValues })
   const { reset } = methods
 
   const handleSubmit = methods.handleSubmit((dataFromForm) => {
