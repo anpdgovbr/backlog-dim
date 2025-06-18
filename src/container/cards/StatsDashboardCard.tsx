@@ -1,3 +1,5 @@
+"use client"
+
 import { DashboardCard } from "@/components/ui/dashboard-card"
 import type { IndicadoresProcesso } from "@/types/Processo"
 import {
@@ -28,16 +30,31 @@ export function StatsDashboardCard() {
   const router = useRouter()
   const [tab, setTab] = useState(0)
   const [dados, setDados] = useState<IndicadoresProcesso | null>(null)
+  const [erro, setErro] = useState(false)
 
   const carregarDados = async () => {
     try {
       const res = await fetch("/api/relatorios/processos-dashboard", {
         cache: "no-store",
       })
+
+      if (!res.ok) {
+        setErro(true)
+        console.warn("Erro ao buscar indicadores:", res.status)
+        return
+      }
+
       const data = await res.json()
+      if (typeof data !== "object" || !data.total) {
+        console.warn("Formato inesperado da resposta:", data)
+        setErro(true)
+        return
+      }
+
       setDados(data)
     } catch (error) {
       console.error("Erro ao carregar indicadores de processos:", error)
+      setErro(true)
     }
   }
 
@@ -50,6 +67,15 @@ export function StatsDashboardCard() {
   }
 
   const renderTabContent = () => {
+    if (erro) {
+      return (
+        <Typography variant="body2" color="error">
+          Não foi possível carregar os dados de estatísticas. Verifique se você está
+          autenticado.
+        </Typography>
+      )
+    }
+
     if (!dados) {
       return (
         <Stack spacing={1}>
@@ -62,21 +88,17 @@ export function StatsDashboardCard() {
 
     const textContent =
       (tab === 0 && (
-        <>
-          <Stack spacing={0.5}>
-            <Typography variant="body2">Total: {dados.total}</Typography>
-            <Typography variant="body2">Criados no mês: {dados.noMes}</Typography>
-            <Typography variant="body2">Atrasados: {dados.atrasados}</Typography>
-          </Stack>
-          <Stack spacing={0.5} mt={1}>
-            <Typography variant="body2" sx={{ color: COLORS[0] }}>
-              ● Atribuídos a mim: {dados.atribuidosAoUsuario}
-            </Typography>
-            <Typography variant="body2" sx={{ color: COLORS[1] }}>
-              ● Outros processos: {dados.total - dados.atribuidosAoUsuario}
-            </Typography>
-          </Stack>
-        </>
+        <Stack spacing={0.5}>
+          <Typography variant="body2">Total: {dados.total}</Typography>
+          <Typography variant="body2">Criados no mês: {dados.noMes}</Typography>
+          <Typography variant="body2">Atrasados: {dados.atrasados}</Typography>
+          <Typography variant="body2" sx={{ color: COLORS[0] }}>
+            ● Atribuídos a mim: {dados.atribuidosAoUsuario}
+          </Typography>
+          <Typography variant="body2" sx={{ color: COLORS[1] }}>
+            ● Outros processos: {dados.total - dados.atribuidosAoUsuario}
+          </Typography>
+        </Stack>
       )) ||
       (tab === 1 && (
         <Stack spacing={0.5}>
@@ -97,15 +119,6 @@ export function StatsDashboardCard() {
         </Stack>
       ) : (
         <Typography variant="body2">Nenhum tema encontrado</Typography>
-      )) ||
-      (tab === 3 && (
-        <Stack spacing={0.5}>
-          {Object.entries(dados.porTipoRequerimento).map(([tipo, qtd]) => (
-            <Typography key={tipo} variant="body2">
-              {tipo}: {qtd}
-            </Typography>
-          ))}
-        </Stack>
       ))
 
     const chartContent =
@@ -163,31 +176,6 @@ export function StatsDashboardCard() {
         </ResponsiveContainer>
       ) : (
         <Typography variant="body2">Nenhum tema encontrado</Typography>
-      )) ||
-      (tab === 3 && Object.keys(dados.porTipoRequerimento).length > 0 ? (
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={Object.entries(dados.porTipoRequerimento).map(([k, v]) => ({
-                name: k,
-                value: v,
-              }))}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius="80%"
-              label={({ name, value }) => `${name}: ${value}`}
-            >
-              {COLORS.map((color, index) => (
-                <Cell key={`cell-${index}`} fill={color} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      ) : (
-        <Typography variant="body2">Nenhum tipo de requerimento encontrado</Typography>
       ))
 
     return (
@@ -205,18 +193,17 @@ export function StatsDashboardCard() {
       sx={{
         height: "100%",
         width: "100%",
-
         color: "secondary.contrastText",
       }}
     >
       <Box
-        width={"100%"}
+        width="100%"
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
         sx={{ height: "100%" }}
       >
-        <Box width={"100%"}>
+        <Box width="100%">
           <Stack direction="row" spacing={2} alignItems="center">
             <Assessment sx={{ fontSize: 40, color: "warning.main" }} />
             <DashboardCard.Title>Estatísticas</DashboardCard.Title>
@@ -249,12 +236,6 @@ export function StatsDashboardCard() {
               label="Temas"
               sx={{ minHeight: 32, py: 0.5 }}
             />
-            {/*<Tab
-              icon={<CategoryOutlined />}
-              iconPosition="start"
-              label="Tipos"
-              sx={{ minHeight: 32, py: 0.5 }}
-            />*/}
           </Tabs>
 
           <Box mt={2} width="100%">
