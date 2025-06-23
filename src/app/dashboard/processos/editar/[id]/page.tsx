@@ -8,6 +8,7 @@ import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { processoSchema } from "@/schemas/ProcessoSchema"
 import { toProcessoInput } from "@/types/Processo"
+import { safeToISO } from "@/utils/date"
 import type { ProcessoInput } from "@anpd/shared-types"
 import { StatusInterno } from "@anpd/shared-types"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -77,12 +78,9 @@ export default function EditarProcessoPage() {
       tipoReclamacaoId: dataFromForm.tipoReclamacaoId ?? undefined,
       prazoPedido: dataFromForm.prazoPedido ?? undefined,
 
-      dataEnvioPedido: dataFromForm.dataEnvioPedido
-        ? new Date(dataFromForm.dataEnvioPedido).toISOString()
-        : undefined,
-      dataConclusao: dataFromForm.dataConclusao
-        ? new Date(dataFromForm.dataConclusao).toISOString()
-        : undefined,
+      dataEnvioPedido: safeToISO(dataFromForm.dataEnvioPedido),
+      dataConclusao: safeToISO(dataFromForm.dataConclusao),
+
       ...(atualizarStatusInterno && {
         statusInterno: StatusInterno.EM_PROCESSAMENTO,
       }),

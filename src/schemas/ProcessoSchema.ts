@@ -27,7 +27,12 @@ export const processoSchema = Yup.object({
   encaminhamentoId: Yup.number().nullable().default(null),
   tipoReclamacaoId: Yup.number().nullable().default(null),
   prazoPedido: Yup.number().nullable().default(null),
-  dataConclusao: Yup.date().nullable().default(null),
+  dataConclusao: Yup.date()
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value
+    })
+    .nullable()
+    .default(null),
   temaRequerimento: Yup.array(Yup.string().defined()).default([]),
   resumo: Yup.string().default(""),
   observacoes: Yup.string().default(""),
@@ -36,6 +41,9 @@ export const processoSchema = Yup.object({
     .nullable()
     .default(null),
   dataEnvioPedido: Yup.date()
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value
+    })
     .nullable()
     .default(null)
     .typeError("A data de envio do pedido é inválida"),
