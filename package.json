@@ -1,6 +1,6 @@
 {
   "name": "backlog-dim",
-  "version": "0.1.91",
+  "version": "0.1.92",
   "private": true,
   "type": "module",
   "scripts": {
@@ -101,7 +101,7 @@
     "prettier": "^3.5.3",
     "prisma": "^6.9.0",
     "purgecss": "^7.0.2",
-    "supabase": "^2.24.3",
+    "supabase": "^2.26.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
