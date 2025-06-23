@@ -1,5 +1,5 @@
 import { StatusInterno } from "@anpd/shared-types"
-import { TipoRequerimento } from "@prisma/client"
+import type { TipoRequerimento } from "@prisma/client"
 import * as Yup from "yup"
 
 // Validador reutilizável para campos numéricos obrigatórios que podem começar como null
@@ -15,23 +15,6 @@ export const processoSchema = Yup.object({
   formaEntradaId: requiredIdTest("A forma de entrada é obrigatória."),
   responsavelId: requiredIdTest("O responsável é obrigatório."),
   situacaoId: requiredIdTest("A situação é obrigatória."),
-  dataEnvioPedido: Yup.date()
-    .nullable()
-    .default(null)
-    .typeError("A data de envio do pedido é inválida.")
-    .test(
-      "required",
-      "A data de envio do pedido é obrigatória.",
-      (value) => value != null
-    ),
-  tipoRequerimento: Yup.mixed<TipoRequerimento | "">()
-    .oneOf([...Object.values(TipoRequerimento), ""], "Selecione um tipo válido.")
-    .default("")
-    .test(
-      "required",
-      "O tipo de requerimento é obrigatório.",
-      (value) => value != null && value !== ""
-    ),
 
   // === Campos opcionais ===
   anonimo: Yup.boolean().default(false),
@@ -52,6 +35,11 @@ export const processoSchema = Yup.object({
     .oneOf(Object.values(StatusInterno))
     .nullable()
     .default(null),
+  dataEnvioPedido: Yup.date()
+    .nullable()
+    .default(null)
+    .typeError("A data de envio do pedido é inválida"),
+  tipoRequerimento: Yup.mixed<TipoRequerimento | "">().nullable().default(null),
 })
 
 // Tipo inferido automaticamente a partir do schema
