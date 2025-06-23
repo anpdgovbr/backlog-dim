@@ -64,9 +64,6 @@ const handlerPUT = withApiForId<{ id: string }>(
       )
     }
 
-    const parseDate = (dateStr?: string) =>
-      dateStr ? new Date(`${dateStr}T00:00:00.000Z`) : null
-
     const camposComparaveis: (keyof typeof body)[] = [
       "requerente",
       "formaEntradaId",
@@ -121,8 +118,8 @@ const handlerPUT = withApiForId<{ id: string }>(
         observacoes: body.observacoes,
         processoStatusId: body.processoStatusId ?? null,
         resumo: body.resumo ?? null,
-        dataConclusao: parseDate(body.dataConclusao),
-        dataEnvioPedido: parseDate(body.dataEnvioPedido),
+        dataConclusao: body.dataConclusao ? new Date(body.dataConclusao) : null,
+        dataEnvioPedido: body.dataEnvioPedido ? new Date(body.dataEnvioPedido) : null,
         prazoPedido: body.prazoPedido ? Number(body.prazoPedido) : null,
         temaRequerimento: Array.isArray(body.temaRequerimento)
           ? body.temaRequerimento

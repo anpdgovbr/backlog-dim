@@ -6,6 +6,7 @@ import usePode from "@/hooks/usePode"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { processoSchema } from "@/schemas/ProcessoSchema"
+import { safeToISO } from "@/utils/date"
 import { type ProcessoInput, StatusInterno } from "@anpd/shared-types"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
@@ -55,12 +56,8 @@ export default function NovoProcessoPage() {
       tipoReclamacaoId: data.tipoReclamacaoId ?? undefined,
       prazoPedido: data.prazoPedido ?? undefined,
 
-      dataEnvioPedido: data.dataEnvioPedido
-        ? new Date(data.dataEnvioPedido).toISOString()
-        : undefined,
-      dataConclusao: data.dataConclusao
-        ? new Date(data.dataConclusao).toISOString()
-        : undefined,
+      dataEnvioPedido: safeToISO(data.dataEnvioPedido),
+      dataConclusao: safeToISO(data.dataConclusao),
     }
 
     const res = await fetch("/api/processos", {
