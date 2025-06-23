@@ -1,8 +1,9 @@
 "use client"
 
+import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { adicionarDiasUteis } from "@/utils/date"
 import { definirCorStatusInterno, formatarStatusInterno } from "@/utils/statusInterno"
-import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoOutput } from "@anpd/shared-types"
 import {
   Checkbox,
   Chip,
@@ -22,7 +23,7 @@ import { RequeridoDropdownSection } from "../select/RequeridoDropdownSection"
 
 interface ProcessoFormProps {
   processo?: ProcessoOutput
-  methods: UseFormReturn<ProcessoInput>
+  methods: UseFormReturn<ProcessoFormData>
 }
 
 export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {

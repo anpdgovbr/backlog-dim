@@ -1,21 +1,58 @@
+import { StatusInterno } from "@anpd/shared-types"
 import { TipoRequerimento } from "@prisma/client"
 import * as Yup from "yup"
 
-// Este schema define as regras de validação para o formulário de processo.
-export const processoSchema = Yup.object().shape({
+// Validador reutilizável para campos numéricos obrigatórios que podem começar como null
+const requiredIdTest = (message: string) =>
+  Yup.number()
+    .nullable()
+    .default(null)
+    .test("required", message, (value) => value != null)
+
+export const processoSchema = Yup.object({
+  // === Campos obrigatórios ===
   numero: Yup.string().required("O número do processo é obrigatório."),
-  formaEntradaId: Yup.number()
-    .typeError("Selecione uma forma de entrada.")
-    .required("A forma de entrada é obrigatória."),
-  responsavelId: Yup.number()
-    .typeError("Selecione um responsável.")
-    .required("O responsável é obrigatório."),
-  situacaoId: Yup.number()
-    .typeError("Selecione uma situação válida.")
-    .required("A situação é obrigatória."),
-  tipoRequerimento: Yup.mixed<TipoRequerimento>()
-    .oneOf(Object.values(TipoRequerimento), "Selecione um tipo de requerimento válido.")
-    .required("O tipo de requerimento é obrigatório."),
+  formaEntradaId: requiredIdTest("A forma de entrada é obrigatória."),
+  responsavelId: requiredIdTest("O responsável é obrigatório."),
+  situacaoId: requiredIdTest("A situação é obrigatória."),
+  dataEnvioPedido: Yup.date()
+    .nullable()
+    .default(null)
+    .typeError("A data de envio do pedido é inválida.")
+    .test(
+      "required",
+      "A data de envio do pedido é obrigatória.",
+      (value) => value != null
+    ),
+  tipoRequerimento: Yup.mixed<TipoRequerimento | "">()
+    .oneOf([...Object.values(TipoRequerimento), ""], "Selecione um tipo válido.")
+    .default("")
+    .test(
+      "required",
+      "O tipo de requerimento é obrigatório.",
+      (value) => value != null && value !== ""
+    ),
+
+  // === Campos opcionais ===
+  anonimo: Yup.boolean().default(false),
+  requerente: Yup.string().default(""),
+  requeridoId: Yup.number().nullable().default(null),
+  requeridoFinalId: Yup.number().nullable().default(null),
+  pedidoManifestacaoId: Yup.number().nullable().default(null),
+  contatoPrevioId: Yup.number().nullable().default(null),
+  evidenciaId: Yup.number().nullable().default(null),
+  encaminhamentoId: Yup.number().nullable().default(null),
+  tipoReclamacaoId: Yup.number().nullable().default(null),
+  prazoPedido: Yup.number().nullable().default(null),
+  dataConclusao: Yup.date().nullable().default(null),
+  temaRequerimento: Yup.array(Yup.string().defined()).default([]),
+  resumo: Yup.string().default(""),
+  observacoes: Yup.string().default(""),
+  statusInterno: Yup.string()
+    .oneOf(Object.values(StatusInterno))
+    .nullable()
+    .default(null),
 })
 
+// Tipo inferido automaticamente a partir do schema
 export type ProcessoFormData = Yup.InferType<typeof processoSchema>
