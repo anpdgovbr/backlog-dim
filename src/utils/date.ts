@@ -31,3 +31,18 @@ export function safeToISO(date: string | Date | null | undefined): string | unde
   }
   return undefined
 }
+
+export function toInputDateValue(date: string | Date | null | undefined): string {
+  if (!date) {
+    return ""
+  }
+
+  try {
+    const dateObj = new Date(date)
+    dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset())
+    return dateObj.toISOString().split("T")[0]
+  } catch (e) {
+    console.error("Erro ao converter data para o formato de entrada:", e)
+    return ""
+  }
+}
