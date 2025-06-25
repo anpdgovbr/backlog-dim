@@ -168,7 +168,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 fullWidth
                 select
                 size="small"
-                SelectProps={{ native: true }}
+                slotProps={{ select: { native: true } }}
                 error={!!errors.tipoRequerimento}
                 helperText={errors.tipoRequerimento?.message as string}
               >
