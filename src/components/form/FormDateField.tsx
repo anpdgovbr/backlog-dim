@@ -32,7 +32,9 @@ export default function FormDateField({ name, label }: FormDateFieldProps) {
             type="date"
             fullWidth
             size="small"
-            InputLabelProps={{ shrink: true }}
+            slotProps={{
+              inputLabel: { shrink: true }, // Garante que o label fique acima do campo quando preenchido}
+            }}
             error={!!errors[name]}
             helperText={errors[name]?.message as string}
             onBlur={field.onBlur}
