@@ -64,9 +64,6 @@ const handlerPUT = withApiForId<{ id: string }>(
       )
     }
 
-    const parseDate = (dateStr?: string) =>
-      dateStr ? new Date(`${dateStr}T00:00:00.000Z`) : null
-
     const camposComparaveis: (keyof typeof body)[] = [
       "requerente",
       "formaEntradaId",
@@ -90,8 +87,21 @@ const handlerPUT = withApiForId<{ id: string }>(
     ]
 
     const houveAlteracao = camposComparaveis.some((campo) => {
-      const valorNovo = JSON.stringify(body[campo] ?? null)
-      const valorAntigo = JSON.stringify((processoAtual as any)[campo] ?? null)
+      const valorNovo = body[campo]
+      const valorAntigo = processoAtual[campo as keyof typeof processoAtual]
+
+      if (campo === "dataConclusao" || campo === "dataEnvioPedido") {
+        const dataNova = valorNovo ? new Date(valorNovo as string).getTime() : null
+
+        const dataAntiga = valorAntigo ? new Date(valorAntigo as Date).getTime() : null
+
+        return dataNova !== dataAntiga
+      }
+
+      if (Array.isArray(valorNovo) && Array.isArray(valorAntigo)) {
+        return JSON.stringify(valorNovo.sort()) !== JSON.stringify(valorAntigo.sort())
+      }
+
       return valorNovo !== valorAntigo
     })
 
@@ -121,8 +131,8 @@ const handlerPUT = withApiForId<{ id: string }>(
         observacoes: body.observacoes,
         processoStatusId: body.processoStatusId ?? null,
         resumo: body.resumo ?? null,
-        dataConclusao: parseDate(body.dataConclusao),
-        dataEnvioPedido: parseDate(body.dataEnvioPedido),
+        dataConclusao: body.dataConclusao ? new Date(body.dataConclusao) : null,
+        dataEnvioPedido: body.dataEnvioPedido ? new Date(body.dataEnvioPedido) : null,
         prazoPedido: body.prazoPedido ? Number(body.prazoPedido) : null,
         temaRequerimento: Array.isArray(body.temaRequerimento)
           ? body.temaRequerimento
