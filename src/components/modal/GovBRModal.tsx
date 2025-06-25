@@ -66,8 +66,10 @@ export function GovBRModal({
           }}
         />
       )}
-      BackdropProps={{
-        style: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+      slotProps={{
+        backdrop: {
+          style: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+        },
       }}
     >
       <DialogTitle
