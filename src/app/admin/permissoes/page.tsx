@@ -137,7 +137,7 @@ function GerenciarPermissoesContent() {
                     <Switch
                       checked={p.permitido}
                       onChange={() => handleTogglePermissao(p)}
-                      inputProps={{ "aria-label": `Permissão ${p.acao}` }}
+                      slotProps={{ input: { "aria-label": `Permissão ${p.acao}` } }}
                     />
                   </Box>
                 ))}
