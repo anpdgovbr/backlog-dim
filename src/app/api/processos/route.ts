@@ -34,9 +34,9 @@ export const POST = withApi(
       const processo = await prisma.processo.create({
         data: {
           ...data,
-          dataEnvioPedido: new Date(data.dataEnvioPedido),
-          dataConclusao: new Date(data.dataEnvioPedido),
           numero,
+          dataEnvioPedido: data.dataEnvioPedido ? new Date(data.dataEnvioPedido) : null,
+          dataConclusao: data.dataConclusao ? new Date(data.dataConclusao) : null,
         },
         include: {
           formaEntrada: true,
