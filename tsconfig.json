@@ -24,8 +24,15 @@
       "@/*": ["./src/*"],
       "@anpd/shared-types": ["./node_modules/@anpd/shared-types"]
     },
-    "typeRoots": ["./node_modules/@types", "./next-auth.d.ts"]
+    "typeRoots": ["./node_modules/@types"],
+    "types": []
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-auth.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
