@@ -1,8 +1,9 @@
 "use client"
 
+import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { adicionarDiasUteis } from "@/utils/date"
 import { definirCorStatusInterno, formatarStatusInterno } from "@/utils/statusInterno"
-import type { ProcessoInput, ProcessoOutput } from "@anpd/shared-types"
+import type { ProcessoOutput } from "@anpd/shared-types"
 import {
   Checkbox,
   Chip,
@@ -16,13 +17,14 @@ import {
 import type { UseFormReturn } from "react-hook-form"
 import { FormProvider, useWatch } from "react-hook-form"
 
+import FormDateField from "../form/FormDateField"
 import FormTagsInput from "../form/FormTagsInput"
 import { MetaDropdownSection } from "../select/MetaDropdownSection"
 import { RequeridoDropdownSection } from "../select/RequeridoDropdownSection"
 
 interface ProcessoFormProps {
   processo?: ProcessoOutput
-  methods: UseFormReturn<ProcessoInput>
+  methods: UseFormReturn<ProcessoFormData>
 }
 
 export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
@@ -166,7 +168,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 fullWidth
                 select
                 size="small"
-                SelectProps={{ native: true }}
+                slotProps={{ select: { native: true } }}
                 error={!!errors.tipoRequerimento}
                 helperText={errors.tipoRequerimento?.message as string}
               >
@@ -278,16 +280,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 sm: 3,
               }}
             >
-              <TextField
-                {...register("dataEnvioPedido")}
-                label="Data de Envio do Pedido"
-                type="date"
-                fullWidth
-                size="small"
-                InputLabelProps={{ shrink: true }}
-                error={!!errors.dataEnvioPedido}
-                helperText={errors.dataEnvioPedido?.message as string}
-              />
+              <FormDateField name="dataEnvioPedido" label="Data de Envio do Pedido" />
             </Grid>
             <Grid
               size={{
@@ -325,16 +318,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 sm: 3,
               }}
             >
-              <TextField
-                {...register("dataConclusao")}
-                label="Data de Conclusão"
-                type="date"
-                fullWidth
-                size="small"
-                InputLabelProps={{ shrink: true }}
-                error={!!errors.dataConclusao}
-                helperText={errors.dataConclusao?.message as string}
-              />
+              <FormDateField name="dataConclusao" label="Data de Conclusão" />
             </Grid>
           </Grid>
         </Paper>

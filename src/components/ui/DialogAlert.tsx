@@ -62,18 +62,20 @@ export default function DialogAlert({
       aria-describedby="dialog-description"
       fullWidth
       maxWidth="xs"
-      PaperProps={{
-        sx: {
-          borderRadius: 2,
-          position: "relative",
-          px: 2,
-          py: 1,
-          textAlign: "center",
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 2,
+            position: "relative",
+            px: 2,
+            py: 1,
+            textAlign: "center",
+          },
         },
-      }}
-      BackdropProps={{
-        sx: {
-          backgroundColor: "rgba(0,0,0,0.5)",
+        backdrop: {
+          sx: {
+            backgroundColor: "rgba(0,0,0,0.5)",
+          },
         },
       }}
     >
