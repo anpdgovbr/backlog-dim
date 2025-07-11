@@ -813,6 +813,15 @@ async function main() {
         perfilId: perfis.administrador.id,
       },
     }),
+    prisma.user.upsert({
+      where: { email: "eduardo.anjos@anpd.gov.br" },
+      update: {},
+      create: {
+        email: "eduardo.anjos@anpd.gov.br",
+        nome: "Eduardo Anjos",
+        perfilId: perfis.administrador.id,
+      },
+    }),
   ])
 
   console.log("✅ Seed aplicado com sucesso!")
