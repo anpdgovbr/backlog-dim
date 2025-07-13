@@ -1,6 +1,6 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
 
-![CI - Validação do Código](https://github.com/anpd/backlog-dim/actions/workflows/ci.yml/badge.svg)
+
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
