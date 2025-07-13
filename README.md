@@ -1,6 +1,18 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
 
 ![CI - Validação do Código](https://github.com/anpd/backlog-dim/actions/workflows/ci.yml/badge.svg)
+[![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
+[![MUI](https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
+[![NextAuth.js](https://img.shields.io/badge/NextAuth.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://next-auth.js.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)](https://prettier.io/)
+[![Husky](https://img.shields.io/badge/Husky-black?style=for-the-badge&logo=husky&logoColor=white)](https://typicode.github.io/husky/)
 [![Versão](https://img.shields.io/npm/v/backlog-dim?label=versão)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg)](LICENSE)
 
@@ -57,23 +69,32 @@ A estrutura de pastas segue as convenções do Next.js e foi organizada para sep
 /
 ├── .github/          # Workflows de CI/CD (GitHub Actions)
 ├── prisma/           # Schema, migrações e seeds do Prisma
-│   ├── migrations/
-│   └── schema.prisma
-├── public/           # Arquivos estáticos
-├── src/
-│   ├── app/          # Coração da aplicação (App Router)
-│   │   ├── (admin)/  # Rotas de administração (layout próprio)
-│   │   ├── (auth)/   # Rotas de autenticação
-│   │   ├── api/      # Endpoints do backend
-│   │   └── ...
-│   ├── components/   # Componentes React reutilizáveis
-│   ├── context/      # Provedores de contexto React
-│   ├── hooks/        # Hooks customizados
-│   ├── lib/          # Funções utilitárias, clientes de API, etc.
-│   ├── schemas/      # Schemas de validação (Yup)
-│   └── styles/       # Estilos globais e configurações de tema
+│   ├── migrations/   # Histórico de migrações do banco de dados
+│   └── schema.prisma # Definição do esquema do banco de dados
+├── public/           # Arquivos estáticos servidos diretamente
+├── src/              # Código fonte da aplicação
+│   ├── app/          # Coração da aplicação (App Router do Next.js)
+│   │   ├── (admin)/  # Rotas e layouts específicos para a área administrativa
+│   │   ├── (auth)/   # Rotas e lógica para autenticação de usuários
+│   │   ├── api/      # Endpoints da API RESTful do backend
+│   │   ├── dashboard/ # Páginas e componentes do dashboard principal
+│   │   ├── perfil/   # Páginas e componentes para gestão de perfil do usuário
+│   │   └── ...       # Outras rotas e páginas da aplicação
+│   ├── components/   # Componentes React reutilizáveis (UI, formulários, modais, etc.)
+│   │   ├── form/     # Componentes genéricos para construção de formulários
+│   │   ├── ui/       # Componentes de UI básicos (botões, inputs, etc.)
+│   │   └── ...       # Componentes específicos de domínio (processo, requerido)
+│   ├── context/      # Provedores de contexto React para gerenciar estado global
+│   ├── hooks/        # Hooks customizados para lógica de negócio e acesso a dados
+│   ├── lib/          # Funções utilitárias, clientes de API, configurações e integrações
+│   │   ├── api.ts    # Funções para interação com a API interna
+│   │   ├── prisma/   # Configuração e instância do cliente Prisma
+│   │   └── helpers/  # Funções auxiliares diversas
+│   ├── schemas/      # Schemas de validação (Yup/Zod) para formulários e dados
+│   ├── styles/       # Estilos globais, configurações de tema e overrides de CSS
+│   └── utils/        # Funções utilitárias diversas (formatação, datas, validação)
 ├── .env.example      # Arquivo de exemplo para variáveis de ambiente
-├── package.json      # Dependências e scripts
+├── package.json      # Dependências e scripts do projeto
 └── README.md         # Este arquivo
 ```
 
@@ -99,15 +120,15 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 
 | Categoria                | Tecnologia                                                                                                  |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| **Framework Fullstack**  | [Next.js](https://nextjs.org/) (^15.3.4)                                                                    |
-| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/) (^5.8.3)                                                      |
-| **ORM**                  | [Prisma](https://www.prisma.io/) (^6.10.1)                                                                  |
+| **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                              |
+| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                               |
+| **ORM**                  | [Prisma](https://www.prisma.io/)                                                                            |
 | **Banco de Dados**       | [PostgreSQL](https://www.postgresql.org/)                                                                   |
-| **UI Framework**         | [React](https://react.dev/) (^19.1.0)                                                                       |
-| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/) (^7.1.2)                                                              |
+| **UI Framework**         | [React](https://react.dev/)                                                                                 |
+| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                       |
 | **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                           |
-| **Autenticação**         | [NextAuth.js](https://next-auth.js.org/) (^4.24.11)                                                         |
-| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli) + [Docker](https://www.docker.com/)                    |
+| **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                    |
+| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)    |
 | **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                        |
 | **Estilo e Qualidade**   | [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) |
 
