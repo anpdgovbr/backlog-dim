@@ -18,14 +18,6 @@ fs.writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + "\n")
 
 console.log(`✅ Versão atualizada para: ${newVersion}`)
 
-// Adiciona o package.json ao git antes de gerar o version.json
-try {
-  execSync("git add package.json", { stdio: "inherit" })
-  console.log("📄 package.json adicionado ao git")
-} catch (error) {
-  console.log("⚠️  Erro ao adicionar package.json ao git:", error.message)
-}
-
 // Gera o version.json automaticamente (agora vai incluir as mudanças do package.json)
 try {
   execSync("node ./scripts/generate-version.cjs", { stdio: "inherit" })
@@ -33,9 +25,16 @@ try {
   console.log("⚠️  Erro ao gerar version.json:", error.message)
 }
 
-// Adiciona o version.json ao git e faz o commit
+// Adiciona AMBOS os arquivos ao git ANTES do commit
 try {
-  execSync("git add public/version.json", { stdio: "inherit" })
+  execSync("git add package.json public/version.json", { stdio: "inherit" })
+  console.log("📄 Arquivos adicionados ao git: package.json e version.json")
+} catch (error) {
+  console.log("⚠️  Erro ao adicionar arquivos ao git:", error.message)
+}
+
+// Faz o commit com ambos os arquivos
+try {
   execSync(`git commit -m "chore: bump version to ${newVersion}"`, { stdio: "inherit" })
   console.log(`🚀 Commit realizado: versão ${newVersion}`)
 } catch (error) {

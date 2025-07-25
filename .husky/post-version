@@ -1,3 +1,0 @@
-echo "🔄 Atualizando version.json após npm version..."
-node ./scripts/generate-version.cjs
-git add public/version.json
