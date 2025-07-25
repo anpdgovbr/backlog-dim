@@ -1,5 +1,6 @@
 const fs = require("fs")
 const path = require("path")
+const { execSync } = require("child_process")
 
 // Caminho absoluto do package.json
 const packagePath = path.resolve(__dirname, "../package.json")
@@ -16,3 +17,10 @@ pkg.version = newVersion
 fs.writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + "\n")
 
 console.log(`✅ Versão atualizada para: ${newVersion}`)
+
+// Gera o version.json automaticamente
+try {
+  execSync("node ./scripts/generate-version.cjs", { stdio: "inherit" })
+} catch (error) {
+  console.log("⚠️  Erro ao gerar version.json:", error.message)
+}
