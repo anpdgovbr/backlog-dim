@@ -1,4 +1,4 @@
-# Runs formatter before commit
-node_modules/.bin/lint-staged
+echo "🚀 Rodando hook de pre-commit do Husky..."
 
-npm run pre-commit
+# Lint-staged (se estiver configurado)
+npx lint-staged

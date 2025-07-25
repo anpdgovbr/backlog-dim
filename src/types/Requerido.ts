@@ -1,20 +1,6 @@
-import { EnumData } from "./EnumData"
+import type { CnaeDto, ControladorDto, EnumData } from "@anpdgovbr/shared-types"
 
-export interface RequeridoInput {
-  nome: string
-  cnpj?: string
-  cnae?: string
-  site?: string
-  email?: string
-  setorId?: number
-}
-
-export interface RequeridoOutput {
-  id: number
-  nome: string
-  cnpj?: string
-  cnae?: string
-  site?: string
-  email?: string
+export interface RequeridoOutput extends ControladorDto {
+  cnae?: CnaeDto
   setor?: EnumData
 }

@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
     "/auth/logout",
     "/api/auth",
     "/favicon.ico",
-    "/sobre"
+    "/sobre",
   ]
 
   // 3. Permitir acesso imediato a rotas públicas
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/api/processos") && !token) {
     return new NextResponse("Unauthorized", {
       status: 401,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     })
   }
 
@@ -47,5 +47,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 }

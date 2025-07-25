@@ -7,7 +7,7 @@ import { globalMetadata } from "./metadata"
 export const metadata = globalMetadata
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
@@ -20,7 +20,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="br-body">
+      <body className="br-body" style={{ minWidth: "300px" }}>
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>

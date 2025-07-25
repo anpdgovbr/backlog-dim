@@ -6,8 +6,8 @@
   "singleQuote": false,
   "printWidth": 90,
   "endOfLine": "lf",
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrder": ["^react$", "^next", "^@mui", "^@anpd", "^@govbr", "^@/", "^\\.\\.?/"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "trailingComma": "none"
+  "trailingComma": "es5"
 }

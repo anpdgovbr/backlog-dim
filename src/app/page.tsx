@@ -1,5 +1,11 @@
-import { Box, Button, Container, Typography } from "@mui/material"
+"use client"
+
 import Link from "next/link"
+
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
 
 export default function HomePage() {
   return (
@@ -12,7 +18,7 @@ export default function HomePage() {
           minHeight: "75vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <Typography variant="h2" gutterBottom>
@@ -26,6 +32,10 @@ export default function HomePage() {
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
           <Button variant="contained" size="large" component={Link} href="/auth/login">
             Acessar Sistema
+          </Button>
+
+          <Button variant="outlined" size="large" component={Link} href="/publico">
+            Dashboard Público
           </Button>
 
           <Button variant="outlined" size="large" component={Link} href="/sobre">
