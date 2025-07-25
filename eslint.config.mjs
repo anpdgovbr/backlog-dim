@@ -20,6 +20,18 @@ const eslintConfig = [
     },
   },
 
+  // Configuração específica para Next.js
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    plugins: {
+      "@next/next": nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules,
+    },
+  },
+
   {
     ignores: [
       "node_modules/",
