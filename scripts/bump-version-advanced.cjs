@@ -58,12 +58,22 @@ try {
 // Adiciona o version.json ao git e faz o commit
 try {
   execSync("git add public/version.json", { stdio: "inherit" })
-  execSync(`git commit -m "chore: bump ${bumpType} version to ${newVersion}"`, { stdio: "inherit" })
+  execSync(`git commit -m "chore: bump ${bumpType} version to ${newVersion}"`, {
+    stdio: "inherit",
+  })
   console.log(`🚀 Commit realizado: versão ${newVersion}`)
-  
+
   // Pergunta se quer criar uma tag
-  console.log(`💡 Para criar uma tag, execute: git tag v${newVersion} && git push origin v${newVersion}`)
+  console.log(
+    `💡 Para criar uma tag, execute: git tag v${newVersion} && git push origin v${newVersion}`
+  )
 } catch (error) {
   console.log("⚠️  Erro ao fazer commit:", error.message)
-  console.log("💡 Execute manualmente: git add . && git commit -m \"chore: bump " + bumpType + " version to " + newVersion + "\"")
+  console.log(
+    '💡 Execute manualmente: git add . && git commit -m "chore: bump ' +
+      bumpType +
+      " version to " +
+      newVersion +
+      '"'
+  )
 }
