@@ -1,0 +1,10 @@
+{
+  "name": "backlog-dim",
+  "version": "0.1.124",
+  "buildTime": "2025-07-25T13:05:35.801Z",
+  "buildTimestamp": 1753448735802,
+  "environment": "development",
+  "commit": "4b41b15337899ae7f7dc2b1902e131a8de8b4b10",
+  "commitShort": "4b41b15",
+  "branch": "main"
+}

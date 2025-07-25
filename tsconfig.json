@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -13,19 +13,21 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
-
+    "baseUrl": ".",
     "paths": {
       "@/config/*": ["./src/config/*"],
       "@/*": ["./src/*"],
-      "@anpd/shared-types": ["./node_modules/@anpd/shared-types"]
-    },
-    "typeRoots": ["./node_modules/@types"],
-    "types": []
+      "@anpd/shared-types": ["../shared-types/src/index.ts"],
+      "@scripts/*": ["scripts/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -34,5 +36,5 @@
     ".next/types/**/*.ts",
     "next-auth.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }
