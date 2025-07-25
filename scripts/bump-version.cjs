@@ -40,5 +40,9 @@ try {
   console.log(`🚀 Commit realizado: versão ${newVersion}`)
 } catch (error) {
   console.log("⚠️  Erro ao fazer commit:", error.message)
-  console.log("💡 Execute manualmente: git add . && git commit -m \"chore: bump version to " + newVersion + "\"")
+  console.log(
+    '💡 Execute manualmente: git add . && git commit -m "chore: bump version to ' +
+      newVersion +
+      '"'
+  )
 }
