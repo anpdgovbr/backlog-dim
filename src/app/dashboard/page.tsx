@@ -1,5 +1,8 @@
 "use client"
 
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
+
 import GovBrLoading from "@/components/ui/GovBrLoading"
 import ImportarDashboardCard from "@/container/cards/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/container/cards/MetadadosDashboardCard"
@@ -9,7 +12,6 @@ import ResponsaveisDashboardCard from "@/container/cards/ResponsaveisDashboardCa
 import StatsDashboardCard from "@/container/cards/StatsDashboardCard"
 import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
-import { Box, Grid } from "@mui/material"
 
 function DashboardBacklog() {
   const { permissoes, loading } = usePermissoes()

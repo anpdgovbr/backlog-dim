@@ -27,7 +27,7 @@ export function parseThemeColor(theme: Theme, colorSpec: string): string {
     if (colorObj && typeof colorObj === "object") {
       // Verifica se shade é uma das chaves válidas
       if (isAllowedShade(shade)) {
-        const maybeOpts = colorObj as { [k in AllowedShades]?: string }
+        const maybeOpts = colorObj as Partial<Record<AllowedShades, string>>
         const c = maybeOpts[shade]
         if (typeof c === "string") {
           return c

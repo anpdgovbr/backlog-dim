@@ -1,8 +1,10 @@
 "use client"
 
-import { fetcher } from "@/lib/fetcher"
-import { useSession } from "next-auth/react"
 import useSWR from "swr"
+
+import { useSession } from "next-auth/react"
+
+import { fetcher } from "@/lib/fetcher"
 
 export function useUsuarioIdLogado() {
   const { data: session } = useSession()

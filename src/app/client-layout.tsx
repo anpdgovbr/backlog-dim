@@ -1,5 +1,10 @@
 "use client"
 
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+
+import "@govbr-ds/core/dist/core.css"
+
 import GovBRAvatar from "@/components/avatar/GovBRAvatar"
 import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
 import SystemTitle from "@/components/ui/SystemTitle"
@@ -8,8 +13,6 @@ import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
 import "@/styles/mui-overrides.css"
 import { ThemeProvider } from "@/theme/ThemeProvider"
-import "@govbr-ds/core/dist/core.css"
-import { Box, Typography } from "@mui/material"
 
 export default function ClientRootLayout({
   children,

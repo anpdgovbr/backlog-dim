@@ -1,8 +1,10 @@
 "use client"
 
-import { Typography } from "@mui/material"
-import dynamic from "next/dynamic"
 import { useRef } from "react"
+
+import dynamic from "next/dynamic"
+
+import Typography from "@mui/material/Typography"
 
 import GenericFormDialog from "../modal/GenericFormDialog"
 import type { RequeridoFormHandle } from "./RequeridoForm"

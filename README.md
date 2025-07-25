@@ -1,6 +1,5 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
 
-
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
@@ -13,8 +12,8 @@
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)](https://prettier.io/)
 [![Husky](https://img.shields.io/badge/Husky-black?style=for-the-badge&logo=husky&logoColor=white)](https://typicode.github.io/husky/)
-[![Versão](https://img.shields.io/npm/v/backlog-dim?label=versão)](package.json)
-[![Licença](https://img.shields.io/badge/licença-MIT-blue.svg)](LICENSE)
+[![Versão](https://img.shields.io/badge/versão-0.2.89-brightgreen?style=for-the-badge)](package.json)
+[![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
 
@@ -68,10 +67,24 @@ A estrutura de pastas segue as convenções do Next.js e foi organizada para sep
 ```
 /
 ├── .github/          # Workflows de CI/CD (GitHub Actions)
+├── .husky/           # Git hooks para automatização de qualidade
+├── docs/             # Documentação técnica e guias
+│   ├── DESENVOLVIMENTO.md       # Guia completo de desenvolvimento
+│   ├── ESLINT.md               # Configuração e uso do ESLint
+│   ├── MODERNIZACAO_CONFIGURACOES.md # Processo de modernização
+│   ├── RESOLUCAO_WARNINGS.md  # Documentação de warnings resolvidos
+│   ├── VERSIONING.md           # Sistema de versionamento
+│   └── ...                     # Outros documentos técnicos
 ├── prisma/           # Schema, migrações e seeds do Prisma
 │   ├── migrations/   # Histórico de migrações do banco de dados
 │   └── schema.prisma # Definição do esquema do banco de dados
 ├── public/           # Arquivos estáticos servidos diretamente
+│   └── version.json  # Informações de versão e build
+├── scripts/          # Scripts de automação e desenvolvimento
+│   ├── bump-version-advanced.cjs  # Bump de versão com tipos
+│   ├── fix-mui-imports-advanced.mjs # Correção avançada de imports MUI
+│   ├── dev-server.mjs             # Servidor de desenvolvimento HTTPS
+│   └── ...                        # Outros scripts utilitários
 ├── src/              # Código fonte da aplicação
 │   ├── app/          # Coração da aplicação (App Router do Next.js)
 │   │   ├── (admin)/  # Rotas e layouts específicos para a área administrativa
@@ -93,9 +106,11 @@ A estrutura de pastas segue as convenções do Next.js e foi organizada para sep
 │   ├── schemas/      # Schemas de validação (Yup/Zod) para formulários e dados
 │   ├── styles/       # Estilos globais, configurações de tema e overrides de CSS
 │   └── utils/        # Funções utilitárias diversas (formatação, datas, validação)
-├── .env.example      # Arquivo de exemplo para variáveis de ambiente
-├── package.json      # Dependências e scripts do projeto
-└── README.md         # Este arquivo
+├── .env.local.example # Template de variáveis de ambiente
+├── eslint.config.mjs  # Configuração moderna do ESLint (flat config)
+├── next.config.ts     # Configuração do Next.js otimizada
+├── package.json       # Dependências e scripts do projeto
+└── README.md          # Este arquivo
 ```
 
 ## 🌐 Endpoints da API
@@ -118,19 +133,20 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 
 ## 💻 Tecnologias
 
-| Categoria                | Tecnologia                                                                                                  |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                              |
-| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                               |
-| **ORM**                  | [Prisma](https://www.prisma.io/)                                                                            |
-| **Banco de Dados**       | [PostgreSQL](https://www.postgresql.org/)                                                                   |
-| **UI Framework**         | [React](https://react.dev/)                                                                                 |
-| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                       |
-| **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                           |
-| **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                    |
-| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)    |
-| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                        |
-| **Estilo e Qualidade**   | [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) |
+| Categoria                | Tecnologia                                                                                                                | Versão  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- |
+| **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                                            | 15.4.4  |
+| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                                             | 5.8.3   |
+| **ORM**                  | [Prisma](https://www.prisma.io/)                                                                                          | 6.9.0   |
+| **Banco de Dados**       | [PostgreSQL](https://www.postgresql.org/)                                                                                 | 15+     |
+| **UI Framework**         | [React](https://react.dev/)                                                                                               | 18+     |
+| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                                     | 6.x     |
+| **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | Latest  |
+| **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
+| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)                  | Latest  |
+| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                                      | Latest  |
+| **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.31.0  |
+| **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
 
 ## 🚀 Guia de Instalação
 
@@ -161,7 +177,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     Copie o arquivo de exemplo e preencha com suas credenciais.
 
     ```bash
-    cp .env.example .env
+    cp .env.local.example .env.local
     ```
 
     _Consulte a seção [Variáveis de Ambiente](#-variáveis-de-ambiente) para mais detalhes._
@@ -197,7 +213,7 @@ A aplicação estará disponível em [http://localhost:3000](http://localhost:30
 
 ## 🔑 Variáveis de Ambiente
 
-O arquivo `.env` é crucial para a configuração da aplicação.
+O arquivo `.env.local` é crucial para a configuração da aplicação. Use o `.env.local.example` como template.
 
 | Variável                        | Descrição                                      | Exemplo (Local)                                           |
 | ------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
@@ -210,20 +226,49 @@ O arquivo `.env` é crucial para a configuração da aplicação.
 | `AZURE_AD_CLIENT_ID`            | ID do Cliente da aplicação no Azure AD.        | (Obtido no portal do Azure)                               |
 | `AZURE_AD_CLIENT_SECRET`        | Segredo do Cliente da aplicação no Azure AD.   | (Obtido no portal do Azure)                               |
 | `AZURE_AD_TENANT_ID`            | ID do Tenant (diretório) do Azure AD.          | (Obtido no portal do Azure)                               |
+| `NODE_TLS_REJECT_UNAUTHORIZED`  | Controle de verificação de certificados TLS.   | `0` (desenvolvimento) / `1` (produção)                    |
+
+### 📋 Configuração Rápida
+
+1. **Copie o template:**
+
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+2. **Configure o Supabase:**
+
+   ```bash
+   npx supabase start
+   # Use as credenciais exibidas para preencher o .env.local
+   ```
+
+3. **Configure o Azure AD:**
+   - Acesse o [Portal do Azure](https://portal.azure.com)
+   - Registre uma nova aplicação
+   - Configure as URLs de redirect: `http://localhost:3000/api/auth/callback/azure-ad`
+   - Copie as credenciais para o `.env.local`
 
 ## ⚙️ Scripts Disponíveis
 
-| Comando                  | Descrição                                           |
-| ------------------------ | --------------------------------------------------- |
-| `npm run dev`            | Inicia o servidor de desenvolvimento com Turbopack. |
-| `npm run build`          | Compila a aplicação para produção.                  |
-| `npm run start`          | Inicia o servidor de produção.                      |
-| `npm run lint`           | Executa o ESLint para análise de código.            |
-| `npm run format`         | Formata o código com Prettier.                      |
-| `npm run db:seed`        | Popula o banco com dados do `prisma/seed.ts`.       |
-| `npm run supabase:start` | Inicia os serviços do Supabase via Docker.          |
-| `npm run supabase:stop`  | Para os serviços do Supabase.                       |
-| `npm run supabase:reset` | Reinicia o ambiente Supabase local.                 |
+| Comando                            | Descrição                                                  |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `npm run dev`                      | Inicia o servidor de desenvolvimento com Turbopack.        |
+| `npm run dev:https`                | Inicia o servidor com HTTPS (certificados auto-assinados). |
+| `npm run build`                    | Compila a aplicação para produção.                         |
+| `npm run start`                    | Inicia o servidor de produção.                             |
+| `npm run lint`                     | Executa o ESLint para análise de código.                   |
+| `npm run format`                   | Formata o código com Prettier.                             |
+| `npm run db:seed`                  | Popula o banco com dados do `prisma/seed.ts`.              |
+| `npm run bump`                     | Incrementa a versão patch automaticamente.                 |
+| `npm run bump:patch`               | Incrementa a versão patch (1.0.0 → 1.0.1).                 |
+| `npm run bump:minor`               | Incrementa a versão minor (1.0.0 → 1.1.0).                 |
+| `npm run bump:major`               | Incrementa a versão major (1.0.0 → 2.0.0).                 |
+| `npm run fix:mui-imports`          | Corrige imports do Material-UI automaticamente.            |
+| `npm run fix:mui-imports:advanced` | Correção avançada de imports MUI com otimizações.          |
+| `npm run supabase:start`           | Inicia os serviços do Supabase via Docker.                 |
+| `npm run supabase:stop`            | Para os serviços do Supabase.                              |
+| `npm run supabase:reset`           | Reinicia o ambiente Supabase local.                        |
 
 ## 🗄️ Gestão do Banco de Dados com Prisma
 
@@ -246,10 +291,85 @@ O projeto utiliza **GitHub Actions** para Integração Contínua. O workflow em 
 
 Isso garante que o código integrado à base principal esteja sempre funcional e padronizado.
 
+## 🚀 Melhorias Recentes
+
+### ✅ Correções de Build Implementadas
+
+- **TypeScript:** Todos os erros de compilação resolvidos
+- **ESLint:** Migração para flat config (v9.31.0) completa
+- **NextAuth:** Compatibilidade com v4.24.11 garantida
+- **Material-UI:** Imports otimizados automaticamente
+
+### 🛠️ Scripts de Versionamento
+
+Sistema robusto de bump de versão implementado:
+
+```bash
+# Incremento automático de patch
+npm run bump
+
+# Incrementos específicos
+npm run bump:patch  # 1.0.0 → 1.0.1
+npm run bump:minor  # 1.0.0 → 1.1.0
+npm run bump:major  # 1.0.0 → 2.0.0
+```
+
+### 📚 Documentação Técnica
+
+Documentação completa disponível em `/docs`:
+
+- `DESENVOLVIMENTO.md` - Guia de desenvolvimento
+- `ESLINT.md` - Configuração do ESLint
+- `RESOLUCAO_WARNINGS.md` - Warnings resolvidos
+- `VERSIONING.md` - Sistema de versionamento
+
+### 🔒 Ambiente Seguro
+
+- **HTTPS local:** Scripts dev:https com certificados auto-assinados
+- **Variáveis TLS:** Configuração cross-platform para certificados
+- **Git hooks:** Prevenção de commits com código problemático
+
 ## 🎨 Padrões de Código
 
-- **ESLint** e **Prettier** são usados para manter um estilo de código consistente.
-- **Husky** e **lint-staged** rodam o linter e o formatador automaticamente antes de cada `git commit`, prevenindo a submissão de código fora do padrão.
+### 🔧 Ferramentas de Qualidade
+
+- **ESLint 9.31.0** com flat config para análise estática de código
+- **Prettier** para formatação automática e consistente
+- **Husky** para git hooks automatizados
+- **lint-staged** para análise incremental nos commits
+
+### 🏗️ Configurações Modernas
+
+- **TypeScript 5.8.3** com strict mode ativado
+- **Next.js 15.4.4** com App Router e Turbopack
+- **Material-UI imports** otimizados automaticamente
+- **Git hooks** previnem commits com código fora do padrão
+
+### 📋 Comandos de Qualidade
+
+```bash
+# Análise e correção automática de código
+npm run lint
+
+# Formatação de todos os arquivos
+npm run format
+
+# Correção de imports Material-UI
+npm run fix:mui-imports
+npm run fix:mui-imports:advanced
+
+# Verificação manual (dry-run)
+npm run fix:mui-imports:dry
+npm run fix:mui-imports:advanced:dry
+```
+
+### ⚙️ Integração Automática
+
+Os hooks do git executam automaticamente:
+
+- **Pre-commit:** ESLint + Prettier nos arquivos modificados
+- **Pre-push:** Validação completa do build
+- **Bump de versão:** Atualização automática da versão no commit
 
 ## 🤝 Como Contribuir
 

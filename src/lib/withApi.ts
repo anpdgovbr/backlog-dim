@@ -1,11 +1,13 @@
 // lib/withApi.ts
+import type { Session } from "next-auth"
+import { getServerSession } from "next-auth/next"
+import type { NextRequest } from "next/server"
+
+import type { AcaoAuditoria, PermissaoConcedida } from "@anpdgovbr/shared-types"
+
 import { authOptions } from "@/config/next-auth.config"
 import { registrarAuditoria } from "@/lib/helpers/auditoria-server"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import type { PermissaoConcedida } from "@anpd/shared-types"
-import type { AcaoAuditoria } from "@prisma/client"
-import { getServerSession } from "next-auth"
-import type { NextRequest } from "next/server"
 
 type HandlerContext<TParams extends object = object, TExtra = object> = {
   req: Request | NextRequest
@@ -30,7 +32,7 @@ type Handler<TParams extends object = object, TExtra = object> = (
 
 type WithApiOptions<TParams extends object = object> = {
   tabela?: string | ((params: TParams) => string)
-  acao?: AcaoAuditoria
+  acao?: (typeof AcaoAuditoria)[keyof typeof AcaoAuditoria]
   permissao?: PermissaoConcedida
 }
 
@@ -41,7 +43,7 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   options?: WithApiOptions<TParams>,
   params: TParams = {} as TParams
 ): Promise<Response> {
-  const session = await getServerSession(authOptions)
+  const session = (await getServerSession(authOptions)) as Session | null
 
   if (!session?.user?.email) {
     return Response.json({ error: "Usuário não autenticado" }, { status: 401 })

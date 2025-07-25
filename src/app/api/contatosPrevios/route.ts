@@ -1,7 +1,8 @@
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
-import { AcaoAuditoria } from "@prisma/client"
 
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.contatoPrevio.findMany({

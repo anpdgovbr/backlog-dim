@@ -1,10 +1,17 @@
 "use client"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
-import { Box, Button, CircularProgress, Container, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
+
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+
+import GovBrLoading from "@/components/ui/GovBrLoading"
 
 export default function LoginPage() {
   const { status } = useSession()

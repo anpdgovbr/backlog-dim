@@ -1,15 +1,15 @@
 "use client"
 
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  Container,
-  Paper,
-  Typography,
-} from "@mui/material"
-import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+
+import { useSession } from "next-auth/react"
+
+import Avatar from "@mui/material/Avatar"
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
 
 interface Perfil {
   id: number

@@ -1,6 +1,7 @@
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
-import { AcaoAuditoria } from "@prisma/client"
 
 // Handler isolado
 const handlerPATCH = withApiForId<{ id: string }>(

@@ -1,4 +1,119 @@
-# 🚀 Melhorias e Atualizações Gerais
+# � Changelog
+
+## 🔧 Correções de Build e Modernização - v0.2.89
+
+**Data:** 25/07/2025  
+**Responsável:** GitHub Copilot  
+**Branch:** minor-0.2
+
+### 🚨 Correções Críticas de Build
+
+#### TypeScript e Compilação
+
+- **Corrigido:** Erros de compilação TypeScript que impediam o build
+- **Corrigido:** Interface `UserWithId` no `AuditProvider.tsx` para compatibilidade com NextAuth v4
+- **Corrigido:** Imports do NextAuth simplificados para v4.24.11
+- **Corrigido:** Validação de `tipoRequerimento` no `ProcessoForm`
+- **Corrigido:** Declarações de tipos para Material-UI e componentes customizados
+
+#### ESLint e Qualidade de Código
+
+- **Modernizado:** Configuração ESLint migrada para flat config (eslint.config.mjs)
+- **Corrigido:** Plugin @next/next não detectado - configuração dual implementada
+- **Adicionado:** Suppressão de warnings específicos do NextAuth v4
+- **Otimizado:** Regras de import para compatibilidade com MUI
+
+#### Scripts de Versioning
+
+- **Corrigido:** Loop infinito nos scripts de bump de versão
+- **Implementado:** Scripts avançados de bump (patch/minor/major)
+- **Otimizado:** Prevenção de modificações pós-commit no version.json
+- **Corrigido:** Arquivo corrompido `bump-version-advanced.cjs` restaurado
+
+### ⚠️ Warnings Resolvidos
+
+#### Certificados TLS
+
+- **Documentado:** Warnings de certificados auto-assinados
+- **Implementado:** Configuração cross-env para NODE_TLS_REJECT_UNAUTHORIZED
+- **Adicionado:** Scripts dev:https para desenvolvimento com HTTPS
+
+#### Dependências e Build
+
+- **Suprimido:** Warnings de peer dependencies no MUI
+- **Otimizado:** Configuração do Turbopack para desenvolvimento
+- **Corrigido:** Configurações do TypeScript para strict mode
+
+### 📚 Documentação Criada
+
+#### Novos Documentos
+
+- `docs/DESENVOLVIMENTO.md` - Guia completo de desenvolvimento
+- `docs/RESOLUCAO_WARNINGS.md` - Documentação de warnings resolvidos
+- `docs/FIXING_WARNINGS.md` - Processo de correção de warnings
+- `docs/ESLINT_RESUMO.md` - Resumo da configuração ESLint
+- `docs/MODERNIZACAO_CONFIGURACOES.md` - Processo de modernização
+- `docs/VERSIONING.md` - Sistema de versionamento
+
+#### Atualizações de Configuração
+
+- `.env.local.example` - Template de variáveis de ambiente
+- `next.config.ts` - Configurações otimizadas do Next.js
+- `eslint.config.mjs` - Nova configuração flat config
+- `.husky/pre-commit` - Hooks de git otimizados
+
+### 🛠️ Scripts e Ferramentas
+
+#### Novos Scripts
+
+- `npm run bump:patch` - Incremento de versão patch
+- `npm run bump:minor` - Incremento de versão minor
+- `npm run bump:major` - Incremento de versão major
+- `npm run dev:https` - Desenvolvimento com HTTPS
+- `scripts/dev-server.mjs` - Servidor de desenvolvimento customizado
+
+#### Scripts Otimizados
+
+- `scripts/generate-version.cjs` - Geração de timestamps otimizada
+- `scripts/fix-mui-imports-advanced.mjs` - Correção avançada de imports MUI
+- `scripts/quick-fixes.mjs` - Correções rápidas automatizadas
+
+### 🔄 Ambiente de Desenvolvimento
+
+#### Melhorias no Workflow
+
+- **Git Hooks:** Prevenção de loops infinitos
+- **Linting:** Execução automática antes de commits
+- **Formatação:** Prettier integrado ao workflow
+- **Build:** Validação automática de tipos
+
+#### Compatibilidade
+
+- **Next.js 15.4.4:** Totalmente compatível
+- **TypeScript 5.8.3:** Strict mode ativado
+- **ESLint 9.31.0:** Flat config implementado
+- **Material-UI:** Imports otimizados
+
+### 📈 Impacto das Correções
+
+#### Antes
+
+- ❌ 5 erros de TypeScript bloqueavam build
+- ❌ Loop infinito nos scripts de versão
+- ⚠️ 15+ warnings diversos no console
+- ❌ ESLint não funcionava corretamente
+
+#### Depois
+
+- ✅ Build passa sem erros
+- ✅ Scripts de versão funcionam corretamente
+- ✅ Warnings documentados/suprimidos
+- ✅ ESLint configurado e funcional
+- ✅ Ambiente de desenvolvimento estável
+
+---
+
+## �🚀 Melhorias e Atualizações Gerais - v0.1.121
 
 **Data:** 13/07/2025
 **Versão:** 0.1.121
@@ -9,7 +124,7 @@
 ### ⬆️ Atualizações de Dependências
 
 - `302f3fe` - fix: Atualizar versão do pacote @mui/x-data-grid para 8.8.0 e eslint para 9.31.0
-- `3126a50` - fix: Atualizar versão do pacote @anpd/shared-types e @emotion/styled
+- `3126a50` - fix: Atualizar versão do pacote @anpdgovbr/shared-types e @emotion/styled
 - `4d80285` - fix: Atualizar dependências e ajustar configurações do TypeScript
 - `9b78e85` - fix: Updating the MUI version to prevent deprecation issues.
 - `dc1450f` - chore: update dependencies for @mui/x-data-grid, sass, tsx, and eslint packages

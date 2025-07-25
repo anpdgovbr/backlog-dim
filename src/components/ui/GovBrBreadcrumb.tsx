@@ -1,9 +1,13 @@
 "use client"
 
-import { ChevronRight, Home } from "@mui/icons-material"
-import { Box, Breadcrumbs, Link as MUILink, Typography } from "@mui/material"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
+
+import ChevronRight from "@mui/icons-material/ChevronRight"
+import Home from "@mui/icons-material/Home"
+import Box from "@mui/material/Box"
+import Breadcrumbs from "@mui/material/Breadcrumbs"
+import Link from "@mui/material/Link"
+import Typography from "@mui/material/Typography"
 
 interface GovBrBreadcrumbProps {
   basePath?: string // opcional: para cortar parte inicial da rota
@@ -48,7 +52,7 @@ export default function GovBrBreadcrumb({ basePath = "/admin" }: GovBrBreadcrumb
               {crumb.label}
             </Typography>
           ) : (
-            <MUILink
+            <Link
               key={crumb.href}
               component={Link}
               href={crumb.href}
@@ -58,7 +62,7 @@ export default function GovBrBreadcrumb({ basePath = "/admin" }: GovBrBreadcrumb
             >
               {crumb.icon && crumb.icon}
               {crumb.label}
-            </MUILink>
+            </Link>
           )
         )}
       </Breadcrumbs>

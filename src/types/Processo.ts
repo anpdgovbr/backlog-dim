@@ -1,5 +1,6 @@
+import type { ProcessoOutput, StatusInterno } from "@anpdgovbr/shared-types"
+
 import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
-import type { ProcessoOutput, StatusInterno } from "@anpd/shared-types"
 
 export function toProcessoInput(
   processo: ProcessoOutput

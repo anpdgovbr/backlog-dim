@@ -1,14 +1,14 @@
-import type { EnumData } from "@anpd/shared-types"
-import type { SelectChangeEvent } from "@mui/material"
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Tooltip,
-} from "@mui/material"
 import { Controller, useFormContext } from "react-hook-form"
+
+import type { SelectChangeEvent } from "@mui/material"
+import FormControl from "@mui/material/FormControl"
+import FormHelperText from "@mui/material/FormHelperText"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import Tooltip from "@mui/material/Tooltip"
+
+import type { EnumData } from "@anpdgovbr/shared-types"
 
 type FormDropdownProps = {
   name: string

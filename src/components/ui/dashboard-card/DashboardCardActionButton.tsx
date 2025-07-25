@@ -1,6 +1,7 @@
-import { ChevronRight } from "@mui/icons-material"
-import type { SxProps } from "@mui/material"
-import { Button, CardActions } from "@mui/material"
+import ChevronRight from "@mui/icons-material/ChevronRight"
+import Button from "@mui/material/Button"
+import CardActions from "@mui/material/CardActions"
+import type { SxProps } from "@mui/material/styles"
 
 interface DashboardCardActionButtonProps {
   id?: string

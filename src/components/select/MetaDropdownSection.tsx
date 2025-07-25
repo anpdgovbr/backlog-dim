@@ -1,8 +1,10 @@
 "use client"
 
-import type { MetaEntidade } from "@/types/MetaEntidades"
-import type { EnumData } from "@anpd/shared-types"
 import { useEffect, useState } from "react"
+
+import type { EnumData } from "@anpdgovbr/shared-types"
+
+import type { MetaEntidade } from "@/types/MetaEntidades"
 
 import { FormSkeleton } from "../skeleton/FormSkeleton"
 import { FormDropdown } from "./FormDropdown"

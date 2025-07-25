@@ -1,15 +1,23 @@
 "use client"
 
-import usePermissoes from "@/hooks/usePermissoes"
+import type { ComponentType } from "react"
+import { useEffect } from "react"
+
+import { useRouter } from "next/navigation"
+
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+
 import type {
   AcaoPermissao,
   PermissaoConcedida,
   RecursoPermissao,
-} from "@anpd/shared-types"
-import { Alert, AlertTitle, Button, Container, Typography } from "@mui/material"
-import { useRouter } from "next/navigation"
-import type { ComponentType } from "react"
-import { useEffect } from "react"
+} from "@anpdgovbr/shared-types"
+
+import usePermissoes from "@/hooks/usePermissoes"
 
 interface WithPermissaoOptions {
   redirecionar?: boolean

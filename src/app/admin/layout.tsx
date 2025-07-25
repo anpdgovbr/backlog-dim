@@ -1,20 +1,23 @@
 "use client"
 
+import { usePathname } from "next/navigation"
+
+import Group from "@mui/icons-material/Group"
+import Home from "@mui/icons-material/Home"
+import LockPerson from "@mui/icons-material/LockPerson"
+import Shield from "@mui/icons-material/Shield"
+import SupervisedUserCircleOutlined from "@mui/icons-material/SupervisedUserCircleOutlined"
+import ViewCompactAltOutlined from "@mui/icons-material/ViewCompactAltOutlined"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import { useTheme } from "@mui/material/styles"
+import useMediaQuery from "@mui/material/useMediaQuery"
+
 import MobileMenu from "@/components/menu/MobileMenu"
 import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 import withPermissao from "@/hoc/withPermissao"
-import {
-  Group,
-  Home,
-  LockPerson,
-  Shield,
-  SupervisedUserCircleOutlined,
-  ViewCompactAltOutlined,
-} from "@mui/icons-material"
-import { Box, Container, useMediaQuery, useTheme } from "@mui/material"
-import { usePathname } from "next/navigation"
 
 const links: LinkItem[] = [
   { href: "/admin", text: "Painel de Gestão", icon: <Home /> },

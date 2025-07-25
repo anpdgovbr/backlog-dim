@@ -1,7 +1,8 @@
 "use client"
 
-import type { PermissaoConcedida } from "@anpd/shared-types"
 import React from "react"
+
+import type { PermissaoConcedida } from "@anpdgovbr/shared-types"
 
 import type { ILayoutSection, NonEmptyArray } from "./Dashboard25LayoutBase"
 import Dashboard25LayoutBase from "./Dashboard25LayoutBase"

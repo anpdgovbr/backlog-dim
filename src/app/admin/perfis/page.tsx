@@ -1,5 +1,23 @@
 "use client"
 
+import useSWR from "swr"
+
+import { useSession } from "next-auth/react"
+
+import LinkOff from "@mui/icons-material/LinkOff"
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import FormControl from "@mui/material/FormControl"
+import IconButton from "@mui/material/IconButton"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import Typography from "@mui/material/Typography"
+import type { GridColDef } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
+
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { usePerfis } from "@/hooks/usePerfis"
@@ -7,23 +25,6 @@ import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import type { UsuarioComResponsavel } from "@/types/User"
-import { LinkOff } from "@mui/icons-material"
-import {
-  Box,
-  CircularProgress,
-  Container,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material"
-import type { GridColDef } from "@mui/x-data-grid"
-import { DataGrid } from "@mui/x-data-grid"
-import { ptBR } from "@mui/x-data-grid/locales"
-import { useSession } from "next-auth/react"
-import useSWR from "swr"
 
 function GerenciarPerfisContent() {
   const { status } = useSession()

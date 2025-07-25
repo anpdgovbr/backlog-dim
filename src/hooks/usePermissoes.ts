@@ -1,7 +1,10 @@
-import { fetcher } from "@/lib/fetcher"
-import type { PermissaoConcedida, PermissaoDto } from "@anpd/shared-types"
-import { useSession } from "next-auth/react"
 import useSWR from "swr"
+
+import { useSession } from "next-auth/react"
+
+import type { PermissaoConcedida, PermissaoDto } from "@anpdgovbr/shared-types"
+
+import { fetcher } from "@/lib/fetcher"
 
 export default function usePermissoes() {
   const { data: session } = useSession()

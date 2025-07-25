@@ -1,5 +1,21 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
+import Business from "@mui/icons-material/Business"
+import EngineeringOutlined from "@mui/icons-material/EngineeringOutlined"
+import Forum from "@mui/icons-material/Forum"
+import Input from "@mui/icons-material/Input"
+import PermContactCalendar from "@mui/icons-material/PermContactCalendar"
+import Person from "@mui/icons-material/Person"
+import Send from "@mui/icons-material/Send"
+import UploadFile from "@mui/icons-material/UploadFile"
+import Visibility from "@mui/icons-material/Visibility"
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+
 import ImportarProcessos from "@/app/dashboard/importar/page"
 import ContatoPrevioPage from "@/app/dashboard/metadados/contato-previo/page"
 import EncaminhamentoPage from "@/app/dashboard/metadados/encaminhamento/page"
@@ -12,19 +28,6 @@ import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
 import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
 import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
-import {
-  Business,
-  EngineeringOutlined,
-  Forum,
-  Input,
-  PermContactCalendar,
-  Person,
-  Send,
-  UploadFile,
-  Visibility,
-} from "@mui/icons-material"
-import { Box, CircularProgress, Container, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
 
 const allSections: ISectionConfig[] = [
   {

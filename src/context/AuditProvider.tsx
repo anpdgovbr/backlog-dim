@@ -1,13 +1,15 @@
 "use client"
 
-import type { AcaoAuditoria } from "@prisma/client"
+import { createContext, useContext, useMemo } from "react"
+
 import { useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
-import { createContext, useContext, useMemo } from "react"
+
+import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 type AuditContextData = {
   userId?: string
-  email?: string
+  email?: string | null
   contexto: string
 }
 
@@ -19,6 +21,14 @@ type LogAuditoriaInput = {
   depois?: object
 }
 
+// Interface para tipagem específica do usuário com id
+interface UserWithId {
+  id?: string
+  email?: string | null
+  name?: string | null
+  image?: string | null
+}
+
 const AuditContext = createContext<AuditContextData | undefined>(undefined)
 
 export function AuditProvider({ children }: { children: React.ReactNode }) {
@@ -26,12 +36,13 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   const value = useMemo(() => {
+    const user = session?.user as UserWithId | undefined
     return {
-      userId: session?.user?.id,
-      email: session?.user?.email,
+      userId: user?.id,
+      email: user?.email,
       contexto: pathname,
     }
-  }, [session?.user?.id, session?.user?.email, pathname])
+  }, [session?.user, pathname])
 
   return <AuditContext.Provider value={value}>{children}</AuditContext.Provider>
 }

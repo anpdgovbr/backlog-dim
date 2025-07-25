@@ -1,20 +1,28 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
+import dynamic from "next/dynamic"
+
+import Clear from "@mui/icons-material/Clear"
+import GridDeleteIcon from "@mui/icons-material/Delete"
+import SettingsIcon from "@mui/icons-material/Settings"
+import Alert from "@mui/material/Alert"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
+
 import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import type { RequeridoOutput } from "@/types/Requerido"
 import { formatCpfCnpj } from "@/utils/formUtils"
-import { Clear } from "@mui/icons-material"
-import GridDeleteIcon from "@mui/icons-material/Delete"
-import SettingsIcon from "@mui/icons-material/Settings"
-import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
-import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
-import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
-import { ptBR } from "@mui/x-data-grid/locales"
-import dynamic from "next/dynamic"
-import { useEffect, useState } from "react"
 
 const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
   ssr: false,

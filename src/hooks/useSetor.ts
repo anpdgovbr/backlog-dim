@@ -1,5 +1,6 @@
+import type { BaseQueryParams, SetorDto } from "@anpdgovbr/shared-types"
+
 import { useApi } from "@/lib/api"
-import type { BaseQueryParams, SetorDto } from "@anpd/shared-types"
 
 interface UseSetorParams extends BaseQueryParams {
   nome?: string

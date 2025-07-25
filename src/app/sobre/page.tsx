@@ -1,4 +1,7 @@
-import { Box, Container, Divider, Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Divider from "@mui/material/Divider"
+import Typography from "@mui/material/Typography"
 
 export default function SobrePage() {
   return (

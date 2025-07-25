@@ -1,7 +1,9 @@
 // hooks/useProcessos.ts
-import { fetcher } from "@/lib/fetcher"
-import type { BaseQueryParams, ProcessoOutput } from "@anpd/shared-types"
 import useSWR from "swr"
+
+import type { BaseQueryParams, ProcessoOutput } from "@anpdgovbr/shared-types"
+
+import { fetcher } from "@/lib/fetcher"
 
 interface UseProcessosParams extends BaseQueryParams {
   responsavelUserId?: string

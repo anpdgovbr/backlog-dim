@@ -1,6 +1,8 @@
+/// <reference types="next-auth" />
 // next-auth.d.ts
 import "next-auth"
 import "next-auth/jwt"
+import type { DefaultSession } from "next-auth/next"
 
 declare module "next-auth" {
   interface Session {

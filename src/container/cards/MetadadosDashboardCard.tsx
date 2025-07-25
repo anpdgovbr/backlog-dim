@@ -1,7 +1,9 @@
-import { DashboardCard } from "@/components/ui/dashboard-card"
-import { TableChart } from "@mui/icons-material"
-import { Stack } from "@mui/material"
 import { useRouter } from "next/navigation"
+
+import TableChart from "@mui/icons-material/TableChart"
+import Stack from "@mui/material/Stack"
+
+import { DashboardCard } from "@/components/ui/dashboard-card"
 
 function MetadadosDashboardCard() {
   const router = useRouter()

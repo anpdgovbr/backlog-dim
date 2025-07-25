@@ -1,4 +1,4 @@
-import { Typography, type TypographyProps } from "@mui/material"
+import Typography, { type TypographyProps } from "@mui/material/Typography"
 
 interface DashboardCardDescriptionProps extends TypographyProps {
   children: React.ReactNode

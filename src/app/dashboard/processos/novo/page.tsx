@@ -1,5 +1,21 @@
 "use client"
 
+import { yupResolver } from "@hookform/resolvers/yup"
+import { useForm } from "react-hook-form"
+
+import { useRouter } from "next/navigation"
+
+import ChevronLeft from "@mui/icons-material/ChevronLeft"
+import SaveOutlined from "@mui/icons-material/SaveOutlined"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
+
+import { type ProcessoInput, StatusInterno } from "@anpdgovbr/shared-types"
+
 import ProcessoForm from "@/components/processo/ProcessoForm"
 import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
@@ -7,13 +23,6 @@ import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
 import { processoSchema } from "@/schemas/ProcessoSchema"
 import { safeToISO } from "@/utils/date"
-import { type ProcessoInput, StatusInterno } from "@anpd/shared-types"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { ChevronLeft, SaveOutlined } from "@mui/icons-material"
-import { Alert, AlertTitle, Button, Container, Stack, Typography } from "@mui/material"
-import type { TipoRequerimento } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
 
 const defaultValues = processoSchema.getDefault()
 
@@ -24,7 +33,8 @@ export default function NovoProcessoPage() {
   const { loading: loadingUserId } = useUsuarioIdLogado()
 
   const methods = useForm<ProcessoFormData>({
-    resolver: yupResolver(processoSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: yupResolver(processoSchema) as any,
     defaultValues,
   })
 
@@ -34,7 +44,10 @@ export default function NovoProcessoPage() {
     // Monta o payload do processo com os dados do formulário
     const payload: ProcessoInput = {
       numero: data.numero,
-      tipoRequerimento: data.tipoRequerimento as TipoRequerimento,
+      tipoRequerimento:
+        data.tipoRequerimento === "" || data.tipoRequerimento === null
+          ? undefined
+          : data.tipoRequerimento,
       responsavelId: data.responsavelId ?? 0,
       formaEntradaId: data.formaEntradaId ?? undefined,
       situacaoId: data.situacaoId ?? undefined,

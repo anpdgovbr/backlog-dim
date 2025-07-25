@@ -1,17 +1,16 @@
 "use client"
 
-import CloseIcon from "@mui/icons-material/Close"
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Typography,
-  useTheme,
-} from "@mui/material"
 import React from "react"
+
+import CloseIcon from "@mui/icons-material/Close"
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import IconButton from "@mui/material/IconButton"
+import Typography from "@mui/material/Typography"
+import { useTheme } from "@mui/material/styles"
 
 interface DialogAlertProps {
   open: boolean

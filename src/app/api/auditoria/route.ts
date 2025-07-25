@@ -1,10 +1,13 @@
 // app/api/auditoria/route.ts
-import { prisma } from "@/lib/prisma"
-import { withApiSlim } from "@/lib/withApiSlim"
 import type { Prisma } from "@prisma/client"
-import { AcaoAuditoria } from "@prisma/client"
+
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
+
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
+import { prisma } from "@/lib/prisma"
+import { withApiSlim } from "@/lib/withApiSlim"
 
 export async function POST(req: NextRequest) {
   try {

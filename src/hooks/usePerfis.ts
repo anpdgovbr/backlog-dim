@@ -1,7 +1,9 @@
 // hooks/usePerfis.ts
-import { fetcher } from "@/lib/fetcher"
-import type { PerfilDto } from "@anpd/shared-types"
 import useSWR from "swr"
+
+import type { PerfilDto } from "@anpdgovbr/shared-types"
+
+import { fetcher } from "@/lib/fetcher"
 
 export function usePerfis() {
   const { data, error, isLoading, mutate } = useSWR<PerfilDto[]>("/api/perfis", fetcher)

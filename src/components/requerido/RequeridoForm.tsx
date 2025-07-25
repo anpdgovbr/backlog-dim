@@ -1,14 +1,21 @@
 "use client"
 
+import { Controller, FormProvider, useForm } from "react-hook-form"
+import { mask, unmask } from "remask"
+
+import { forwardRef, useEffect, useImperativeHandle } from "react"
+
+import Grid from "@mui/material/Grid"
+import MenuItem from "@mui/material/MenuItem"
+import Paper from "@mui/material/Paper"
+import TextField from "@mui/material/TextField"
+
+import type { ControladorDto } from "@anpdgovbr/shared-types"
+import { TipoControlador } from "@anpdgovbr/shared-types"
+
 import { useNotification } from "@/context/NotificationProvider"
 import { useBuscarCnpj } from "@/hooks/useBuscarCnpj"
 import { validateEmail, validateSite, validateTelefone } from "@/utils/formUtils"
-import type { ControladorDto } from "@anpd/shared-types"
-import { TipoControlador } from "@anpd/shared-types"
-import { Grid, MenuItem, Paper, TextField } from "@mui/material"
-import { forwardRef, useEffect, useImperativeHandle } from "react"
-import { Controller, FormProvider, useForm } from "react-hook-form"
-import { mask, unmask } from "remask"
 
 import { CnaeDropdownSection } from "../select/CnaeDropdownSection"
 import { SetorDropdownSection } from "../select/SetorDropdownSection"

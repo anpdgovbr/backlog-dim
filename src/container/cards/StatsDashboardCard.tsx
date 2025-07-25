@@ -1,16 +1,5 @@
 "use client"
 
-import { DashboardCard } from "@/components/ui/dashboard-card"
-import type { IndicadoresProcesso } from "@/types/Processo"
-import {
-  Assessment,
-  AssessmentOutlined,
-  InfoOutlined,
-  LabelOutlined,
-} from "@mui/icons-material"
-import { Box, Button, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 import {
   Bar,
   BarChart,
@@ -23,6 +12,25 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+
+import { useEffect, useState } from "react"
+
+import { useRouter } from "next/navigation"
+
+import Assessment from "@mui/icons-material/Assessment"
+import AssessmentOutlined from "@mui/icons-material/AssessmentOutlined"
+import InfoOutlined from "@mui/icons-material/InfoOutlined"
+import LabelOutlined from "@mui/icons-material/LabelOutlined"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Skeleton from "@mui/material/Skeleton"
+import Stack from "@mui/material/Stack"
+import Tab from "@mui/material/Tab"
+import Tabs from "@mui/material/Tabs"
+import Typography from "@mui/material/Typography"
+
+import { DashboardCard } from "@/components/ui/dashboard-card"
+import type { IndicadoresProcesso } from "@/types/Processo"
 
 const COLORS = ["#0288D1", "#43A047", "#FB8C00", "#8E24AA", "#F4511E"]
 

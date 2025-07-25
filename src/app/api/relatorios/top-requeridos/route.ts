@@ -1,8 +1,10 @@
-import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
-import type { ControladorDto } from "@anpd/shared-types"
 import https from "https"
 import fetch from "node-fetch"
+
+import type { ControladorDto } from "@anpdgovbr/shared-types"
+
+import { prisma } from "@/lib/prisma"
+import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 // npm install node-fetch
 

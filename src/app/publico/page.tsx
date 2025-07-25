@@ -1,12 +1,13 @@
 "use client"
 
+import Grid from "@mui/material/Grid"
+
 import ImportarDashboardCard from "@/container/cards/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/container/cards/MetadadosDashboardCard"
 import ProcessDashboardCard from "@/container/cards/ProcessDashboardCard"
 import RequeridosDashboardCard from "@/container/cards/RequeridosDashboardCard"
 import ResponsaveisDashboardCard from "@/container/cards/ResponsaveisDashboardCard"
 import StatsDashboardCard from "@/container/cards/StatsDashboardCard"
-import { Grid } from "@mui/material"
 
 export default function SobrePage() {
   return (

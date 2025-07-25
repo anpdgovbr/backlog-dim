@@ -1,11 +1,14 @@
 "use client"
 
-import { KeyboardArrowDownOutlined, KeyboardArrowUpOutlined } from "@mui/icons-material"
+import { useEffect, useRef, useState } from "react"
+
 import { useSession } from "next-auth/react"
 import { signOut } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined"
+import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
 
 declare global {
   interface Window {

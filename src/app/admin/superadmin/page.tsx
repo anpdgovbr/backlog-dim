@@ -1,27 +1,29 @@
 "use client"
 
+import useSWR from "swr"
+
+import { useState } from "react"
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import Accordion from "@mui/material/Accordion"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import Switch from "@mui/material/Switch"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
+
+import type { PermissaoDto } from "@anpdgovbr/shared-types"
+
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
-import type { PermissaoDto } from "@anpd/shared-types"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  MenuItem,
-  Select,
-  Switch,
-  TextField,
-  Typography,
-} from "@mui/material"
-import { useState } from "react"
-import useSWR from "swr"
 
 interface Perfil {
   id: number

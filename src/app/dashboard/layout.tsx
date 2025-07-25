@@ -1,25 +1,29 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
+import { useSession } from "next-auth/react"
+import { usePathname, useRouter } from "next/navigation"
+
+import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings"
+import Assessment from "@mui/icons-material/Assessment"
+import Business from "@mui/icons-material/Business"
+import Home from "@mui/icons-material/Home"
+import ManageSearch from "@mui/icons-material/ManageSearch"
+import Person from "@mui/icons-material/Person"
+import Settings from "@mui/icons-material/Settings"
+import TableChart from "@mui/icons-material/TableChart"
+import UploadFile from "@mui/icons-material/UploadFile"
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import { useTheme } from "@mui/material/styles"
+import useMediaQuery from "@mui/material/useMediaQuery"
+
 import MobileMenu from "@/components/menu/MobileMenu"
 import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
-import {
-  AdminPanelSettings,
-  Assessment,
-  Business,
-  Home,
-  ManageSearch,
-  Person,
-  Settings,
-  TableChart,
-  UploadFile,
-} from "@mui/icons-material"
-import { Box, CircularProgress, Container } from "@mui/material"
-import { useMediaQuery, useTheme } from "@mui/material"
-import { useSession } from "next-auth/react"
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession()

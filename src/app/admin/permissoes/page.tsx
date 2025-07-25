@@ -1,23 +1,25 @@
 "use client"
 
+import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
+
+import { useMemo, useState } from "react"
+
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import Switch from "@mui/material/Switch"
+import Typography from "@mui/material/Typography"
+
+import type { PerfilDto, PermissaoDto } from "@anpdgovbr/shared-types"
+
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import type { PerfilDto, PermissaoDto } from "@anpd/shared-types"
-import {
-  Box,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-  Typography,
-} from "@mui/material"
-import { useMemo, useState } from "react"
-import useSWR from "swr"
-import useSWRImmutable from "swr/immutable"
 
 function GerenciarPermissoesContent() {
   const { notify } = useNotification()

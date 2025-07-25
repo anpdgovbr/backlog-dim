@@ -1,9 +1,10 @@
-import { pode as podeFn } from "@/lib/permissoes"
 import type {
   AcaoPermissao,
   PermissaoConcedida,
   RecursoPermissao,
-} from "@anpd/shared-types"
+} from "@anpdgovbr/shared-types"
+
+import { pode as podeFn } from "@/lib/permissoes"
 
 import usePermissoes from "./usePermissoes"
 

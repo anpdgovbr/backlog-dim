@@ -1,7 +1,9 @@
 // src/app/api/controladores/route.ts
-import { withApi } from "@/lib/withApi"
-import { AcaoAuditoria } from "@anpd/shared-types"
 import { NextResponse } from "next/server"
+
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
+import { withApi } from "@/lib/withApi"
 
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/controladores`

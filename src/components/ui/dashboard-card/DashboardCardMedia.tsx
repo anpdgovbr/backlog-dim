@@ -1,5 +1,5 @@
-import type { SxProps } from "@mui/material"
-import { CardMedia } from "@mui/material"
+import CardMedia from "@mui/material/CardMedia"
+import type { SxProps } from "@mui/material/styles"
 
 interface DashboardCardMediaProps {
   imgSrc: string

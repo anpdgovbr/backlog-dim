@@ -1,5 +1,16 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
+import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn"
+import Forum from "@mui/icons-material/Forum"
+import Input from "@mui/icons-material/Input"
+import PermContactCalendar from "@mui/icons-material/PermContactCalendar"
+import Send from "@mui/icons-material/Send"
+import Visibility from "@mui/icons-material/Visibility"
+import Box from "@mui/material/Box"
+import CircularProgress from "@mui/material/CircularProgress"
+
 import ContatoPrevioPage from "@/app/dashboard/metadados/contato-previo/page"
 import EncaminhamentoPage from "@/app/dashboard/metadados/encaminhamento/page"
 import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
@@ -9,16 +20,6 @@ import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
 import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
 import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
-import {
-  AssignmentTurnedIn,
-  Forum,
-  Input,
-  PermContactCalendar,
-  Send,
-  Visibility,
-} from "@mui/icons-material"
-import { Box, CircularProgress } from "@mui/material"
-import { useEffect, useState } from "react"
 
 import TipoReclamacaoPage from "./tipo-reclamacao/page"
 

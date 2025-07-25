@@ -1,4 +1,5 @@
-import { type SxProps, Typography, type TypographyProps } from "@mui/material"
+import type { SxProps } from "@mui/material"
+import Typography, { type TypographyProps } from "@mui/material/Typography"
 
 interface DashboardCardTitleProps {
   variant?: TypographyProps["variant"]

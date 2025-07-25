@@ -1,7 +1,8 @@
 "use client"
 
+import type { BaseQueryParams, CnaeDto } from "@anpdgovbr/shared-types"
+
 import { useApi } from "@/lib/api"
-import type { BaseQueryParams, CnaeDto } from "@anpd/shared-types"
 
 interface UseCnaeParams extends BaseQueryParams {
   code?: string

@@ -1,17 +1,25 @@
 "use client"
 
+import useSWR from "swr"
+
+import { useCallback, useMemo, useState } from "react"
+
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+import Alert from "@mui/material/Alert"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
+import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
+import { ptBR } from "@mui/x-data-grid/locales"
+
 import { useNotification } from "@/context/NotificationProvider"
 import usePermissoes from "@/hooks/usePermissoes"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/styles/dataGridStyles"
-import DeleteIcon from "@mui/icons-material/Delete"
-import EditIcon from "@mui/icons-material/Edit"
-import { Alert, Box, Button, IconButton, TextField, Typography } from "@mui/material"
-import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
-import { DataGrid, GridAddIcon } from "@mui/x-data-grid"
-import { ptBR } from "@mui/x-data-grid/locales"
-import { useCallback, useMemo, useState } from "react"
-import useSWR from "swr"
 
 import { GovBRInputModal } from "./modal/GovBRModal"
 import DialogAlert from "./ui/DialogAlert"

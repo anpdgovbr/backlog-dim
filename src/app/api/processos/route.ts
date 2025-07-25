@@ -1,6 +1,7 @@
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { AcaoAuditoria } from "@prisma/client"
 
 async function gerarNumeroProcesso(): Promise<string> {
   const agora = new Date()

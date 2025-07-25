@@ -1,7 +1,8 @@
 "use client"
 
-import TopNotification from "@/components/notification/TopNotification"
 import React, { createContext, useCallback, useContext, useState } from "react"
+
+import TopNotification from "@/components/notification/TopNotification"
 
 type NotificationType = "success" | "error" | "info" | "warning"
 

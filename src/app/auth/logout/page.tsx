@@ -1,10 +1,15 @@
 "use client"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
-import { Box, Button, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
+
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+
+import GovBrLoading from "@/components/ui/GovBrLoading"
 
 export default function LogoutPage() {
   const router = useRouter()

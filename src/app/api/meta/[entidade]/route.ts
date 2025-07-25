@@ -1,8 +1,10 @@
+import { NextResponse } from "next/server"
+
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { withApiForId } from "@/lib/withApi"
 import { withApiSlim } from "@/lib/withApiSlim"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
-import { AcaoAuditoria } from "@prisma/client"
-import { NextResponse } from "next/server"
 
 const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => {
   const validacao = validarEntidadeParams(params)

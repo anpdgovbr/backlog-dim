@@ -1,10 +1,14 @@
 "use client"
 
-import { calcIconCircleBg, parseThemeColor } from "@/utils/colorUtils"
-import { KeyboardArrowDown, KeyboardArrowRight } from "@mui/icons-material"
-import { Box, Typography } from "@mui/material"
-import type { Theme } from "@mui/material/styles"
 import React from "react"
+
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown"
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import type { Theme } from "@mui/material/styles"
+
+import { calcIconCircleBg, parseThemeColor } from "@/utils/colorUtils"
 
 interface IMenu25BaseProps {
   readonly id: string

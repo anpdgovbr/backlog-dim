@@ -1,23 +1,23 @@
 "use client"
 
+import React, { useEffect, useRef, useState } from "react"
+
+import Link from "next/link"
+
 import BugReportIcon from "@mui/icons-material/BugReport"
 import CloseIcon from "@mui/icons-material/Close"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Fab,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-} from "@mui/material"
-import Link from "next/link"
-import React, { useEffect, useRef, useState } from "react"
+import Accordion from "@mui/material/Accordion"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import Box from "@mui/material/Box"
+import Fab from "@mui/material/Fab"
+import IconButton from "@mui/material/IconButton"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
 
 interface DevRoutes {
   pages: string[]

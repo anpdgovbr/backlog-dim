@@ -1,6 +1,7 @@
 // lib/auditoria-server.ts
+import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
-import type { AcaoAuditoria } from "@prisma/client"
 
 type LogProps = {
   tabela: string

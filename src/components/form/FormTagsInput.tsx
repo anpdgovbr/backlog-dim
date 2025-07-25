@@ -1,8 +1,12 @@
 "use client"
 
-import { Box, Chip, TextField } from "@mui/material"
-import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+
+import { useState } from "react"
+
+import Box from "@mui/material/Box"
+import Chip from "@mui/material/Chip"
+import TextField from "@mui/material/TextField"
 
 interface FormTagsInputProps {
   name: string

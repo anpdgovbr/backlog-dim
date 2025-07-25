@@ -1,10 +1,16 @@
 "use client"
 
-import { useCnae } from "@/hooks/useCnae"
-import type { CnaeDto } from "@anpd/shared-types"
-import { Autocomplete, CircularProgress, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+
+import { useEffect, useState } from "react"
+
+import Autocomplete from "@mui/material/Autocomplete"
+import CircularProgress from "@mui/material/CircularProgress"
+import TextField from "@mui/material/TextField"
+
+import type { CnaeDto } from "@anpdgovbr/shared-types"
+
+import { useCnae } from "@/hooks/useCnae"
 
 interface CnaeDropdownSectionProps {
   name: string

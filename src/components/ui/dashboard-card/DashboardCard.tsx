@@ -1,7 +1,8 @@
-import { CardActionArea, styled } from "@mui/material"
-import type { SxProps } from "@mui/material"
 import Card from "@mui/material/Card"
+import CardActionArea from "@mui/material/CardActionArea"
 import CardContent from "@mui/material/CardContent"
+import { styled } from "@mui/material/styles"
+import type { SxProps } from "@mui/material/styles"
 
 import { DashboardCardActionButton } from "./DashboardCardActionButton"
 import { DashboardCardContent } from "./DashboardCardContent"

@@ -1,5 +1,6 @@
+import type { SxProps } from "@mui/material/styles"
+
 import ANPDtheme from "@/theme/theme"
-import type { SxProps } from "@mui/material"
 
 export const dataGridStyles = {
   width: "100%",

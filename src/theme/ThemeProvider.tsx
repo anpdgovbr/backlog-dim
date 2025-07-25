@@ -1,8 +1,10 @@
 "use client"
 
-import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material"
 import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
+
+import CssBaseline from "@mui/material/CssBaseline"
+import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles"
 
 import ANPDtheme from "./theme"
 

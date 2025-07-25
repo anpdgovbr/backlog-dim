@@ -1,7 +1,6 @@
-import type { AuthOptions } from "next-auth"
 import AzureADProvider from "next-auth/providers/azure-ad"
 
-export const authOptions: AuthOptions = {
+export const authOptions = {
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
@@ -15,11 +14,12 @@ export const authOptions: AuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
-    maxAge: 4 * 60 * 60, // 4 horas
+    strategy: "jwt" as const,
+    maxAge: 4 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user, account }: any) {
       if (account) {
         token.accessToken = account.access_token
         token.refreshToken = account.refresh_token
@@ -29,7 +29,9 @@ export const authOptions: AuthOptions = {
       }
       return token
     },
-    async session({ session, token }) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token }: any) {
       return {
         ...session,
         user: {
@@ -46,4 +48,5 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
+
 export default authOptions

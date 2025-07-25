@@ -1,7 +1,9 @@
+import type { Session } from "next-auth"
+import { getServerSession } from "next-auth/next"
+import { NextResponse } from "next/server"
+
 import authOptions from "@/config/next-auth.config"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { NextResponse } from "next/server"
 
 function normalizarTexto(texto: string): string {
   return texto
@@ -11,7 +13,7 @@ function normalizarTexto(texto: string): string {
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
+  const session = (await getServerSession(authOptions)) as Session | null
 
   if (!session?.user?.email) {
     // Agora verificamos por email
@@ -59,9 +61,11 @@ export async function GET() {
 
   // Cálculos das estatísticas
   const total = processos.length
-  const noMes = processos.filter((p) => p.dataCriacao >= inicioDoMes).length
+  const noMes = processos.filter(
+    (p: (typeof processos)[number]) => p.dataCriacao >= inicioDoMes
+  ).length
   const atrasados = processos.filter(
-    (p) => p.dataVencimento && p.dataVencimento < hoje
+    (p: (typeof processos)[number]) => p.dataVencimento && p.dataVencimento < hoje
   ).length
 
   const porStatusInterno: Record<string, number> = {}

@@ -1,8 +1,11 @@
+import type { Prisma } from "@prisma/client"
+
+import type { ProcessoImportacao } from "@anpdgovbr/shared-types"
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { getOrRestoreByName } from "@/lib/prisma/getOrRestoreByName"
 import { withApi } from "@/lib/withApi"
-import type { ProcessoImportacao } from "@anpd/shared-types"
-import { AcaoAuditoria } from "@anpd/shared-types"
 
 const formatarData = (data: string): string => {
   const [dia, mes, ano] = data.split("/")
@@ -29,7 +32,7 @@ export const POST = withApi(
 
       for (const [index, processo] of processos.entries()) {
         try {
-          await prisma.$transaction(async (tx) => {
+          await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             const {
               responsavelNome,
               numeroProcesso,

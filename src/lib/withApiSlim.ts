@@ -1,9 +1,12 @@
 // lib/withApiSlim.ts
+import type { Session } from "next-auth"
+import { getServerSession } from "next-auth/next"
+import type { NextRequest } from "next/server"
+
+import type { PermissaoConcedida } from "@anpdgovbr/shared-types"
+
 import { authOptions } from "@/config/next-auth.config"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
-import type { PermissaoConcedida } from "@anpd/shared-types"
-import { getServerSession } from "next-auth"
-import type { NextRequest } from "next/server"
 
 type SlimHandlerContext<TParams extends object = object> = {
   req: Request | NextRequest
@@ -25,7 +28,7 @@ async function handleApiRequestSlim<TParams extends object = object>(
   permissao?: PermissaoConcedida,
   params?: TParams
 ): Promise<Response> {
-  const session = await getServerSession(authOptions)
+  const session = (await getServerSession(authOptions)) as Session | null
 
   if (!session?.user?.email) {
     return Response.json({ error: "Usuário não autenticado" }, { status: 401 })

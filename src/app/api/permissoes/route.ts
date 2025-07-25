@@ -1,9 +1,10 @@
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import type { PermissaoPayload } from "@anpdgovbr/shared-types"
+
 import { getPermissoesPorPerfil } from "@/lib/helpers/permissoes-utils"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
-import type { PermissaoPayload } from "@anpd/shared-types"
-import { AcaoAuditoria } from "@prisma/client"
 
 export const GET = withApiSlimNoParams(async ({ req, email }) => {
   const { searchParams } = new URL(req.url)

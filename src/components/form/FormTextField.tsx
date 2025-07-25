@@ -1,9 +1,10 @@
 "use client"
 
-import type { TextFieldProps } from "@mui/material"
-import { TextField } from "@mui/material"
 import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form"
 import { Controller } from "react-hook-form"
+
+import type { TextFieldProps } from "@mui/material/TextField"
+import TextField from "@mui/material/TextField"
 
 interface FormTextFieldProps<
   TFieldValues extends FieldValues,

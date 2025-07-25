@@ -1,8 +1,9 @@
 "use client"
 
+import type { BaseQueryParams, ControladorDto } from "@anpdgovbr/shared-types"
+
 import { useApi } from "@/lib/api"
 import { replaceNumbers } from "@/utils/stringUtils"
-import type { BaseQueryParams, ControladorDto } from "@anpd/shared-types"
 
 interface UseControladoresParams extends BaseQueryParams {
   cnpj?: string

@@ -1,7 +1,7 @@
+import { AcaoAuditoria, type PermissaoPayload } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import type { PermissaoPayload } from "@anpd/shared-types"
-import { AcaoAuditoria } from "@prisma/client"
 
 export const PATCH = withApi(
   async ({ req }) => {

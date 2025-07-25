@@ -1,11 +1,19 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
+import { useRouter } from "next/navigation"
+
+import Person from "@mui/icons-material/Person"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import Stack from "@mui/material/Stack"
+import Tooltip from "@mui/material/Tooltip"
+import Typography from "@mui/material/Typography"
+
 import { DashboardCard } from "@/components/ui/dashboard-card"
 import type { TopResponsavel } from "@/types/TopResponsaveis"
-import { Person } from "@mui/icons-material"
-import { Box, Button, Grid, Stack, Tooltip, Typography } from "@mui/material"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 
 const MAX_RESPONSAVEIS = 6
 

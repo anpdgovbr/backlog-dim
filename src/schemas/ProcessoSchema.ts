@@ -1,6 +1,7 @@
-import { StatusInterno } from "@anpd/shared-types"
 import type { TipoRequerimento } from "@prisma/client"
 import * as Yup from "yup"
+
+import { StatusInterno } from "@anpdgovbr/shared-types"
 
 // Validador reutilizável para campos numéricos obrigatórios que podem começar como null
 const requiredIdTest = (message: string) =>

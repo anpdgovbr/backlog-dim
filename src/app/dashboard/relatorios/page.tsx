@@ -1,7 +1,9 @@
 "use client"
 
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+
 import withPermissao from "@/hoc/withPermissao"
-import { Box, Typography } from "@mui/material"
 
 function RelatoriosPageContent() {
   return (

@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material"
+import { createTheme } from "@mui/material/styles"
 import { ptBR } from "@mui/x-data-grid/locales"
 
 // Cores institucionais da ANPD
