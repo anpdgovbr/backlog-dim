@@ -1,8 +1,6 @@
-// src/config/next-auth.config.ts
-import type { AuthOptions } from "next-auth"
 import AzureADProvider from "next-auth/providers/azure-ad"
 
-export const authOptions: AuthOptions = {
+export const authOptions = {
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
@@ -10,38 +8,45 @@ export const authOptions: AuthOptions = {
       tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          scope: "openid email profile"
-        }
-      }
-    })
+          scope: "openid email profile offline_access",
+        },
+      },
+    }),
   ],
   session: {
-    strategy: "jwt",
-    maxAge: 4 * 60 * 60 // 4 horas
+    strategy: "jwt" as const,
+    maxAge: 4 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user, account }: any) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.refreshToken = account.refresh_token
+      }
       if (user) {
         token.id = user.id
       }
       return token
     },
-    async session({ session, token }) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token }: any) {
       return {
         ...session,
         user: {
           ...session.user,
-          id: token.id
-        }
+          id: token.id,
+          accessToken: token.accessToken,
+        },
       }
     },
-    redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl) ? url : baseUrl
-    }
   },
   pages: {
     signIn: "/auth/login",
-    error: "/auth/login"
+    error: "/auth/login",
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 }
+
+export default authOptions

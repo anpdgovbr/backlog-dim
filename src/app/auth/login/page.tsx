@@ -1,10 +1,17 @@
 "use client"
 
-import GovBrLoading from "@/components/GovBrLoading"
-import { Box, Button, CircularProgress, Container, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
+
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+
+import GovBrLoading from "@/components/ui/GovBrLoading"
 
 export default function LoginPage() {
   const { status } = useSession()
@@ -12,14 +19,16 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
+  const showLoading = redirecting || isLoading || status === "loading"
 
   // Controle de redirecionamento
   useEffect(() => {
     if (status === "authenticated") {
       setRedirecting(true)
+      setIsLoading(true) // Mantém o loading até redirecionar
       const timer = setTimeout(() => {
         router.replace("/dashboard")
-      }, 500) // Pequeno delay para exibir o loading
+      }, 500)
 
       return () => clearTimeout(timer)
     }
@@ -29,20 +38,26 @@ export default function LoginPage() {
     try {
       setIsLoading(true)
       setError(null)
-      await signIn("azure-ad", {
+      const result = await signIn("azure-ad", {
         redirect: false,
-        callbackUrl: "/dashboard"
+        callbackUrl: "/dashboard",
       })
+
+      if (result?.error) {
+        setError("Falha ao realizar o login. Tente novamente.")
+        setIsLoading(false) // só desliga o loading se falhou
+      }
+
+      // Se deu certo, não faz nada — o `useEffect` cuidará do redirecionamento
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
       console.error("Erro de login:", err)
-    } finally {
       setIsLoading(false)
     }
   }
 
   // Exibir loading durante transições críticas
-  if (redirecting || status === "loading" || isLoading) {
+  if (showLoading) {
     return (
       <GovBrLoading
         message={redirecting ? "Redirecionando..." : "Verificando sessão..."}
@@ -61,7 +76,7 @@ export default function LoginPage() {
         minHeight: "75vh",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
       }}
     >
       <Box
@@ -72,7 +87,7 @@ export default function LoginPage() {
           border: "1px solid #ddd",
           borderRadius: 2,
           boxShadow: 3,
-          backgroundColor: "background.paper"
+          backgroundColor: "background.paper",
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
@@ -97,14 +112,14 @@ export default function LoginPage() {
             fontSize: "1.1rem",
             backgroundColor: "primary.main",
             "&:hover": {
-              backgroundColor: "primary.dark"
-            }
+              backgroundColor: "primary.dark",
+            },
           }}
         >
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            "Entrar com Gov.br"
+            "Entrar com Login Institucional"
           )}
         </Button>
 

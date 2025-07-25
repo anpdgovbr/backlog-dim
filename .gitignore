@@ -24,6 +24,8 @@ package-lock.json
 # misc
 .DS_Store
 *.pem
+*.csr
+/logs/
 
 # debug
 npm-debug.log*
@@ -50,3 +52,13 @@ supabase/.branches/
 package-lock.json
 package-lock.json
 package-lock.json
+dev.csr
+dev.cert.cer
+server.js
+dev-cert.ext
+deploy.sh
+dev-cert.csr
+ecosystem.config.cjs
+logs/combined-0.log
+
+public/dev-routes.json

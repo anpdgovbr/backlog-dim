@@ -1,4 +1,5 @@
-import { Theme, alpha } from "@mui/material/styles"
+import type { Theme } from "@mui/material/styles"
+import { alpha } from "@mui/material/styles"
 
 /**
  * Lista de possíveis chaves (shades) que podem existir em SimplePaletteColorOptions.
@@ -26,7 +27,7 @@ export function parseThemeColor(theme: Theme, colorSpec: string): string {
     if (colorObj && typeof colorObj === "object") {
       // Verifica se shade é uma das chaves válidas
       if (isAllowedShade(shade)) {
-        const maybeOpts = colorObj as { [k in AllowedShades]?: string }
+        const maybeOpts = colorObj as Partial<Record<AllowedShades, string>>
         const c = maybeOpts[shade]
         if (typeof c === "string") {
           return c

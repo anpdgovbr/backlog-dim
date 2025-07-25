@@ -1,2 +1,2 @@
-# Runs build (lint) before push
-npm run build
+npm run lint
+npm run type-check
