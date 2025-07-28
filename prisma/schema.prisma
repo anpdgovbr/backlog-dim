@@ -37,10 +37,8 @@ model Processo {
   dataConclusao          DateTime?          
   dataEnvioPedido        DateTime?          
   prazoPedido            Int?               
-
   active                 Boolean         @default(true)
   exclusionDate          DateTime?
-
   contatoPrevio          ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
   encaminhamento         Encaminhamento?     @relation(fields: [encaminhamentoId], references: [id])
   evidencia              Evidencia?          @relation(fields: [evidenciaId], references: [id])

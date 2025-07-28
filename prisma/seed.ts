@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client"
-import { skip } from "node:test"
 
 const prisma = new PrismaClient()
 
@@ -10,20 +9,35 @@ async function main() {
   // 🌟 Populando tabelas auxiliares
   // ==============================
 
-  console.log("🔹 Criando Responsáveis...")
-  await prisma.responsavel.createMany({
-    data: [
-      { nome: "Camila Romero" },
-      { nome: "Dagoberto Heg" },
-      { nome: "Danubia Durand" },
-      { nome: "Fernanda Pereira" },
-      { nome: "Jean Frederick" },
-      { nome: "Kelly Resqueti Paz" },
-      { nome: "Tatiana Silva" },
-      { nome: "Vanessa Mendes" },
-    ],
-    skipDuplicates: true,
-  })
+  console.log("🔹 Criando Responsáveis a partir de SEED_RESPONSAVEIS_JSON...")
+  if (process.env.SEED_RESPONSAVEIS_JSON) {
+    try {
+      const responsaveis = JSON.parse(process.env.SEED_RESPONSAVEIS_JSON)
+      if (
+        Array.isArray(responsaveis) &&
+        responsaveis.every((r) => typeof r.nome === "string")
+      ) {
+        await prisma.responsavel.createMany({
+          data: responsaveis,
+          skipDuplicates: true,
+        })
+        console.log(`✅ ${responsaveis.length} Responsáveis criados.`)
+      } else {
+        console.error(
+          "❌ SEED_RESPONSAVEIS_JSON não é um array de objetos com a chave 'nome'."
+        )
+      }
+    } catch (error) {
+      console.error(
+        "❌ Erro ao processar SEED_RESPONSAVEIS_JSON. Verifique o formato do JSON.",
+        error
+      )
+    }
+  } else {
+    console.log(
+      "⏩ SEED_RESPONSAVEIS_JSON não definido. Pulando criação de responsáveis."
+    )
+  }
 
   console.log("🔹 Criando Formas de Entrada...")
   await prisma.formaEntrada.createMany({
@@ -739,90 +753,56 @@ async function main() {
     })
   }
 
-  console.log("🔹 Criando Usuários Iniciais...")
-  await Promise.all([
-    prisma.user.upsert({
-      where: { email: "luciano.psilva@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "luciano.psilva@anpd.gov.br",
-        perfilId: perfis.administrador.id,
-        nome: "Luciano Édipo",
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "fabricio.lopes@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "fabricio.lopes@anpd.gov.br",
-        perfilId: perfis.administrador.id,
-        nome: "Fabrício Lopes",
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "arthur.vasconcelos@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "arthur.vasconcelos@anpd.gov.br",
-        perfilId: perfis.administrador.id,
-        nome: "Arthur Oliveira Vasconcelos",
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "henrique.silva@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "henrique.silva@anpd.gov.br",
-        perfilId: perfis.supervisor.id,
-        nome: "Henrique Adriano Santos Silva",
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "thatyane.batista@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "thatyane.batista@anpd.gov.br",
-        perfilId: perfis.supervisor.id,
-        nome: "Thatyane Oliveira Campos Batista",
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "daniel.chaves@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "daniel.chaves@anpd.gov.br",
-        nome: "Daniel Guimaraes Chaves",
-        perfilId: perfis.administrador.id,
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "jorge.lima@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "jorge.lima@anpd.gov.br",
-        nome: "Jorge Andre Ferreira Fontelles de Lima",
-        perfilId: perfis.administrador.id,
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "gustavo.lima@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "gustavo.lima@anpd.gov.br",
-        nome: "Gustavo Fernades Lima",
-        perfilId: perfis.administrador.id,
-      },
-    }),
-    prisma.user.upsert({
-      where: { email: "eduardo.anjos@anpd.gov.br" },
-      update: {},
-      create: {
-        email: "eduardo.anjos@anpd.gov.br",
-        nome: "Eduardo Anjos",
-        perfilId: perfis.administrador.id,
-      },
-    }),
-  ])
+  console.log("🔹 Criando Usuários a partir de SEED_USERS_JSON...")
+  if (process.env.SEED_USERS_JSON) {
+    try {
+      const usersToCreate = JSON.parse(process.env.SEED_USERS_JSON)
+
+      if (!Array.isArray(usersToCreate)) {
+        throw new Error("SEED_USERS_JSON não é um array JSON válido.")
+      }
+
+      const perfilNameToIdMap = {
+        Leitor: perfis.leitor.id,
+        Atendente: perfis.atendente.id,
+        Supervisor: perfis.supervisor.id,
+        Administrador: perfis.administrador.id,
+        SuperAdmin: perfis.superAdmin.id,
+      }
+
+      for (const userData of usersToCreate) {
+        const { email, nome, perfil } = userData
+
+        if (!email || !nome || !perfil) {
+          console.warn("⚠️ Usuário com dados incompletos no JSON. Pulando:", userData)
+          continue
+        }
+
+        const perfilId = perfilNameToIdMap[perfil as keyof typeof perfilNameToIdMap]
+
+        if (!perfilId) {
+          console.warn(
+            `⚠️ Perfil '${perfil}' para o usuário '${email}' não é válido. Pulando.`
+          )
+          continue
+        }
+
+        await prisma.user.upsert({
+          where: { email },
+          update: { nome, perfilId },
+          create: { email, nome, perfilId },
+        })
+      }
+      console.log(`✅ ${usersToCreate.length} usuários processados a partir do JSON.`)
+    } catch (error) {
+      console.error(
+        "❌ Erro ao processar SEED_USERS_JSON. Verifique o formato do JSON.",
+        error
+      )
+    }
+  } else {
+    console.log("⏩ SEED_USERS_JSON não definido. Pulando criação de usuários.")
+  }
 
   console.log("✅ Seed aplicado com sucesso!")
 }
