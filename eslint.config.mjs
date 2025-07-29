@@ -38,7 +38,6 @@ const eslintConfig = [
       ".next/",
       "public/",
       "prisma/",
-      "supabase/",
       "scripts/*.cjs",
       "docs/",
       "*.config.{js,ts,mjs}",

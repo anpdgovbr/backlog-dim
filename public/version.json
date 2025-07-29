@@ -1,10 +1,10 @@
 {
   "name": "@anpdgovbr/backlog-dim",
   "version": "0.2.89",
-  "buildTime": "2025-07-25T17:51:05.464Z",
-  "buildTimestamp": 1753465865465,
+  "buildTime": "2025-07-28T20:56:00.787Z",
+  "buildTimestamp": 1753736160788,
   "environment": "development",
-  "commit": "01c9dafa0eb800456e63fc982bed79ca220edf3f",
-  "commitShort": "01c9daf",
-  "branch": "minor-0.2"
+  "commit": "636e36fdb521ad13724ae25b5a20cee9d38c3202",
+  "commitShort": "636e36f",
+  "branch": "main"
 }

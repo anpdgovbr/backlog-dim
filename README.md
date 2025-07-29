@@ -134,7 +134,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 ## 💻 Tecnologias
 
 | Categoria                | Tecnologia                                                                                                                | Versão  |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- | --------- |
 | **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                                            | 15.4.4  |
 | **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                                             | 5.8.3   |
 | **ORM**                  | [Prisma](https://www.prisma.io/)                                                                                          | 6.9.0   |
@@ -143,7 +143,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 | **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                                     | 6.x     |
 | **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | Latest  |
 | **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
-| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)                  | Latest  |
+| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)                  | Latest  | //remover |
 | **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                                      | Latest  |
 | **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.31.0  |
 | **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
@@ -156,7 +156,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 - [NPM](https://www.npmjs.com/) (v9 ou superior)
 - [Git](https://git-scm.com/)
 - [Docker](https://www.docker.com/products/docker-desktop/)
-- [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started): `npm install -g supabase`
+- [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started): `npm install -g supabase` //remover
 
 ### Passo a Passo
 
@@ -177,12 +177,12 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     Copie o arquivo de exemplo e preencha com suas credenciais.
 
     ```bash
-    cp .env.local.example .env.local
+    cp .env.example .env
     ```
 
     _Consulte a seção [Variáveis de Ambiente](#-variáveis-de-ambiente) para mais detalhes._
 
-4.  **Inicie o ambiente Supabase:**
+4.  **Inicie o ambiente Supabase:** //remover
     Este comando irá subir os contêineres Docker com o PostgreSQL e outros serviços.
 
     ```bash
@@ -213,34 +213,31 @@ A aplicação estará disponível em [http://localhost:3000](http://localhost:30
 
 ## 🔑 Variáveis de Ambiente
 
-O arquivo `.env.local` é crucial para a configuração da aplicação. Use o `.env.local.example` como template.
+O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.example` como template.
 
-| Variável                        | Descrição                                      | Exemplo (Local)                                           |
-| ------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
-| `DATABASE_URL`                  | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
-| `NEXTAUTH_URL`                  | URL base da aplicação para o NextAuth.         | `http://localhost:3000`                                   |
-| `NEXTAUTH_SECRET`               | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                     |
-| `NEXT_PUBLIC_SUPABASE_URL`      | URL pública da API do Supabase.                | `http://127.0.0.1:54321`                                  |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave anônima (pública) do Supabase.           | (Fornecida pelo `supabase start`)                         |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Chave de serviço (privada) do Supabase.        | (Fornecida pelo `supabase start`)                         |
-| `AZURE_AD_CLIENT_ID`            | ID do Cliente da aplicação no Azure AD.        | (Obtido no portal do Azure)                               |
-| `AZURE_AD_CLIENT_SECRET`        | Segredo do Cliente da aplicação no Azure AD.   | (Obtido no portal do Azure)                               |
-| `AZURE_AD_TENANT_ID`            | ID do Tenant (diretório) do Azure AD.          | (Obtido no portal do Azure)                               |
-| `NODE_TLS_REJECT_UNAUTHORIZED`  | Controle de verificação de certificados TLS.   | `0` (desenvolvimento) / `1` (produção)                    |
+| Variável                       | Descrição                                      | Exemplo (Local)                                           |
+| ------------------------------ | ---------------------------------------------- | --------------------------------------------------------- |
+| `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+| `NEXTAUTH_URL`                 | URL base da aplicação para o NextAuth.         | `http://localhost:3000`                                   |
+| `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                     |
+| `AZURE_AD_CLIENT_ID`           | ID do Cliente da aplicação no Azure AD.        | (Obtido no portal do Azure)                               |
+| `AZURE_AD_CLIENT_SECRET`       | Segredo do Cliente da aplicação no Azure AD.   | (Obtido no portal do Azure)                               |
+| `AZURE_AD_TENANT_ID`           | ID do Tenant (diretório) do Azure AD.          | (Obtido no portal do Azure)                               |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (desenvolvimento) / `1` (produção)                    |
 
 ### 📋 Configuração Rápida
 
 1. **Copie o template:**
 
    ```bash
-   cp .env.local.example .env.local
+   cp .env.example .env
    ```
 
-2. **Configure o Supabase:**
+2. **Configure o Supabase:** //remover
 
    ```bash
    npx supabase start
-   # Use as credenciais exibidas para preencher o .env.local
+   # Use as credenciais exibidas para preencher o .env
    ```
 
 3. **Configure o Azure AD:**
@@ -266,9 +263,6 @@ O arquivo `.env.local` é crucial para a configuração da aplicação. Use o `.
 | `npm run bump:major`               | Incrementa a versão major (1.0.0 → 2.0.0).                 |
 | `npm run fix:mui-imports`          | Corrige imports do Material-UI automaticamente.            |
 | `npm run fix:mui-imports:advanced` | Correção avançada de imports MUI com otimizações.          |
-| `npm run supabase:start`           | Inicia os serviços do Supabase via Docker.                 |
-| `npm run supabase:stop`            | Para os serviços do Supabase.                              |
-| `npm run supabase:reset`           | Reinicia o ambiente Supabase local.                        |
 
 ## 🗄️ Gestão do Banco de Dados com Prisma
 

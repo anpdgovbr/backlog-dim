@@ -5,7 +5,7 @@ export const globalMetadata: Metadata = {
   description:
     "Sistema interno para gestão de denúncias e petições relacionadas à LGPD, seguindo o Padrão Digital de Governo.",
   keywords:
-    "ANPD, LGPD, Denúncias, Petições, GovBR, Next.js, Supabase, Design System, Fila de Processamento",
+    "ANPD, LGPD, Denúncias, Petições, GovBR, Next.js, Prisma, Design System, Fila de Processamento",
   authors: [{ name: "Luciano Édipo", url: "https://github.com/lucianoedipo" }],
   openGraph: {
     title: "Fila de Processamento - ANPD",

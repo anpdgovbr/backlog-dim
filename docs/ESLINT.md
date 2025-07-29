@@ -74,7 +74,6 @@ npm run format
     ".next/",
     "public/",
     "prisma/",
-    "supabase/",
     "scripts/*.cjs",
     "docs/",
     "*.config.{js,ts,mjs}"

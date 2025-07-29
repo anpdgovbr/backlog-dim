@@ -3,7 +3,7 @@ name: CI - Validação do Código
 on:
   pull_request:
     branches:
-#      - main
+      #      - main
       - stable
 #      - develop
 
@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       NEXTAUTH_URL: "http://localhost:3000"
@@ -33,27 +31,23 @@ jobs:
 
       - name: 🔧 Criar Arquivo .env
         run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}" >> .env
-          echo "SUPABASE_DB_URL=${SUPABASE_DB_URL}" >> .env
           echo "DATABASE_URL=${DATABASE_URL}" >> .env
           echo "NEXTAUTH_SECRET=${NEXTAUTH_SECRET}" >> .env
           echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env
           echo "AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}" >> .env
           echo "AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET}" >> .env
           echo "AZURE_AD_TENANT_ID=${AZURE_AD_TENANT_ID}" >> .env
-          echo "🔹 NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}"
           echo "🔹 DATABASE_URL=${DATABASE_URL}"
           echo "🔹 NEXTAUTH_URL=${NEXTAUTH_URL}"
 
       - name: 📦 Instalar Dependências
-        run: npm install --legacy-peer-deps
+        run: npm install
 
       - name: 🧹 Rodar ESLint e Prettier
         run: npm run lint && npm run format
 
       - name: 🔍 Debug Variáveis de Ambiente
         run: |
-          echo "🔹 NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}"
           echo "🔹 DATABASE_URL=${DATABASE_URL}"
 
       - name: 🔨 Construir o Projeto
