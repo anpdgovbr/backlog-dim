@@ -46,9 +46,10 @@ A aplicação é um monorepo que utiliza o framework **Next.js**, aproveitando o
 
 - **Frontend:** Construído com **React**, **TypeScript** e **Material-UI (MUI)**, seguindo as diretrizes do **Design System do Gov.br**.
 - **Backend:** As rotas da API são servidas pelo próprio Next.js na pasta `src/app/api`.
-- **Banco de Dados:** Um banco de dados **PostgreSQL**, gerenciado pelo ORM **Prisma**.
-- **Infraestrutura:** O **Supabase** é utilizado para provisionar o ambiente de desenvolvimento local (banco de dados, etc.) através do Docker.
-- **Autenticação:** O **NextAuth.js** gerencia o fluxo de autenticação, utilizando o provedor do Azure AD.
+- **Banco de Dados:** PostgreSQL gerenciado via **docker-infra-pg** (padrão ANPD) ou configuração manual.
+- **ORM:** **Prisma** para migrations, modelagem e acesso aos dados.
+- **Autenticação:** **NextAuth.js** gerencia o fluxo de autenticação, utilizando o provedor do Azure AD.
+- **Infraestrutura:** Padronizada com **docker-infra-pg** para consistência entre projetos da ANPD.
 
 ## ✨ Funcionalidades Principais
 
@@ -134,7 +135,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 ## 💻 Tecnologias
 
 | Categoria                | Tecnologia                                                                                                                | Versão  |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- | --------- |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- |
 | **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                                            | 15.4.4  |
 | **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                                             | 5.8.3   |
 | **ORM**                  | [Prisma](https://www.prisma.io/)                                                                                          | 6.9.0   |
@@ -143,7 +144,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 | **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                                     | 6.x     |
 | **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | Latest  |
 | **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
-| **Infraestrutura Local** | [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started) + [Docker](https://www.docker.com/)                  | Latest  | //remover |
+| **Infraestrutura Local** | [Docker](https://www.docker.com/) + [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg)                       | Latest  |
 | **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                                      | Latest  |
 | **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.31.0  |
 | **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
@@ -153,10 +154,9 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/en/) (v20 ou superior)
-- [NPM](https://www.npmjs.com/) (v9 ou superior)
+- [NPM](https://www.npmjs.com/) (v10 ou superior)
 - [Git](https://git-scm.com/)
-- [Docker](https://www.docker.com/products/docker-desktop/)
-- [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started): `npm install -g supabase` //remover
+- [Docker](https://www.docker.com/products/docker-desktop/) (**Obrigatório** para infraestrutura padrão ANPD)
 
 ### Passo a Passo
 
@@ -177,34 +177,44 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     Copie o arquivo de exemplo e preencha com suas credenciais.
 
     ```bash
-    cp .env.example .env
+    cp .env.example .env.local
     ```
 
     _Consulte a seção [Variáveis de Ambiente](#-variáveis-de-ambiente) para mais detalhes._
 
-4.  **Inicie o ambiente Supabase:** //remover
-    Este comando irá subir os contêineres Docker com o PostgreSQL e outros serviços.
+4.  **Configure a infraestrutura do banco de dados:**
+
+    **🚀 Opção 1: Docker PostgreSQL (Padrão ANPD - Recomendado)**
 
     ```bash
-    npx supabase start
+    # Setup automatizado da infraestrutura padrão
+    npm run infra:setup
+
+    # Subir banco PostgreSQL
+    npm run infra:up
+
+    # Setup completo (infra + migrations + seed)
+    npm run db:setup
     ```
 
-    Ao final, o CLI exibirá as credenciais do banco e da API. **Use-as para preencher o arquivo `.env`**.
-
-5.  **Aplique as migrações do banco:**
-    Este comando cria todas as tabelas definidas no `schema.prisma`.
+    **⚙️ Opção 2: PostgreSQL Manual (Configuração Avançada)**
 
     ```bash
+    # Instalar e configurar PostgreSQL manualmente
+    # Criar banco: backlog_dim_dev
+    # Configurar usuário e permissões
+    # Ajustar DATABASE_URL no .env.local
+
+    # Aplicar migrations
     npx prisma migrate dev
-    ```
 
-6.  **Popule o banco com dados iniciais (opcional):**
-
-    ```bash
+    # Popular banco (opcional)
     npm run db:seed
     ```
 
-7.  **Execute a aplicação:**
+    > 💡 **Recomendação ANPD:** Use sempre a Opção 1 (docker-infra-pg) para consistência entre projetos e facilidade de manutenção.
+
+5.  **Execute a aplicação:**
     ```bash
     npm run dev
     ```
@@ -230,14 +240,14 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 1. **Copie o template:**
 
    ```bash
-   cp .env.example .env
+   cp .env.example .env.local
    ```
 
-2. **Configure o Supabase:** //remover
+2. **Configure a infraestrutura padrão:**
 
    ```bash
-   npx supabase start
-   # Use as credenciais exibidas para preencher o .env
+   npm run infra:setup  # Setup automatizado
+   npm run db:setup     # Banco pronto para uso
    ```
 
 3. **Configure o Azure AD:**
@@ -263,8 +273,39 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 | `npm run bump:major`               | Incrementa a versão major (1.0.0 → 2.0.0).                 |
 | `npm run fix:mui-imports`          | Corrige imports do Material-UI automaticamente.            |
 | `npm run fix:mui-imports:advanced` | Correção avançada de imports MUI com otimizações.          |
+| `npm run infra:setup`              | Setup automatizado da infraestrutura PostgreSQL.           |
+| `npm run infra:up`                 | Sobe a infraestrutura PostgreSQL (Docker).                 |
+| `npm run infra:down`               | Para a infraestrutura PostgreSQL.                          |
+| `npm run infra:logs`               | Visualiza logs do PostgreSQL em tempo real.                |
+| `npm run infra:reset`              | Reset completo da infraestrutura (dados são perdidos).     |
+| `npm run db:setup`                 | Setup completo: infra + migrations + seed.                 |
+| `npm run db:fresh`                 | Ambiente fresco: reset + setup completo.                   |
 
-## 🗄️ Gestão do Banco de Dados com Prisma
+## 🗄️ Gestão do Banco de Dados
+
+### 🐳 Infraestrutura PostgreSQL (docker-infra-pg)
+
+Nossa infraestrutura PostgreSQL é baseada no projeto [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg) da ANPD:
+
+| Comando               | Descrição                                             |
+| --------------------- | ----------------------------------------------------- |
+| `npm run infra:setup` | Configura a infraestrutura PostgreSQL automaticamente |
+| `npm run infra:up`    | Sobe o banco PostgreSQL via Docker Compose            |
+| `npm run infra:down`  | Para o banco PostgreSQL                               |
+| `npm run infra:logs`  | Visualiza logs do PostgreSQL em tempo real            |
+| `npm run infra:reset` | Reset completo (⚠️ todos os dados são perdidos)       |
+| `npm run db:setup`    | Setup completo: infra + migrations + seed             |
+| `npm run db:fresh`    | Ambiente fresco: reset + setup completo               |
+
+**Configuração automática:**
+
+- ✅ PostgreSQL 15+ na porta 5432
+- ✅ Banco `backlog_dim_dev` criado automaticamente
+- ✅ Usuário `backlog_user_db` com privilégios específicos
+- ✅ Volume persistente para dados
+- ✅ Configuração isolada por projeto
+
+### 🛠️ Comandos Prisma
 
 | Comando                    | Descrição                                                                      |
 | -------------------------- | ------------------------------------------------------------------------------ |

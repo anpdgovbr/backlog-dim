@@ -33,7 +33,14 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:studio": "npx prisma studio",
     "start": "next start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "infra:setup": "curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/setup-infra.sh | bash",
+    "infra:up": "cd infra-db && docker-compose up -d",
+    "infra:down": "cd infra-db && docker-compose down",
+    "infra:logs": "cd infra-db && docker-compose logs -f postgres",
+    "infra:reset": "cd infra-db && docker-compose down -v && docker-compose up -d",
+    "db:setup": "npm run infra:up && sleep 5 && npm run prisma:migrate && npm run prisma:seed",
+    "db:fresh": "npm run infra:reset && sleep 10 && npm run db:setup"
   },
   "engines": {
     "node": ">=20.0.0",
