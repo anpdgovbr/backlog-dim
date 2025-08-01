@@ -34,7 +34,7 @@
     "fix:mui-imports:dry": "node scripts/fix-mui-imports.mjs --dry-run",
     "fix:mui-imports:advanced": "node scripts/fix-mui-imports-advanced.mjs",
     "fix:mui-imports:advanced:dry": "node scripts/fix-mui-imports-advanced.mjs --dry-run",
-    "infra:setup": "mkdir -p .infra 2>/dev/null || mkdir .infra 2>nul && curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/setup-cross-platform.cjs > .infra/setup-cross-platform.cjs && curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/docker-helper.cjs > .infra/docker-helper.cjs && curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/db-helper.cjs > .infra/db-helper.cjs && node .infra/setup-cross-platform.cjs",
+    "infra:setup": "curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/setup-cross-platform.js -o .infra/setup-cross-platform.cjs && curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/docker-helper.js -o .infra/docker-helper.cjs && curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/db-helper.js -o .infra/db-helper.cjs && node .infra/setup-cross-platform.cjs",
     "infra:setup:manual": "node .infra/setup-cross-platform.cjs --manual",
     "infra:setup:force": "node .infra/setup-cross-platform.cjs --force --auto",
     "infra:up": "node .infra/docker-helper.cjs up",
