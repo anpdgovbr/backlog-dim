@@ -26,6 +26,8 @@ package-lock.json
 *.pem
 *.csr
 /logs/
+/infra-db/
+/.infra/
 
 # debug
 npm-debug.log*
