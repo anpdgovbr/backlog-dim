@@ -2,12 +2,12 @@
 
 import Grid from "@mui/material/Grid"
 
-import ImportarDashboardCard from "@/container/cards/ImportarDashboardCard"
-import MetadadosDashboardCard from "@/container/cards/MetadadosDashboardCard"
-import ProcessDashboardCard from "@/container/cards/ProcessDashboardCard"
-import RequeridosDashboardCard from "@/container/cards/RequeridosDashboardCard"
-import ResponsaveisDashboardCard from "@/container/cards/ResponsaveisDashboardCard"
-import StatsDashboardCard from "@/container/cards/StatsDashboardCard"
+import ImportarDashboardCard from "@/components/ui/dashboard-card/ImportarDashboardCard"
+import MetadadosDashboardCard from "@/components/ui/dashboard-card/MetadadosDashboardCard"
+import ProcessDashboardCard from "@/components/ui/dashboard-card/ProcessDashboardCard"
+import RequeridosDashboardCard from "@/components/ui/dashboard-card/RequeridosDashboardCard"
+import ResponsaveisDashboardCard from "@/components/ui/dashboard-card/ResponsaveisDashboardCard"
+import StatsDashboardCard from "@/components/ui/dashboard-card/StatsDashboardCard"
 
 export default function SobrePage() {
   return (

@@ -6,6 +6,8 @@ import reactHooksPlugin from "eslint-plugin-react-hooks"
 
 const eslintConfig = [
   eslint.configs.recommended,
+
+  // Configuração principal para todos os arquivos
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     plugins: {
@@ -17,18 +19,6 @@ const eslintConfig = [
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
       ...reactHooksPlugin.configs.recommended.rules,
-    },
-  },
-
-  // Configuração específica para Next.js
-  {
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    plugins: {
-      "@next/next": nextPlugin,
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules,
     },
   },
 

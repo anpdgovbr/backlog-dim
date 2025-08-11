@@ -1,7 +1,7 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import type { PermissaoPayload } from "@anpdgovbr/shared-types"
 
-import { getPermissoesPorPerfil } from "@/lib/helpers/permissoes-utils"
+import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"

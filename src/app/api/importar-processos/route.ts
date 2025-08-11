@@ -3,8 +3,8 @@ import type { Prisma } from "@prisma/client"
 import type { ProcessoImportacao } from "@anpdgovbr/shared-types"
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
+import { getOrRestoreByName } from "@/helpers/getOrRestoreByName"
 import { prisma } from "@/lib/prisma"
-import { getOrRestoreByName } from "@/lib/prisma/getOrRestoreByName"
 import { withApi } from "@/lib/withApi"
 
 const formatarData = (data: string): string => {

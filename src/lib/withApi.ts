@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server"
 import type { AcaoAuditoria, PermissaoConcedida } from "@anpdgovbr/shared-types"
 
 import { authOptions } from "@/config/next-auth.config"
-import { registrarAuditoria } from "@/lib/helpers/auditoria-server"
+import { registrarAuditoria } from "@/helpers/auditoria-server"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
 
 type HandlerContext<TParams extends object = object, TExtra = object> = {
