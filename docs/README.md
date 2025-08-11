@@ -4,18 +4,12 @@
 
 ### 🛠️ Desenvolvimento
 
-- **[DESENVOLVIMENTO.md](DESENVOLVIMENTO.md)** - Guia completo de desenvolvimento
-  - Setup inicial rápido
-  - Ambientes de desenvolvimento
-  - Workflow diário
-  - Resolução de problemas
+- **[ESLINT.md](ESLINT.md)** - Configuração e uso do ESLint
+  - Flat config implementação
+  - Regras customizadas
+  - Troubleshooting
 
 ### 🏗️ Infraestrutura
-
-- **[INFRA-DOCKER-PG-COMO-USAR.md](INFRA-DOCKER-PG-COMO-USAR.md)** - Como usar a infraestrutura PostgreSQL
-  - Setup automático
-  - Scripts úteis
-  - Configurações padrão
 
 - **[MIGRACAO_DOCKER_INFRA_PG.md](MIGRACAO_DOCKER_INFRA_PG.md)** - Migração para docker-infra-pg
   - Implementação completa
@@ -23,11 +17,6 @@
   - Fluxos de trabalho atualizados
 
 ### 🔧 Configuração Técnica
-
-- **[ESLINT.md](ESLINT.md)** - Configuração e uso do ESLint
-  - Flat config implementação
-  - Regras customizadas
-  - Troubleshooting
 
 - **[VERSIONING.md](VERSIONING.md)** - Sistema de versionamento
   - Scripts de bump automático
@@ -41,19 +30,12 @@
   - Configurações atualizadas
   - Antes vs depois
 
-### 🔄 Documentação Externa
-
-- **[REFINAMENTOS_DOCKER_INFRA_PG.md](REFINAMENTOS_DOCKER_INFRA_PG.md)** - Sugestões para docker-infra-pg
-  - Refinamentos baseados em uso real
-  - Métricas de sucesso
-  - Próximos passos
-
 ## 🎯 Guia de Uso
 
 ### 👨‍💻 Para Novos Desenvolvedores
 
-1. Leia **[DESENVOLVIMENTO.md](DESENVOLVIMENTO.md)** primeiro
-2. Configure com **[INFRA-DOCKER-PG-COMO-USAR.md](INFRA-DOCKER-PG-COMO-USAR.md)**
+1. Consulte o README.md principal do projeto primeiro
+2. Configure com os scripts de infraestrutura (`npm run infra:setup`)
 3. Familiarize-se com **[ESLINT.md](ESLINT.md)**
 
 ### 🔧 Para Configuração Avançada
@@ -64,23 +46,21 @@
 ### 🏗️ Para Infraestrutura
 
 1. **[MIGRACAO_DOCKER_INFRA_PG.md](MIGRACAO_DOCKER_INFRA_PG.md)** - Implementação atual
-2. **[REFINAMENTOS_DOCKER_INFRA_PG.md](REFINAMENTOS_DOCKER_INFRA_PG.md)** - Melhorias sugeridas
 
 ## 📝 Documentos Removidos
 
-Os seguintes documentos foram consolidados ou removidos por serem temporários:
+Os seguintes documentos foram consolidados ou removidos por serem obsoletos/temporários:
 
-- `FIXING_WARNINGS.md` - Integrado ao DESENVOLVIMENTO.md
+- `FIXING_WARNINGS.md` - Informações temporárias integradas ao workflow
 - `RESOLUCAO_WARNINGS.md` - Informações obsoletas
-- `RESOLUCAO_ESLINT_MUI.md` - Consolidado no ESLINT.md
+- `RESOLUCAO_ESLINT_MUI.md` - Consolidado no ESLINT.md  
 - `ESLINT_RESUMO.md` - Duplicado do ESLINT.md
 
 ## 🔄 Manutenção da Documentação
 
 ### ✅ Documentos Ativos (manter atualizados)
 
-- DESENVOLVIMENTO.md
-- INFRA-DOCKER-PG-COMO-USAR.md
+- README.md (principal)
 - ESLINT.md
 - VERSIONING.md
 
@@ -88,7 +68,6 @@ Os seguintes documentos foram consolidados ou removidos por serem temporários:
 
 - MIGRACAO_DOCKER_INFRA_PG.md
 - MODERNIZACAO_CONFIGURACOES.md
-- REFINAMENTOS_DOCKER_INFRA_PG.md
 
 ### 🎯 Critérios para Novos Documentos
 

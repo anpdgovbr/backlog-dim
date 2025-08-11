@@ -7,12 +7,11 @@
 [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
 [![MUI](https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
 [![NextAuth.js](https://img.shields.io/badge/NextAuth.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://next-auth.js.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)](https://prettier.io/)
 [![Husky](https://img.shields.io/badge/Husky-black?style=for-the-badge&logo=husky&logoColor=white)](https://typicode.github.io/husky/)
-[![Versão](https://img.shields.io/badge/versão-0.2.89-brightgreen?style=for-the-badge)](package.json)
+[![Versão](https://img.shields.io/badge/versão-0.2.90-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
@@ -136,17 +135,17 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 
 | Categoria                | Tecnologia                                                                                                                | Versão  |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- |
-| **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                                            | 15.4.4  |
-| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                                             | 5.8.3   |
-| **ORM**                  | [Prisma](https://www.prisma.io/)                                                                                          | 6.9.0   |
+| **Framework Fullstack**  | [Next.js](https://nextjs.org/)                                                                                            | 15.4.6  |
+| **Linguagem**            | [TypeScript](https://www.typescriptlang.org/)                                                                             | 5.9.2   |
+| **ORM**                  | [Prisma](https://www.prisma.io/)                                                                                          | 6.13.0  |
 | **Banco de Dados**       | [PostgreSQL](https://www.postgresql.org/)                                                                                 | 15+     |
-| **UI Framework**         | [React](https://react.dev/)                                                                                               | 18+     |
-| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                                     | 6.x     |
-| **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | Latest  |
+| **UI Framework**         | [React](https://react.dev/)                                                                                               | 19.1.1  |
+| **Componentes UI**       | [Material-UI (MUI)](https://mui.com/)                                                                                     | 7.3.1   |
+| **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | 3.6.2   |
 | **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
 | **Infraestrutura Local** | [Docker](https://www.docker.com/) + [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg)                       | Latest  |
-| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [Zod](https://zod.dev/) (via Form Resolvers)                                      | Latest  |
-| **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.31.0  |
+| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [React Hook Form](https://react-hook-form.com/)                                   | Latest  |
+| **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.33.0  |
 | **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
 
 ## 🚀 Guia de Instalação
@@ -194,7 +193,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     npm run infra:up
 
     # Setup completo (infra + migrations + seed)
-    npm run db:setup
+    npm run infra:db:init
     ```
 
     **⚙️ Opção 2: PostgreSQL Manual (Configuração Avançada)**
@@ -247,7 +246,7 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
    ```bash
    npm run infra:setup  # Setup automatizado
-   npm run db:setup     # Banco pronto para uso
+   npm run infra:db:init # Banco pronto para uso
    ```
 
 3. **Configure o Azure AD:**
@@ -262,24 +261,42 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 | ---------------------------------- | ---------------------------------------------------------- |
 | `npm run dev`                      | Inicia o servidor de desenvolvimento com Turbopack.        |
 | `npm run dev:https`                | Inicia o servidor com HTTPS (certificados auto-assinados). |
+| `npm run devs`                     | Inicia o servidor de desenvolvimento alternativo.          |
 | `npm run build`                    | Compila a aplicação para produção.                         |
 | `npm run start`                    | Inicia o servidor de produção.                             |
 | `npm run lint`                     | Executa o ESLint para análise de código.                   |
 | `npm run format`                   | Formata o código com Prettier.                             |
+| `npm run type-check`               | Verifica tipos TypeScript sem gerar arquivos.              |
 | `npm run db:seed`                  | Popula o banco com dados do `prisma/seed.ts`.              |
 | `npm run bump`                     | Incrementa a versão patch automaticamente.                 |
 | `npm run bump:patch`               | Incrementa a versão patch (1.0.0 → 1.0.1).                 |
 | `npm run bump:minor`               | Incrementa a versão minor (1.0.0 → 1.1.0).                 |
 | `npm run bump:major`               | Incrementa a versão major (1.0.0 → 2.0.0).                 |
-| `npm run fix:mui-imports`          | Corrige imports do Material-UI automaticamente.            |
-| `npm run fix:mui-imports:advanced` | Correção avançada de imports MUI com otimizações.          |
+| `npm run build-routes`             | Gera rotas de desenvolvimento automaticamente.             |
+| `npm run build-routes:verbose`     | Gera rotas com saída detalhada.                            |
+| `npm run generate:version`         | Gera o arquivo version.json com informações de build.      |
+| `npm run version:env`              | Define variáveis de ambiente de versão.                    |
 | `npm run infra:setup`              | Setup automatizado da infraestrutura PostgreSQL.           |
 | `npm run infra:up`                 | Sobe a infraestrutura PostgreSQL (Docker).                 |
 | `npm run infra:down`               | Para a infraestrutura PostgreSQL.                          |
 | `npm run infra:logs`               | Visualiza logs do PostgreSQL em tempo real.                |
 | `npm run infra:reset`              | Reset completo da infraestrutura (dados são perdidos).     |
-| `npm run db:setup`                 | Setup completo: infra + migrations + seed.                 |
-| `npm run db:fresh`                 | Ambiente fresco: reset + setup completo.                   |
+| `npm run infra:status`             | Verifica status da infraestrutura.                         |
+| `npm run infra:clean`              | Limpa recursos da infraestrutura.                          |
+| `npm run infra:psql`               | Acessa o PostgreSQL via linha de comando.                  |
+| `npm run infra:backup`             | Cria backup do banco de dados.                             |
+| `npm run infra:update`             | Atualiza scripts da infraestrutura.                        |
+| `npm run infra:debug`              | Executa diagnósticos da infraestrutura.                    |
+| `npm run infra:fix`                | Corrige credenciais da infraestrutura.                     |
+| `npm run infra:db:init`            | Inicializa o banco de dados.                               |
+| `npm run infra:db:fresh`           | Cria um ambiente fresco de banco.                          |
+| `npm run infra:db:migrate`         | Executa migrações do banco.                                |
+| `npm run infra:db:seed`            | Popula o banco via infraestrutura.                         |
+| `npm run infra:db:studio`          | Abre Prisma Studio via infraestrutura.                     |
+| `npm run infra:db:reset`           | Reset completo do banco.                                   |
+| `npm run prisma:migrate`           | Cria e aplica nova migração.                               |
+| `npm run prisma:push`              | Sincroniza schema com banco (desenvolvimento).             |
+| `npm run prisma:studio`            | Abre Prisma Studio diretamente.                            |
 
 ## 🗄️ Gestão do Banco de Dados
 
@@ -287,15 +304,23 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
 Nossa infraestrutura PostgreSQL é baseada no projeto [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg) da ANPD:
 
-| Comando               | Descrição                                             |
-| --------------------- | ----------------------------------------------------- |
-| `npm run infra:setup` | Configura a infraestrutura PostgreSQL automaticamente |
-| `npm run infra:up`    | Sobe o banco PostgreSQL via Docker Compose            |
-| `npm run infra:down`  | Para o banco PostgreSQL                               |
-| `npm run infra:logs`  | Visualiza logs do PostgreSQL em tempo real            |
-| `npm run infra:reset` | Reset completo (⚠️ todos os dados são perdidos)       |
-| `npm run db:setup`    | Setup completo: infra + migrations + seed             |
-| `npm run db:fresh`    | Ambiente fresco: reset + setup completo               |
+| Comando                       | Descrição                                             |
+| ----------------------------- | ----------------------------------------------------- |
+| `npm run infra:setup`         | Configura a infraestrutura PostgreSQL automaticamente |
+| `npm run infra:up`            | Sobe o banco PostgreSQL via Docker Compose            |
+| `npm run infra:down`          | Para o banco PostgreSQL                               |
+| `npm run infra:logs`          | Visualiza logs do PostgreSQL em tempo real            |
+| `npm run infra:reset`         | Reset completo (⚠️ todos os dados são perdidos)       |
+| `npm run infra:status`        | Verifica status da infraestrutura                     |
+| `npm run infra:clean`         | Limpa recursos da infraestrutura                      |
+| `npm run infra:psql`          | Acessa PostgreSQL via linha de comando                |
+| `npm run infra:backup`        | Cria backup do banco de dados                         |
+| `npm run infra:db:init`       | Inicializa o banco de dados                           |
+| `npm run infra:db:fresh`      | Cria um ambiente fresco de banco                      |
+| `npm run infra:db:migrate`    | Executa migrações do banco                            |
+| `npm run infra:db:seed`       | Popula o banco via infraestrutura                     |
+| `npm run infra:db:studio`     | Abre Prisma Studio via infraestrutura                 |
+| `npm run infra:db:reset`      | Reset completo do banco                               |
 
 **Configuração automática:**
 
@@ -389,13 +414,8 @@ npm run lint
 # Formatação de todos os arquivos
 npm run format
 
-# Correção de imports Material-UI
-npm run fix:mui-imports
-npm run fix:mui-imports:advanced
-
-# Verificação manual (dry-run)
-npm run fix:mui-imports:dry
-npm run fix:mui-imports:advanced:dry
+# Verificação de tipos TypeScript
+npm run type-check
 ```
 
 ### ⚙️ Integração Automática

@@ -41,17 +41,9 @@ yarn-error.log*
 .env
 
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-
-# Supabase
-supabase/.temp/
-supabase/.branches/
 package-lock.json
 package-lock.json
 package-lock.json
