@@ -3,6 +3,33 @@
   "version": "0.2.90",
   "private": true,
   "type": "module",
+  "description": "Aplicação CRUD para gerenciar processamentos administrativos relacionados à atuação da DIM na ANPD. Sistema moderno, seguro e escalável, desenvolvido com React, Next.js, TypeScript e Prisma.",
+  "keywords": [
+    "react",
+    "crud",
+    "typescript",
+    "nextjs",
+    "lgpd",
+    "anpd",
+    "dim",
+    "admin",
+    "prisma",
+    "postgresql",
+    "govbr",
+    "dashboard",
+    "auth",
+    "material-ui"
+  ],
+  "homepage": "https://github.com/anpdgovbr/backlog-dim",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anpdgovbr/backlog-dim.git"
+  },
+  "author": "ANPD (Autoridade Nacional de Proteção de Dados) <desenvolvimento@anpd.gov.br>",
+  "license": "CC-BY-4.0",
+  "bugs": {
+    "url": "https://github.com/anpdgovbr/backlog-dim/issues"
+  },
   "scripts": {
     "build": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=1 npx prisma generate && next build",
     "build-routes": "tsx scripts/generateDevRoutes.ts",
