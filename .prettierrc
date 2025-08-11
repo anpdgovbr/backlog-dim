@@ -5,8 +5,5 @@
   "singleQuote": false,
   "printWidth": 90,
   "endOfLine": "lf",
-  "importOrder": ["^react$", "^next", "^@mui", "^@anpd", "^@govbr", "^@/", "^\\.\\.?/"],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
   "trailingComma": "es5"
 }

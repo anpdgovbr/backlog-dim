@@ -257,46 +257,46 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
 ## ⚙️ Scripts Disponíveis
 
-| Comando                            | Descrição                                                  |
-| ---------------------------------- | ---------------------------------------------------------- |
-| `npm run dev`                      | Inicia o servidor de desenvolvimento com Turbopack.        |
-| `npm run dev:https`                | Inicia o servidor com HTTPS (certificados auto-assinados). |
-| `npm run devs`                     | Inicia o servidor de desenvolvimento alternativo.          |
-| `npm run build`                    | Compila a aplicação para produção.                         |
-| `npm run start`                    | Inicia o servidor de produção.                             |
-| `npm run lint`                     | Executa o ESLint para análise de código.                   |
-| `npm run format`                   | Formata o código com Prettier.                             |
-| `npm run type-check`               | Verifica tipos TypeScript sem gerar arquivos.              |
-| `npm run db:seed`                  | Popula o banco com dados do `prisma/seed.ts`.              |
-| `npm run bump`                     | Incrementa a versão patch automaticamente.                 |
-| `npm run bump:patch`               | Incrementa a versão patch (1.0.0 → 1.0.1).                 |
-| `npm run bump:minor`               | Incrementa a versão minor (1.0.0 → 1.1.0).                 |
-| `npm run bump:major`               | Incrementa a versão major (1.0.0 → 2.0.0).                 |
-| `npm run build-routes`             | Gera rotas de desenvolvimento automaticamente.             |
-| `npm run build-routes:verbose`     | Gera rotas com saída detalhada.                            |
-| `npm run generate:version`         | Gera o arquivo version.json com informações de build.      |
-| `npm run version:env`              | Define variáveis de ambiente de versão.                    |
-| `npm run infra:setup`              | Setup automatizado da infraestrutura PostgreSQL.           |
-| `npm run infra:up`                 | Sobe a infraestrutura PostgreSQL (Docker).                 |
-| `npm run infra:down`               | Para a infraestrutura PostgreSQL.                          |
-| `npm run infra:logs`               | Visualiza logs do PostgreSQL em tempo real.                |
-| `npm run infra:reset`              | Reset completo da infraestrutura (dados são perdidos).     |
-| `npm run infra:status`             | Verifica status da infraestrutura.                         |
-| `npm run infra:clean`              | Limpa recursos da infraestrutura.                          |
-| `npm run infra:psql`               | Acessa o PostgreSQL via linha de comando.                  |
-| `npm run infra:backup`             | Cria backup do banco de dados.                             |
-| `npm run infra:update`             | Atualiza scripts da infraestrutura.                        |
-| `npm run infra:debug`              | Executa diagnósticos da infraestrutura.                    |
-| `npm run infra:fix`                | Corrige credenciais da infraestrutura.                     |
-| `npm run infra:db:init`            | Inicializa o banco de dados.                               |
-| `npm run infra:db:fresh`           | Cria um ambiente fresco de banco.                          |
-| `npm run infra:db:migrate`         | Executa migrações do banco.                                |
-| `npm run infra:db:seed`            | Popula o banco via infraestrutura.                         |
-| `npm run infra:db:studio`          | Abre Prisma Studio via infraestrutura.                     |
-| `npm run infra:db:reset`           | Reset completo do banco.                                   |
-| `npm run prisma:migrate`           | Cria e aplica nova migração.                               |
-| `npm run prisma:push`              | Sincroniza schema com banco (desenvolvimento).             |
-| `npm run prisma:studio`            | Abre Prisma Studio diretamente.                            |
+| Comando                        | Descrição                                                  |
+| ------------------------------ | ---------------------------------------------------------- |
+| `npm run dev`                  | Inicia o servidor de desenvolvimento com Turbopack.        |
+| `npm run dev:https`            | Inicia o servidor com HTTPS (certificados auto-assinados). |
+| `npm run devs`                 | Inicia o servidor de desenvolvimento alternativo.          |
+| `npm run build`                | Compila a aplicação para produção.                         |
+| `npm run start`                | Inicia o servidor de produção.                             |
+| `npm run lint`                 | Executa o ESLint para análise de código.                   |
+| `npm run format`               | Formata o código com Prettier.                             |
+| `npm run type-check`           | Verifica tipos TypeScript sem gerar arquivos.              |
+| `npm run db:seed`              | Popula o banco com dados do `prisma/seed.ts`.              |
+| `npm run bump`                 | Incrementa a versão patch automaticamente.                 |
+| `npm run bump:patch`           | Incrementa a versão patch (1.0.0 → 1.0.1).                 |
+| `npm run bump:minor`           | Incrementa a versão minor (1.0.0 → 1.1.0).                 |
+| `npm run bump:major`           | Incrementa a versão major (1.0.0 → 2.0.0).                 |
+| `npm run build-routes`         | Gera rotas de desenvolvimento automaticamente.             |
+| `npm run build-routes:verbose` | Gera rotas com saída detalhada.                            |
+| `npm run generate:version`     | Gera o arquivo version.json com informações de build.      |
+| `npm run version:env`          | Define variáveis de ambiente de versão.                    |
+| `npm run infra:setup`          | Setup automatizado da infraestrutura PostgreSQL.           |
+| `npm run infra:up`             | Sobe a infraestrutura PostgreSQL (Docker).                 |
+| `npm run infra:down`           | Para a infraestrutura PostgreSQL.                          |
+| `npm run infra:logs`           | Visualiza logs do PostgreSQL em tempo real.                |
+| `npm run infra:reset`          | Reset completo da infraestrutura (dados são perdidos).     |
+| `npm run infra:status`         | Verifica status da infraestrutura.                         |
+| `npm run infra:clean`          | Limpa recursos da infraestrutura.                          |
+| `npm run infra:psql`           | Acessa o PostgreSQL via linha de comando.                  |
+| `npm run infra:backup`         | Cria backup do banco de dados.                             |
+| `npm run infra:update`         | Atualiza scripts da infraestrutura.                        |
+| `npm run infra:debug`          | Executa diagnósticos da infraestrutura.                    |
+| `npm run infra:fix`            | Corrige credenciais da infraestrutura.                     |
+| `npm run infra:db:init`        | Inicializa o banco de dados.                               |
+| `npm run infra:db:fresh`       | Cria um ambiente fresco de banco.                          |
+| `npm run infra:db:migrate`     | Executa migrações do banco.                                |
+| `npm run infra:db:seed`        | Popula o banco via infraestrutura.                         |
+| `npm run infra:db:studio`      | Abre Prisma Studio via infraestrutura.                     |
+| `npm run infra:db:reset`       | Reset completo do banco.                                   |
+| `npm run prisma:migrate`       | Cria e aplica nova migração.                               |
+| `npm run prisma:push`          | Sincroniza schema com banco (desenvolvimento).             |
+| `npm run prisma:studio`        | Abre Prisma Studio diretamente.                            |
 
 ## 🗄️ Gestão do Banco de Dados
 
@@ -304,23 +304,23 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
 Nossa infraestrutura PostgreSQL é baseada no projeto [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg) da ANPD:
 
-| Comando                       | Descrição                                             |
-| ----------------------------- | ----------------------------------------------------- |
-| `npm run infra:setup`         | Configura a infraestrutura PostgreSQL automaticamente |
-| `npm run infra:up`            | Sobe o banco PostgreSQL via Docker Compose            |
-| `npm run infra:down`          | Para o banco PostgreSQL                               |
-| `npm run infra:logs`          | Visualiza logs do PostgreSQL em tempo real            |
-| `npm run infra:reset`         | Reset completo (⚠️ todos os dados são perdidos)       |
-| `npm run infra:status`        | Verifica status da infraestrutura                     |
-| `npm run infra:clean`         | Limpa recursos da infraestrutura                      |
-| `npm run infra:psql`          | Acessa PostgreSQL via linha de comando                |
-| `npm run infra:backup`        | Cria backup do banco de dados                         |
-| `npm run infra:db:init`       | Inicializa o banco de dados                           |
-| `npm run infra:db:fresh`      | Cria um ambiente fresco de banco                      |
-| `npm run infra:db:migrate`    | Executa migrações do banco                            |
-| `npm run infra:db:seed`       | Popula o banco via infraestrutura                     |
-| `npm run infra:db:studio`     | Abre Prisma Studio via infraestrutura                 |
-| `npm run infra:db:reset`      | Reset completo do banco                               |
+| Comando                    | Descrição                                             |
+| -------------------------- | ----------------------------------------------------- |
+| `npm run infra:setup`      | Configura a infraestrutura PostgreSQL automaticamente |
+| `npm run infra:up`         | Sobe o banco PostgreSQL via Docker Compose            |
+| `npm run infra:down`       | Para o banco PostgreSQL                               |
+| `npm run infra:logs`       | Visualiza logs do PostgreSQL em tempo real            |
+| `npm run infra:reset`      | Reset completo (⚠️ todos os dados são perdidos)       |
+| `npm run infra:status`     | Verifica status da infraestrutura                     |
+| `npm run infra:clean`      | Limpa recursos da infraestrutura                      |
+| `npm run infra:psql`       | Acessa PostgreSQL via linha de comando                |
+| `npm run infra:backup`     | Cria backup do banco de dados                         |
+| `npm run infra:db:init`    | Inicializa o banco de dados                           |
+| `npm run infra:db:fresh`   | Cria um ambiente fresco de banco                      |
+| `npm run infra:db:migrate` | Executa migrações do banco                            |
+| `npm run infra:db:seed`    | Popula o banco via infraestrutura                     |
+| `npm run infra:db:studio`  | Abre Prisma Studio via infraestrutura                 |
+| `npm run infra:db:reset`   | Reset completo do banco                               |
 
 **Configuração automática:**
 

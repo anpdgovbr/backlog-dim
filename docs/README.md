@@ -53,7 +53,7 @@ Os seguintes documentos foram consolidados ou removidos por serem obsoletos/temp
 
 - `FIXING_WARNINGS.md` - Informações temporárias integradas ao workflow
 - `RESOLUCAO_WARNINGS.md` - Informações obsoletas
-- `RESOLUCAO_ESLINT_MUI.md` - Consolidado no ESLINT.md  
+- `RESOLUCAO_ESLINT_MUI.md` - Consolidado no ESLINT.md
 - `ESLINT_RESUMO.md` - Duplicado do ESLINT.md
 
 ## 🔄 Manutenção da Documentação
