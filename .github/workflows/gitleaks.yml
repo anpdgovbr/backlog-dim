@@ -1,9 +1,27 @@
-name: gitleaks
-on: [push, pull_request]
+name: Gitleaks (official action)
+on:
+  push:
+    branches: [main, stable, develop]
+  pull_request:
+    branches: [main, stable, develop]
+  schedule:
+    - cron: "0 2 * * 1"
+
 jobs:
-  gitleaks:
+  scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: gitleaks/gitleaks-action@v2
+        with:
+          fetch-depth: 0
+      - name: Run Gitleaks (official action)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ❗ Necessário para organizações (mesmo plano gratuito)
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        with:
+          # Opcional: caminho customizado para configuração
+          # config-path: .gitleaks.toml
+          args: >
+            --redact
