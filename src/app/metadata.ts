@@ -1,25 +1,48 @@
 import type { Metadata } from "next"
 
 export const globalMetadata: Metadata = {
-  title: "Fila de Processamento - ANPD",
+  title: {
+    default: "Backlog DIM - ANPD",
+    template: "%s | Backlog DIM - ANPD",
+  },
   description:
-    "Sistema interno para gestão de denúncias e petições relacionadas à LGPD, seguindo o Padrão Digital de Governo.",
-  keywords:
-    "ANPD, LGPD, Denúncias, Petições, GovBR, Next.js, Prisma, Design System, Fila de Processamento",
-  authors: [{ name: "Luciano Édipo", url: "https://github.com/lucianoedipo" }],
+    "Sistema de gestão de processos administrativos relacionados à atuação da DIM na ANPD. Aplicação CRUD moderna, segura e escalável.",
+  keywords: [
+    "ANPD",
+    "LGPD",
+    "DIM",
+    "processos administrativos",
+    "gestão",
+    "CRUD",
+    "Next.js",
+    "TypeScript",
+    "Gov.br",
+  ],
+  authors: [
+    {
+      name: "ANPD - Autoridade Nacional de Proteção de Dados",
+      url: "https://www.gov.br/anpd",
+    },
+  ],
+  creator: "ANPD/CGTI/DDSS",
+  publisher: "ANPD",
+  robots: {
+    index: false, // Sistema interno
+    follow: false,
+  },
   openGraph: {
-    title: "Fila de Processamento - ANPD",
+    title: "Backlog DIM - ANPD",
     description:
-      "Aplicação interna da ANPD para acompanhamento e gestão de requerimentos relacionados à LGPD.",
-    url: "https://hml-dim.anpd.gov.br/",
-    images: [
-      {
-        url: "https://gov.br/anpd/assets/img/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Fila de Processamento - ANPD",
-      },
-    ],
+      "Sistema de gestão de processos administrativos relacionados à atuação da DIM na ANPD.",
     type: "website",
+    locale: "pt_BR",
+    siteName: "Backlog DIM - ANPD",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 }

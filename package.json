@@ -91,6 +91,7 @@
   },
   "dependencies": {
     "@anpdgovbr/shared-types": "^0.1.4-beta",
+    "@anpdgovbr/shared-ui": "^0.2.1-beta.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@govbr-ds/core": "^3.6.2",
@@ -100,6 +101,7 @@
     "@mui/x-data-grid": "^8.10.0",
     "@prisma/client": "^6.14.0",
     "dayjs": "^1.11.13",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "^15.4.6",
     "next-auth": "^4.24.11",
@@ -108,6 +110,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.62.0",
+    "react-lgpd-consent": "^0.3.2",
     "recharts": "^3.1.2",
     "remask": "^1.2.2",
     "sass": "^1.90.0",
