@@ -1,58 +1,17 @@
-name: CI - Validação do Código
-
+name: CI
 on:
   pull_request:
-    branches:
-      #      - main
-      - stable
-#      - develop
-
+    branches: ["main", "develop", "stable"]
+  push:
+    branches: ["develop"]
 jobs:
-  lint-build-test:
-    name: 🛠️ Lint, Build e Testes
+  build:
     runs-on: ubuntu-latest
-
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      NEXTAUTH_URL: "http://localhost:3000"
-      AZURE_AD_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      AZURE_AD_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-
     steps:
-      - name: 📥 Checkout do Código
-        uses: actions/checkout@v4
-
-      - name: ⚙️ Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 🔧 Criar Arquivo .env
-        run: |
-          echo "DATABASE_URL=${DATABASE_URL}" >> .env
-          echo "NEXTAUTH_SECRET=${NEXTAUTH_SECRET}" >> .env
-          echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env
-          echo "AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}" >> .env
-          echo "AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET}" >> .env
-          echo "AZURE_AD_TENANT_ID=${AZURE_AD_TENANT_ID}" >> .env
-          echo "🔹 DATABASE_URL=${DATABASE_URL}"
-          echo "🔹 NEXTAUTH_URL=${NEXTAUTH_URL}"
-
-      - name: 📦 Instalar Dependências
-        run: npm install
-
-      - name: 🧹 Rodar ESLint e Prettier
-        run: npm run lint && npm run format
-
-      - name: 🔍 Debug Variáveis de Ambiente
-        run: |
-          echo "🔹 DATABASE_URL=${DATABASE_URL}"
-
-      - name: 🔨 Construir o Projeto
-        run: npm run build
-
-      # Descomente esta parte quando os testes automatizados forem implementados
-      # - name: ✅ Executar Testes Automatizados
-      #   run: npm test
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - run: npm ci
+      - run: npm run type-check
+      - run: npm run lint
+      - run: npm run build

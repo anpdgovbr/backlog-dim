@@ -26,7 +26,7 @@
     "url": "https://github.com/anpdgovbr/backlog-dim.git"
   },
   "author": "ANPD (Autoridade Nacional de Proteção de Dados) <desenvolvimento@anpd.gov.br>",
-  "license": "CC-BY-4.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/anpdgovbr/backlog-dim/issues"
   },

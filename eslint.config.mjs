@@ -5,6 +5,22 @@ import typescriptParser from "@typescript-eslint/parser"
 import reactHooksPlugin from "eslint-plugin-react-hooks"
 
 const eslintConfig = [
+  // Node.js globals para arquivos JS na raiz (ex: server.js)
+  {
+    files: ["*.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        Buffer: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        exports: "writable",
+        module: "writable",
+        require: "readonly",
+      },
+    },
+  },
   eslint.configs.recommended,
 
   // Configuração principal para todos os arquivos
