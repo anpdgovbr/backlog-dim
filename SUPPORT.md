@@ -1,22 +1,77 @@
-# Suporte – Backlog DIM
+# 📢 Suporte – Backlog DIM
 
-## Para Usuários/Contribuidores
+Este documento explica como obter ajuda, reportar problemas e contribuir de forma adequada com o projeto **Backlog DIM**.
 
-- **Perguntas gerais**: abra uma issue do tipo `question`.
-- **Bugs**: abra issue `bug` com passos de reprodução, logs e contexto.
-- **Melhorias**: abra issue `enhancement` descrevendo valor e escopo.
+---
 
-> Evite compartilhar qualquer informação sigilosa ou dado pessoal em issues públicas.
+## 🔍 Antes de pedir ajuda
 
-## Contatos Internos (ANPD)
+Antes de abrir um ticket ou entrar em contato:
 
-- CGTI/DDSS (time técnico): **desenvolvimento@anpd.gov.br**
-- Demandas funcionais (CGF/Divisão de Monitoramento): via canais internos.
+1. **Pesquise nas Issues existentes**:  
+   Verifique se o problema ou dúvida já foi relatado.
+2. **Consulte a documentação**:
+   - [README.md](./README.md)
+   - Documentos na pasta `/docs` (ex.: `DESENVOLVIMENTO.md`, `ESLINT.md`, `VERSIONING.md`).
+3. **Reproduza o problema no `develop` mais recente**:  
+   Confirme se o erro ainda acontece na última versão.
 
-## Segurança
+---
 
-- Vulnerabilidades: siga `SECURITY.md`.
+## 📮 Como obter suporte
 
-## Roadmap
+### 1. Para dúvidas gerais
 
-- A priorização é definida internamente pela ANPD; sugerimos usar issues para propostas técnicas objetivas.
+- Use a [Issue Template de Dúvida](.github/ISSUE_TEMPLATE/question.yml).
+- Forneça **detalhes claros** sobre o contexto e código envolvido (sem dados sensíveis).
+
+### 2. Para reportar bugs
+
+- Use a [Issue Template de Bug](.github/ISSUE_TEMPLATE/bug_report.yml).
+- Inclua passos para reprodução, logs e prints (sem informações pessoais reais).
+
+### 3. Para propor novas funcionalidades
+
+- Use a [Issue Template de Feature](.github/ISSUE_TEMPLATE/feature_request.yml).
+- Descreva o problema, a solução sugerida e os critérios de aceitação.
+
+---
+
+## 🔒 Segurança e LGPD
+
+**Nunca** poste dados reais de titulares, credenciais ou informações sensíveis nas Issues.  
+Para vulnerabilidades de segurança, siga as instruções em [SECURITY.md](./SECURITY.md).
+
+---
+
+## 🛠 Suporte interno ANPD
+
+Se você for membro da ANPD e precisar de ajuda interna:
+
+- **Time responsável:** DDSS – Divisão de Desenvolvimento e Sustentação de Sistemas
+- **Canais internos:** Teams / CGTI-DDSS
+- **E-mail institucional:** desenvolvimento@anpd.gov.br
+
+---
+
+## 🌐 Suporte externo
+
+Se você não faz parte da ANPD, use exclusivamente:
+
+- **Issues públicas no GitHub**
+- **E-mail institucional:** desenvolvimento@anpd.gov.br
+
+---
+
+## 📅 SLA de Resposta
+
+| Tipo de solicitação          | Prazo estimado de resposta           |
+| ---------------------------- | ------------------------------------ |
+| Dúvidas gerais               | Até 5 dias úteis                     |
+| Reporte de bug               | Até 5 dias úteis                     |
+| Solicitação de feature       | Até 10 dias úteis                    |
+| Vulnerabilidade de segurança | Resposta imediata (em até 24h úteis) |
+
+---
+
+> ℹ️ Este arquivo segue o padrão de suporte adotado nos projetos institucionais da ANPD e será atualizado conforme mudanças no fluxo de atendimento.

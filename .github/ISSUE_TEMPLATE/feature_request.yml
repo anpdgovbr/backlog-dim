@@ -1,0 +1,54 @@
+name: "✨ Feature request"
+description: Proponha uma funcionalidade
+labels: ["type: feature"]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Resumo
+      placeholder: Ex. Adicionar filtros avançados na lista de processos
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema a ser resolvido
+      description: Qual dor ou necessidade?
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta de solução
+      description: Descreva a solução e impacto esperado
+  - type: textarea
+    id: scope
+    attributes:
+      label: Escopo mínimo (MVP)
+      description: O que está dentro/fora?
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Frontend (Next.js/React/MUI)
+        - API (App Router /api)
+        - Banco/Prisma
+        - Infra/CI
+        - Documentação
+  - type: checkboxes
+    id: nonfunc
+    attributes:
+      label: Requisitos não funcionais
+      options:
+        - label: Acessibilidade (a11y)
+        - label: Segurança/LGPD
+        - label: Performance
+        - label: Observabilidade
+  - type: textarea
+    id: risks
+    attributes:
+      label: Riscos/Dependências
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação
+      description: Itens objetivos de validação
