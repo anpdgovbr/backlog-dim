@@ -1,9 +1,9 @@
 "use client"
 
 import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
+import { CardGrid, DashboardLayout, DashboardSection } from "@/components/layouts"
 import ImportarDashboardCard from "@/components/ui/dashboard-card/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/components/ui/dashboard-card/MetadadosDashboardCard"
 import ProcessDashboardCard from "@/components/ui/dashboard-card/ProcessDashboardCard"
@@ -16,60 +16,72 @@ import usePermissoes from "@/hooks/usePermissoes"
 function DashboardBacklog() {
   const { permissoes, loading } = usePermissoes()
 
-  if (loading) {
+  const hasAnyPermission =
+    permissoes["Exibir_Processo"] ||
+    permissoes["Exibir_Relatorios"] ||
+    permissoes["Exibir_Metadados"] ||
+    permissoes["Exibir_Responsavel"]
+
+  if (!hasAnyPermission) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <GovBrLoading />
-      </Box>
+      <DashboardLayout
+        title="Acesso Restrito"
+        subtitle="Você não possui permissões suficientes para visualizar este conteúdo"
+      >
+        <Box sx={{ textAlign: "center", py: 6 }}>
+          <Typography variant="body1" color="text.secondary">
+            Entre em contato com o administrador do sistema para solicitar acesso.
+          </Typography>
+        </Box>
+      </DashboardLayout>
     )
   }
 
   return (
-    <Grid container spacing={2} sx={{ width: "100%" }}>
-      {/* ===== Processos (principal) ===== */}
-      {permissoes["Exibir_Processo"] && (
-        <Grid size={{ xs: 12, md: 6 }} component="div">
-          <ProcessDashboardCard />
-        </Grid>
+    <DashboardLayout
+      title="Dashboard Administrativo"
+      subtitle="Painel de controle e gestão dos processos da DIM/ANPD"
+      loading={loading}
+      loadingMessage="Carregando dashboard..."
+    >
+      {/* ===== Seção Principal ===== */}
+      {(permissoes["Exibir_Processo"] || permissoes["Exibir_Relatorios"]) && (
+        <DashboardSection
+          title="Visão Geral"
+          subtitle="Acompanhe métricas e indicadores principais"
+        >
+          <CardGrid columns={{ xs: 12, md: 6 }} minCardHeight={350}>
+            {permissoes["Exibir_Processo"] && <ProcessDashboardCard />}
+            {permissoes["Exibir_Relatorios"] && <StatsDashboardCard />}
+          </CardGrid>
+        </DashboardSection>
       )}
 
-      {/* ===== Estatísticas ===== */}
-      {permissoes["Exibir_Relatorios"] && (
-        <Grid size={{ xs: 12, md: 6 }} component="div">
-          <StatsDashboardCard />
-        </Grid>
+      {/* ===== Seção de Gerenciamento ===== */}
+      {(permissoes["Exibir_Responsavel"] || permissoes["Exibir_Metadados"]) && (
+        <DashboardSection
+          title="Gerenciamento"
+          subtitle="Administre usuários, categorias e configurações"
+        >
+          <CardGrid columns={{ xs: 12, sm: 6, lg: 4 }} minCardHeight={280}>
+            {permissoes["Exibir_Responsavel"] && (
+              <>
+                <ResponsaveisDashboardCard />
+                <RequeridosDashboardCard />
+              </>
+            )}
+            {permissoes["Exibir_Metadados"] && (
+              <>
+                <MetadadosDashboardCard />
+                <ImportarDashboardCard />
+              </>
+            )}
+          </CardGrid>
+        </DashboardSection>
       )}
-
-      {/* ===== Metadados ===== 
-      ajustar futuramente
-      */}
-      {permissoes["Exibir_Metadados"] && (
-        <Grid container spacing={2} columns={12} size={{ xs: 12, sm: 6, md: 4 }}>
-          <Grid size={{ xs: 12 }} component="div">
-            <MetadadosDashboardCard />
-          </Grid>
-          <Grid size={{ xs: 12 }} component="div">
-            <ImportarDashboardCard />
-          </Grid>
-        </Grid>
-      )}
-
-      {/* ===== Responsáveis ===== */}
-      {permissoes["Exibir_Responsavel"] && (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div">
-          <ResponsaveisDashboardCard />
-        </Grid>
-      )}
-      {/* ===== Requeridos ===== */}
-      {permissoes["Exibir_Responsavel"] && (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div" minWidth={0}>
-          <RequeridosDashboardCard />
-        </Grid>
-      )}
-    </Grid>
+    </DashboardLayout>
   )
 }
 
 // Protege toda a página: só usuários com Exibir_Processo podem ver o dashboard.
-// Ajuste acao/recurso conforme seu enum de permissões.
 export default withPermissao(DashboardBacklog, "Exibir", "Processo")

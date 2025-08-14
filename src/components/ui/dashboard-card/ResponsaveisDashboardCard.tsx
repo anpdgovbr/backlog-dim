@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import { useRouter } from "next/navigation"
 
-import Person from "@mui/icons-material/Person"
+import PersonIcon from "@mui/icons-material/Person"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Grid from "@mui/material/Grid"
@@ -60,7 +60,15 @@ function ResponsaveisDashboardCard({
 
   return (
     <>
-      <DashboardCard sx={{ height: "100%", bgcolor: "background.paper" }}>
+      <DashboardCard
+        sx={{
+          height: "100%",
+          bgcolor: "success.main",
+          color: "success.contrastText",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         <Box
           display="flex"
           flexDirection="column"
@@ -68,16 +76,36 @@ function ResponsaveisDashboardCard({
           sx={{ height: "100%" }}
         >
           <Box>
-            <Stack direction="row" spacing={2} alignItems="center" mb={1}>
-              <Person sx={{ fontSize: 40, color: "primary.dark" }} />
-              <DashboardCard.Title>Responsáveis</DashboardCard.Title>
+            <Stack direction="row" spacing={2} alignItems="center" mb={2}>
+              <PersonIcon
+                sx={{ fontSize: 48, color: "success.contrastText", opacity: 0.9 }}
+              />
+              <Box>
+                <DashboardCard.Title sx={{ color: "success.contrastText" }}>
+                  Responsáveis
+                </DashboardCard.Title>
+                <Typography
+                  variant="caption"
+                  sx={{ color: "success.contrastText", opacity: 0.8 }}
+                >
+                  Equipe Técnica
+                </Typography>
+              </Box>
             </Stack>
 
-            <DashboardCard.Description variant="body2" sx={{ mb: 1 }}>
+            <DashboardCard.Description
+              variant="body2"
+              sx={{ mb: 2, color: "success.contrastText", opacity: 0.9 }}
+            >
               Controle de usuários responsáveis por processos.
             </DashboardCard.Description>
             {erro && (
-              <Typography variant="body2" color="error" mb={1}>
+              <Typography
+                variant="body2"
+                color="warning.main"
+                mb={1}
+                sx={{ fontWeight: 600 }}
+              >
                 Não foi possível carregar os responsáveis. Verifique se está autenticado.
               </Typography>
             )}
@@ -90,9 +118,9 @@ function ResponsaveisDashboardCard({
                         px: 1.5,
                         py: 1,
                         borderRadius: 1,
-                        border: "1px solid",
-                        borderColor: "divider",
-                        bgcolor: "primary.light",
+                        bgcolor: "rgba(255, 255, 255, 0.15)",
+                        backdropFilter: "blur(10px)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)",
                         height: "100%",
                         width: "100%",
                         overflow: "hidden",
@@ -104,7 +132,7 @@ function ResponsaveisDashboardCard({
                             <Typography
                               variant="body2"
                               sx={{
-                                color: "primary.contrastText",
+                                color: "success.contrastText",
                                 display: "-webkit-box",
                                 WebkitBoxOrient: "vertical",
                                 WebkitLineClamp: 2,
@@ -115,7 +143,7 @@ function ResponsaveisDashboardCard({
                               {r.nome}
                             </Typography>
                           </Tooltip>
-                          <Typography variant="caption" color="primary.contrastText">
+                          <Typography variant="caption" color="success.contrastText">
                             Processos: {r.totalProcessos}
                           </Typography>
                         </>
@@ -149,18 +177,37 @@ function ResponsaveisDashboardCard({
           <Box mt={2}>
             <Button
               fullWidth
-              sx={{
-                textTransform: "uppercase",
-              }}
-              size="small"
-              variant="outlined"
-              color="success"
+              variant="contained"
+              size="large"
               onClick={() => router.push("/dashboard/responsaveis")}
+              sx={{
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                color: "success.contrastText",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                "&:hover": {
+                  bgcolor: "rgba(255, 255, 255, 0.3)",
+                },
+              }}
             >
               Ver todos
             </Button>
           </Box>
         </Box>
+
+        {/* Elemento decorativo */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: -20,
+            right: -20,
+            width: 120,
+            height: 120,
+            borderRadius: "50%",
+            bgcolor: "rgba(255, 255, 255, 0.05)",
+            zIndex: 0,
+          }}
+        />
       </DashboardCard>
     </>
   )

@@ -31,8 +31,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
     icon,
     baseColor,
     expanded,
-    collapsedBgColor = "#f2f5f8", // govbr: --gray-2
-    expandedBgColor = "#ffffff", // govbr: --pure-0
+    collapsedBgColor = "rgba(0, 0, 0, 0.02)", // Mais sutil
     extraContent,
     onToggle,
   } = props
@@ -42,23 +41,32 @@ export function Menu25Base(props: IMenu25BaseProps) {
       id={`menu-item-${id}`}
       onClick={onToggle}
       sx={(theme: Theme) => {
-        const actualBaseColor = parseThemeColor(theme, baseColor)
+        const actualBaseColor = expanded
+          ? theme.palette.primary.contrastText
+          : parseThemeColor(theme, baseColor)
         const bgColor = expanded
-          ? parseThemeColor(theme, expandedBgColor)
+          ? theme.palette.primary.main
           : parseThemeColor(theme, collapsedBgColor)
-        const iconCircleBg = calcIconCircleBg(theme, baseColor)
+        const iconCircleBg = expanded
+          ? "rgba(255, 255, 255, 0.2)"
+          : calcIconCircleBg(theme, baseColor)
 
         return {
           mb: 0.5,
           p: 0.5,
-          borderRadius: 1,
+          borderRadius: 2,
           bgcolor: bgColor,
-          border: `1px solid ${iconCircleBg}`,
+          border: expanded ? "none" : `1px solid rgba(0, 0, 0, 0.08)`,
           cursor: "pointer",
-          transition: "background 0.3s ease",
-          boxShadow: expanded ? theme.shadows[1] : "none",
+          transition: "all 0.3s ease",
+          boxShadow: expanded
+            ? "0px 4px 16px rgba(0, 0, 0, 0.12)"
+            : "0px 2px 8px rgba(0, 0, 0, 0.06)",
           "&:hover": {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: expanded
+              ? theme.palette.primary.dark
+              : "rgba(0, 0, 0, 0.04)",
+            transform: "translateY(-1px)",
           },
 
           "& .menu-header": {
@@ -86,8 +94,8 @@ export function Menu25Base(props: IMenu25BaseProps) {
 
           "& .titleText": {
             textTransform: "uppercase",
-            color: actualBaseColor,
-            fontWeight: theme.typography.fontWeightMedium,
+            color: expanded ? theme.palette.primary.contrastText : actualBaseColor,
+            fontWeight: theme.typography.fontWeightBold,
             letterSpacing: "0.02em",
             wordBreak: "break-word",
             flex: 1,
@@ -100,7 +108,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
             flexShrink: 0,
             display: "flex",
             alignItems: "center",
-            color: actualBaseColor,
+            color: expanded ? theme.palette.primary.contrastText : actualBaseColor,
             fontSize: 18,
           },
 
@@ -108,7 +116,7 @@ export function Menu25Base(props: IMenu25BaseProps) {
             mt: 0.5,
             px: 1,
             fontSize: theme.typography.caption.fontSize,
-            color: theme.palette.text.secondary,
+            color: expanded ? "rgba(255, 255, 255, 0.8)" : theme.palette.text.secondary,
           },
 
           "& .extraContent": {

@@ -17,6 +17,7 @@ import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
 import Paper from "@mui/material/Paper"
+import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
 interface DevRoutes {
@@ -147,21 +148,21 @@ const FloatingDevMenu = () => {
         >
           <Box
             className="drag-header"
-            sx={{
+            sx={(theme) => ({
               cursor: "move",
-              backgroundColor: "#1976d2",
-              color: "white",
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               px: 2,
               py: 1,
-            }}
+            })}
           >
             <Typography sx={{ fontSize: 14, fontWeight: "bold" }}>📌 Dev Menu</Typography>
             <IconButton
               size="small"
-              sx={{ color: "white" }}
+              sx={(theme) => ({ color: theme.palette.primary.contrastText })}
               onClick={() => setOpen(false)}
             >
               <CloseIcon fontSize="small" />
@@ -223,6 +224,60 @@ const FloatingDevMenu = () => {
                 </List>
               </AccordionDetails>
             </Accordion>
+
+            {/* Teste do Cookie Banner */}
+            <Box sx={{ mt: 2, p: 1, borderTop: 1, borderColor: "divider" }}>
+              <Typography sx={{ fontSize: 13, fontWeight: "bold", mb: 1 }}>
+                🍪 Teste LGPD
+              </Typography>
+              <Stack spacing={1}>
+                <button
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      // Limpar cookie da lib react-lgpd-consent
+                      document.cookie =
+                        "lgpd-consent=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;"
+                      window.location.reload()
+                    }
+                  }}
+                  style={{
+                    fontSize: 11,
+                    padding: "4px 8px",
+                    borderRadius: 4,
+                    border: "1px solid #ccc",
+                    background: "#f5f5f5",
+                    cursor: "pointer",
+                    width: "100%",
+                  }}
+                >
+                  Resetar & Mostrar Banner
+                </button>
+                <button
+                  onClick={() => {
+                    // Usar função global da lib
+                    if (typeof window !== "undefined") {
+                      const globalOpenPreferences = (
+                        window as { openPreferencesModal?: () => void }
+                      ).openPreferencesModal
+                      if (globalOpenPreferences) {
+                        globalOpenPreferences()
+                      }
+                    }
+                  }}
+                  style={{
+                    fontSize: 11,
+                    padding: "4px 8px",
+                    borderRadius: 4,
+                    border: "1px solid #0066cc",
+                    background: "#e6f3ff",
+                    cursor: "pointer",
+                    width: "100%",
+                  }}
+                >
+                  Abrir Modal Preferências
+                </button>
+              </Stack>
+            </Box>
           </Box>
         </Paper>
       )}

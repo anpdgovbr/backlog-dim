@@ -9,7 +9,7 @@ import PermContactCalendar from "@mui/icons-material/PermContactCalendar"
 import Send from "@mui/icons-material/Send"
 import Visibility from "@mui/icons-material/Visibility"
 import Box from "@mui/material/Box"
-import CircularProgress from "@mui/material/CircularProgress"
+import Typography from "@mui/material/Typography"
 
 import ContatoPrevioPage from "@/app/dashboard/metadados/contato-previo/page"
 import EncaminhamentoPage from "@/app/dashboard/metadados/encaminhamento/page"
@@ -17,108 +17,136 @@ import EvidenciaPage from "@/app/dashboard/metadados/evidencia/page"
 import FormaEntradaPage from "@/app/dashboard/metadados/forma-entrada/page"
 import PedidoManifestacaoPage from "@/app/dashboard/metadados/pedido-manifestacao/page"
 import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
-import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
-import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
+import { SidebarLayout } from "@/components/layouts"
+import type { SidebarSection, NonEmptyArray } from "@/components/layouts"
 import usePermissoes from "@/hooks/usePermissoes"
 
 import TipoReclamacaoPage from "./tipo-reclamacao/page"
 
-const allSections: ISectionConfig[] = [
+const allSections: SidebarSection[] = [
   {
     id: "contato_previo",
     title: "Contato Prévio",
-    description: "",
+    description: "Gerenciar tipos de contato prévio",
     icon: <PermContactCalendar />,
     baseColor: "#4caf50",
     component: () => <ContatoPrevioPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "tipo_reclamacao",
     title: "Tipo de Reclamação",
-    description: "",
+    description: "Categorias de reclamações",
     icon: <Input />,
     baseColor: "#ff9800",
     component: () => <TipoReclamacaoPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "encaminhamento",
     title: "Encaminhamentos",
-    description: "",
+    description: "Tipos de encaminhamento",
     icon: <Send />,
     baseColor: "#f44336",
     component: () => <EncaminhamentoPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "evidencia",
     title: "Evidências",
-    description: "",
+    description: "Tipos de evidências",
     icon: <Visibility />,
     baseColor: "#03a9f4",
     component: () => <EvidenciaPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "forma_entrada",
     title: "Formas de Entrada",
-    description: "",
+    description: "Canais de entrada dos processos",
     icon: <Input />,
     baseColor: "#ff5722",
     component: () => <FormaEntradaPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
   {
     id: "pedido_manifestacao",
     title: "Pedidos de Manifestação",
-    description: "",
+    description: "Tipos de manifestação",
     icon: <Forum />,
     baseColor: "#9c27b0",
     component: () => <PedidoManifestacaoPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
-
   {
     id: "situacao",
     title: "Situação",
-    description: "",
+    description: "Status dos processos",
     icon: <AssignmentTurnedIn />,
-    baseColor: "#3feb3b",
+    baseColor: "#2e7d32",
     component: () => <SituacaoPage />,
-    requiredPermissions: ["Exibir_Metadados"],
   },
 ]
 
 export default function GerenciarMetadados() {
   const { permissoes, loading } = usePermissoes()
-  const [sections, setSections] = useState<ISectionConfig[]>([])
+  const [sections, setSections] = useState<SidebarSection[]>([])
 
   useEffect(() => {
-    if (!loading) {
-      const filtered = allSections.filter((section) =>
-        section.requiredPermissions?.some((perm) => permissoes[perm])
-      )
-
-      // só atualiza se for diferente
-      setSections((prev) => {
-        const isDifferent =
-          prev.length !== filtered.length || prev.some((s, i) => s.id !== filtered[i]?.id)
-        return isDifferent ? filtered : prev
-      })
+    if (!loading && permissoes["Exibir_Metadados"]) {
+      setSections(allSections)
     }
   }, [loading, permissoes])
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
-        <CircularProgress />
-      </Box>
+      <SidebarLayout
+        title="Gerenciar Metadados"
+        subtitle="Carregando configurações..."
+        sections={[allSections[0]] as NonEmptyArray<SidebarSection>}
+        defaultSectionId="contato_previo"
+      />
     )
   }
+
+  if (!permissoes["Exibir_Metadados"]) {
+    return (
+      <SidebarLayout
+        title="Gerenciar Metadados"
+        subtitle="Acesso Restrito"
+        sections={[allSections[0]] as NonEmptyArray<SidebarSection>}
+        defaultSectionId="contato_previo"
+        fallback={
+          <Box sx={{ p: 3, textAlign: "center" }}>
+            <Typography variant="h6" color="error" gutterBottom>
+              Acesso Negado
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Você não possui permissões para visualizar os metadados do sistema.
+            </Typography>
+          </Box>
+        }
+      />
+    )
+  }
+
+  if (sections.length === 0) {
+    return (
+      <SidebarLayout
+        title="Gerenciar Metadados"
+        subtitle="Nenhuma seção disponível"
+        sections={[allSections[0]] as NonEmptyArray<SidebarSection>}
+        defaultSectionId="contato_previo"
+        fallback={
+          <Box sx={{ p: 3, textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary">
+              Nenhuma seção de metadados está disponível para o seu perfil.
+            </Typography>
+          </Box>
+        }
+      />
+    )
+  }
+
   return (
-    <Dashboard25Wrapper
-      sectionsConfig={sections as [ISectionConfig, ...ISectionConfig[]]}
+    <SidebarLayout
+      title="Gerenciar Metadados"
+      subtitle="Configure categorias e tipos auxiliares do sistema"
+      sections={sections as NonEmptyArray<SidebarSection>}
       defaultSectionId="contato_previo"
     />
   )

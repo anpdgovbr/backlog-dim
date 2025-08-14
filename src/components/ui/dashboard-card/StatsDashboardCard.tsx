@@ -32,7 +32,13 @@ import Typography from "@mui/material/Typography"
 import { DashboardCard } from "@/components/ui/dashboard-card"
 import type { IndicadoresProcesso } from "@/types/Processo"
 
-const COLORS = ["#0288D1", "#43A047", "#FB8C00", "#8E24AA", "#F4511E"]
+const COLORS = [
+  "rgba(255, 255, 255, 0.9)",
+  "rgba(255, 255, 255, 0.7)",
+  "rgba(255, 255, 255, 0.5)",
+  "rgba(255, 255, 255, 0.8)",
+  "rgba(255, 255, 255, 0.6)",
+]
 
 export function StatsDashboardCard() {
   const router = useRouter()
@@ -201,7 +207,10 @@ export function StatsDashboardCard() {
       sx={{
         height: "100%",
         width: "100%",
-        color: "secondary.contrastText",
+        bgcolor: "warning.main",
+        color: "warning.contrastText",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       <Box
@@ -213,10 +222,25 @@ export function StatsDashboardCard() {
       >
         <Box width="100%">
           <Stack direction="row" spacing={2} alignItems="center">
-            <Assessment sx={{ fontSize: 40, color: "warning.main" }} />
-            <DashboardCard.Title>Estatísticas</DashboardCard.Title>
+            <Assessment
+              sx={{ fontSize: 48, color: "warning.contrastText", opacity: 0.9 }}
+            />
+            <Box>
+              <DashboardCard.Title sx={{ color: "warning.contrastText" }}>
+                Estatísticas
+              </DashboardCard.Title>
+              <Typography
+                variant="caption"
+                sx={{ color: "warning.contrastText", opacity: 0.8 }}
+              >
+                Relatórios e Métricas
+              </Typography>
+            </Box>
           </Stack>
-          <DashboardCard.Description variant="body2">
+          <DashboardCard.Description
+            variant="body2"
+            sx={{ mb: 2, opacity: 0.9, color: "warning.contrastText" }}
+          >
             Veja relatórios e métricas do processamento de dados.
           </DashboardCard.Description>
 
@@ -224,7 +248,22 @@ export function StatsDashboardCard() {
             value={tab}
             onChange={handleTabChange}
             variant="fullWidth"
-            sx={{ minHeight: 32 }}
+            sx={{
+              minHeight: 32,
+              "& .MuiTab-root": {
+                color: "warning.contrastText",
+                opacity: 0.7,
+                minHeight: 32,
+                py: 0.5,
+              },
+              "& .Mui-selected": {
+                color: "warning.contrastText",
+                opacity: 1,
+              },
+              "& .MuiTabs-indicator": {
+                backgroundColor: "warning.contrastText",
+              },
+            }}
           >
             <Tab
               icon={<InfoOutlined />}
@@ -254,16 +293,37 @@ export function StatsDashboardCard() {
         <Box mt={2}>
           <Button
             fullWidth
-            sx={{ textTransform: "uppercase" }}
-            variant="outlined"
-            size="small"
-            color="inherit"
+            variant="contained"
+            size="large"
             onClick={() => router.push("/dashboard/processos")}
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.2)",
+              color: "warning.contrastText",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(0, 0, 0, 0.3)",
+              "&:hover": {
+                bgcolor: "rgba(0, 0, 0, 0.3)",
+              },
+            }}
           >
             Ver Processos
           </Button>
         </Box>
       </Box>
+
+      {/* Elemento decorativo */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: -20,
+          right: -20,
+          width: 120,
+          height: 120,
+          borderRadius: "50%",
+          bgcolor: "rgba(0, 0, 0, 0.05)",
+          zIndex: 0,
+        }}
+      />
     </DashboardCard>
   )
 }

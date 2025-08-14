@@ -5,15 +5,15 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { usePathname, useRouter } from "next/navigation"
 
-import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings"
-import Assessment from "@mui/icons-material/Assessment"
-import Business from "@mui/icons-material/Business"
-import Home from "@mui/icons-material/Home"
-import ManageSearch from "@mui/icons-material/ManageSearch"
-import Person from "@mui/icons-material/Person"
-import Settings from "@mui/icons-material/Settings"
-import TableChart from "@mui/icons-material/TableChart"
-import UploadFile from "@mui/icons-material/UploadFile"
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"
+import AssessmentIcon from "@mui/icons-material/Assessment"
+import BusinessIcon from "@mui/icons-material/Business"
+import HomeIcon from "@mui/icons-material/Home"
+import ManageSearchIcon from "@mui/icons-material/ManageSearch"
+import PersonIcon from "@mui/icons-material/Person"
+import SettingsIcon from "@mui/icons-material/Settings"
+import TableChartIcon from "@mui/icons-material/TableChart"
+import UploadFileIcon from "@mui/icons-material/UploadFile"
 import Box from "@mui/material/Box"
 import CircularProgress from "@mui/material/CircularProgress"
 import Container from "@mui/material/Container"
@@ -66,36 +66,36 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   const links: LinkItem[] = [
-    { href: "/dashboard", text: "Página Inicial", icon: <Home /> },
+    { href: "/dashboard", text: "Página Inicial", icon: <HomeIcon /> },
   ]
   if (perfilId === null) {
-    links.push({ href: "#", text: "Configurações", icon: <Settings /> })
+    links.push({ href: "#", text: "Configurações", icon: <SettingsIcon /> })
   } else {
     if (perfilId >= 1) {
       links.push({
         href: "/dashboard/processos",
         text: "Processos",
-        icon: <ManageSearch />,
+        icon: <ManageSearchIcon />,
       })
     }
     if (perfilId >= 2) {
       links.push({
         href: "/dashboard/metadados",
         text: "Metadados",
-        icon: <TableChart />,
+        icon: <TableChartIcon />,
       })
     }
     if (perfilId >= 3) {
       links.push(
-        { href: "/dashboard/importar", text: "Importar", icon: <UploadFile /> },
-        { href: "/dashboard/requeridos", text: "Requeridos", icon: <Business /> },
-        { href: "/dashboard/responsaveis", text: "Responsáveis", icon: <Person /> }
+        { href: "/dashboard/importar", text: "Importar", icon: <UploadFileIcon /> },
+        { href: "/dashboard/requeridos", text: "Requeridos", icon: <BusinessIcon /> },
+        { href: "/dashboard/responsaveis", text: "Responsáveis", icon: <PersonIcon /> }
       )
     }
     if (perfilId >= 4) {
       links.push(
-        { href: "/dashboard/relatorios", text: "Relatórios", icon: <Assessment /> },
-        { href: "/admin", text: "Admin", icon: <AdminPanelSettings /> }
+        { href: "/dashboard/relatorios", text: "Relatórios", icon: <AssessmentIcon /> },
+        { href: "/admin", text: "Admin", icon: <AdminPanelSettingsIcon /> }
       )
     }
   }

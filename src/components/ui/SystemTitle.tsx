@@ -13,7 +13,7 @@ export default function SystemTitle() {
       sx={{ color: "primary.contrastText", textAlign: "center" }}
     >
       <Link
-        href="/dashboard"
+        href="/" //"/dashboard"
         style={{
           textDecoration: "none",
           color: "inherit",
