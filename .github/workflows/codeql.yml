@@ -20,7 +20,7 @@ jobs:
       matrix:
         language: ["javascript"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # (Opcional) Preparar Node para builds/instalação se necessário
       - uses: actions/setup-node@v4
