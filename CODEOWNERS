@@ -1,0 +1,38 @@
+# Donos de Código – Backlog DIM
+
+# Revisores obrigatórios para áreas específicas do repositório.
+
+# Proprietários gerais de todo o código
+
+- @anpdgovbr/backlog-lgpd-team @anpdgovbr/cgti-admin @anpdgovbr/cis-team @anpdgovbr/ddss-team
+
+# Código-fonte principal
+
+/src/ @anpdgovbr/ddss-team
+
+# Schemas e migrações
+
+/prisma/ @anpdgovbr/ddss-team
+
+# Documentação técnica
+
+/docs/ @anpdgovbr/ddss-team @anpdgovbr/cgti-admin
+
+# Workflows e configurações do repositório
+
+/.github/ @anpdgovbr/cgti-admin @anpdgovbr/cis-team
+
+# Configurações de lint/format/build
+
+/eslint.config.mjs @anpdgovbr/ddss-team
+/tsconfig.json @anpdgovbr/ddss-team
+/next.config.ts @anpdgovbr/ddss-team
+/package.json @anpdgovbr/ddss-team
+
+# Arquivos de governança
+
+/CODE_OF_CONDUCT.md @anpdgovbr/cgti-admin
+/CONTRIBUTING.md @anpdgovbr/cgti-admin
+/SECURITY.md @anpdgovbr/cgti-admin
+/SUPPORT.md @anpdgovbr/cgti-admin
+/CODEOWNERS @anpdgovbr/cgti-admin
