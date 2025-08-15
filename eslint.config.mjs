@@ -30,7 +30,7 @@ const eslintConfig = [
       // Registrar o plugin Next de duas formas:
       // - 'next' para a detecção automática do Next.js
       // - '@next/next' para regras que referenciam explicitamente esse namespace
-      "next": nextPlugin,
+      next: nextPlugin,
       "@next/next": nextPlugin,
       "@typescript-eslint": typescriptPlugin,
       "react-hooks": reactHooksPlugin,
