@@ -31,7 +31,7 @@
     "url": "https://github.com/anpdgovbr/backlog-dim/issues"
   },
   "scripts": {
-    "build": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=1 npx prisma generate && next build",
+    "build": "npx prisma generate && next build",
     "build-routes": "tsx scripts/generateDevRoutes.ts",
     "build-routes:verbose": "tsx scripts/generateDevRoutes.ts --verbose",
     "bump": "node scripts/bump-version.cjs",
