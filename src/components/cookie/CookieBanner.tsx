@@ -23,7 +23,7 @@ import Stack from "@mui/material/Stack"
 import Switch from "@mui/material/Switch"
 import Typography from "@mui/material/Typography"
 import { alpha } from "@mui/material/styles"
-import type { CustomPreferencesModalProps } from "react-lgpd-consent"
+import type { CustomPreferencesModalProps, ConsentPreferences } from "react-lgpd-consent"
 
 interface CookieInfo {
   name: string
@@ -144,10 +144,13 @@ export default function CookiePreferencesModal({
 
     // Atualizar preferências na lib
     if (setPreferences) {
-      setPreferences({
-        ...preferences,
+      const newPrefs = {
+        ...(preferences || {}),
         [categoryId]: enabled,
-      })
+        // garantir presence de `necessary` (obrigatório na tipagem)
+        necessary: (preferences as any)?.necessary ?? true,
+      } as ConsentPreferences
+      setPreferences(newPrefs)
     }
   }
 
@@ -166,7 +169,12 @@ export default function CookiePreferencesModal({
     })
     setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: true })))
     if (setPreferences) {
-      setPreferences(allPreferences)
+      const prefs = {
+        ...allPreferences,
+        // garantir `necessary` presente e true
+        necessary: allPreferences.necessary ?? true,
+      } as ConsentPreferences
+      setPreferences(prefs)
     }
     closePreferences()
   }
@@ -178,7 +186,12 @@ export default function CookiePreferencesModal({
     })
     setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: cat.required })))
     if (setPreferences) {
-      setPreferences(minimalPreferences)
+      const prefs = {
+        ...minimalPreferences,
+        // garantir `necessary` presente (mínimo requerido)
+        necessary: minimalPreferences.necessary ?? true,
+      } as ConsentPreferences
+      setPreferences(prefs)
     }
     closePreferences()
   }

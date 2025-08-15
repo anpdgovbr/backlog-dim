@@ -27,12 +27,18 @@ export interface SidebarSection {
 export type NonEmptyArray<T> = [T, ...T[]]
 
 interface SidebarLayoutProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   title: string
   subtitle?: string
   sections: SidebarSection[]
-  selectedSectionId: string
-  onSectionChange: (sectionId: string) => void
+  // tornar selecionamento externo opcional
+  selectedSectionId?: string
+  // novo: id default caso não seja informado selectedSectionId
+  defaultSectionId?: string
+  // tornar callback opcional
+  onSectionChange?: (sectionId: string) => void
+  // novo: conteúdo de fallback para a área principal
+  fallback?: React.ReactNode
 }
 
 export default function SidebarLayout({
@@ -41,18 +47,25 @@ export default function SidebarLayout({
   subtitle,
   sections,
   selectedSectionId,
+  defaultSectionId,
   onSectionChange,
+  fallback,
 }: SidebarLayoutProps) {
   const isUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"))
-  const [selectedSection, setSelectedSection] = useState<string>(selectedSectionId)
+  const [selectedSection, setSelectedSection] = useState<string>(
+    // inicializar com selectedSectionId -> defaultSectionId -> primeira seção disponível
+    selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? ""
+  )
 
   useEffect(() => {
-    setSelectedSection(selectedSectionId)
-  }, [selectedSectionId])
+    // sincronizar quando props mudarem (selectedSectionId, defaultSectionId ou sections)
+    setSelectedSection(selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? "")
+  }, [selectedSectionId, defaultSectionId, sections])
 
   function handleSectionChange(newSectionId: string) {
     setSelectedSection(newSectionId)
-    onSectionChange(newSectionId)
+    // chamar callback somente se fornecido
+    if (onSectionChange) onSectionChange(newSectionId)
   }
 
   function handleSelectChange(event: SelectChangeEvent<string>) {
@@ -104,7 +117,8 @@ export default function SidebarLayout({
       hasSidebar={true}
       sidebar={sidebarContent}
     >
-      {children}
+      {/* Usa children se presente, caso contrário usa fallback (ou null) */}
+      {children ?? fallback ?? null}
     </DashboardLayout>
   )
 }
