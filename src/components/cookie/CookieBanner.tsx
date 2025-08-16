@@ -148,7 +148,7 @@ export default function CookiePreferencesModal({
         ...(preferences || {}),
         [categoryId]: enabled,
         // garantir presence de `necessary` (obrigatório na tipagem)
-        necessary: (preferences as any)?.necessary ?? true,
+        necessary: preferences?.necessary ?? true,
       } as ConsentPreferences
       setPreferences(newPrefs)
     }
