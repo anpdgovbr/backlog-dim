@@ -176,7 +176,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     Copie o arquivo de exemplo e preencha com suas credenciais.
 
     ```bash
-    cp .env.example .env.local
+    cp .env.example .env
     ```
 
     _Consulte a seção [Variáveis de Ambiente](#-variáveis-de-ambiente) para mais detalhes._
@@ -202,7 +202,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
     # Instalar e configurar PostgreSQL manualmente
     # Criar banco: backlog_dim_dev
     # Configurar usuário e permissões
-    # Ajustar DATABASE_URL no .env.local
+    # Ajustar DATABASE_URL no .env
 
     # Aplicar migrations
     npx prisma migrate dev
@@ -239,7 +239,7 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 1. **Copie o template:**
 
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
 
 2. **Configure a infraestrutura padrão:**
