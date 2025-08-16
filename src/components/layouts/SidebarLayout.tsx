@@ -26,7 +26,8 @@ export interface SidebarSection {
 
 export type NonEmptyArray<T> = [T, ...T[]]
 
-interface SidebarLayoutProps {
+// Trocar interface por type e envolver com Readonly<>
+type SidebarLayoutProps = Readonly<{
   children?: React.ReactNode
   title: string
   subtitle?: string
@@ -39,7 +40,7 @@ interface SidebarLayoutProps {
   onSectionChange?: (sectionId: string) => void
   // novo: conteúdo de fallback para a área principal
   fallback?: React.ReactNode
-}
+}>
 
 export default function SidebarLayout({
   children,

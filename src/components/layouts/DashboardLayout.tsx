@@ -9,14 +9,14 @@ import Typography from "@mui/material/Typography"
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
 interface DashboardLayoutProps {
-  children: React.ReactNode
-  title?: string
-  subtitle?: string
-  loading?: boolean
-  loadingMessage?: string
-  actions?: React.ReactNode
-  sidebar?: React.ReactNode
-  hasSidebar?: boolean
+  readonly children: React.ReactNode
+  readonly title?: string
+  readonly subtitle?: string
+  readonly loading?: boolean
+  readonly loadingMessage?: string
+  readonly actions?: React.ReactNode
+  readonly sidebar?: React.ReactNode
+  readonly hasSidebar?: boolean
 }
 
 export default function DashboardLayout({

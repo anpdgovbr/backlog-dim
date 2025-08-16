@@ -1,84 +1,60 @@
 import type { SxProps } from "@mui/material/styles"
+import { alpha } from "@mui/material/styles"
 
 import ANPDtheme from "@/theme/theme"
 
-export const dataGridStyles = {
+export const dataGridStyles: SxProps = {
+  // Estilos do container do DataGrid
+  border: `1px solid ${ANPDtheme.palette.divider}`,
+  borderRadius: ANPDtheme.shape.borderRadius,
+  boxShadow: ANPDtheme.shadows[1],
+  backgroundColor: ANPDtheme.palette.background.paper,
+  height: "100%",
   width: "100%",
-  backgroundColor: ANPDtheme.palette.background.default,
-  borderRadius: 2,
+  display: "flex",
+  flexDirection: "column",
 
-  "& .MuiDataGrid-main": {
-    minWidth: "100% !important",
-  },
-  "& .MuiDataGrid-virtualScrollerContent": {
-    width: "100% !important",
-    minWidth: "100% !important",
+  // Estilos para o elemento raiz do DataGrid
+  "& .MuiDataGrid-root": {
+    border: "none",
     flexGrow: 1,
   },
-  "& .MuiDataGrid-virtualScroller": {
-    overflowX: "hidden",
-  },
-  "& .MuiDataGrid-columnHeaders": {
-    minWidth: "100% !important",
-  },
 
-  "& .MuiDataGrid-row": { alignItems: "center" },
-  "& .MuiDataGrid-cell": {
-    display: "flex",
-    alignItems: "center",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  "& .MuiDataGrid-root": {
-    backgroundColor: ANPDtheme.palette.background.paper,
-    borderRadius: 2,
-  },
-  "& .MuiDataGrid-columnHeader": {
-    backgroundColor: `${ANPDtheme.palette.primary.light} !important`,
-    color: ANPDtheme.palette.primary.contrastText,
-    fontWeight: "bold",
+  // Estilos do cabeçalho
+  "& .MuiDataGrid-columnHeaders": {
+    backgroundColor: ANPDtheme.palette.grey[100],
     borderBottom: `2px solid ${ANPDtheme.palette.primary.main}`,
-    fontSize: "0.9rem",
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    color: ANPDtheme.palette.primary.contrastText,
-    fontWeight: 700,
+    fontWeight: "bold",
+    color: ANPDtheme.palette.text.primary,
   },
-  "& .MuiDataGrid-row:nth-of-type(even)": {
-    backgroundColor: "#F0F0F0",
+
+  // Estilos das linhas
+  "& .MuiDataGrid-row": {
+    "&:nth-of-type(even)": {
+      backgroundColor: alpha(ANPDtheme.palette.grey[200], 0.5),
+    },
+    "&:hover": {
+      backgroundColor: alpha(ANPDtheme.palette.primary.light, 0.2),
+      cursor: "pointer",
+    },
+    transition: `background-color 0.2s ease-in-out`,
   },
-  "& .MuiDataGrid-row:hover": {
-    backgroundColor: ANPDtheme.palette.secondary.light,
+
+  // Estilos das células
+  "& .MuiDataGrid-cell": {
+    borderBottom: `1px solid ${ANPDtheme.palette.divider}`,
   },
-  "& .MuiTablePagination-root": {
-    alignItems: "center",
-    display: "flex",
-    minHeight: "56px",
-    justifyContent: "flex-end",
+
+  // Estilos do rodapé
+  "& .MuiDataGrid-footerContainer": {
+    borderTop: `1px solid ${ANPDtheme.palette.divider}`,
+    backgroundColor: ANPDtheme.palette.grey[50],
   },
-  "& .MuiTablePagination-toolbar": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: 0,
-    minHeight: "48px",
+
+  // Estilo para quando não há linhas
+  "& .MuiDataGrid-overlay": {
+    backgroundColor: alpha(ANPDtheme.palette.background.default, 0.7),
   },
-  "& .MuiTablePagination-selectLabel": {
-    margin: 0,
-  },
-  "& .MuiTablePagination-displayedRows": {
-    margin: 0,
-  },
-  "& .MuiTablePagination-actions": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  "& .MuiInputBase-root": {
-    display: "flex",
-    alignItems: "center",
-    padding: 0,
-  },
-} as SxProps
+}

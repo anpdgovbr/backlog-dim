@@ -1,6 +1,12 @@
 "use client"
 
-import { Box, Button, Stack, Typography, Link, Alert, Backdrop } from "@mui/material"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
+import Link from "@mui/material/Link"
+import Alert from "@mui/material/Alert"
+import Backdrop from "@mui/material/Backdrop"
 import { alpha } from "@mui/material/styles"
 import type { CustomCookieBannerProps } from "react-lgpd-consent"
 
@@ -9,7 +15,7 @@ export default function SimpleCookieBanner({
   rejectAll,
   openPreferences,
   texts,
-}: CustomCookieBannerProps) {
+}: Readonly<CustomCookieBannerProps>) {
   return (
     <>
       {/* Backdrop escuro bloqueante */}

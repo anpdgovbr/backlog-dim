@@ -1,5 +1,7 @@
 "use client"
 
+import React from "react"
+
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
 import Stack from "@mui/material/Stack"
@@ -25,9 +27,9 @@ export default function CardGrid({
   title,
   subtitle,
   spacing = 3,
-  minCardHeight = 300,
+  minCardHeight = "auto",
   columns = { xs: 12, sm: 6, md: 4, lg: 3 },
-}: CardGridProps) {
+}: Readonly<CardGridProps>) {
   return (
     <Box>
       {/* Título da seção */}
@@ -48,23 +50,8 @@ export default function CardGrid({
 
       {/* Grid de Cards */}
       <Grid container spacing={spacing}>
-        {Array.isArray(children) ? (
-          children.map((child, index) => (
-            <Grid key={index} size={columns}>
-              <Box
-                sx={{
-                  height: "100%",
-                  minHeight: minCardHeight,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {child}
-              </Box>
-            </Grid>
-          ))
-        ) : (
-          <Grid size={12}>
+        {React.Children.map(children, (child, index) => (
+          <Grid item key={index} {...columns}>
             <Box
               sx={{
                 height: "100%",
@@ -73,10 +60,10 @@ export default function CardGrid({
                 flexDirection: "column",
               }}
             >
-              {children}
+              {child}
             </Box>
           </Grid>
-        )}
+        ))}
       </Grid>
     </Box>
   )
@@ -89,13 +76,13 @@ export function DashboardSection({
   subtitle,
   actions,
   spacing = 4,
-}: {
+}: Readonly<{
   children: React.ReactNode
   title?: string
   subtitle?: string
   actions?: React.ReactNode
   spacing?: number
-}) {
+}>) {
   return (
     <Box sx={{ mb: spacing }}>
       {(title || subtitle || actions) && (

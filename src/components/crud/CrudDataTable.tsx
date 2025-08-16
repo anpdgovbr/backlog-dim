@@ -1,7 +1,6 @@
 "use client"
 
 import { useMemo } from "react"
-import { useTheme } from "@mui/material/styles"
 
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
@@ -10,6 +9,8 @@ import IconButton from "@mui/material/IconButton"
 import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
+
+import { dataGridStyles } from "@/styles/dataGridStyles"
 
 interface Item {
   id: number
@@ -40,8 +41,6 @@ export default function CrudDataTable({
   canEdit,
   canDelete,
 }: CrudDataTableProps) {
-  const theme = useTheme()
-
   const columns: GridColDef[] = useMemo(
     () => [
       {
@@ -79,7 +78,8 @@ export default function CrudDataTable({
               onClick={() => onEdit(params.row)}
               sx={{
                 "&:hover": {
-                  bgcolor: "primary.50",
+                  bgcolor: "primary.light",
+                  color: "primary.contrastText",
                   transform: "scale(1.1)",
                 },
                 transition: "all 0.2s ease",
@@ -94,7 +94,8 @@ export default function CrudDataTable({
               onClick={() => onDelete(params.row.id)}
               sx={{
                 "&:hover": {
-                  bgcolor: "error.50",
+                  bgcolor: "error.light",
+                  color: "error.contrastText",
                   transform: "scale(1.1)",
                 },
                 transition: "all 0.2s ease",
@@ -110,66 +111,8 @@ export default function CrudDataTable({
   )
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        bgcolor: "background.paper",
-        borderRadius: 2,
-        border: "1px solid",
-        borderColor: "divider",
-        overflow: "hidden",
-        boxShadow: theme.shadows[2],
-      }}
-    >
+    <Box sx={dataGridStyles}>
       <DataGrid
-        sx={{
-          flexGrow: 1,
-          minHeight: "45vh",
-          border: "none",
-
-          // Header customization
-          "& .MuiDataGrid-columnHeaders": {
-            bgcolor: "grey.50",
-            borderBottom: "2px solid",
-            borderColor: "primary.main",
-
-            "& .MuiDataGrid-columnHeader": {
-              fontWeight: theme.typography.fontWeightBold,
-            },
-          },
-
-          // Row customization
-          "& .MuiDataGrid-row": {
-            "&:nth-of-type(even)": {
-              bgcolor: "grey.25",
-            },
-            "&:hover": {
-              bgcolor: "primary.50",
-              transform: "scale(1.001)",
-              transition: "all 0.2s ease",
-            },
-          },
-
-          // Cell customization
-          "& .MuiDataGrid-cell": {
-            borderColor: "divider",
-          },
-
-          // Footer customization
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "2px solid",
-            borderColor: "divider",
-            bgcolor: "grey.25",
-          },
-
-          // Loading overlay
-          "& .MuiDataGrid-overlay": {
-            bgcolor: "rgba(255, 255, 255, 0.8)",
-          },
-        }}
         disableColumnMenu
         rows={items}
         columns={columns}

@@ -11,10 +11,10 @@ if (process.env.NODE_ENV === "development") {
 }
 
 interface CookieManagerProps {
-  children: React.ReactNode
+  readonly children: React.ReactNode
 }
 
-export default function CookieManager({ children }: CookieManagerProps) {
+export default function CookieManager({ children }: Readonly<CookieManagerProps>) {
   return (
     <ConsentProvider
       categories={{

@@ -220,7 +220,7 @@ export default function ProcessoDataGrid() {
             </Stack>
           </Stack>
 
-          <Box sx={{ ...dataGridStyles, display: "flex", height: "100%", width: "100%" }}>
+          <Box sx={dataGridStyles}>
             <DataGrid
               sx={{ minHeight: "45vh" }}
               disableColumnMenu

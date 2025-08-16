@@ -1,20 +1,72 @@
-// Arquivo minimal para garantir que o Next.js detecte o plugin de ESLint.
-// Mantemos a configuração principal em `eslint.config.mjs` (flat config),
-// mas o Next.js atualmente detecta configs tradicionais (.eslintrc) mais
-// facilmente — esse arquivo serve apenas para sinalizar ao Next que o
-// plugin/config do Next está presente.
+// ESLint compat (legacy) para ajudar o Next.js a detectar o plugin e
+// aplicar regras de naming que a equipe deseja impor.
 
 module.exports = {
   root: true,
   plugins: [
-    // marca explicitamente o plugin do Next para detectores que checam a
-    // presença do plugin em `plugins` (além de `extends`).
     "@next/next",
     "next",
+    "@typescript-eslint",
+    "filenames",
   ],
   extends: [
-    // Configurações oficiais do Next.js — garante detecção pelo Next
     "next",
     "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
   ],
+  rules: {
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        selector: "default",
+        format: ["camelCase"]
+      },
+      {
+        selector: "variable",
+        format: ["camelCase", "UPPER_CASE", "PascalCase"],
+        leadingUnderscore: "allow"
+      },
+      {
+        selector: "function",
+        format: ["camelCase"]
+      },
+      {
+        selector: "parameter",
+        format: ["camelCase"],
+        leadingUnderscore: "allow"
+      },
+      {
+        selector: "typeLike",
+        format: ["PascalCase"]
+      },
+      {
+        selector: "enum",
+        format: ["PascalCase"]
+      },
+      {
+        selector: "enumMember",
+        format: ["PascalCase", "UPPER_CASE"]
+      }
+    ],
+
+    "filenames/match-regex": [
+      "error",
+      "^[A-Z][a-zA-Z0-9]*$",
+      {
+        message: "TSX component filenames should be PascalCase (Ex: MyComponent.tsx)"
+      }
+    ]
+  },
+  overrides: [
+    {
+      files: ["**/*.tsx"],
+      rules: {
+        "filenames/match-regex": [
+          "error",
+          "^[A-Z][a-zA-Z0-9]*$",
+          { message: "TSX component filenames should be PascalCase" }
+        ]
+      }
+    }
+  ]
 }

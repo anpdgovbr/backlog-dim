@@ -35,16 +35,17 @@ function PageHeader({
   actions,
   variant = "default",
   bgColor,
-}: PageHeaderProps) {
+}: Readonly<PageHeaderProps>) {
   const isInstitutional = variant === "institutional"
   const isHero = variant === "hero"
+  const paddingY = isHero ? 8 : isInstitutional ? 6 : 4
 
   return (
     <Box
       sx={{
         bgcolor: bgColor || (isInstitutional ? "primary.main" : "background.paper"),
         color: isInstitutional ? "primary.contrastText" : "text.primary",
-        py: isHero ? 8 : isInstitutional ? 6 : 4,
+        py: paddingY,
         mb: 4,
         position: "relative",
         overflow: "hidden",
@@ -141,7 +142,7 @@ export default function PageLayout({
   maxWidth = "lg",
   fullWidth = false,
   spacing = 4,
-}: PageLayoutProps) {
+}: Readonly<PageLayoutProps>) {
   if (loading) {
     return <GovBrLoading message={loadingMessage} fullScreen />
   }
@@ -172,14 +173,14 @@ export function PageSection({
   spacing = 4,
   elevation = 0,
   noPadding = false,
-}: {
+}: Readonly<{
   children: React.ReactNode
   title?: string
   subtitle?: string
   spacing?: number
   elevation?: number
   noPadding?: boolean
-}) {
+}>) {
   return (
     <Box sx={{ mb: spacing }}>
       {(title || subtitle) && (
