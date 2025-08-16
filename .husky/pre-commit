@@ -1,4 +1,1 @@
-echo "🚀 Rodando hook de pre-commit do Husky..."
-
-# Lint-staged (se estiver configurado)
 npx lint-staged

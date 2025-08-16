@@ -10,8 +10,10 @@ import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
+import Typography from "@mui/material/Typography"
 import useMediaQuery from "@mui/material/useMediaQuery"
 
+import { parseThemeColor } from "@/utils/colorUtils"
 import { Menu25Base } from "../menu/Menu25Base"
 
 export type NonEmptyArray<T> = [T, ...T[]]
@@ -55,7 +57,7 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
     const foundSection = sections.find((sec) => sec.id === selectedSection)
     if (!foundSection) {
       return (
-        <Box>
+        <Box sx={{ p: 1 }}>
           {fallback ?? (
             <Alert sx={{ mx: 1 }} variant="filled" severity="error">
               <AlertTitle>Erro de seção</AlertTitle>
@@ -67,7 +69,97 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
     }
 
     const SectionComponent = foundSection.component
-    return <SectionComponent />
+    return (
+      <Box
+        sx={(theme) => ({
+          // Container com estilo integrado ao Menu25Base
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          border: "1px solid rgba(0, 0, 0, 0.08)",
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.06)",
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+          position: "relative",
+
+          // Header da seção com indicador colorido
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            bgcolor:
+              parseThemeColor(theme, foundSection.baseColor) ||
+              theme.palette.primary.main,
+          },
+
+          // Título da seção
+          "& .section-title": {
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            px: 2,
+            py: 1.5,
+            borderBottom: "1px solid rgba(0, 0, 0, 0.06)",
+            bgcolor: "rgba(0, 0, 0, 0.02)",
+
+            "& .title-text": {
+              textTransform: "uppercase",
+              fontWeight: theme.typography.fontWeightBold,
+              fontSize: theme.typography.body2.fontSize,
+              letterSpacing: "0.02em",
+              color:
+                parseThemeColor(theme, foundSection.baseColor) ||
+                theme.palette.primary.main,
+            },
+
+            "& .title-icon": {
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              bgcolor:
+                parseThemeColor(theme, foundSection.baseColor) ||
+                theme.palette.primary.main,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontSize: 14,
+            },
+          },
+
+          // Container do conteúdo
+          "& .section-content": {
+            p: 2,
+          },
+
+          // Hover effect similar ao Menu25Base
+          "&:hover": {
+            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.12)",
+            transform: "translateY(-1px)",
+          },
+        })}
+      >
+        {/* Header da seção */}
+        <Box className="section-title">
+          {foundSection.icon && <Box className="title-icon">{foundSection.icon}</Box>}
+          <Typography className="title-text" variant="body2">
+            {foundSection.title}
+          </Typography>
+          {foundSection.description && (
+            <Typography variant="caption" sx={{ color: "text.secondary", ml: "auto" }}>
+              {foundSection.description}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Conteúdo da seção */}
+        <Box className="section-content">
+          <SectionComponent />
+        </Box>
+      </Box>
+    )
   }
 
   return (
@@ -85,7 +177,12 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
           flexShrink: 0,
           width: { xs: "100%", md: 280 },
           bgcolor: "background.paper",
-          pr: { xs: 0, md: 2 },
+          pr: { xs: 0, md: 1.5 },
+          // Adiciona separação visual sutil
+          borderRight: {
+            xs: "none",
+            md: "1px solid rgba(0, 0, 0, 0.06)",
+          },
         }}
       >
         {isUpMd ? (
@@ -131,10 +228,12 @@ export default function Dashboard25LayoutBase(props: IDashboard25LayoutBaseProps
         sx={{
           flexGrow: 1,
           minWidth: 0,
-          overflow: "auto",
           height: "100%",
           width: "100%",
           maxWidth: "100%",
+          p: { xs: 1, md: 2 }, // Padding consistente
+          // Background sutil para diferenciar da sidebar
+          bgcolor: "rgba(0, 0, 0, 0.01)",
         }}
       >
         {renderSelectedSection()}

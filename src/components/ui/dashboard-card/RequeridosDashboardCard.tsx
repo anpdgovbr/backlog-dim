@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import { useRouter } from "next/navigation"
 
-import Business from "@mui/icons-material/Business"
+import BusinessIcon from "@mui/icons-material/Business"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Grid from "@mui/material/Grid"
@@ -66,7 +66,15 @@ function RequeridosDashboardCard({
   }, [limit])
 
   return (
-    <DashboardCard sx={{ height: "100%", bgcolor: "background.paper" }}>
+    <DashboardCard
+      sx={{
+        height: "100%",
+        bgcolor: "secondary.main",
+        color: "secondary.contrastText",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       <Box
         display="flex"
         flexDirection="column"
@@ -74,17 +82,37 @@ function RequeridosDashboardCard({
         sx={{ height: "100%" }}
       >
         <Box>
-          <Stack direction="row" spacing={2} alignItems="center" mb={1}>
-            <Business sx={{ fontSize: 40, color: "secondary.dark" }} />
-            <DashboardCard.Title>Requeridos</DashboardCard.Title>
+          <Stack direction="row" spacing={2} alignItems="center" mb={2}>
+            <BusinessIcon
+              sx={{ fontSize: 48, color: "secondary.contrastText", opacity: 0.9 }}
+            />
+            <Box>
+              <DashboardCard.Title sx={{ color: "secondary.contrastText" }}>
+                Requeridos
+              </DashboardCard.Title>
+              <Typography
+                variant="caption"
+                sx={{ color: "secondary.contrastText", opacity: 0.8 }}
+              >
+                Top Empresas
+              </Typography>
+            </Box>
           </Stack>
 
-          <DashboardCard.Description variant="body2" sx={{ mb: 1 }}>
+          <DashboardCard.Description
+            variant="body2"
+            sx={{ mb: 2, color: "secondary.contrastText", opacity: 0.9 }}
+          >
             Acesse os principais requeridos com mais processos.
           </DashboardCard.Description>
 
           {erro && (
-            <Typography variant="body2" color="error" mb={1}>
+            <Typography
+              variant="body2"
+              color="warning.main"
+              mb={1}
+              sx={{ fontWeight: 600 }}
+            >
               Não foi possível carregar os requeridos. Verifique se está autenticado.
             </Typography>
           )}
@@ -109,10 +137,10 @@ function RequeridosDashboardCard({
                   sx={{
                     px: 1.5,
                     py: 1,
-                    bgcolor: "secondary.light",
+                    bgcolor: "rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
                     borderRadius: 1,
-                    border: "1px solid",
-                    borderColor: "divider",
                     overflow: "hidden",
                     width: "100%",
                   }}
@@ -144,16 +172,37 @@ function RequeridosDashboardCard({
         <Box mt={2}>
           <Button
             fullWidth
-            sx={{ textTransform: "uppercase" }}
-            size="small"
-            variant="outlined"
-            color="secondary"
+            variant="contained"
+            size="large"
             onClick={() => router.push("/dashboard/requeridos")}
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.2)",
+              color: "secondary.contrastText",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(0, 0, 0, 0.3)",
+              "&:hover": {
+                bgcolor: "rgba(0, 0, 0, 0.3)",
+              },
+            }}
           >
             Ver todos
           </Button>
         </Box>
       </Box>
+
+      {/* Elemento decorativo */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: -20,
+          right: -20,
+          width: 120,
+          height: 120,
+          borderRadius: "50%",
+          bgcolor: "rgba(0, 0, 0, 0.05)",
+          zIndex: 0,
+        }}
+      />
     </DashboardCard>
   )
 }

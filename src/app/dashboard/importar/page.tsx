@@ -4,8 +4,11 @@ import Papa from "papaparse"
 
 import { useState } from "react"
 
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import DescriptionIcon from "@mui/icons-material/Description"
 import NavigateBefore from "@mui/icons-material/NavigateBefore"
 import NavigateNext from "@mui/icons-material/NavigateNext"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -14,6 +17,7 @@ import Chip from "@mui/material/Chip"
 import Grid from "@mui/material/Grid"
 import IconButton from "@mui/material/IconButton"
 import LinearProgress from "@mui/material/LinearProgress"
+import Stack from "@mui/material/Stack"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -26,6 +30,8 @@ import Typography from "@mui/material/Typography"
 
 import { StatusInterno } from "@anpdgovbr/shared-types"
 
+import { DashboardLayout } from "@/components/layouts"
+import MetricCard from "@/components/ui/MetricCard"
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 
@@ -204,112 +210,170 @@ function ImportarProcessosContent() {
     setPagina(0)
   }
 
+  const actions = (
+    <Stack direction="row" spacing={2}>
+      <Button
+        variant="outlined"
+        component="label"
+        disabled={loading}
+        startIcon={<CloudUploadIcon />}
+      >
+        Selecionar CSV
+        <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
+      </Button>
+
+      <Button
+        variant="contained"
+        onClick={handleImport}
+        disabled={loading || !dados.length || importado}
+        startIcon={loading ? undefined : <PlayArrowIcon />}
+      >
+        {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
+      </Button>
+    </Stack>
+  )
+
   return (
-    <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Importação de Processos
-      </Typography>
-
-      <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-        <Button variant="contained" component="label" disabled={loading}>
-          Selecionar CSV
-          <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleImport}
-          disabled={loading || !dados.length || importado}
-        >
-          {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
-        </Button>
-      </Box>
-
+    <DashboardLayout
+      title="Importação de Processos"
+      subtitle="Importe processos em lote a partir de arquivos CSV"
+      actions={actions}
+    >
+      {/* Barra de progresso */}
       {loading && (
-        <LinearProgress variant="determinate" value={progresso} sx={{ mb: 1 }} />
+        <Box sx={{ mb: 3 }}>
+          <LinearProgress
+            variant="determinate"
+            value={progresso}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              bgcolor: "grey.200",
+              "& .MuiLinearProgress-bar": {
+                borderRadius: 4,
+              },
+            }}
+          />
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 1, textAlign: "center" }}
+          >
+            Processando registro {Math.round((progresso / 100) * dados.length)} de{" "}
+            {dados.length}
+          </Typography>
+        </Box>
       )}
 
-      <Card sx={{ p: 1, mb: 1, bgcolor: "background.paper" }}>
-        <Typography variant="h6" gutterBottom>
-          {importado ? "Resultado da Importação" : "Análise do Arquivo"}
-        </Typography>
-        {!importado && (
-          <Grid container spacing={1}>
-            <Grid
-              size={{
-                xs: 6,
-                md: 3,
-              }}
-            >
-              <Estatistica
-                titulo="Total"
-                valor={importado ? resumoImportacao.totalRegistros : dados.length}
-                cor="primary"
+      {/* Arquivo selecionado */}
+      {fileName && (
+        <Alert icon={<DescriptionIcon />} severity="info" sx={{ mb: 3 }}>
+          <Typography variant="body2">
+            <strong>Arquivo:</strong> {fileName} ({dados.length} registros)
+          </Typography>
+        </Alert>
+      )}
+
+      {/* Métricas do arquivo/importação */}
+      {dados.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+            {importado ? "Resultado da Importação" : "Análise do Arquivo"}
+          </Typography>
+
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <MetricCard
+                title="Total de Registros"
+                value={importado ? resumoImportacao.totalRegistros : dados.length}
+                color="primary"
+                icon={<DescriptionIcon />}
               />
             </Grid>
 
-            <Grid
-              size={{
-                xs: 6,
-                md: 3,
-              }}
-            >
-              <Estatistica
-                titulo="Anônimos"
-                valor={
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <MetricCard
+                title="Registros Anônimos"
+                value={
                   importado
                     ? resumoImportacao.totalAnonimos
                     : dados.filter((l) => l[5]?.toLowerCase() === "sim").length
                 }
-                cor="secondary"
+                color="secondary"
+                icon={<DescriptionIcon />}
               />
             </Grid>
 
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-              }}
-            >
-              <CategoriaResumo
-                titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
-                dados={
-                  importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
-                }
-              />
-            </Grid>
+            {importado && (
+              <>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <MetricCard
+                    title="Importados com Sucesso"
+                    value={relatorio.sucesso}
+                    color="success"
+                    icon={<DescriptionIcon />}
+                  />
+                </Grid>
 
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-              }}
-            >
-              <CategoriaResumo
-                titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
-                dados={
-                  importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
-                }
-                cor="secondary"
-              />
-            </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <MetricCard
+                    title="Erros Encontrados"
+                    value={relatorio.falhas.length}
+                    color="error"
+                    icon={<DescriptionIcon />}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
-        )}
-      </Card>
+        </Box>
+      )}
 
+      {/* Resumos por categoria */}
+      {dados.length > 0 && (
+        <Grid container spacing={3} sx={{ mb: 3 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <CategoriaResumo
+              titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
+              dados={
+                importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
+              }
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <CategoriaResumo
+              titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
+              dados={
+                importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
+              }
+              cor="secondary"
+            />
+          </Grid>
+        </Grid>
+      )}
+
+      {/* Tabela de pré-visualização */}
       {!importado && !!dados.length && (
-        <Card sx={{ mb: 1 }}>
-          <TableContainer>
-            <Typography variant="h6" sx={{ p: 1 }}>
+        <Card
+          sx={{
+            mb: 3,
+            border: "1px solid rgba(0, 0, 0, 0.08)",
+            borderRadius: 2,
+          }}
+        >
+          <Box sx={{ p: 2, borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}>
+            <Typography variant="h6">
               Pré-visualização dos Dados ({dados.length} registros)
             </Typography>
+          </Box>
 
+          <TableContainer>
             <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
                   {cabecalho.map((coluna, i) => (
-                    <TableCell key={i} sx={{ fontWeight: "bold" }}>
+                    <TableCell key={i} sx={{ fontWeight: 600, bgcolor: "grey.50" }}>
                       {coluna}
                     </TableCell>
                   ))}
@@ -325,7 +389,9 @@ function ImportarProcessosContent() {
                   .map((linha, i) => (
                     <TableRow key={i}>
                       {linha.map((celula, j) => (
-                        <TableCell key={j}>{celula || <em>vazio</em>}</TableCell>
+                        <TableCell key={j}>
+                          {celula || <em style={{ color: "#999" }}>vazio</em>}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}
@@ -364,20 +430,31 @@ function ImportarProcessosContent() {
         </Card>
       )}
 
+      {/* Relatório de importação */}
       {importado && (
-        <Box sx={{ mt: 2 }}>
+        <Box>
           {relatorio.sucesso > 0 && (
             <Alert severity="success" sx={{ mb: 2 }}>
-              {relatorio.sucesso} processos importados com sucesso
+              <Typography variant="subtitle1">
+                ✅ {relatorio.sucesso} processos importados com sucesso
+              </Typography>
             </Alert>
           )}
 
           {relatorio.falhas.length > 0 && (
-            <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
+            <Alert severity="error">
               <Typography variant="subtitle1" gutterBottom>
-                {relatorio.falhas.length} erro(s) encontrados:
+                ❌ {relatorio.falhas.length} erro(s) encontrados:
               </Typography>
-              <Box component="ol" sx={{ maxHeight: 400, overflowY: "auto" }}>
+              <Box
+                component="ol"
+                sx={{
+                  maxHeight: 300,
+                  overflowY: "auto",
+                  pl: 2,
+                  "& li": { mb: 0.5 },
+                }}
+              >
                 {relatorio.falhas.map((falha, i) => (
                   <li key={i}>
                     <Typography variant="body2">{falha}</Typography>
@@ -388,28 +465,11 @@ function ImportarProcessosContent() {
           )}
         </Box>
       )}
-    </Box>
+    </DashboardLayout>
   )
 }
 
-// Auxiliares
-const Estatistica = ({
-  titulo,
-  valor,
-  cor,
-}: {
-  titulo: string
-  valor: number
-  cor: "primary" | "secondary"
-}) => (
-  <Card sx={{ textAlign: "center", p: 2, bgcolor: `${cor}.light` }}>
-    <Typography variant="subtitle1">{titulo}</Typography>
-    <Typography variant="h3" color={`${cor}.main`}>
-      {valor}
-    </Typography>
-  </Card>
-)
-
+// Componente de resumo por categoria
 const CategoriaResumo = ({
   titulo,
   dados,
@@ -419,18 +479,38 @@ const CategoriaResumo = ({
   dados: Record<string, number>
   cor?: "primary" | "secondary"
 }) => (
-  <Card sx={{ p: 2 }}>
-    <Typography variant="subtitle2" gutterBottom>
+  <Card
+    sx={{
+      p: 3,
+      height: "100%",
+      border: "1px solid rgba(0, 0, 0, 0.08)",
+      borderRadius: 2,
+    }}
+  >
+    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
       {titulo}
     </Typography>
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-      {Object.entries(dados).map(([nome, total]) => (
-        <Chip key={nome} label={`${nome} (${total})`} color={cor} variant="outlined" />
-      ))}
+      {Object.entries(dados).length === 0 ? (
+        <Typography variant="body2" color="text.secondary">
+          Nenhum dado disponível
+        </Typography>
+      ) : (
+        Object.entries(dados).map(([nome, total]) => (
+          <Chip
+            key={nome}
+            label={`${nome} (${total})`}
+            color={cor}
+            variant="outlined"
+            sx={{ fontWeight: 500 }}
+          />
+        ))
+      )}
     </Box>
   </Card>
 )
 
+// Função auxiliar
 const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, number> =>
   dados.reduce(
     (acc, linha) => {
