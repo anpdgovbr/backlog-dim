@@ -127,21 +127,6 @@ const eslintConfig = [
       "no-debugger": "warn",
       "no-undef": "warn",
       "no-useless-escape": "warn",
-
-      // MUI optimization rules - Desabilitado temporariamente para permitir migração gradual
-      // TODO: Reativar após migração completa para imports otimizados
-      // "no-restricted-imports": [
-      //   "warn",
-      //   {
-      //     paths: [
-      //       {
-      //         name: "@mui/material",
-      //         importNames: ["Typography", "Button", "Box", "Link"],
-      //         message: "⚠️ Para melhor tree shaking, prefira: import Button from '@mui/material/Button'"
-      //       }
-      //     ]
-      //   }
-      // ],
     },
   },
 ]

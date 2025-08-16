@@ -76,6 +76,12 @@
     "infra:debug": "curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/diagnostic.js -o .infra/diagnostic.cjs && node .infra/diagnostic.cjs",
     "infra:fix": "curl -sSL https://raw.githubusercontent.com/anpdgovbr/docker-infra-pg/main/fix-credentials.js -o .infra/fix-credentials.cjs && node .infra/fix-credentials.cjs"
   },
+  "eslintConfig": {
+    "extends": [
+      "next",
+      "next/core-web-vitals"
+    ]
+  },
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
