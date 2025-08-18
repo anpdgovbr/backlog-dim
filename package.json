@@ -97,7 +97,7 @@
   },
   "dependencies": {
     "@anpdgovbr/shared-types": "^0.1.4-beta",
-    "@anpdgovbr/shared-ui": "^0.2.1-beta.0",
+    "@anpdgovbr/shared-ui": "^0.3.2-beta.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@govbr-ds/core": "^3.6.2",
