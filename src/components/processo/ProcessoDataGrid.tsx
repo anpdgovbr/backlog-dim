@@ -216,7 +216,7 @@ export default function ProcessoDataGrid({
               />
               <Box gap={2} display="flex" alignItems="center">
                 <Tooltip title="Limpar filtros">
-                  <GovBRButton inverted={true} strictgovbr onClick={handleClearFilters}>
+                  <GovBRButton inverted={true} onClick={handleClearFilters}>
                     <RestartAltIcon sx={{ mr: 1 }} />
                     Limpar
                   </GovBRButton>
@@ -225,7 +225,6 @@ export default function ProcessoDataGrid({
                 <Tooltip title="Adicionar novo processo">
                   <GovBRButton
                     color="primary"
-                    strictgovbr
                     onClick={() => router.push("/dashboard/processos/novo")}
                   >
                     <AddIcon sx={{ mr: 1 }} />
