@@ -6,12 +6,12 @@ import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 
-import ImportarDashboardCard from "@/app/dashboard/ImportarDashboardCard"
-import MetadadosDashboardCard from "@/app/dashboard/MetadadosDashboardCard"
-import ProcessDashboardCard from "@/app/dashboard/ProcessDashboardCard"
-import RequeridosDashboardCard from "@/app/dashboard/RequeridosDashboardCard"
-import ResponsaveisDashboardCard from "@/app/dashboard/ResponsaveisDashboardCard"
-import StatsDashboardCard from "@/app/dashboard/StatsDashboardCard"
+import ImportarDashboardCard from "@/app/dashboard/_components/ImportarDashboardCard"
+import MetadadosDashboardCard from "@/app/dashboard/_components/MetadadosDashboardCard"
+import ProcessDashboardCard from "@/app/dashboard/_components/ProcessDashboardCard"
+import RequeridosDashboardCard from "@/app/dashboard/_components/RequeridosDashboardCard"
+import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisDashboardCard"
+import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
 
 export default function PublicoPage() {
   return (

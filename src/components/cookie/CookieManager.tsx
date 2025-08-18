@@ -1,9 +1,8 @@
 "use client"
 
-import { ConsentProvider, setDebugLogging, LogLevel } from "react-lgpd-consent"
-import SimpleCookieBanner from "./SimpleCookieBanner"
+import { ConsentProvider, LogLevel, setDebugLogging } from "react-lgpd-consent"
 import CookiePreferencesModal from "./CookieBanner"
-import CookieManagementDock from "./CookieManagementDock"
+import SimpleCookieBanner from "./SimpleCookieBanner"
 
 // Habilitar debug em desenvolvimento
 if (process.env.NODE_ENV === "development") {
@@ -50,7 +49,8 @@ export default function CookieManager({ children }: Readonly<CookieManagerProps>
       {children}
 
       {/* Dock de gerenciamento customizado */}
-      <CookieManagementDock />
+      {/* TODO: Ativar junto do MenuDev futuramente 
+      <CookieManagementDock />*/}
     </ConsentProvider>
   )
 }

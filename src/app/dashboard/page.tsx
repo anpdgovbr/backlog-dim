@@ -4,12 +4,12 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 
 import { CardGrid, DashboardLayout, DashboardSection } from "@/components/layouts"
-import ImportarDashboardCard from "@/app/dashboard/ImportarDashboardCard"
-import MetadadosDashboardCard from "@/app/dashboard/MetadadosDashboardCard"
-import ProcessDashboardCard from "@/app/dashboard/ProcessDashboardCard"
-import RequeridosDashboardCard from "@/app/dashboard/RequeridosDashboardCard"
-import ResponsaveisDashboardCard from "@/app/dashboard/ResponsaveisDashboardCard"
-import StatsDashboardCard from "@/app/dashboard/StatsDashboardCard"
+import ImportarDashboardCard from "@/app/dashboard/_components/ImportarDashboardCard"
+import MetadadosDashboardCard from "@/app/dashboard/_components/MetadadosDashboardCard"
+import ProcessDashboardCard from "@/app/dashboard/_components/ProcessDashboardCard"
+import RequeridosDashboardCard from "@/app/dashboard/_components/RequeridosDashboardCard"
+import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisDashboardCard"
+import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
 import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
 
@@ -50,7 +50,7 @@ function DashboardBacklog() {
           title="Visão Geral"
           subtitle="Acompanhe métricas e indicadores principais"
         >
-          <CardGrid columns={{ xs: 12, md: 6 }} minCardHeight={350}>
+          <CardGrid columns={{ xs: 12, lg: 6 }} minCardHeight={380}>
             {permissoes["Exibir_Processo"] && <ProcessDashboardCard />}
             {permissoes["Exibir_Relatorios"] && <StatsDashboardCard />}
           </CardGrid>
@@ -63,19 +63,11 @@ function DashboardBacklog() {
           title="Gerenciamento"
           subtitle="Administre usuários, categorias e configurações"
         >
-          <CardGrid columns={{ xs: 12, sm: 6, lg: 4 }} minCardHeight={280}>
-            {permissoes["Exibir_Responsavel"] && (
-              <>
-                <ResponsaveisDashboardCard />
-                <RequeridosDashboardCard />
-              </>
-            )}
-            {permissoes["Exibir_Metadados"] && (
-              <>
-                <MetadadosDashboardCard />
-                <ImportarDashboardCard />
-              </>
-            )}
+          <CardGrid columns={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }} minCardHeight="auto">
+            {permissoes["Exibir_Responsavel"] && <ResponsaveisDashboardCard />}
+            {permissoes["Exibir_Responsavel"] && <RequeridosDashboardCard />}
+            {permissoes["Exibir_Metadados"] && <MetadadosDashboardCard />}
+            {permissoes["Exibir_Metadados"] && <ImportarDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}

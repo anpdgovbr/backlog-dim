@@ -10,7 +10,7 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt"
 import SettingsIcon from "@mui/icons-material/Settings"
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import IconButton from "@mui/material/IconButton"
 import Stack from "@mui/material/Stack"
@@ -30,7 +30,13 @@ import { useProcessos } from "@/hooks/useProcessos"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 
-export default function ProcessoDataGrid() {
+interface ProcessoDataGridProps {
+  showTitle?: boolean
+}
+
+export default function ProcessoDataGrid({
+  showTitle = true,
+}: Readonly<ProcessoDataGridProps>) {
   const [search, setSearch] = useState("")
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
@@ -134,8 +140,18 @@ export default function ProcessoDataGrid() {
       headerName: "Ações",
       width: 120,
       renderCell: (params) => (
-        <Box display="flex" gap={1}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 0.5,
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <IconButton
+            size="small"
             color="primary"
             disabled={!podeEditar(params.row.responsavel?.userId)}
             onClick={() => router.push(`/dashboard/processos/editar/${params.row.id}`)}
@@ -143,6 +159,7 @@ export default function ProcessoDataGrid() {
             <SettingsIcon />
           </IconButton>
           <IconButton
+            size="small"
             color="error"
             disabled={!pode("Desabilitar", "Processo")}
             onClick={() => handleDelete(params.row.id)}
@@ -166,9 +183,11 @@ export default function ProcessoDataGrid() {
         </Alert>
       ) : (
         <Box>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Lista de Processos
-          </Typography>
+          {showTitle && (
+            <Typography variant="h4" component="h1" gutterBottom>
+              Lista de Processos
+            </Typography>
+          )}
 
           <Stack direction={{ xs: "column", sm: "column" }} spacing={1} mb={1}>
             <TextField
@@ -195,34 +214,31 @@ export default function ProcessoDataGrid() {
                 label="Somente atribuídos a mim"
                 sx={{ ml: 1, mr: 1 }}
               />
+              <Box gap={2} display="flex" alignItems="center">
+                <Tooltip title="Limpar filtros">
+                  <GovBRButton inverted={true} strictgovbr onClick={handleClearFilters}>
+                    <RestartAltIcon sx={{ mr: 1 }} />
+                    Limpar
+                  </GovBRButton>
+                </Tooltip>
 
-              <Tooltip title="Limpar filtros">
-                <Button
-                  startIcon={<RestartAltIcon />}
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleClearFilters}
-                >
-                  Limpar
-                </Button>
-              </Tooltip>
-
-              <Tooltip title="Adicionar novo processo">
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  color="primary"
-                  onClick={() => router.push("/dashboard/processos/novo")}
-                >
-                  Novo
-                </Button>
-              </Tooltip>
+                <Tooltip title="Adicionar novo processo">
+                  <GovBRButton
+                    color="primary"
+                    strictgovbr
+                    onClick={() => router.push("/dashboard/processos/novo")}
+                  >
+                    <AddIcon sx={{ mr: 1 }} />
+                    Novo
+                  </GovBRButton>
+                </Tooltip>
+              </Box>
             </Stack>
           </Stack>
 
           <Box sx={dataGridStyles}>
             <DataGrid
-              sx={{ minHeight: "45vh" }}
+              //sx={{ minHeight: "45vh" }}
               disableColumnMenu
               disableColumnSorting
               rows={processos}
@@ -234,6 +250,8 @@ export default function ProcessoDataGrid() {
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+              disableRowSelectionOnClick
+              density="comfortable"
             />
           </Box>
         </Box>

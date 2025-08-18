@@ -3,59 +3,50 @@
 
 module.exports = {
   root: true,
-  plugins: [
-    "@next/next",
-    "next",
-    "@typescript-eslint",
-    "filenames",
-  ],
-  extends: [
-    "next",
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-  ],
+  plugins: ["@next/next", "next", "@typescript-eslint", "filenames"],
+  extends: ["next", "next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
     "@typescript-eslint/naming-convention": [
       "error",
       {
         selector: "default",
-        format: ["camelCase"]
+        format: ["camelCase"],
       },
       {
         selector: "variable",
         format: ["camelCase", "UPPER_CASE", "PascalCase"],
-        leadingUnderscore: "allow"
+        leadingUnderscore: "allow",
       },
       {
         selector: "function",
-        format: ["camelCase"]
+        format: ["camelCase"],
       },
       {
         selector: "parameter",
         format: ["camelCase"],
-        leadingUnderscore: "allow"
+        leadingUnderscore: "allow",
       },
       {
         selector: "typeLike",
-        format: ["PascalCase"]
+        format: ["PascalCase"],
       },
       {
         selector: "enum",
-        format: ["PascalCase"]
+        format: ["PascalCase"],
       },
       {
         selector: "enumMember",
-        format: ["PascalCase", "UPPER_CASE"]
-      }
+        format: ["PascalCase", "UPPER_CASE"],
+      },
     ],
 
     "filenames/match-regex": [
       "error",
       "^[A-Z][a-zA-Z0-9]*$",
       {
-        message: "TSX component filenames should be PascalCase (Ex: MyComponent.tsx)"
-      }
-    ]
+        message: "TSX component filenames should be PascalCase (Ex: MyComponent.tsx)",
+      },
+    ],
   },
   overrides: [
     {
@@ -64,9 +55,9 @@ module.exports = {
         "filenames/match-regex": [
           "error",
           "^[A-Z][a-zA-Z0-9]*$",
-          { message: "TSX component filenames should be PascalCase" }
-        ]
-      }
-    }
-  ]
+          { message: "TSX component filenames should be PascalCase" },
+        ],
+      },
+    },
+  ],
 }

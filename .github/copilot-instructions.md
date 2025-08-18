@@ -71,7 +71,6 @@ Enforcement sugerido (opcional)
   - `eslint-plugin-filenames` para forçar PascalCase em arquivos de componente `.tsx`
 - Processo recomendado: adicionar as regras no `.eslintrc` e rodar `npm run lint` + `npm run type-check`, depois aplicar autofix e revisar renomeações de arquivos/paths.
 
-
 Integrações e segredos:
 
 - Azure AD / NextAuth: ver `src/config/next-auth.config.ts` e variáveis em `.env.example`.
@@ -99,4 +98,4 @@ Feedback: me diga se quer que eu inclua exemplos de código adicionais, regras d
 
 ---
 
-Muito importante: responder sempre em pt-BR. Imports MUI e MUIIcons devem ser sempre individuais e sem desestruturação.
+Muito importante: responder sempre em pt-BR. Imports MUI e MUIIcons devem ser sempre individuais e sem desestruturaçãoe sem usar any.

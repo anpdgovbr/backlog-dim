@@ -16,7 +16,9 @@ interface CrudManagerProps {
   tableName: string
 }
 
-export default function CrudManager({ entityName, tableName }: CrudManagerProps) {
+export default function CrudManager(props: Readonly<CrudManagerProps>) {
+  const { entityName, tableName } = props
+
   const { permissoes, loading: loadingPerms } = usePermissoes()
 
   const {

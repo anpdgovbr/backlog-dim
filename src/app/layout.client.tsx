@@ -1,8 +1,7 @@
 "use client"
 
+import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
 import Box from "@mui/material/Box"
-import CssBaseline from "@mui/material/CssBaseline"
-import { ThemeProvider } from "@mui/material/styles"
 
 import CookieManager from "@/components/cookie/CookieManager"
 import Footer from "@/components/layout/Footer"
@@ -11,14 +10,6 @@ import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
 import { AuditProvider } from "@/context/AuditProvider"
 import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
-import { govbrTheme } from "@anpdgovbr/shared-ui"
-
-// Importando apenas CSS essencial mínimo
-import "@/styles/essential.css"
-
-// Removendo CSS legados para migração shared-ui:
-// "@govbr-ds/core/dist/core.css" - comentado anteriormente
-// "@/styles/mui-overrides.css" - não necessário com shared-ui
 
 export default function ClientRootLayout({
   children,
@@ -26,8 +17,7 @@ export default function ClientRootLayout({
   return (
     <AuthProvider>
       <AuditProvider>
-        <ThemeProvider theme={govbrTheme}>
-          <CssBaseline />
+        <GovBRThemeProvider>
           <NotificationProvider>
             <CookieManager>
               <Box
@@ -68,7 +58,7 @@ export default function ClientRootLayout({
               <FloatingDevMenu />
             </CookieManager>
           </NotificationProvider>
-        </ThemeProvider>
+        </GovBRThemeProvider>
       </AuditProvider>
     </AuthProvider>
   )

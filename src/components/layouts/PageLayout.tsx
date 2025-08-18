@@ -38,7 +38,12 @@ function PageHeader({
 }: Readonly<PageHeaderProps>) {
   const isInstitutional = variant === "institutional"
   const isHero = variant === "hero"
-  const paddingY = isHero ? 8 : isInstitutional ? 6 : 4
+  let paddingY = 4
+  if (isHero) {
+    paddingY = 8
+  } else if (isInstitutional) {
+    paddingY = 6
+  }
 
   return (
     <Box

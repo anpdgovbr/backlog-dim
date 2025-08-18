@@ -118,8 +118,13 @@ export default function SidebarLayout({
       hasSidebar={true}
       sidebar={sidebarContent}
     >
-      {/* Usa children se presente, caso contrário usa fallback (ou null) */}
-      {children ?? fallback ?? null}
+      {/* Usa children se presente, caso contrário tenta renderizar a seção selecionada, se houver; senão usa fallback (ou null) */}
+      {children ??
+        (() => {
+          const selected = sections.find((s) => s.id === selectedSection)
+          const SelectedComponent = selected?.component
+          return SelectedComponent ? <SelectedComponent /> : (fallback ?? null)
+        })()}
     </DashboardLayout>
   )
 }

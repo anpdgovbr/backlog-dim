@@ -1,9 +1,8 @@
 "use client"
 
-import React from "react"
+import * as React from "react"
 
 import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
@@ -49,22 +48,46 @@ export default function CardGrid({
       )}
 
       {/* Grid de Cards */}
-      <Grid container spacing={spacing}>
-        {React.Children.map(children, (child, index) => (
-          <Grid item key={index} {...columns}>
+      <Box
+        sx={{
+          display: "grid",
+          gap: spacing,
+          alignItems: "stretch", // stretch para que itens da mesma linha tenham mesma altura
+          gridTemplateColumns: {
+            xs: `repeat(${12 / (columns.xs || 12)}, minmax(280px, 1fr))`,
+            sm: columns.sm ? `repeat(auto-fit, minmax(300px, 1fr))` : undefined,
+            md: columns.md ? `repeat(auto-fit, minmax(320px, 1fr))` : undefined,
+            lg: columns.lg ? `repeat(auto-fit, minmax(280px, 1fr))` : undefined,
+            xl: columns.xl ? `repeat(auto-fit, minmax(280px, 1fr))` : undefined,
+          },
+        }}
+      >
+        {React.Children.toArray(children).map((child, index) => {
+          const key =
+            React.isValidElement(child) && child.key ? child.key : `grid-child-${index}`
+          return (
             <Box
+              key={key}
               sx={{
-                height: "100%",
-                minHeight: minCardHeight,
-                display: "flex",
-                flexDirection: "column",
+                height: "100%", // garante que o item do grid ocupe toda a altura da linha
               }}
             >
-              {child}
+              {/* inner wrapper com flex:1 para que o conteúdo interno cresça e preencha a altura */}
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: 1,
+                  minHeight: minCardHeight,
+                }}
+              >
+                {child}
+              </Box>
             </Box>
-          </Grid>
-        ))}
-      </Grid>
+          )
+        })}
+      </Box>
     </Box>
   )
 }

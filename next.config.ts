@@ -1,6 +1,7 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@anpdgovbr/shared-ui"],
   reactStrictMode: true,
   eslint: {
     dirs: ["src"], // Garantindo que o ESLint veja a pasta correta

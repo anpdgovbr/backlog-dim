@@ -1,6 +1,6 @@
-// Removendo imports CSS legados para migração shared-ui
-// import "@/styles/global.css"
-// import "@/styles/style.css"
+import "@govbr-ds/core/dist/core.min.css"
+import "@govbr-ds/core/dist/core-tokens.min.css"
+import "@anpdgovbr/shared-ui/styles"
 
 import ClientRootLayout from "./layout.client"
 import { globalMetadata } from "./metadata"
@@ -14,15 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <head>
-        {/* Font Awesome ainda necessário para alguns ícones */}
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body style={{ minWidth: "300px", margin: 0 }}>
+      <body>
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>

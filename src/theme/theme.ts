@@ -44,7 +44,7 @@ const anpdColors = {
 }
 
 // Configuração do tema MUI
-let ANPDtheme = createTheme({
+const baseTheme = createTheme({
   palette: {
     primary: anpdColors.primary,
     secondary: anpdColors.secondary,
@@ -100,6 +100,59 @@ let ANPDtheme = createTheme({
   },
 })
 
-ANPDtheme = createTheme(ANPDtheme, ptBR)
+const ANPDtheme = createTheme(
+  baseTheme,
+  {
+    components: {
+      MuiDataGrid: {
+        defaultProps: {
+          disableColumnMenu: true,
+          density: "comfortable",
+        },
+        styleOverrides: {
+          root: {
+            border: `1px solid ${baseTheme.palette.divider}`,
+            borderRadius: baseTheme.shape.borderRadius,
+            boxShadow: baseTheme.shadows[1],
+            backgroundColor: baseTheme.palette.background.paper,
+            overflow: "hidden",
+            "& .MuiDataGrid-cell:focus:not(:focus-visible), & .MuiDataGrid-columnHeader:focus:not(:focus-visible), & .MuiDataGrid-row:focus:not(:focus-visible)":
+              {
+                outline: "none",
+                boxShadow: "none",
+              },
+            "& .MuiDataGrid-row.Mui-selected, & .MuiDataGrid-row.Mui-selected:focus": {
+              outline: "none",
+              boxShadow: "none",
+            },
+          },
+          columnHeaders: {
+            backgroundColor: baseTheme.palette.grey[100],
+            borderBottom: `2px solid ${baseTheme.palette.primary.main}`,
+          },
+          columnHeaderTitle: {
+            fontWeight: "bold",
+            color: baseTheme.palette.text.primary,
+          },
+          main: {
+            borderRadius: baseTheme.shape.borderRadius,
+            overflow: "hidden",
+          },
+          cell: {
+            borderBottom: `1px solid ${baseTheme.palette.divider}`,
+          },
+          footerContainer: {
+            borderTop: `1px solid ${baseTheme.palette.divider}`,
+            backgroundColor: baseTheme.palette.grey[50],
+          },
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.07)",
+          },
+        },
+      },
+    },
+  },
+  ptBR
+)
 
 export default ANPDtheme

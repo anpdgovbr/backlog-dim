@@ -83,7 +83,7 @@ export default function DashboardLayout({
 
       {/* Conteúdo com ou sem sidebar */}
       {hasSidebar && sidebar ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={0}>
           <Grid size={{ xs: 12, md: 3 }}>
             <Paper
               elevation={0}
