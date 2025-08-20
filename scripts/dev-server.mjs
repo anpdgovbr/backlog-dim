@@ -16,10 +16,10 @@ import next from "next"
 const isDevelopment = process.env.NODE_ENV !== "production"
 
 if (isDevelopment) {
-  // Suprimir warnings TLS apenas em desenvolvimento
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-  console.log("🔒 TLS warnings suprimidos para desenvolvimento local")
-  console.log("⚠️  ATENÇÃO: Esta configuração é APENAS para desenvolvimento!")
+  // Para evitar warnings TLS em desenvolvimento, use certificados válidos ou adicione o CA ao trust store do Node.js
+  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // REMOVIDO: Não desabilite a validação de certificado
+  console.log("🔒 Use certificados válidos para evitar warnings TLS em desenvolvimento")
+  console.log("⚠️  ATENÇÃO: Não desabilite a validação de certificado nem mesmo em desenvolvimento!")
   console.log("📝 Para produção, server.js usa IP específico cadastrado no Entra ID")
 }
 
