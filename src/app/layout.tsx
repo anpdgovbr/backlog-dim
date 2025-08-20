@@ -1,7 +1,8 @@
-import "@/styles/global.css"
-import "@/styles/style.css"
+import "@govbr-ds/core/dist/core.min.css"
+import "@govbr-ds/core/dist/core-tokens.min.css"
+import "@anpdgovbr/shared-ui/styles"
 
-import ClientRootLayout from "./client-layout"
+import ClientRootLayout from "./layout.client"
 import { globalMetadata } from "./metadata"
 
 export const metadata = globalMetadata
@@ -13,14 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className="br-body" style={{ minWidth: "300px" }}>
+      <body>
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>

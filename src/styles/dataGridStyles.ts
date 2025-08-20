@@ -1,84 +1,84 @@
-import type { SxProps } from "@mui/material/styles"
+import type { SxProps, Theme } from "@mui/material/styles"
+import { alpha } from "@mui/material/styles"
 
-import ANPDtheme from "@/theme/theme"
-
-export const dataGridStyles = {
+export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
+  // Estilos do container do DataGrid
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[1],
+  backgroundColor: theme.palette.background.paper,
+  height: "100%",
   width: "100%",
-  backgroundColor: ANPDtheme.palette.background.default,
-  borderRadius: 2,
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden", // garante que o conteúdo interno siga o borderRadius do container
 
-  "& .MuiDataGrid-main": {
-    minWidth: "100% !important",
-  },
-  "& .MuiDataGrid-virtualScrollerContent": {
-    width: "100% !important",
-    minWidth: "100% !important",
-    flexGrow: 1,
-  },
-  "& .MuiDataGrid-virtualScroller": {
-    overflowX: "hidden",
-  },
-  "& .MuiDataGrid-columnHeaders": {
-    minWidth: "100% !important",
-  },
-
-  "& .MuiDataGrid-row": { alignItems: "center" },
-  "& .MuiDataGrid-cell": {
-    display: "flex",
-    alignItems: "center",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
+  // Estilos para o elemento raiz do DataGrid
   "& .MuiDataGrid-root": {
-    backgroundColor: ANPDtheme.palette.background.paper,
-    borderRadius: 2,
+    border: "none",
+    flexGrow: 1,
+    // aplicar borda arredondada também no elemento raiz para que as células/cabeçalho
+    // respeitem os cantos do container pai
+    borderRadius: theme.shape.borderRadius,
+    overflow: "hidden",
   },
-  "& .MuiDataGrid-columnHeader": {
-    backgroundColor: `${ANPDtheme.palette.primary.light} !important`,
-    color: ANPDtheme.palette.primary.contrastText,
-    fontWeight: "bold",
-    borderBottom: `2px solid ${ANPDtheme.palette.primary.main}`,
-    fontSize: "0.9rem",
+
+  // Alguns elementos internos também precisam ter borderRadius/overflow em versões
+  // diferentes do DataGrid
+  "& .MuiDataGrid-main": {
+    borderRadius: theme.shape.borderRadius,
+    overflow: "hidden",
+  },
+
+  // Estilos do cabeçalho
+  "& .MuiDataGrid-columnHeaders": {
+    backgroundColor: theme.palette.grey[100],
+    borderBottom: `2px solid ${theme.palette.primary.main}`,
   },
   "& .MuiDataGrid-columnHeaderTitle": {
-    color: ANPDtheme.palette.primary.contrastText,
-    fontWeight: 700,
+    fontWeight: "bold",
+    color: theme.palette.text.primary,
   },
-  "& .MuiDataGrid-row:nth-of-type(even)": {
-    backgroundColor: "#F0F0F0",
+
+  // Estilos das linhas
+  "& .MuiDataGrid-row": {
+    "&:nth-of-type(even)": {
+      backgroundColor: alpha(theme.palette.grey[200], 0.5),
+    },
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.primary.light, 0.2),
+      cursor: "pointer",
+    },
+    transition: `background-color 0.2s ease-in-out`,
   },
-  "& .MuiDataGrid-row:hover": {
-    backgroundColor: ANPDtheme.palette.secondary.light,
+
+  // Estilos das células
+  "& .MuiDataGrid-cell": {
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
-  "& .MuiTablePagination-root": {
-    alignItems: "center",
-    display: "flex",
-    minHeight: "56px",
-    justifyContent: "flex-end",
+
+  // Remover outline visual quando a célula for focada por clique (preservando
+  // indicação de foco para navegação por teclado via :focus-visible)
+  "& .MuiDataGrid-cell:focus:not(:focus-visible), & .MuiDataGrid-columnHeader:focus:not(:focus-visible), & .MuiDataGrid-row:focus:not(:focus-visible)":
+    {
+      outline: "none",
+      boxShadow: "none",
+    },
+
+  // Também garantir que seleções de linha não exibam outline indesejado ao clicar
+  "& .MuiDataGrid-row.Mui-selected, & .MuiDataGrid-row.Mui-selected:focus": {
+    outline: "none",
+    boxShadow: "none",
   },
-  "& .MuiTablePagination-toolbar": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: 0,
-    minHeight: "48px",
+
+  // Estilos do rodapé
+  "& .MuiDataGrid-footerContainer": {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.grey[50],
   },
-  "& .MuiTablePagination-selectLabel": {
-    margin: 0,
+
+  // Estilo para quando não há linhas
+  "& .MuiDataGrid-overlay": {
+    backgroundColor: alpha(theme.palette.background.default, 0.7),
   },
-  "& .MuiTablePagination-displayedRows": {
-    margin: 0,
-  },
-  "& .MuiTablePagination-actions": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  "& .MuiInputBase-root": {
-    display: "flex",
-    alignItems: "center",
-    padding: 0,
-  },
-} as SxProps
+})

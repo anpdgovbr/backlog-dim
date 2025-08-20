@@ -123,7 +123,7 @@ export default function AdminLogViewer() {
         </TextField>
       </Stack>
 
-      <Box sx={{ ...dataGridStyles, height: "100%", width: "100%", display: "flex" }}>
+      <Box sx={dataGridStyles}>
         <DataGrid
           sx={{
             minHeight: "50vh",

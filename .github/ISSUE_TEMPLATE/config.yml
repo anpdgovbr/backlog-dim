@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Segurança – Política de Reporte
-    url: ../SECURITY.md
+    url: https://github.com/anpdgovbr/backlog-dim/blob/main/SECURITY.md
     about: Leia antes de reportar vulnerabilidades
   - name: Suporte – Backlog DIM
-    url: ../SUPPORT.md
+    url: https://github.com/anpdgovbr/backlog-dim/blob/main/SUPPORT.md
     about: Como obter suporte

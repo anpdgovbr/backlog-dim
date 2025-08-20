@@ -1,4 +1,5 @@
 // src/components/ui/dashboard-card/index.ts
+export * from "./BaseDashboardCard"
 export * from "./DashboardCard"
 export * from "./DashboardCardActionButton"
 export * from "./DashboardCardContent"

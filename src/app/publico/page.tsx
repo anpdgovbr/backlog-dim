@@ -1,53 +1,115 @@
 "use client"
 
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
 import Grid from "@mui/material/Grid"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
 
-import ImportarDashboardCard from "@/components/ui/dashboard-card/ImportarDashboardCard"
-import MetadadosDashboardCard from "@/components/ui/dashboard-card/MetadadosDashboardCard"
-import ProcessDashboardCard from "@/components/ui/dashboard-card/ProcessDashboardCard"
-import RequeridosDashboardCard from "@/components/ui/dashboard-card/RequeridosDashboardCard"
-import ResponsaveisDashboardCard from "@/components/ui/dashboard-card/ResponsaveisDashboardCard"
-import StatsDashboardCard from "@/components/ui/dashboard-card/StatsDashboardCard"
+import ImportarDashboardCard from "@/app/dashboard/_components/ImportarDashboardCard"
+import MetadadosDashboardCard from "@/app/dashboard/_components/MetadadosDashboardCard"
+import ProcessDashboardCard from "@/app/dashboard/_components/ProcessDashboardCard"
+import RequeridosDashboardCard from "@/app/dashboard/_components/RequeridosDashboardCard"
+import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisDashboardCard"
+import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
 
-export default function SobrePage() {
+export default function PublicoPage() {
   return (
-    <Grid container spacing={2} sx={{ width: "100%" }}>
-      {/* ===== Processos (principal) ===== */}
+    <Container maxWidth="xl" sx={{ py: 3 }}>
+      {/* Header da página pública */}
+      <Paper
+        elevation={0}
+        sx={(theme) => ({
+          p: 4,
+          mb: 4,
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
+          textAlign: "center",
+          borderRadius: 2,
+        })}
+      >
+        <Typography variant="h3" component="h1" gutterBottom fontWeight={700}>
+          Dashboard Público - ANPD
+        </Typography>
+        <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 800, mx: "auto" }}>
+          Transparência e acompanhamento dos processos administrativos da Diretoria de
+          Investigação e Monitoramento
+        </Typography>
+      </Paper>
 
-      <Grid size={{ xs: 12, md: 6 }} component="div">
-        <ProcessDashboardCard />
-      </Grid>
+      {/* Seção de métricas principais */}
+      <Box sx={{ mb: 4 }}>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          textAlign="center"
+          fontWeight={600}
+          sx={{ mb: 3 }}
+        >
+          Indicadores Principais
+        </Typography>
 
-      {/* ===== Estatísticas ===== */}
-
-      <Grid size={{ xs: 12, md: 6 }} component="div">
-        <StatsDashboardCard />
-      </Grid>
-
-      {/* ===== Metadados ===== 
-      ajustar futuramente
-      */}
-
-      <Grid container spacing={2} columns={12} size={{ xs: 12, sm: 6, md: 4 }}>
-        <Grid size={{ xs: 12 }} component="div">
-          <MetadadosDashboardCard />
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <ProcessDashboardCard />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <StatsDashboardCard />
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12 }} component="div">
-          <ImportarDashboardCard />
+      </Box>
+
+      {/* Seção de dados detalhados */}
+      <Box sx={{ mb: 4 }}>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          textAlign="center"
+          fontWeight={600}
+          sx={{ mb: 3 }}
+        >
+          Dados Detalhados
+        </Typography>
+
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <ResponsaveisDashboardCard />
+          </Grid>
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <RequeridosDashboardCard />
+          </Grid>
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <Grid container spacing={2} sx={{ height: "100%" }}>
+              <Grid size={{ xs: 12 }}>
+                <MetadadosDashboardCard />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <ImportarDashboardCard />
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
 
-      {/* ===== Responsáveis ===== */}
-
-      <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div">
-        <ResponsaveisDashboardCard />
-      </Grid>
-
-      {/* ===== Requeridos ===== */}
-
-      <Grid size={{ xs: 12, sm: 6, md: 4 }} component="div" minWidth={0}>
-        <RequeridosDashboardCard />
-      </Grid>
-    </Grid>
+      {/* Footer informativo */}
+      <Paper
+        elevation={0}
+        sx={(theme) => ({
+          p: 3,
+          mt: 4,
+          backgroundColor: theme.palette.grey[50],
+          borderLeft: `4px solid ${theme.palette.primary.main}`,
+          textAlign: "center",
+        })}
+      >
+        <Typography variant="body1" color="text.secondary">
+          <strong>Acesso Público:</strong> Esta página apresenta dados agregados e
+          estatísticas gerais dos processos administrativos da ANPD, garantindo
+          transparência institucional sem expor informações sensíveis.
+        </Typography>
+      </Paper>
+    </Container>
   )
 }

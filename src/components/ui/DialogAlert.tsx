@@ -114,18 +114,30 @@ export default function DialogAlert({
       <DialogActions sx={{ justifyContent: "center", pb: 2, gap: 2 }}>
         <Button
           variant="outlined"
-          className="br-button secondary"
           onClick={onClose}
           disabled={loading}
+          sx={{
+            borderColor: "text.secondary",
+            color: "text.secondary",
+            "&:hover": {
+              borderColor: "text.primary",
+              color: "text.primary",
+            },
+          }}
         >
           {cancelText}
         </Button>
         <Button
           variant="contained"
-          className="br-button danger"
           onClick={onConfirm}
           disabled={loading}
-          sx={{ color: "#fff" }}
+          sx={{
+            bgcolor: "error.main",
+            color: "error.contrastText",
+            "&:hover": {
+              bgcolor: "error.dark",
+            },
+          }}
         >
           {loading ? "Aguarde..." : confirmText}
         </Button>

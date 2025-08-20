@@ -11,6 +11,7 @@ import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 interface GovBRModalProps {
   open: boolean
@@ -171,12 +172,22 @@ export function GovBRInputModal({
       sx={sx}
       footer={
         <>
-          <button className="br-button secondary mr-2" onClick={onClose}>
+          <GovBRButton
+            className="br-button secondary mr-2"
+            variant="contained"
+            onClick={onClose}
+          >
             {cancelText}
-          </button>
-          <button className="br-button primary" onClick={onSubmit} disabled={disabled}>
+          </GovBRButton>
+          <GovBRButton
+            type="submit"
+            variant="contained"
+            className="br-button primary"
+            onClick={onSubmit}
+            disabled={disabled}
+          >
             {confirmText}
-          </button>
+          </GovBRButton>
         </>
       }
     >

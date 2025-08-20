@@ -12,15 +12,17 @@ import { parseId } from "@/utils/parseId"
 import { GovBRInputModal } from "../modal/GovBRModal"
 import ProcessoForm from "./ProcessoForm"
 
+type ModalEditarProcessoProps = Readonly<{
+  open: boolean
+  onClose: () => void
+  processoId: number | null
+}>
+
 export default function ModalEditarProcesso({
   open,
   onClose,
   processoId,
-}: {
-  open: boolean
-  onClose: () => void
-  processoId: number | null
-}) {
+}: ModalEditarProcessoProps) {
   const [processo, setProcesso] = useState<ProcessoOutput | null>(null)
 
   const defaultValues = useMemo(() => {
