@@ -117,7 +117,6 @@
     "react-lgpd-consent": "^0.3.3",
     "recharts": "^3.1.2",
     "remask": "^1.2.2",
-    "sass": "^1.90.0",
     "swr": "^2.3.6",
     "tsx": "^4.20.5",
     "yup": "^1.7.0"
@@ -132,8 +131,8 @@
     "@types/papaparse": "^5.3.16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@typescript-eslint/eslint-plugin": "^8.40.0",
-    "@typescript-eslint/parser": "^8.40.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
     "cross-env": "^10.0.0",
     "eslint": "^9.34.0",
     "eslint-config-next": "^15.5.0",
