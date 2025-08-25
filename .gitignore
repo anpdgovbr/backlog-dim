@@ -10,6 +10,8 @@
 !.yarn/releases
 !.yarn/versions
 
+# Arquivos de deploy locais (não versionar)
+ecosystem.config.cjs
 
 # testing
 /coverage
