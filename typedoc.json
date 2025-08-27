@@ -1,18 +1,9 @@
 {
-  "entryPoints": [
-    "src",
-    "prisma/schema.prisma",
-    "node_modules/@anpdgovbr/shared-types/dist/index.d.ts",
-    "node_modules/@anpdgovbr/shared-types/dist/dto/index.d.ts",
-    "node_modules/@anpdgovbr/shared-types/dist/enums/index.d.ts",
-    "node_modules/@anpdgovbr/shared-types/dist/interfaces/index.d.ts",
-    "node_modules/@anpdgovbr/shared-types/dist/base/index.d.ts",
-    "node_modules/@anpdgovbr/shared-types/dist/**/*.d.ts"
-  ],
-  "out": "docs/api",
+  "entryPoints": ["src", "prisma/schema.prisma"],
+  "out": "docs",
   "tsconfig": "tsconfig.json",
   "entryPointStrategy": "expand",
-  "exclude": ["**/.next/**", "**/public/**", "**/scripts/**"],
+  "exclude": ["**/.next/**", "**/public/**", "**/scripts/**", "**/node_modules/**"],
   "excludeExternals": false,
   "excludePrivate": true,
   "excludeProtected": false,

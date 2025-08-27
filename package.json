@@ -105,8 +105,8 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@mui/x-data-grid": "^8.10.2",
-    "@prisma/client": "^6.14.0",
-    "dayjs": "^1.11.13",
+    "@prisma/client": "^6.15.0",
+    "dayjs": "^1.11.14",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "^15.5.2",
@@ -143,8 +143,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
-    "prisma": "^6.14.0",
+    "prisma": "^6.15.0",
     "typescript": "^5.9.2",
-    "typedoc": "^0.29.0"
+    "typedoc": "^0.28.11"
   }
 }

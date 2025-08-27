@@ -28,13 +28,6 @@
       "@scripts/*": ["scripts/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "next-auth.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "node_modules/@anpdgovbr/shared-types/dist/**/*.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "next-auth.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", ".next", "dist", "build"]
 }
