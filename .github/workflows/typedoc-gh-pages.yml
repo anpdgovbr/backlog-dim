@@ -1,0 +1,59 @@
+name: Generate TypeDoc and Publish
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate TypeDoc
+        run: npx typedoc --options typedoc.json
+
+      - name: Add Prisma schema to docs
+        run: |
+          mkdir -p docs/api
+          printf "%s\n" "# Prisma schema (schema.prisma)" > docs/api/schema-prisma.md
+          printf "```prisma\n" >> docs/api/schema-prisma.md
+          cat prisma/schema.prisma >> docs/api/schema-prisma.md
+          printf "\n```\n" >> docs/api/schema-prisma.md
+
+      - name: Verify TypeDoc output
+        run: |
+          if [ ! -f ./docs/api/index.html ]; then
+            echo "TypeDoc output not found at ./docs/api/index.html";
+            exit 1;
+          fi
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/api
+          publish_branch: gh-pages
+          user_name: "github-actions[bot]"
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"

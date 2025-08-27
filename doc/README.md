@@ -47,6 +47,27 @@
 
 1. **[MIGRACAO_DOCKER_INFRA_PG.md](MIGRACAO_DOCKER_INFRA_PG.md)** - Implementação atual
 
+## 📚 Documentação de API (TypeDoc)
+
+A documentação de API gerada automaticamente pelo TypeDoc será colocada em `docs/api`.
+
+Para gerar localmente:
+
+```powershell
+npm ci
+npm run docs
+```
+
+Se preferir gerar em HTML estático ou Markdown (via plugins), ajuste `typedoc.json` com os plugins desejados.
+
+## Publicação (GitHub Pages)
+
+O workflow `Generate TypeDoc and Publish` gera a documentação e publica `docs/api` no branch `gh-pages` sempre que houver push para `main`.
+
+Para testar manualmente sem merge, faça um push numa branch e abra um PR para `main` (o merge dispara o workflow), ou adicione um `workflow_dispatch` no arquivo de workflow para acionar manualmente.
+
+Após o deploy, habilite GitHub Pages nas configurações do repositório apontando para a branch `gh-pages` (source: `gh-pages` / root).
+
 ## 📝 Documentos Removidos
 
 Os seguintes documentos foram consolidados ou removidos por serem obsoletos/temporários:

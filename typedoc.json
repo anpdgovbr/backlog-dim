@@ -1,0 +1,18 @@
+{
+  "entryPoints": [
+    "src",
+    "prisma/schema.prisma",
+    "node_modules/@anpdgovbr/shared-types/dist/**/*.d.ts"
+  ],
+  "out": "docs/api",
+  "tsconfig": "tsconfig.json",
+  "entryPointStrategy": "expand",
+  "exclude": ["**/.next/**", "**/public/**", "**/scripts/**"],
+  "excludeExternals": false,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "disableSources": false,
+  "hideGenerator": true,
+  "includeVersion": true,
+  "cleanOutputDir": true
+}
