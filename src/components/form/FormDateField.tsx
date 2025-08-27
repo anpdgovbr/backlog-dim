@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField"
 
 import { toInputDateValue } from "@/utils/date"
 
-interface FormDateFieldProps {
+export interface FormDateFieldProps {
   name: string
   label: string
 }

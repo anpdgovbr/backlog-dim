@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "development") {
   setDebugLogging(true, LogLevel.DEBUG)
 }
 
-interface CookieManagerProps {
+export interface CookieManagerProps {
   readonly children: React.ReactNode
 }
 

@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
-interface DashboardLayoutProps {
+export interface DashboardLayoutProps {
   readonly children: React.ReactNode
   readonly title?: string
   readonly subtitle?: string

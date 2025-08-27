@@ -12,9 +12,9 @@ import Snackbar from "@mui/material/Snackbar"
 import Typography from "@mui/material/Typography"
 import { alpha, useTheme } from "@mui/material/styles"
 
-type NotificationType = "success" | "error" | "info" | "warning"
+export type NotificationType = "success" | "error" | "info" | "warning"
 
-interface TopNotificationProps {
+export interface TopNotificationProps {
   open: boolean
   message: string
   type: NotificationType

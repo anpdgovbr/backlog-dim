@@ -8,9 +8,9 @@ import WarningIcon from "@mui/icons-material/Warning"
 import Chip from "@mui/material/Chip"
 import type { ChipProps } from "@mui/material/Chip"
 
-type StatusType = "success" | "error" | "warning" | "info" | "pending" | "default"
+export type StatusType = "success" | "error" | "warning" | "info" | "pending" | "default"
 
-interface StatusChipProps extends Omit<ChipProps, "color"> {
+export interface StatusChipProps extends Omit<ChipProps, "color"> {
   status: StatusType
   text?: string
   showIcon?: boolean

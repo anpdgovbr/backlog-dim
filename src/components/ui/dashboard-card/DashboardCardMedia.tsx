@@ -1,7 +1,7 @@
 import CardMedia from "@mui/material/CardMedia"
 import type { SxProps } from "@mui/material/styles"
 
-interface DashboardCardMediaProps {
+export interface DashboardCardMediaProps {
   imgSrc: string
   alt: string
   height?: number

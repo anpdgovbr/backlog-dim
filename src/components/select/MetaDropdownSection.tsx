@@ -9,7 +9,7 @@ import type { MetaEntidade } from "@/types/MetaEntidades"
 import { FormSkeleton } from "../skeleton/FormSkeleton"
 import { FormDropdown } from "./FormDropdown"
 
-interface MetaDropdownSectionProps {
+export interface MetaDropdownSectionProps {
   entidade: MetaEntidade
   label: string
   name: string

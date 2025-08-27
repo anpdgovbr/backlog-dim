@@ -11,12 +11,12 @@ import DialogTitle from "@mui/material/DialogTitle"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 
-interface Item {
+export interface Item {
   id?: number
   nome: string
 }
 
-interface CrudModalProps {
+export interface CrudModalProps {
   open: boolean
   onClose: () => void
   onSave: () => void

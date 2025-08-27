@@ -19,7 +19,7 @@ import type {
 
 import usePermissoes from "@/hooks/usePermissoes"
 
-interface WithPermissaoOptions {
+export interface WithPermissaoOptions {
   redirecionar?: boolean
 }
 

@@ -4,12 +4,12 @@ import type { BaseQueryParams, CnaeDto } from "@anpdgovbr/shared-types"
 
 import { useApi } from "@/lib/api"
 
-interface UseCnaeParams extends BaseQueryParams {
+export interface UseCnaeParams extends BaseQueryParams {
   code?: string
   nome?: string
 }
 
-interface UseCnaeResult {
+export interface UseCnaeResult {
   data: CnaeDto[]
   total: number
   isLoading: boolean

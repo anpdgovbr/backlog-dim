@@ -27,7 +27,7 @@ export interface ISectionConfig {
  * Props do wrapper: recebe a config de cada seção,
  * a seção padrão e um fallback opcional.
  */
-interface IDashboard25WrapperProps {
+export interface IDashboard25WrapperProps {
   readonly sectionsConfig: NonEmptyArray<ISectionConfig>
   readonly defaultSectionId: string
   readonly fallback?: React.ReactNode

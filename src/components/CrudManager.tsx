@@ -11,11 +11,25 @@ import DialogAlert from "@/components/ui/DialogAlert"
 import usePermissoes from "@/hooks/usePermissoes"
 import { useCrudManager } from "@/hooks/useCrudManager"
 
-interface CrudManagerProps {
+export interface CrudManagerProps {
   entityName: string
   tableName: string
 }
 
+/**
+ * Componente genérico de gerenciamento CRUD para metadados.
+ *
+ * @remarks
+ * Encapsula cabeçalho, tabela, modal de edição/adição e diálogo de confirmação.
+ * Utiliza `useCrudManager` para a maior parte da lógica (estado, ações e
+ * requisições). `entityName` é apenas o rótulo exibido e `tableName` é usado
+ * para compor chamadas ao backend via o hook.
+ *
+ * @example
+ * ```tsx
+ * <CrudManager entityName="Perfis" tableName="perfis" />
+ * ```
+ */
 export default function CrudManager(props: Readonly<CrudManagerProps>) {
   const { entityName, tableName } = props
 

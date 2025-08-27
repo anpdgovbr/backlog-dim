@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@prisma/client"
 
 // 🔹 Apenas os delegates de modelo (remove funções utilitárias)
-type ModelKeysOnly = {
+export type ModelKeysOnly = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in Extract<keyof PrismaClient, string>]: PrismaClient[K] extends { findFirst: any }
     ? K

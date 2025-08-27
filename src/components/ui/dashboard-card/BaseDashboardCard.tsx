@@ -7,7 +7,7 @@ import type { SxProps } from "@mui/material/styles"
 
 import { DashboardCard } from "./DashboardCard"
 
-interface BaseDashboardCardProps {
+export interface BaseDashboardCardProps {
   icon: React.ReactNode
   title: string
   subtitle: string

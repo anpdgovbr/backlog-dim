@@ -33,6 +33,7 @@
     "next-auth.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "node_modules/@anpdgovbr/shared-types/dist/**/*.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", "dist", "build"]

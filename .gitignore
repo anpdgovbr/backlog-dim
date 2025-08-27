@@ -58,3 +58,4 @@ logs/combined-0.log
 # generated
 docs/
 public/dev-routes.json
+issues/

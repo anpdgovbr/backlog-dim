@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 
-interface SidebarItem {
+export interface SidebarItem {
   id: string
   label: string
   icon: React.ReactNode
@@ -25,7 +25,7 @@ interface SidebarItem {
   disabled?: boolean
 }
 
-interface SidebarProps {
+export interface SidebarProps {
   title?: string
   items: SidebarItem[]
   defaultOpen?: boolean

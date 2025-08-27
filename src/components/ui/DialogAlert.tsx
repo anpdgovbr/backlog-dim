@@ -12,18 +12,30 @@ import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/material/styles"
 
-interface DialogAlertProps {
-  open: boolean
-  onClose: () => void
-  onConfirm?: () => void
-  title?: string
-  message?: string
-  confirmText?: string
-  cancelText?: string
-  loading?: boolean
-  severity?: "info" | "warning" | "danger"
-}
+/**
+ * Props para `DialogAlert` — caixa de confirmação genérica usada na UI.
+ *
+ * Exemplo de uso:
+ * ```tsx
+ * <DialogAlert open={open} onClose={() => setOpen(false)} onConfirm={handleConfirm} />
+ * ```
+ */
+export interface DialogAlertProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    onConfirm?: () => void
+    title?: string
+    message?: string
+    confirmText?: string
+    cancelText?: string
+    loading?: boolean
+    severity?: "info" | "warning" | "danger"
+  }> {}
 
+/**
+ * Diálogo de alerta/confirm ação com botões padrão.
+ */
 export default function DialogAlert({
   open,
   onClose,

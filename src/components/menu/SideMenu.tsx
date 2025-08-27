@@ -25,7 +25,7 @@ export type LinkItem = {
   icon: React.ReactNode
 }
 
-type SideMenuProps = {
+export type SideMenuProps = {
   links: LinkItem[]
   pathname: string
   storageKey?: string

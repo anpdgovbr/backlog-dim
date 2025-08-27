@@ -2,7 +2,7 @@
 
 import { useCallback } from "react"
 
-interface DadosCnpj {
+export interface DadosCnpj {
   razao_social?: string
   email?: string
   telefone?: string
