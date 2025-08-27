@@ -58,8 +58,7 @@ export default function HomePage() {
             fontWeight: 400,
           }}
         >
-          Sistema de Gestão de Processos Administrativos da Diretoria de Investigação e
-          Monitoramento
+          Sistema de Gestão de Processos Administrativos da Divisão de Monitoramento
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
