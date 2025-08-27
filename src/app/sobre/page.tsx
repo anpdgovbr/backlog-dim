@@ -64,8 +64,8 @@ export default function SobrePage() {
           color="text.secondary"
           sx={{ maxWidth: 600, mx: "auto" }}
         >
-          Sistema moderno de gestão de processos administrativos da Diretoria de
-          Investigação e Monitoramento da ANPD
+          Sistema moderno de gestão de processos administrativos da Divisão de
+          Monitoramento da ANPD
         </Typography>
       </Box>
 
