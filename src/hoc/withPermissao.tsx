@@ -11,13 +11,10 @@ import Button from "@mui/material/Button"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 
-import type {
-  AcaoPermissao,
-  PermissaoConcedida,
-  RecursoPermissao,
-} from "@anpdgovbr/shared-types"
+import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 import usePermissoes from "@/hooks/usePermissoes"
+import { pode } from "@/lib/permissions"
 
 export interface WithPermissaoOptions {
   redirecionar?: boolean
@@ -32,19 +29,16 @@ export default function withPermissao<T extends object>(
   return function Protegido(props: T) {
     const { permissoes, loading } = usePermissoes()
     const router = useRouter()
-    const chavePermissao = `${acao}_${recurso}` as PermissaoConcedida
 
     useEffect(() => {
       if (loading) return
 
-      if (permissoes?.[chavePermissao] === undefined) return
-
-      if (!permissoes[chavePermissao] && redirecionar) {
+      if (!pode(permissoes, acao, recurso) && redirecionar) {
         router.push("/acesso-negado")
       }
-    }, [loading, permissoes, chavePermissao, router])
+    }, [loading, permissoes, acao, recurso, router, redirecionar])
 
-    if (loading || permissoes?.[chavePermissao] === undefined) {
+    if (loading) {
       return (
         <Container maxWidth="lg">
           <Typography variant="body1">Carregando permissões...</Typography>
@@ -52,7 +46,7 @@ export default function withPermissao<T extends object>(
       )
     }
 
-    if (!permissoes[chavePermissao]) {
+    if (!pode(permissoes, acao, recurso)) {
       return redirecionar ? null : (
         <Container maxWidth="lg">
           <Alert severity="error" variant="filled">
