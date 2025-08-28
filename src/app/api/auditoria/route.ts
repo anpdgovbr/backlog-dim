@@ -1,4 +1,13 @@
-// app/api/auditoria/route.ts
+/**
+ * @file Rota de API para registro e consulta de logs de auditoria.
+ *
+ * Esta rota implementa endpoints para:
+ * - Registrar eventos de auditoria no banco de dados (POST)
+ * - Consultar logs de auditoria com filtros e paginação (GET)
+ *
+ * Utiliza Prisma para persistência e segue convenções do projeto Backlog DIM.
+ */
+
 import type { Prisma } from "@prisma/client"
 
 import type { NextRequest } from "next/server"
@@ -9,6 +18,28 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApiSlim } from "@/lib/withApiSlim"
 
+/**
+ * Função handler para o método POST.
+ *
+ * @remarks
+ * Utilizada para registrar uma entrada de auditoria no banco de dados.
+ *
+ * @param req - Instância de NextRequest contendo os dados da auditoria no corpo da requisição.
+ * @returns NextResponse informando sucesso ou erro.
+ *
+ * @example
+ * POST /api/auditoria
+ * {
+ *   "tabela": "usuarios",
+ *   "acao": "CREATE",
+ *   "registroId": "123",
+ *   "userId": "456",
+ *   "email": "usuario@exemplo.com",
+ *   "contexto": { ... },
+ *   "antes": { ... },
+ *   "depois": { ... }
+ * }
+ */
 export async function POST(req: NextRequest) {
   /**
    * Registra uma entrada de auditoria no banco.
@@ -61,8 +92,22 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * Lista logs de auditoria com paginação e filtros.
- * Query params suportados: page, pageSize, orderBy, ascending, acao, tabela, email, dataInicial, dataFinal, search
+ * Endpoint para listar logs de auditoria com paginação e filtros.
+ *
+ * @param req - Objeto NextRequest contendo os parâmetros de consulta na URL.
+ * @param context - Contexto da rota, incluindo parâmetros de rota.
+ * @returns NextResponse com os dados paginados dos logs de auditoria.
+ *
+ * Parâmetros de consulta suportados:
+ * - page: número da página (default: 1)
+ * - pageSize: quantidade por página (default: 10)
+ * - orderBy: campo de ordenação (default: criadoEm)
+ * - ascending: ordenação ascendente (default: false)
+ * - acao: filtra por ação de auditoria
+ * - tabela: filtra por nome da tabela
+ * - email: filtra por email do usuário
+ * - dataInicial, dataFinal: filtra por intervalo de datas
+ * - search: busca textual em tabela, email ou ação
  */
 const handleGET = withApiSlim(async ({ req }) => {
   const { searchParams } = new URL(req.url)
@@ -120,6 +165,19 @@ const handleGET = withApiSlim(async ({ req }) => {
   return NextResponse.json({ total, dados })
 })
 
+/**
+ * Função handler para o método GET.
+ *
+ * @remarks
+ * Utilizada para listar logs de auditoria com suporte a filtros, busca textual e paginação.
+ *
+ * @param req - Instância de NextRequest contendo os parâmetros de consulta na URL.
+ * @param context - Contexto da rota, incluindo parâmetros de rota.
+ * @returns NextResponse com os dados paginados dos logs de auditoria.
+ *
+ * @example
+ * GET /api/auditoria?page=1&pageSize=20&acao=CREATE&tabela=usuarios
+ */
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }

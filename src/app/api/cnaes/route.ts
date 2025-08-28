@@ -8,6 +8,19 @@ import { withApi } from "@/lib/withApi"
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/cnaes`
 
+/**
+ * Manipulador para requisições GET na rota de CNAEs.
+ *
+ * @remarks
+ * Este endpoint atua como proxy para a API externa de CNAEs, repassando a query string recebida
+ * e retornando o JSON obtido da API de metadados.
+ *
+ * @param req - Objeto Request contendo a URL e parâmetros de consulta.
+ * @returns NextResponse com os dados dos CNAEs obtidos da API externa.
+ *
+ * @example
+ * GET /api/cnaes?query=123
+ */
 export async function GET(req: Request) {
   /**
    * Proxy para listar CNAEs na API externa.
@@ -24,6 +37,24 @@ export async function GET(req: Request) {
   return NextResponse.json(dados)
 }
 
+/**
+ * Manipulador para requisições POST na rota de CNAEs.
+ *
+ * @remarks
+ * Este endpoint cria um novo registro de CNAE na API externa de metadados.
+ * Em caso de erro na API externa, retorna o código HTTP e detalhes do erro.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição com os dados do CNAE.
+ * @returns Response JSON com o novo registro criado ou erro detalhado.
+ *
+ * @example
+ * POST /api/cnaes
+ * {
+ *   "codigo": "1234-5/01",
+ *   "descricao": "Atividades de exemplo"
+ * }
+ */
 export const POST = withApi(
   /**
    * Cria um registro de CNAE na API externa.

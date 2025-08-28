@@ -3,6 +3,19 @@ import { AcaoAuditoria, type PermissaoPayload } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 
+/**
+ * Manipulador para requisições PATCH na rota de permissões administrativas.
+ *
+ * Este manipulador atualiza ou cria um registro de permissão (`permissao`) no banco de dados.
+ * - Valida o payload recebido, exigindo os campos: `perfilId`, `acao`, `recurso` e `permitido`.
+ * - Impede atualização de permissões desabilitadas, exigindo reativação ou exclusão manual.
+ * - Utiliza o método `upsert` do Prisma para atualizar ou criar a permissão.
+ * - Retorna a permissão atualizada/criada e informações de auditoria.
+ * - Em caso de erro, retorna o status HTTP apropriado e mensagem de erro.
+ *
+ * @param req Requisição HTTP contendo o payload da permissão.
+ * @returns Resposta JSON com permissão atualizada/criada e dados de auditoria, ou erro.
+ */
 export const PATCH = withApi(
   async ({ req }) => {
     const { perfilId, acao, recurso, permitido }: PermissaoPayload = await req.json()
