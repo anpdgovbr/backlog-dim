@@ -3,7 +3,6 @@
 import { ConsentProvider, LogLevel, setDebugLogging } from "react-lgpd-consent"
 import CookiePreferencesModal from "./CookieBanner"
 import SimpleCookieBanner from "./SimpleCookieBanner"
-import { govbrTheme } from "@anpdgovbr/shared-ui"
 
 // Habilitar debug em desenvolvimento
 if (process.env.NODE_ENV === "development") {
