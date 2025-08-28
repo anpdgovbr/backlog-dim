@@ -15,9 +15,9 @@ export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <AuthProvider>
-      <AuditProvider>
-        <GovBRThemeProvider>
+    <GovBRThemeProvider>
+      <AuthProvider>
+        <AuditProvider>
           <NotificationProvider>
             <CookieManager>
               <Box
@@ -58,8 +58,8 @@ export default function ClientRootLayout({
               <FloatingDevMenu />
             </CookieManager>
           </NotificationProvider>
-        </GovBRThemeProvider>
-      </AuditProvider>
-    </AuthProvider>
+        </AuditProvider>
+      </AuthProvider>
+    </GovBRThemeProvider>
   )
 }
