@@ -17,7 +17,6 @@ interface CookieManagerProps {
 export default function CookieManager({ children }: Readonly<CookieManagerProps>) {
   return (
     <ConsentProvider
-      theme={govbrTheme}
       categories={{
         enabledCategories: ["analytics", "marketing"],
       }}
