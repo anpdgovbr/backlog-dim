@@ -47,7 +47,9 @@
     "version:env": "node scripts/set-version-env.cjs",
     "prebuild": "npm run version:env && npm run generate:version && npm run build-routes",
     "docs:typedoc": "typedoc --options typedoc.json",
-    "docs": "npm run docs:typedoc",
+    "docs:clean": "rimraf .typedocs public/docs || true",
+    "docs:build": "npm run docs:typedoc",
+    "docs": "npm run docs:build",
     "prepare": "husky",
     "pre-commit": "lint-staged",
     "prisma:migrate": "npx prisma migrate dev --name init",
@@ -104,7 +106,7 @@
     "@hookform/resolvers": "^5.2.1",
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
-    "@mui/x-data-grid": "^8.10.2",
+    "@mui/x-data-grid": "^8.11.0",
     "@prisma/client": "^6.15.0",
     "dayjs": "^1.11.15",
     "js-cookie": "^3.0.5",
@@ -144,7 +146,7 @@
     "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
     "prisma": "^6.15.0",
-    "typescript": "^5.9.2",
-    "typedoc": "^0.28.11"
+    "typedoc": "^0.28.11",
+    "typescript": "^5.9.2"
   }
 }

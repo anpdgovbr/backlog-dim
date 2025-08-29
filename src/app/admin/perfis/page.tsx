@@ -23,7 +23,7 @@ import withPermissao from "@/hoc/withPermissao"
 import { usePerfis } from "@/hooks/usePerfis"
 import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { UsuarioComResponsavel } from "@/types/User"
 
 function GerenciarPerfisContent() {

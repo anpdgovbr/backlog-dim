@@ -21,7 +21,7 @@ import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
 import { pode } from "@/lib/permissions"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { RequeridoOutput } from "@/types/Requerido"
 import { formatCpfCnpj } from "@/utils/formUtils"
 

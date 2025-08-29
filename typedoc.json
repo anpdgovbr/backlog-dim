@@ -1,6 +1,6 @@
 {
-  "entryPoints": ["src", "prisma/schema.prisma"],
-  "out": "docs",
+  "entryPoints": ["src"],
+  "out": ".typedocs",
   "tsconfig": "tsconfig.json",
   "entryPointStrategy": "expand",
   "exclude": ["**/.next/**", "**/public/**", "**/scripts/**", "**/node_modules/**"],
