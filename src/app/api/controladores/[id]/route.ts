@@ -6,6 +6,14 @@ import { withApiForId } from "@/lib/withApi"
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 
 // === GET ===
+/**
+ * Recupera um controlador por `id` via API externa.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON do controlador externo.
+ * @example GET /api/controladores/10
+ * @remarks Auditoria ({@link AcaoAuditoria.GET}).
+ */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
@@ -25,7 +33,7 @@ const handlerGET = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )
 
@@ -37,6 +45,14 @@ export async function GET(
 }
 
 // === PATCH ===
+/**
+ * Atualiza um controlador via API externa.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com dados atualizados e auditoria.
+ * @example PATCH /api/controladores/10 { "nome": "Novo" }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Editar", recurso: "Responsavel"}.
+ */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const { id } = params
@@ -71,7 +87,7 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Editar_Responsavel",
+    permissao: { acao: "Editar", recurso: "Responsavel" },
   }
 )
 
@@ -83,6 +99,14 @@ export async function PATCH(
 }
 
 // === DELETE ===
+/**
+ * Exclui um controlador via API externa.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com resultado e auditoria.
+ * @example DELETE /api/controladores/10
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Responsavel"}.
+ */
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
@@ -105,7 +129,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.DELETE,
-    permissao: "Desabilitar_Responsavel",
+    permissao: { acao: "Desabilitar", recurso: "Responsavel" },
   }
 )
 

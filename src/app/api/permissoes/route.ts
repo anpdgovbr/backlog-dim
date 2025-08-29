@@ -7,11 +7,12 @@ import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Recupera permissões. Se `perfilId` for fornecido na query string,
- * retorna permissões daquele perfil; caso contrário, retorna permissões do
- * usuário autenticado (via email da sessão).
- * @example
- * GET /api/permissoes?perfilId=3
+ * Recupera permissões.
+ *
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com a lista de permissões (por perfil ou do usuário autenticado).
+ * @example GET /api/permissoes?perfilId=3
+ * @remarks Sem auditoria; consulta simples e permissões derivadas do perfil.
  */
 export const GET = withApiSlimNoParams(async ({ req, email }) => {
   const { searchParams } = new URL(req.url)
@@ -47,10 +48,15 @@ export const GET = withApiSlimNoParams(async ({ req, email }) => {
   return Response.json(permissoes)
 })
 
-// ✅ MÉTODO POST → Criar Nova Permissão com auditoria
 /**
  * Cria ou atualiza uma permissão para um perfil.
- * Corpo esperado: { perfilId, acao, recurso, permitido }
+ *
+ * @see {@link withApi}
+ * @returns JSON com a permissão criada/atualizada.
+ * @example
+ * POST /api/permissoes
+ * { "perfilId": 1, "acao": "Exibir", "recurso": "Usuario", "permitido": true }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
  */
 export const POST = withApi<PermissaoPayload>(
   async ({ req }) => {
@@ -90,6 +96,6 @@ export const POST = withApi<PermissaoPayload>(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )

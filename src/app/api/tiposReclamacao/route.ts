@@ -4,14 +4,33 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.tipoReclamacao.findMany({
-    where: { active: true },
-  })
+/**
+ * Lista tipos de reclamação ativos (metadados).
+ *
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de tipos ativos.
+ * @example GET /api/tiposReclamacao
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
+ */
+export const GET = withApiSlimNoParams(
+  async () => {
+    const dados = await prisma.tipoReclamacao.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { acao: "Exibir", recurso: "Metadados" }
+)
 
+/**
+ * Cria um novo tipo de reclamação.
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro criado (201).
+ * @example POST /api/tiposReclamacao { "nome": "Denúncia" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
+ */
 export const POST = withApi(
   async ({ req }) => {
     try {
@@ -39,6 +58,6 @@ export const POST = withApi(
   {
     tabela: "tiporeclamacao",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

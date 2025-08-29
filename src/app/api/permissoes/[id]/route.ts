@@ -3,7 +3,14 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
 
-// Handler isolado
+/**
+ * Atualiza o campo `permitido` de uma permissão por `id`.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com a permissão atualizada.
+ * @example PATCH /api/permissoes/10 { "permitido": false }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
+ */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const permissaoId = parseInt(params.id, 10)
@@ -45,7 +52,7 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )
 

@@ -8,6 +8,13 @@ import { withApi } from "@/lib/withApi"
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/controladores`
 
+/**
+ * Proxy para listar controladores na API externa.
+ *
+ * @param req - Requisição HTTP (query string é repassada).
+ * @returns JSON retornado pela API externa.
+ * @example GET /api/controladores?nome=Empresa
+ */
 export async function GET(req: Request) {
   /**
    * Proxy para a API externa de controladores.
@@ -27,6 +34,14 @@ export async function GET(req: Request) {
   return NextResponse.json(dados)
 }
 
+/**
+ * Cria um controlador via API externa.
+ *
+ * @see {@link withApi}
+ * @returns JSON com a resposta da API externa e auditoria de criação.
+ * @example POST /api/controladores { "nome": "Empresa X" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Responsavel"}.
+ */
 export const POST = withApi(
   /**
    * Cria um controlador via API externa.
@@ -55,6 +70,6 @@ export const POST = withApi(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Responsavel",
+    permissao: { acao: "Cadastrar", recurso: "Responsavel" },
   }
 )

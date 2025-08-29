@@ -1,21 +1,29 @@
-import type {
-  AcaoPermissao,
-  PermissaoConcedida,
-  RecursoPermissao,
-} from "@anpdgovbr/shared-types"
+/**
+ * @fileoverview
+ * Adaptação de permissões por usuário para o formato `PermissionsMap` e helpers
+ * para verificação de acesso por par `{ acao, recurso }`.
+ *
+ * @remarks
+ * Este módulo consulta as permissões do perfil do usuário via Prisma e as
+ * organiza em `PermissionsMap` (ver `@/lib/permissions`).
+ */
+import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { pode, type PermissionsMap } from "@/lib/permissions"
 
-export function pode(
-  permissoes: Partial<Record<PermissaoConcedida, boolean>>,
-  chave: PermissaoConcedida
-): boolean {
-  return !!permissoes[chave]
-}
-
-export async function buscarPermissoesConcedidas(
-  email: string
-): Promise<Partial<Record<PermissaoConcedida, boolean>>> {
+/**
+ * Busca permissões concedidas ao usuário e as converte para `PermissionsMap`.
+ *
+ * @param email - Email do usuário autenticado.
+ * @returns Mapa de permissões no formato `PermissionsMap`.
+ * @example
+ * ```ts
+ * const perms = await buscarPermissoesConcedidas('user@example.com')
+ * if (pode(perms, 'Exibir', 'Processo')) { /* ... *\/ }
+ * ```
+ */
+export async function buscarPermissoesConcedidas(email: string): Promise<PermissionsMap> {
   const usuario = await prisma.user.findUnique({
     where: { email },
     include: {
@@ -27,27 +35,32 @@ export async function buscarPermissoesConcedidas(
     },
   })
 
-  if (!usuario?.perfil) return {}
-
-  const resultado: Record<PermissaoConcedida, boolean> = {} as Record<
-    PermissaoConcedida,
-    boolean
-  >
+  const map: PermissionsMap = {}
+  if (!usuario?.perfil?.permissoes) return map
 
   for (const p of usuario.perfil.permissoes) {
-    const chave = `${p.acao}_${p.recurso}` as PermissaoConcedida
-    resultado[chave] = p.permitido
+    const acao = p.acao as AcaoPermissao
+    const recurso = p.recurso as RecursoPermissao
+    map[acao] ??= {}
+    map[acao]![recurso] = !!p.permitido
   }
 
-  return resultado
+  return map
 }
 
+/**
+ * Verifica se um usuário possui permissão para um par `{ acao, recurso }`.
+ *
+ * @param email - Email do usuário autenticado.
+ * @param acao - Ação requerida.
+ * @param recurso - Recurso alvo.
+ * @returns `true` quando permitido, `false` caso contrário.
+ */
 export async function verificarPermissao(
   email: string,
   acao: AcaoPermissao,
   recurso: RecursoPermissao
 ): Promise<boolean> {
   const permissoes = await buscarPermissoesConcedidas(email)
-  const chave = `${acao}_${recurso}` as PermissaoConcedida
-  return pode(permissoes, chave)
+  return pode(permissoes, acao, recurso)
 }

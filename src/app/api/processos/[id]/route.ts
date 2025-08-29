@@ -5,17 +5,12 @@ import { withApiForId } from "@/lib/withApi"
 
 // === GET ===
 /**
- * Recupera um processo por id (param path `id`).
+ * Recupera um processo por `id`.
  *
- * Parâmetros:
- * - id: identificador numérico do processo (string no path, convertido internamente)
- *
- * Respostas:
- * - 200: objeto processo
- * - 404: { error: 'Processo não encontrado' }
- *
- * Exemplo:
- * GET /api/processos/123
+ * @see {@link withApiForId}
+ * @returns JSON com o processo (200) ou erro 404.
+ * @example GET /api/processos/123
+ * @remarks Permissão {acao: "Exibir", recurso: "Processo"} e auditoria ({@link AcaoAuditoria.GET}).
  */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -50,10 +45,17 @@ const handlerGET = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )
 
+/**
+ * Handler Next.js de GET (resolve `context.params` e delega ao handler tipado).
+ *
+ * @param req - Requisição HTTP.
+ * @param context - Contexto com `params` assíncrono.
+ * @returns Resposta do handler GET.
+ */
 export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -63,10 +65,12 @@ export async function GET(
 
 // === PUT ===
 /**
- * Atualiza parcial/totalmente um processo por id.
+ * Atualiza parcial/totalmente um processo por `id`.
  *
- * O corpo deve conter os campos que serão atualizados. Campos de data aceitam string ISO.
- * Retorna 200 com o processo atualizado ou 404 se não encontrado.
+ * @see {@link withApiForId}
+ * @returns JSON com o processo atualizado (200) ou erro (404/400).
+ * @example PUT /api/processos/123 { "requerente": "Empresa Y" }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "EditarGeral", recurso: "Processo"}.
  */
 const handlerPUT = withApiForId<{ id: string }>(
   async ({ params, req }) => {
@@ -179,7 +183,7 @@ const handlerPUT = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "EditarGeral_Processo",
+    permissao: { acao: "EditarGeral", recurso: "Processo" },
   }
 )
 
@@ -192,9 +196,12 @@ export async function PUT(
 
 // === DELETE ===
 /**
- * Remove (marca como inactive) um processo por id.
+ * Desativa (soft delete) um processo por `id`.
  *
- * Retorna 200 em sucesso, 404 se não encontrado/inativo.
+ * @see {@link withApiForId}
+ * @returns JSON com mensagem de sucesso (200) ou erro 404.
+ * @example DELETE /api/processos/123
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Processo"}.
  */
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -233,7 +240,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.DELETE,
-    permissao: "Desabilitar_Processo",
+    permissao: { acao: "Desabilitar", recurso: "Processo" },
   }
 )
 

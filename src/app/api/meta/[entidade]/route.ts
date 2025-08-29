@@ -6,30 +6,41 @@ import { withApiForId } from "@/lib/withApi"
 import { withApiSlim } from "@/lib/withApiSlim"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
 
-const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => {
-  const validacao = validarEntidadeParams(params)
-  if (!validacao.valid) return validacao.response
+/**
+ * Lista metadados de uma entidade dinâmica (e.g., situacoes, encaminhamentos).
+ *
+ * @see {@link withApiSlim}
+ * @returns JSON com `{ data, total }`.
+ * @example GET /api/meta/situacoes?page=1&pageSize=10
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
+ */
+const handlerGET = withApiSlim<{ entidade: string }>(
+  async ({ req, params }) => {
+    const validacao = validarEntidadeParams(params)
+    if (!validacao.valid) return validacao.response
 
-  const { model } = validacao
-  const { searchParams } = new URL(req.url)
+    const { model } = validacao
+    const { searchParams } = new URL(req.url)
 
-  const page = Number(searchParams.get("page")) || 1
-  const pageSize = Number(searchParams.get("pageSize")) || 10
-  const orderBy = searchParams.get("orderBy") || "nome"
-  const ascending = searchParams.get("ascending") === "true"
+    const page = Number(searchParams.get("page")) || 1
+    const pageSize = Number(searchParams.get("pageSize")) || 10
+    const orderBy = searchParams.get("orderBy") || "nome"
+    const ascending = searchParams.get("ascending") === "true"
 
-  const [total, data] = await Promise.all([
-    model.count({ where: { active: true } }),
-    model.findMany({
-      where: { active: true },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
-    }),
-  ])
+    const [total, data] = await Promise.all([
+      model.count({ where: { active: true } }),
+      model.findMany({
+        where: { active: true },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+      }),
+    ])
 
-  return NextResponse.json({ data, total })
-}, "Exibir_Metadados")
+    return NextResponse.json({ data, total })
+  },
+  { acao: "Exibir", recurso: "Metadados" }
+)
 
 export async function GET(
   req: Request,
@@ -39,6 +50,14 @@ export async function GET(
 }
 
 // POST
+/**
+ * Cria um item de metadado para a entidade dinâmica.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com o item criado (201).
+ * @example POST /api/meta/situacoes { "nome": "Novo" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
+ */
 const handlerPOST = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -58,7 +77,7 @@ const handlerPOST = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
     acao: AcaoAuditoria.CREATE,
     tabela: (params) => params.entidade,
   }
@@ -72,6 +91,14 @@ export async function POST(
 }
 
 // PUT
+/**
+ * Atualiza o nome de um metadado por `id` da entidade dinâmica.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com o registro atualizado.
+ * @example PUT /api/meta/situacoes { "id": 1, "nome": "Atualizado" }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Editar", recurso: "Metadados"}.
+ */
 const handlerPUT = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -92,7 +119,7 @@ const handlerPUT = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Editar_Metadados",
+    permissao: { acao: "Editar", recurso: "Metadados" },
     acao: AcaoAuditoria.UPDATE,
     tabela: (params) => params.entidade,
   }
@@ -106,6 +133,14 @@ export async function PUT(
 }
 
 // DELETE
+/**
+ * Desativa (soft delete) um metadado por `id` da entidade dinâmica.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com mensagem de sucesso.
+ * @example DELETE /api/meta/situacoes { "id": 1 }
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Metadados"}.
+ */
 const handlerDELETE = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -133,7 +168,7 @@ const handlerDELETE = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Desabilitar_Metadados",
+    permissao: { acao: "Desabilitar", recurso: "Metadados" },
     acao: AcaoAuditoria.DELETE,
     tabela: (params) => params.entidade,
   }
