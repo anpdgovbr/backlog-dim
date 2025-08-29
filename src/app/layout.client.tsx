@@ -12,15 +12,11 @@ import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
 import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
 
-// GlobalStyles was used for diagnostics and removed
-
 export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <GovBRThemeProvider>
-      {/* GlobalStyles removido: o `govbrTheme` agora define variantes dinâmicas e
-      defaultProps inline para garantir prioridade de estilos locais. */}
       <AuthProvider>
         <AuditProvider>
           <CssBaseline />
