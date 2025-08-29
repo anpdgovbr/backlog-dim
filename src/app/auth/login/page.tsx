@@ -13,6 +13,23 @@ import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
+/**
+ * Componente de página de Login (Client Component).
+ *
+ * Descrição:
+ * - Gerencia o fluxo de autenticação via NextAuth (provê integração com Azure AD).
+ * - Exibe estados de loading durante verificação de sessão e redirecionamento.
+ * - Dispara signIn("azure-ad") ao acionar o botão de login e trata erros locais.
+ *
+ * Comportamento:
+ * - Quando a sessão está autenticada, inicia redirecionamento para "/dashboard".
+ * - Mostra GovBrLoading enquanto verifica/realiza redirecionamento ou enquanto a ação de login está em andamento.
+ *
+ * Observações de implementação:
+ * - É um componente client ( contém "use client" no topo do arquivo ).
+ * - Não altera estado global externo; todo estado é local ao componente.
+ * - Erros de login são exibidos via estado local `error`.
+ */
 export default function LoginPage() {
   const { status } = useSession()
   const router = useRouter()
