@@ -92,22 +92,8 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * Endpoint para listar logs de auditoria com paginação e filtros.
- *
- * @param req - Objeto NextRequest contendo os parâmetros de consulta na URL.
- * @param context - Contexto da rota, incluindo parâmetros de rota.
- * @returns NextResponse com os dados paginados dos logs de auditoria.
- *
- * Parâmetros de consulta suportados:
- * - page: número da página (default: 1)
- * - pageSize: quantidade por página (default: 10)
- * - orderBy: campo de ordenação (default: criadoEm)
- * - ascending: ordenação ascendente (default: false)
- * - acao: filtra por ação de auditoria
- * - tabela: filtra por nome da tabela
- * - email: filtra por email do usuário
- * - dataInicial, dataFinal: filtra por intervalo de datas
- * - search: busca textual em tabela, email ou ação
+ * Lista logs de auditoria com paginação e filtros.
+ * Query params suportados: page, pageSize, orderBy, ascending, acao, tabela, email, dataInicial, dataFinal, search
  */
 const handleGET = withApiSlim(async ({ req }) => {
   const { searchParams } = new URL(req.url)

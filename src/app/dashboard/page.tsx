@@ -12,15 +12,17 @@ import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisD
 import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
 import withPermissao from "@/hoc/withPermissao"
 import usePermissoes from "@/hooks/usePermissoes"
+import { hasAny, pode } from "@/lib/permissions"
 
 function DashboardBacklog() {
   const { permissoes, loading } = usePermissoes()
 
-  const hasAnyPermission =
-    permissoes["Exibir_Processo"] ||
-    permissoes["Exibir_Relatorios"] ||
-    permissoes["Exibir_Metadados"] ||
-    permissoes["Exibir_Responsavel"]
+  const hasAnyPermission = hasAny(permissoes, [
+    ["Exibir", "Processo"],
+    ["Exibir", "Relatorios"],
+    ["Exibir", "Metadados"],
+    ["Exibir", "Responsavel"],
+  ])
 
   if (!hasAnyPermission) {
     return (
@@ -45,29 +47,31 @@ function DashboardBacklog() {
       loadingMessage="Carregando dashboard..."
     >
       {/* ===== Seção Principal ===== */}
-      {(permissoes["Exibir_Processo"] || permissoes["Exibir_Relatorios"]) && (
+      {(pode(permissoes, "Exibir", "Processo") ||
+        pode(permissoes, "Exibir", "Relatorios")) && (
         <DashboardSection
           title="Visão Geral"
           subtitle="Acompanhe métricas e indicadores principais"
         >
           <CardGrid columns={{ xs: 12, lg: 6 }} minCardHeight={380}>
-            {permissoes["Exibir_Processo"] && <ProcessDashboardCard />}
-            {permissoes["Exibir_Relatorios"] && <StatsDashboardCard />}
+            {pode(permissoes, "Exibir", "Processo") && <ProcessDashboardCard />}
+            {pode(permissoes, "Exibir", "Relatorios") && <StatsDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}
 
       {/* ===== Seção de Gerenciamento ===== */}
-      {(permissoes["Exibir_Responsavel"] || permissoes["Exibir_Metadados"]) && (
+      {(pode(permissoes, "Exibir", "Responsavel") ||
+        pode(permissoes, "Exibir", "Metadados")) && (
         <DashboardSection
           title="Gerenciamento"
           subtitle="Administre usuários, categorias e configurações"
         >
           <CardGrid columns={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }} minCardHeight="auto">
-            {permissoes["Exibir_Responsavel"] && <ResponsaveisDashboardCard />}
-            {permissoes["Exibir_Responsavel"] && <RequeridosDashboardCard />}
-            {permissoes["Exibir_Metadados"] && <MetadadosDashboardCard />}
-            {permissoes["Exibir_Metadados"] && <ImportarDashboardCard />}
+            {pode(permissoes, "Exibir", "Responsavel") && <ResponsaveisDashboardCard />}
+            {pode(permissoes, "Exibir", "Responsavel") && <RequeridosDashboardCard />}
+            {pode(permissoes, "Exibir", "Metadados") && <MetadadosDashboardCard />}
+            {pode(permissoes, "Exibir", "Metadados") && <ImportarDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}

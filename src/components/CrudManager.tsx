@@ -9,6 +9,7 @@ import CrudHeader from "@/components/crud/CrudHeader"
 import CrudModal from "@/components/crud/CrudModal"
 import DialogAlert from "@/components/ui/DialogAlert"
 import usePermissoes from "@/hooks/usePermissoes"
+import { pode } from "@/lib/permissions"
 import { useCrudManager } from "@/hooks/useCrudManager"
 
 export interface CrudManagerProps {
@@ -61,10 +62,10 @@ export default function CrudManager(props: Readonly<CrudManagerProps>) {
   } = useCrudManager(tableName)
 
   // Permissions
-  const canView = !!permissoes["Exibir_Metadados"]
-  const canAdd = !!permissoes["Cadastrar_Metadados"]
-  const canEdit = !!permissoes["Editar_Metadados"]
-  const canDelete = !!permissoes["Desabilitar_Metadados"]
+  const canView = pode(permissoes, "Exibir", "Metadados")
+  const canAdd = pode(permissoes, "Cadastrar", "Metadados")
+  const canEdit = pode(permissoes, "Editar", "Metadados")
+  const canDelete = pode(permissoes, "Desabilitar", "Metadados")
 
   if (loadingPerms) {
     return (

@@ -16,13 +16,7 @@ import NextAuth from "next-auth/next"
 
 import { authOptions } from "@/config/next-auth.config"
 
-/**
- * Handler de autenticação NextAuth.
- *
- * @remarks
- * - Exportado como GET e POST para suportar ambos os métodos HTTP.
- * - Recebe as opções de autenticação do projeto.
- */
+// NextAuth handler — delega GET/POST para o adaptador do NextAuth.
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

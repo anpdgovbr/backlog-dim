@@ -28,6 +28,8 @@ import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
 import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
 import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
+import { pode } from "@/lib/permissions"
+import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 const allSections: ISectionConfig[] = [
   {
@@ -135,7 +137,10 @@ export default function DashboardAdmin() {
   useEffect(() => {
     if (!loading) {
       const filteredSections = allSections.filter((section) =>
-        section.requiredPermissions?.some((perm) => permissoes[perm])
+        section.requiredPermissions?.some((perm) => {
+          const [acao, recurso] = perm.split("_") as [AcaoPermissao, RecursoPermissao]
+          return pode(permissoes, acao, recurso)
+        })
       )
 
       // Só atualiza o state se mudou

@@ -6,12 +6,12 @@ export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[1],
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: "theme.palette.background.paper",
   height: "100%",
   width: "100%",
   display: "flex",
   flexDirection: "column",
-  overflow: "hidden", // garante que o conteúdo interno siga o borderRadius do container
+  overflow: "hidden",
 
   // Estilos para o elemento raiz do DataGrid
   "& .MuiDataGrid-root": {
@@ -32,7 +32,7 @@ export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
 
   // Estilos do cabeçalho
   "& .MuiDataGrid-columnHeaders": {
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: "theme.palette.grey[100]",
     borderBottom: `2px solid ${theme.palette.primary.main}`,
   },
   "& .MuiDataGrid-columnHeaderTitle": {
