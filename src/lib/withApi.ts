@@ -9,7 +9,13 @@ import { authOptions } from "@/config/next-auth.config"
 import { registrarAuditoria } from "@/helpers/auditoria-server"
 import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
 
-type HandlerContext<TParams extends object = object, TExtra = object> = {
+/**
+ * Contexto passado para handlers configurados com `withApi`.
+ *
+ * Contém a `req` original, sessão do NextAuth (quando disponível), email do usuário
+ * autenticado, `userId`, e `params` (quando aplicável).
+ */
+export type HandlerContext<TParams extends object = object, TExtra = object> = {
   req: Request | NextRequest
   session: Awaited<ReturnType<typeof getServerSession>>
   email: string
@@ -17,7 +23,14 @@ type HandlerContext<TParams extends object = object, TExtra = object> = {
   params: TParams
 } & TExtra
 
-type Handler<TParams extends object = object, TExtra = object> = (
+/**
+ * Tipo de função handler para rotas que usam `withApi`.
+ *
+ * Um handler pode retornar diretamente um `Response` ou um objeto contendo
+ * `response` e informações opcionais de `audit` que serão usadas pelo sistema
+ * de auditoria.
+ */
+export type Handler<TParams extends object = object, TExtra = object> = (
   ctx: HandlerContext<TParams, TExtra>
 ) => Promise<
   | Response
@@ -30,7 +43,15 @@ type Handler<TParams extends object = object, TExtra = object> = (
     }
 >
 
-type WithApiOptions<TParams extends object = object> = {
+/**
+ * Opções para `withApi`.
+ *
+ * - `tabela`: nome da tabela/entidade para gravar auditoria. Pode ser string ou uma função
+ *   que recebe `params`.
+ * - `acao`: ação de auditoria (do enum `AcaoAuditoria`).
+ * - `permissao`: permissão requerida para acessar a rota.
+ */
+export type WithApiOptions<TParams extends object = object> = {
   tabela?: string | ((params: TParams) => string)
   acao?: (typeof AcaoAuditoria)[keyof typeof AcaoAuditoria]
   permissao?: PermissaoConcedida
@@ -96,6 +117,16 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
 }
 
 // Wrapper para rotas padrão
+/**
+ * Wrapper para rotas API internas que trata autenticação, autorização e auditoria.
+ *
+ * @example
+ * // pages/api/protected.ts
+ * export const GET = withApi(async ({ req, email }) => {
+ *   const data = { message: `Hello ${email}` }
+ *   return new Response(JSON.stringify(data), { status: 200 })
+ * }, { permissao: 'Exibir' as any })
+ */
 export function withApi<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,
   options?: WithApiOptions<TParams>
@@ -106,6 +137,18 @@ export function withApi<TParams extends object = object, TExtra = object>(
 }
 
 // Wrapper para rotas com params
+/**
+ * Wrapper para rotas que recebem `params` (por exemplo, [id]).
+ *
+ * A função resolve o `context.params` passado pelo Next e repassa ao handler.
+ *
+ * @example
+ * export const PATCH = withApiForId(async ({ params, req }) => {
+ *   const id = params.id
+ *   // ...
+ *   return new Response(null, { status: 204 })
+ * })
+ */
 export function withApiForId<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,
   options?: WithApiOptions<TParams>

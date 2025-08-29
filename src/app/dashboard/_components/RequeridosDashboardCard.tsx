@@ -16,7 +16,7 @@ import type { TopRequerido } from "@/types/TopRequeridos"
 
 const MAX_REQUERIDOS = 5
 
-type RequeridosDashboardCardProps = Readonly<{
+export type RequeridosDashboardCardProps = Readonly<{
   limit?: number
 }>
 

@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
+/**
+ * Lista encaminhamentos ativos (metadados).
+ */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.encaminhamento.findMany({
     where: { active: true },
@@ -12,6 +15,9 @@ export const GET = withApiSlimNoParams(async () => {
   return Response.json(dados)
 }, "Exibir_Metadados")
 
+/**
+ * Cria um novo encaminhamento (metadado).
+ */
 export const POST = withApi(
   async ({ req }) => {
     try {

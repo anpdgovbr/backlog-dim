@@ -17,13 +17,13 @@ import { ptBR } from "@mui/x-data-grid/locales"
 import { dataGridStyles } from "@/styles/dataGridStyles"
 import type { SxProps, Theme } from "@mui/material"
 
-interface Item {
+export interface Item {
   id: number
   nome: string
   active?: boolean
 }
 
-interface CrudDataTableProps {
+export interface CrudDataTableProps {
   items: Item[]
   totalRows: number
   isLoading: boolean

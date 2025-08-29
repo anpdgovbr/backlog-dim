@@ -1,3 +1,13 @@
+/**
+ * Adiciona dias úteis (segunda a sexta) a uma data.
+ *
+ * @param data Data inicial
+ * @param dias Número de dias úteis a adicionar
+ * @returns Nova instância de Date com os dias úteis adicionados
+ *
+ * @example
+ * adicionarDiasUteis(new Date('2025-08-22'), 3) // pula fim de semana automaticamente
+ */
 export function adicionarDiasUteis(data: Date, dias: number): Date {
   const resultado = new Date(data)
   let adicionados = 0
@@ -11,6 +21,13 @@ export function adicionarDiasUteis(data: Date, dias: number): Date {
   return resultado
 }
 
+/**
+ * Converte uma data em formato BR (dd/mm/yyyy) para ISO string.
+ * Retorna `undefined` caso a string seja inválida.
+ *
+ * @example
+ * parseBRDateToISO('31/12/2024') // '2024-12-31T00:00:00.000Z' (ou similar)
+ */
 export function parseBRDateToISO(dateStr?: string): string | undefined {
   if (!dateStr) return undefined
   const [day, month, year] = dateStr.split("/")
@@ -21,6 +38,10 @@ export function parseBRDateToISO(dateStr?: string): string | undefined {
   return isNaN(date.getTime()) ? undefined : date.toISOString()
 }
 
+/**
+ * Converte uma data (string no formato BR ou Date) para ISO string segura.
+ * Retorna `undefined` quando a entrada for inválida ou nula.
+ */
 export function safeToISO(date: string | Date | null | undefined): string | undefined {
   if (!date) return undefined
   if (date instanceof Date) {
@@ -32,6 +53,14 @@ export function safeToISO(date: string | Date | null | undefined): string | unde
   return undefined
 }
 
+/**
+ * Formata uma data para o valor esperado por campos <input type="date">.
+ * Ajusta o timezone local para que a string retornada represente corretamente
+ * a data local no formato YYYY-MM-DD.
+ *
+ * @example
+ * toInputDateValue('2025-08-26T12:00:00Z') // '2025-08-26'
+ */
 export function toInputDateValue(date: string | Date | null | undefined): string {
   if (!date) {
     return ""

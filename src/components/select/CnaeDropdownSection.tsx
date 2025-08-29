@@ -12,7 +12,7 @@ import type { CnaeDto } from "@anpdgovbr/shared-types"
 
 import { useCnae } from "@/hooks/useCnae"
 
-interface CnaeDropdownSectionProps {
+export interface CnaeDropdownSectionProps {
   name: string
   label?: string
 }

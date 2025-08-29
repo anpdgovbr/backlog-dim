@@ -3,7 +3,7 @@ import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 
-type LogProps = {
+export type LogProps = {
   tabela: string
   acao: AcaoAuditoria
   registroId?: number

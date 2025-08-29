@@ -13,7 +13,7 @@ type AuditContextData = {
   contexto: string
 }
 
-type LogAuditoriaInput = {
+export type LogAuditoriaInput = {
   tabela: string
   acao: AcaoAuditoria
   registroId?: number
@@ -31,7 +31,7 @@ interface UserWithId {
 
 const AuditContext = createContext<AuditContextData | undefined>(undefined)
 
-export function AuditProvider({ children }: { children: React.ReactNode }) {
+export function AuditProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { data: session } = useSession()
   const pathname = usePathname()
 

@@ -2,9 +2,11 @@ import useSWR from "swr"
 
 import { useSession } from "next-auth/react"
 
-import type { PermissaoConcedida, PermissaoDto } from "@anpdgovbr/shared-types"
+import type { PermissaoDto } from "@anpdgovbr/shared-types"
 
 import { fetcher } from "@/lib/fetcher"
+import type { PermissionsMap } from "@/lib/permissions"
+import { toPermissionsMap } from "@/lib/permissions"
 
 export default function usePermissoes() {
   const { data: session } = useSession()
@@ -15,13 +17,7 @@ export default function usePermissoes() {
     fetcher
   )
 
-  const permissoes: Partial<Record<PermissaoConcedida, boolean>> = {}
-
-  if (Array.isArray(data)) {
-    for (const p of data) {
-      permissoes[`${p.acao}_${p.recurso}` as PermissaoConcedida] = p.permitido
-    }
-  }
+  const permissoes: PermissionsMap = toPermissionsMap(data)
 
   if (error) {
     console.error("Erro ao buscar permissões:", error)
@@ -32,11 +28,4 @@ export default function usePermissoes() {
     loading: isLoading,
     error,
   }
-}
-
-export function pode(
-  permissoes: Partial<Record<PermissaoConcedida, boolean>>,
-  acao: PermissaoConcedida
-): boolean {
-  return permissoes[acao] ?? false
 }

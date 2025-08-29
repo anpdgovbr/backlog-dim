@@ -17,7 +17,7 @@ import type { TopResponsavel } from "@/types/TopResponsaveis"
 
 const MAX_RESPONSAVEIS = 6
 
-interface ResponsaveisDashboardCardProps {
+export interface ResponsaveisDashboardCardProps {
   limit?: number
 }
 

@@ -7,7 +7,7 @@ import type { GridPaginationModel } from "@mui/x-data-grid"
 import { useNotification } from "@/context/NotificationProvider"
 import { fetcher } from "@/lib/fetcher"
 
-interface Item {
+export interface Item {
   id: number
   nome: string
   active?: boolean
@@ -21,6 +21,33 @@ interface CrudState {
   paginationModel: GridPaginationModel
 }
 
+/**
+ * Hook que encapsula lógica comum de CRUD para páginas de metadados.
+ *
+ * Responsabilidades:
+ * - buscar a lista com paginação via SWR
+ * - fornecer state para modal de edição/adicionar
+ * - ações para salvar, excluir, confirmar, cancelar
+ *
+ * @param tableName Nome da tabela/metadado (ex.: 'Setor', 'TipoReclamacao')
+ * @returns Um conjunto de itens, estado e ações para uso nos componentes de UI
+ *
+ * @example
+ * const manager = useCrudManager('Setor')
+ * manager.openAddModal()
+ */
+/**
+ * Hook que encapsula lógica comum de CRUD para páginas de metadados.
+ *
+ * Retorna dados, estado e ações para uso em componentes de listagem/edição.
+ *
+ * @param tableName Nome da tabela/metadado (ex.: 'Setor', 'TipoReclamacao')
+ * @returns Objeto com `items`, `totalRows`, `isLoading`, estado/modal e ações (openAddModal, handleSave, confirmDelete, etc.)
+ *
+ * @example
+ * const manager = useCrudManager('Setor')
+ * manager.openAddModal()
+ */
 export function useCrudManager(tableName: string) {
   const { notify } = useNotification()
 

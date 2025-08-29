@@ -55,4 +55,7 @@ dev-cert.csr
 ecosystem.config.cjs
 logs/combined-0.log
 
+# generated
+docs/
 public/dev-routes.json
+issues/

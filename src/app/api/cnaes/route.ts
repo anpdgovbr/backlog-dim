@@ -9,6 +9,12 @@ const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.b
 const endpoint = `${baseUrl}/cnaes`
 
 export async function GET(req: Request) {
+  /**
+   * Proxy para listar CNAEs na API externa.
+   * Repasse de query string e retorno do JSON obtido.
+   * @example
+   * GET /api/cnaes?query=123
+   */
   const { searchParams } = new URL(req.url)
   const url = `${endpoint}?${searchParams.toString()}`
 
@@ -19,6 +25,10 @@ export async function GET(req: Request) {
 }
 
 export const POST = withApi(
+  /**
+   * Cria um registro de CNAE na API externa.
+   * Em caso de erro na API externa, retorna o código e detalhes.
+   */
   async ({ req }) => {
     try {
       const data = await req.json()

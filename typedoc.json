@@ -1,0 +1,14 @@
+{
+  "entryPoints": ["src", "prisma/schema.prisma"],
+  "out": "docs",
+  "tsconfig": "tsconfig.json",
+  "entryPointStrategy": "expand",
+  "exclude": ["**/.next/**", "**/public/**", "**/scripts/**", "**/node_modules/**"],
+  "excludeExternals": false,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "disableSources": false,
+  "hideGenerator": true,
+  "includeVersion": true,
+  "cleanOutputDir": true
+}

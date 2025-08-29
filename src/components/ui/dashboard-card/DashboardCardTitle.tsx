@@ -1,7 +1,7 @@
 import type { SxProps } from "@mui/material"
 import Typography, { type TypographyProps } from "@mui/material/Typography"
 
-interface DashboardCardTitleProps {
+export interface DashboardCardTitleProps {
   variant?: TypographyProps["variant"]
   children: React.ReactNode
   sx?: SxProps

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import type { SxProps } from "@mui/material/styles"
 
-interface DashboardCardContentProps {
+export interface DashboardCardContentProps {
   children: React.ReactNode
   sx?: SxProps
 }

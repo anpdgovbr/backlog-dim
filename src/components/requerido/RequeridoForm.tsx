@@ -24,13 +24,28 @@ export interface RequeridoFormHandle {
   submit: () => void
 }
 
-interface Props {
+export interface RequeridoFormProps {
   requeridoId: number | null
   onSave?: () => void
   mutate?: () => void
 }
 
-const RequeridoForm = forwardRef<RequeridoFormHandle, Props>(
+/**
+ * Formulário para criação/edição de um Requerido (Controlador).
+ *
+ * @remarks
+ * O componente usa `react-hook-form` e expõe um handle (`submit`) via
+ * `forwardRef` para submissão programática. Faz validações locais e utiliza
+ * `useBuscarCnpj` para preencher campos quando aplicável.
+ *
+ * @example
+ * ```tsx
+ * const ref = useRef<RequeridoFormHandle>(null)
+ * <RequeridoForm ref={ref} requeridoId={null} onSave={() => {}} />
+ * // para submeter programaticamente: ref.current?.submit()
+ * ```
+ */
+const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
   ({ requeridoId, onSave, mutate }, ref) => {
     const methods = useForm<ControladorDto>({
       defaultValues: {

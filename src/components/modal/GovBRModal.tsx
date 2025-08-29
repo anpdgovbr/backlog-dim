@@ -13,19 +13,44 @@ import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 
-interface GovBRModalProps {
-  open: boolean
-  onClose: () => void
-  title?: string
-  children: ReactNode
-  footer?: ReactNode
-  size?: "xsmall" | "small" | "medium" | "large" | "auto"
-  scroll?: boolean
-  id?: string
-  ariaLabelledBy?: string
-  sx?: SxProps
-}
+/**
+ * Props para o modal genérico do padrão GovBR usado no projeto.
+ *
+ * Fornece controle sobre título, tamanho, conteúdo e ações.
+ */
+export interface GovBRModalProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    title?: string
+    children: ReactNode
+    footer?: ReactNode
+    size?: "xsmall" | "small" | "medium" | "large" | "auto"
+    scroll?: boolean
+    id?: string
+    ariaLabelledBy?: string
+    sx?: SxProps
+  }> {}
 
+/**
+ * Modal genérico com estilos e comportamento do padrão GovBR.
+ *
+ * Prefer usar as variantes `GovBRInputModal`, `GovBRConfirmModal` ou
+ * `GovBROptionModal` quando formatado para casos específicos.
+ *
+ * @remarks
+ * O componente principal (`GovBRModal`) provê a base visual. As variações
+ * (`GovBRInputModal`, `GovBRConfirmModal`, `GovBROptionModal`) adicionam
+ * footers e botões prontos para padrões comuns (confirmação, entrada de dados,
+ * opções). Os componentes são acessíveis via atributos ARIA já configurados.
+ *
+ * @example
+ * ```tsx
+ * <GovBRModal open={true} onClose={() => {}} title="Exemplo">
+ *   <div>Conteúdo</div>
+ * </GovBRModal>
+ * ```
+ */
 export function GovBRModal({
   open,
   onClose,
@@ -102,6 +127,18 @@ export function GovBRModal({
     </Dialog>
   )
 }
+export interface GovBRConfirmModalProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    onConfirm: () => void
+    message: string
+    confirmText?: string
+    cancelText?: string
+    title?: string
+    sx?: SxProps
+  }> {}
+
 export function GovBRConfirmModal({
   open,
   onClose,
@@ -111,16 +148,7 @@ export function GovBRConfirmModal({
   cancelText = "Cancelar",
   title = "Confirmação",
   sx,
-}: {
-  open: boolean
-  onClose: () => void
-  onConfirm: () => void
-  message: string
-  confirmText?: string
-  cancelText?: string
-  title?: string
-  sx?: SxProps
-}) {
+}: Readonly<GovBRConfirmModalProps>) {
   return (
     <GovBRModal
       open={open}
@@ -153,17 +181,7 @@ export function GovBRInputModal({
   cancelText = "Cancelar",
   disabled = false,
   sx,
-}: {
-  open: boolean
-  onClose: () => void
-  title: string
-  children: ReactNode
-  onSubmit: () => void
-  confirmText?: string
-  cancelText?: string
-  disabled?: boolean
-  sx?: SxProps
-}) {
+}: Readonly<GovBRInputModalProps>) {
   return (
     <GovBRModal
       open={open}
@@ -195,6 +213,18 @@ export function GovBRInputModal({
     </GovBRModal>
   )
 }
+export interface GovBRInputModalProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    title: string
+    children: ReactNode
+    onSubmit: () => void
+    confirmText?: string
+    cancelText?: string
+    disabled?: boolean
+    sx?: SxProps
+  }> {}
 
 export function GovBROptionModal({
   open,
@@ -206,17 +236,7 @@ export function GovBROptionModal({
   cancelText = "Cancelar",
   disabled = false,
   sx,
-}: {
-  open: boolean
-  onClose: () => void
-  title: string
-  children: ReactNode
-  onConfirm: () => void
-  confirmText?: string
-  cancelText?: string
-  disabled?: boolean
-  sx?: SxProps
-}) {
+}: Readonly<GovBROptionModalProps>) {
   return (
     <GovBRModal
       open={open}
@@ -238,3 +258,16 @@ export function GovBROptionModal({
     </GovBRModal>
   )
 }
+
+export interface GovBROptionModalProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    title: string
+    children: ReactNode
+    onConfirm: () => void
+    confirmText?: string
+    cancelText?: string
+    disabled?: boolean
+    sx?: SxProps
+  }> {}

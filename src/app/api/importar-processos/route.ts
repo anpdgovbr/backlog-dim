@@ -13,6 +13,19 @@ const formatarData = (data: string): string => {
 }
 
 export const POST = withApi(
+  /**
+   * Importa uma lista de processos (CSV já convertidos para JSON no frontend).
+   *
+   * Corpo esperado: { processos: ProcessoImportacao[], nomeArquivo?: string }
+   * Onde ProcessoImportacao segue o tipo exportado por @anpdgovbr/shared-types.
+   *
+   * Resposta: 200 com resumo de importação ou 400 com falhas por linha.
+   * @example
+   * POST /api/importar-processos
+   * {
+   *   "processos": [ { "numeroProcesso": "P202504-0001", "responsavelNome": "Fulano", "dataCriacao": "01/04/2025" } ]
+   * }
+   */
   async ({ req }) => {
     try {
       const {

@@ -14,19 +14,20 @@ const LazyRequeridoForm = dynamic(() => import("./RequeridoForm"), {
   loading: () => <Typography>Carregando formulário...</Typography>,
 })
 
-interface Props {
-  open: boolean
-  onClose: () => void
-  requeridoId: number | null
-  mutate?: () => void
-}
+export interface RequeridoModalFormProps
+  extends Readonly<{
+    open: boolean
+    onClose: () => void
+    requeridoId: number | null
+    mutate?: () => void
+  }> {}
 
 export default function RequeridoModalForm({
   open,
   onClose,
   requeridoId,
   mutate,
-}: Props) {
+}: RequeridoModalFormProps) {
   const title = requeridoId ? "Editar Requerido" : "Novo Requerido"
   const formRef = useRef<RequeridoFormHandle>(null)
   return (

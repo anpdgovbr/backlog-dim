@@ -4,6 +4,19 @@ import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
 
 // === GET ===
+/**
+ * Recupera um processo por id (param path `id`).
+ *
+ * Parâmetros:
+ * - id: identificador numérico do processo (string no path, convertido internamente)
+ *
+ * Respostas:
+ * - 200: objeto processo
+ * - 404: { error: 'Processo não encontrado' }
+ *
+ * Exemplo:
+ * GET /api/processos/123
+ */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
@@ -49,6 +62,12 @@ export async function GET(
 }
 
 // === PUT ===
+/**
+ * Atualiza parcial/totalmente um processo por id.
+ *
+ * O corpo deve conter os campos que serão atualizados. Campos de data aceitam string ISO.
+ * Retorna 200 com o processo atualizado ou 404 se não encontrado.
+ */
 const handlerPUT = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const { id } = params
@@ -58,7 +77,7 @@ const handlerPUT = withApiForId<{ id: string }>(
       where: { id: Number(id) },
     })
 
-    if (!processoAtual || !processoAtual.active) {
+    if (!processoAtual?.active) {
       return Response.json(
         { error: "Processo não encontrado ou inativo" },
         { status: 404 }
@@ -100,7 +119,11 @@ const handlerPUT = withApiForId<{ id: string }>(
       }
 
       if (Array.isArray(valorNovo) && Array.isArray(valorAntigo)) {
-        return JSON.stringify(valorNovo.sort()) !== JSON.stringify(valorAntigo.sort())
+        const novoSorted = [...valorNovo].map(String).sort((a, b) => a.localeCompare(b))
+        const antigoSorted = [...valorAntigo]
+          .map(String)
+          .sort((a, b) => a.localeCompare(b))
+        return JSON.stringify(novoSorted) !== JSON.stringify(antigoSorted)
       }
 
       return valorNovo !== valorAntigo
@@ -168,6 +191,11 @@ export async function PUT(
 }
 
 // === DELETE ===
+/**
+ * Remove (marca como inactive) um processo por id.
+ *
+ * Retorna 200 em sucesso, 404 se não encontrado/inativo.
+ */
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
@@ -176,7 +204,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
       where: { id: Number(id) },
     })
 
-    if (!processo || !processo.active) {
+    if (!processo?.active) {
       return Response.json(
         { error: "Processo não encontrado ou já excluído" },
         { status: 404 }

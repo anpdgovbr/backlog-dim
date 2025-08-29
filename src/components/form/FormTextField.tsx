@@ -6,7 +6,7 @@ import { Controller } from "react-hook-form"
 import type { TextFieldProps } from "@mui/material/TextField"
 import TextField from "@mui/material/TextField"
 
-interface FormTextFieldProps<
+export interface FormTextFieldProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
 > extends Omit<TextFieldProps, "name"> {

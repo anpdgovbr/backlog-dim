@@ -12,7 +12,7 @@ import { parseId } from "@/utils/parseId"
 import { GovBRInputModal } from "../modal/GovBRModal"
 import ProcessoForm from "./ProcessoForm"
 
-type ModalEditarProcessoProps = Readonly<{
+export type ModalEditarProcessoProps = Readonly<{
   open: boolean
   onClose: () => void
   processoId: number | null

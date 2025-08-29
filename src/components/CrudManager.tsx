@@ -9,13 +9,28 @@ import CrudHeader from "@/components/crud/CrudHeader"
 import CrudModal from "@/components/crud/CrudModal"
 import DialogAlert from "@/components/ui/DialogAlert"
 import usePermissoes from "@/hooks/usePermissoes"
+import { pode } from "@/lib/permissions"
 import { useCrudManager } from "@/hooks/useCrudManager"
 
-interface CrudManagerProps {
+export interface CrudManagerProps {
   entityName: string
   tableName: string
 }
 
+/**
+ * Componente genérico de gerenciamento CRUD para metadados.
+ *
+ * @remarks
+ * Encapsula cabeçalho, tabela, modal de edição/adição e diálogo de confirmação.
+ * Utiliza `useCrudManager` para a maior parte da lógica (estado, ações e
+ * requisições). `entityName` é apenas o rótulo exibido e `tableName` é usado
+ * para compor chamadas ao backend via o hook.
+ *
+ * @example
+ * ```tsx
+ * <CrudManager entityName="Perfis" tableName="perfis" />
+ * ```
+ */
 export default function CrudManager(props: Readonly<CrudManagerProps>) {
   const { entityName, tableName } = props
 
@@ -47,10 +62,10 @@ export default function CrudManager(props: Readonly<CrudManagerProps>) {
   } = useCrudManager(tableName)
 
   // Permissions
-  const canView = !!permissoes["Exibir_Metadados"]
-  const canAdd = !!permissoes["Cadastrar_Metadados"]
-  const canEdit = !!permissoes["Editar_Metadados"]
-  const canDelete = !!permissoes["Desabilitar_Metadados"]
+  const canView = pode(permissoes, "Exibir", "Metadados")
+  const canAdd = pode(permissoes, "Cadastrar", "Metadados")
+  const canEdit = pode(permissoes, "Editar", "Metadados")
+  const canDelete = pode(permissoes, "Desabilitar", "Metadados")
 
   if (loadingPerms) {
     return (
