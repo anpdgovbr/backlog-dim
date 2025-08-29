@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
+/**
+ * Lista situações ativas (metadados).
+ */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.situacao.findMany({
     where: { active: true },
@@ -12,6 +15,9 @@ export const GET = withApiSlimNoParams(async () => {
   return Response.json(dados)
 }, "Exibir_Metadados")
 
+/**
+ * Cria uma nova situação (metadado).
+ */
 export const POST = withApi(
   async ({ req }) => {
     try {

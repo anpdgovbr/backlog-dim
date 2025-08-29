@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography"
 import type { GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data-grid"
 import { DataGrid } from "@mui/x-data-grid"
 
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 
 interface AuditLogEntry {
   id: number

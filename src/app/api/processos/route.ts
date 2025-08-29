@@ -27,6 +27,24 @@ async function gerarNumeroProcesso(): Promise<string> {
 }
 
 export const POST = withApi(
+  /**
+   * Cria um novo processo.
+   *
+   * Expectativa do corpo (JSON): um objeto com os campos do processo conforme o modelo Prisma.
+   * - Campos de data aceitam string ISO ou null.
+   *
+   * Resposta: 201 com o processo recém-criado.
+   * @example
+   * POST /api/processos
+   * {
+   *   "requerente": "Empresa X",
+   *   "formaEntradaId": 1,
+   *   "responsavelId": 2
+   * }
+   *
+   * @remarks
+   * Este endpoint também grava entrada de auditoria via middleware `withApi`.
+   */
   async ({ req }) => {
     try {
       const data = await req.json()
@@ -66,6 +84,21 @@ export const POST = withApi(
 )
 
 export const GET = withApi(
+  /**
+   * Lista processos com paginação e busca simples.
+   *
+   * Query params suportados:
+   * - page: número da página (default: 1)
+   * - pageSize: itens por página (default: 10)
+   * - orderBy: campo para ordenação (default: dataCriacao)
+   * - ascending: 'true' para ascendente
+   * - search: texto a buscar em requerente, número, responsável, situação
+   * - responsavelUserId: filtrar por userId do responsável
+   *
+   * Retorna um objeto { data: Processo[], total: number }.
+   * @example
+   * GET /api/processos?page=1&pageSize=20&search=empresa
+   */
   async ({ req }) => {
     const { searchParams } = new URL(req.url)
     const page = Number(searchParams.get("page")) || 1

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button"
 import CardActions from "@mui/material/CardActions"
 import type { SxProps } from "@mui/material/styles"
 
-interface DashboardCardActionButtonProps {
+export interface DashboardCardActionButtonProps {
   id?: string
   title: string
   hasIcon?: boolean

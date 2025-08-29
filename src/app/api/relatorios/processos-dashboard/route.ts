@@ -12,9 +12,15 @@ function normalizarTexto(texto: string): string {
     .toLowerCase()
 }
 
+/**
+ * Relatório do dashboard de processos.
+ * Retorna estatísticas agregadas para exibição no dashboard do usuário autenticado:
+ * { total, noMes, atrasados, atribuidosAoUsuario, porStatusInterno, porTipoRequerimento, topTemas }
+ * @example
+ * GET /api/relatorios/processos-dashboard
+ */
 export async function GET() {
   const session = (await getServerSession(authOptions)) as Session | null
-
   if (!session?.user?.email) {
     // Agora verificamos por email
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })

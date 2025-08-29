@@ -6,7 +6,7 @@ import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
-interface CardGridProps {
+export interface CardGridProps {
   children: React.ReactNode
   title?: string
   subtitle?: string

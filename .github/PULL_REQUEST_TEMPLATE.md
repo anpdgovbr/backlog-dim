@@ -67,17 +67,3 @@ _Passos objetivos para validar manualmente._
 ## 🔍 Evidências (screenshots/GIFs)
 
 _Anexe imagens curtas, comparativos antes/depois se for UI._
-
-## 🧯 Risco, Rollout e Rollback
-
-- **Risco:** baixo / médio / alto
-- **Plano de rollout:** _ex.: deploy em sandbox → hml → prod_
-- **Plano de rollback:** _ex.: revert PR, executar `prisma migrate reset` (se aplicável), restaurar backup_
-
-## 🔗 Issues Relacionadas
-
-_Ex.:_ `Resolves #123` · `Related #456`
-
-## 📣 Notas aos Revisores
-
-_Dúvidas conhecidas, trade-offs, pontos de atenção._

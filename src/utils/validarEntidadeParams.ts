@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 import type { MetaEntidade } from "@/types/MetaEntidades"
 import { allowedEntities } from "@/types/MetaEntidades"
 
-type PrismaDelegate<T> = {
+export type PrismaDelegate<T> = {
   findMany: (args?: Prisma.Args<T, "findMany">) => Promise<T[]>
   create: (args: Prisma.Args<T, "create">) => Promise<T>
   update: (args: Prisma.Args<T, "update">) => Promise<T>
@@ -13,7 +13,7 @@ type PrismaDelegate<T> = {
   count: (args?: Prisma.Args<T, "count">) => Promise<number>
 }
 
-type ValidarEntidadeResult =
+export type ValidarEntidadeResult =
   | { valid: true; entidade: MetaEntidade; model: PrismaDelegate<unknown> }
   | { valid: false; response: Response }
 

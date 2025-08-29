@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField"
 
 import { useControladores } from "@/hooks/useControladores"
 
-interface RequeridoDropdownSectionProps {
+export interface RequeridoDropdownSectionProps {
   label: string
   name: string
   hasAllOption?: boolean

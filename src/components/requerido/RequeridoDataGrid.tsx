@@ -20,7 +20,8 @@ import { ptBR } from "@mui/x-data-grid/locales"
 import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { pode } from "@/lib/permissions"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { RequeridoOutput } from "@/types/Requerido"
 import { formatCpfCnpj } from "@/utils/formUtils"
 
@@ -121,7 +122,7 @@ export default function RequeridoDataGrid() {
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
-            disabled={!permissoes["Editar_Responsavel"]}
+            disabled={!pode(permissoes, "Editar", "Responsavel")}
             onClick={() => {
               setSelectedRequeridoId(params.row.id)
               setOpenModal(true)
@@ -131,7 +132,7 @@ export default function RequeridoDataGrid() {
           </IconButton>
           <IconButton
             color="error"
-            disabled={!permissoes["Desabilitar_Responsavel"]}
+            disabled={!pode(permissoes, "Desabilitar", "Responsavel")}
             onClick={() => handleDelete(params.row.id)}
           >
             <GridDeleteIcon />
@@ -145,7 +146,7 @@ export default function RequeridoDataGrid() {
 
   return (
     <Box>
-      {!permissoes["Exibir_Responsavel"] ? (
+      {!pode(permissoes, "Exibir", "Responsavel") ? (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Você não tem permissão para visualizar este conteúdo.
         </Alert>
@@ -159,7 +160,7 @@ export default function RequeridoDataGrid() {
             <Button
               variant="contained"
               startIcon={<GridAddIcon />}
-              disabled={!permissoes["Cadastrar_Responsavel"]}
+              disabled={!pode(permissoes, "Cadastrar", "Responsavel")}
               onClick={() => {
                 setSelectedRequeridoId(null)
                 setOpenModal(true)

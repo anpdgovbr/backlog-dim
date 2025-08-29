@@ -28,12 +28,34 @@ import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import { useProcessos } from "@/hooks/useProcessos"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 
-interface ProcessoDataGridProps {
-  showTitle?: boolean
-}
+/**
+ * Props do `ProcessoDataGrid`.
+ *
+ * @example
+ * <ProcessoDataGrid showTitle={false} />
+ */
+export interface ProcessoDataGridProps
+  extends Readonly<{
+    showTitle?: boolean
+  }> {}
 
+/**
+ * Componente que renderiza a listagem de processos usando `@mui/x-data-grid`.
+ * Integra com o hook `useProcessos` e provê ações de edição/exclusão.
+ *
+ * @remarks
+ * Este componente delega paginação e busca para o hook `useProcessos` e
+ * centraliza permissões (via `usePode`) para habilitar ações na linha.
+ * Use `showTitle={false}` quando desejar renderizar apenas a grade, sem o
+ * título principal da página.
+ *
+ * @example
+ * ```tsx
+ * <ProcessoDataGrid showTitle={true} />
+ * ```
+ */
 export default function ProcessoDataGrid({
   showTitle = true,
 }: Readonly<ProcessoDataGridProps>) {

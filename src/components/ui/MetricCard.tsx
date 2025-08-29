@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 import type { SxProps } from "@mui/material/styles"
 
-interface MetricCardProps {
+export interface MetricCardProps {
   title: string
   value: string | number
   subtitle?: string

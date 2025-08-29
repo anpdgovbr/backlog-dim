@@ -10,7 +10,7 @@ import { DashboardCardDescription } from "./DashboardCardDescription"
 import { DashboardCardMedia } from "./DashboardCardMedia"
 import { DashboardCardTitle } from "./DashboardCardTitle"
 
-interface DashboardCardProps {
+export interface DashboardCardProps {
   hasAction?: boolean
   action?: () => void
   children: React.ReactNode

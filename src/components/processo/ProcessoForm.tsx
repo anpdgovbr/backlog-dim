@@ -23,11 +23,62 @@ import FormTagsInput from "../form/FormTagsInput"
 import { MetaDropdownSection } from "../select/MetaDropdownSection"
 import { RequeridoDropdownSection } from "../select/RequeridoDropdownSection"
 
-interface ProcessoFormProps {
-  processo?: ProcessoOutput
-  methods: UseFormReturn<ProcessoFormData>
-}
+/**
+ * Props do componente `ProcessoForm`.
+ *
+ * Use este componente para renderizar o formulário de criação/edição de um
+ * processo. Recebe os métodos do react-hook-form para integração com validação
+ * e envio.
+ *
+ * @example
+ *
+ * @remarks
+ * Os campos são compostos por seções (Dados Principais, Identificação, Fluxo,
+ * Prazos e Complementares). Quando `processo` é fornecido o formulário passa
+ * para o modo de edição e exibe informações de status; caso contrário exibe
+ * campos para criação. O componente depende de `ProcessoFormData` para o
+ * tipo dos métodos do `react-hook-form`.
+ *
+ * @example
+ * ```tsx
+ * const methods = useForm<ProcessoFormData>()
+ * <ProcessoForm methods={methods} />
+ * ```
+ * <ProcessoForm
+ *   processo={processoExistente}
+ *   methods={methods}
+ * />
+ */
+export interface ProcessoFormProps
+  extends Readonly<{
+    processo?: ProcessoOutput
+    methods: UseFormReturn<ProcessoFormData>
+  }> {}
 
+/**
+ * Formulário de Processo (criação/edição).
+ *
+ * O componente encapsula campos principais, identificação e fluxo do processo
+ * e expõe o comportamento padrão de um formulário controlado pelo
+ * `react-hook-form` através de `methods`.
+ *
+ * @remarks
+ * Organização das seções:
+ * - Dados Principais
+ * - Identificação
+ * - Fluxo do Processo
+ * - Prazos
+ * - Informações Complementares
+ *
+ * Recebe `methods` do `react-hook-form` para controle e validação. Quando o
+ * prop `processo` é informado, o formulário entra em modo de edição.
+ *
+ * @example
+ * ```tsx
+ * const methods = useForm<ProcessoFormData>()
+ * <ProcessoForm methods={methods} />
+ * ```
+ */
 export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
   const {
     register,

@@ -32,8 +32,8 @@ export default function PublicoPage() {
           Dashboard Público - ANPD
         </Typography>
         <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 800, mx: "auto" }}>
-          Transparência e acompanhamento dos processos administrativos da Diretoria de
-          Investigação e Monitoramento
+          Transparência e acompanhamento dos processos administrativos da Divisão de
+          Monitoramento
         </Typography>
       </Paper>
 

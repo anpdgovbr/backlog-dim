@@ -26,8 +26,7 @@ export interface SidebarSection {
 
 export type NonEmptyArray<T> = [T, ...T[]]
 
-// Trocar interface por type e envolver com Readonly<>
-type SidebarLayoutProps = Readonly<{
+export type SidebarLayoutProps = Readonly<{
   children?: React.ReactNode
   title: string
   subtitle?: string

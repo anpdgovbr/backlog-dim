@@ -5,17 +5,33 @@ import type { BaseQueryParams, ProcessoOutput } from "@anpdgovbr/shared-types"
 
 import { fetcher } from "@/lib/fetcher"
 
-interface UseProcessosParams extends BaseQueryParams {
+/**
+ * Parâmetros aceitos pelo hook `useProcessos`.
+ */
+export interface UseProcessosParams extends BaseQueryParams {
+  /** Filtra por responsável (user id) */
   responsavelUserId?: string
 }
 
-interface UseProcessosResult {
+/**
+ * Resultado retornado por `useProcessos`.
+ */
+export interface UseProcessosResult {
   data: ProcessoOutput[]
   total: number
   isLoading: boolean
   error: unknown
 }
 
+/**
+ * Hook para buscar processos paginados usando SWR.
+ *
+ * O hook monta a query string automaticamente a partir dos parâmetros
+ * e consome a rota `/api/processos`.
+ *
+ * @example
+ * const { data, total, isLoading } = useProcessos({ page: 1, pageSize: 20 })
+ */
 export function useProcessos(params: UseProcessosParams): UseProcessosResult {
   const {
     page = 1,

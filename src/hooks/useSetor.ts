@@ -2,11 +2,11 @@ import type { BaseQueryParams, SetorDto } from "@anpdgovbr/shared-types"
 
 import { useApi } from "@/lib/api"
 
-interface UseSetorParams extends BaseQueryParams {
+export interface UseSetorParams extends BaseQueryParams {
   nome?: string
 }
 
-interface UseSetorResult {
+export interface UseSetorResult {
   data: SetorDto[]
   total: number
   isLoading: boolean

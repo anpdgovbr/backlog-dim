@@ -6,6 +6,13 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
+/**
+ * Recupera permissões. Se `perfilId` for fornecido na query string,
+ * retorna permissões daquele perfil; caso contrário, retorna permissões do
+ * usuário autenticado (via email da sessão).
+ * @example
+ * GET /api/permissoes?perfilId=3
+ */
 export const GET = withApiSlimNoParams(async ({ req, email }) => {
   const { searchParams } = new URL(req.url)
   const perfilId = searchParams.get("perfilId")
@@ -38,9 +45,13 @@ export const GET = withApiSlimNoParams(async ({ req, email }) => {
 
   const permissoes = await getPermissoesPorPerfil(usuario.perfil.nome)
   return Response.json(permissoes)
-}, undefined)
+})
 
 // ✅ MÉTODO POST → Criar Nova Permissão com auditoria
+/**
+ * Cria ou atualiza uma permissão para um perfil.
+ * Corpo esperado: { perfilId, acao, recurso, permitido }
+ */
 export const POST = withApi<PermissaoPayload>(
   async ({ req }) => {
     const { perfilId, acao, recurso, permitido }: PermissaoPayload = await req.json()

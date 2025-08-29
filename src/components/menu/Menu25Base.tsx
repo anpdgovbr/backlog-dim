@@ -10,7 +10,7 @@ import type { Theme } from "@mui/material/styles"
 
 import { calcIconCircleBg, parseThemeColor } from "@/utils/colorUtils"
 
-interface IMenu25BaseProps {
+export interface IMenu25BaseProps {
   readonly id: string
   readonly title: string
   readonly description?: string

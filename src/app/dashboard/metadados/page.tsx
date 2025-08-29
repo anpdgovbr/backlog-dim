@@ -20,6 +20,7 @@ import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
 import { SidebarLayout } from "@/components/layouts"
 import type { SidebarSection, NonEmptyArray } from "@/components/layouts"
 import usePermissoes from "@/hooks/usePermissoes"
+import { pode } from "@/lib/permissions"
 
 import TipoReclamacaoPage from "./tipo-reclamacao/page"
 
@@ -87,7 +88,7 @@ export default function GerenciarMetadados() {
   const [sections, setSections] = useState<SidebarSection[]>([])
 
   useEffect(() => {
-    if (!loading && permissoes["Exibir_Metadados"]) {
+    if (!loading && pode(permissoes, "Exibir", "Metadados")) {
       setSections(allSections)
     }
   }, [loading, permissoes])
@@ -103,7 +104,7 @@ export default function GerenciarMetadados() {
     )
   }
 
-  if (!permissoes["Exibir_Metadados"]) {
+  if (!pode(permissoes, "Exibir", "Metadados")) {
     return (
       <SidebarLayout
         title="Gerenciar Metadados"

@@ -5,12 +5,12 @@ import type { BaseQueryParams, ControladorDto } from "@anpdgovbr/shared-types"
 import { useApi } from "@/lib/api"
 import { replaceNumbers } from "@/utils/stringUtils"
 
-interface UseControladoresParams extends BaseQueryParams {
+export interface UseControladoresParams extends BaseQueryParams {
   cnpj?: string
   nome?: string
 }
 
-interface UseControladoresResult {
+export interface UseControladoresResult {
   data: ControladorDto[]
   total: number
   isLoading: boolean

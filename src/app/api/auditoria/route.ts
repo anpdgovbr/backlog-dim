@@ -10,6 +10,12 @@ import { prisma } from "@/lib/prisma"
 import { withApiSlim } from "@/lib/withApiSlim"
 
 export async function POST(req: NextRequest) {
+  /**
+   * Registra uma entrada de auditoria no banco.
+   *
+   * Corpo esperado: { tabela, acao, registroId?, userId?, email?, contexto?, antes?, depois? }
+   * Onde `acao` deve ser um membro de `AcaoAuditoria`.
+   */
   try {
     const { tabela, acao, registroId, userId, email, contexto, antes, depois } =
       await req.json()
@@ -54,6 +60,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
+/**
+ * Lista logs de auditoria com paginação e filtros.
+ * Query params suportados: page, pageSize, orderBy, ascending, acao, tabela, email, dataInicial, dataFinal, search
+ */
 const handleGET = withApiSlim(async ({ req }) => {
   const { searchParams } = new URL(req.url)
 
@@ -108,7 +118,7 @@ const handleGET = withApiSlim(async ({ req }) => {
   ])
 
   return NextResponse.json({ total, dados })
-}, undefined)
+})
 
 export async function GET(
   req: NextRequest,

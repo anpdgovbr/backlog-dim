@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
-interface PageHeaderProps {
+export interface PageHeaderProps {
   title: string
   subtitle?: string
   description?: string
@@ -18,7 +18,7 @@ interface PageHeaderProps {
   bgColor?: string
 }
 
-interface PageLayoutProps {
+export interface PageLayoutProps {
   children: React.ReactNode
   header?: PageHeaderProps
   loading?: boolean

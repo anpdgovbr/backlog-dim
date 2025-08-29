@@ -47,5 +47,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Não aplicar middleware para _next assets e para os caminhos de favicon comuns
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|favicon-16x16.png|favicon-32x32.png).*)",
+  ],
 }

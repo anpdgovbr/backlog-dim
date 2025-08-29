@@ -1,4 +1,8 @@
 {
   "eslint.useFlatConfig": true,
-  "references.preferredLocation": "view"
+  "references.preferredLocation": "view",
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "editor.quickSuggestions": { "other": true, "comments": false, "strings": false }
 }

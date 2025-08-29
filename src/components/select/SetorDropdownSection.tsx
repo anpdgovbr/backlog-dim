@@ -5,7 +5,7 @@ import { useSetor } from "@/hooks/useSetor"
 import { FormSkeleton } from "../skeleton/FormSkeleton"
 import { FormDropdown } from "./FormDropdown"
 
-interface SetorDropdownSectionProps {
+export interface SetorDropdownSectionProps {
   label: string
   name: string
   hasAllOption?: boolean

@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 
-interface GenericFormDialogProps extends Omit<DialogProps, "children" | "title"> {
+export interface GenericFormDialogProps extends Omit<DialogProps, "children" | "title"> {
   open: boolean
   onClose: () => void
   onSubmit?: () => void
