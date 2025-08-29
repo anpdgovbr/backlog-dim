@@ -5,7 +5,17 @@ import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Lista situações ativas (metadados).
+ * GET - Lista situações ativas (metadados).
+ *
+ * Retorna um Response JSON com todas as entradas da tabela `situacao` que
+ * possuem `active: true`.
+ *
+ * Observações:
+ * - Este handler é envolvido por `withApiSlimNoParams` e não espera corpo na requisição.
+ * - Utilizado para obter metadados de situações para preenchimento de selects/listas.
+ *
+ * Retorno:
+ * - Response JSON com um array de objetos do modelo `situacao`.
  */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.situacao.findMany({
@@ -16,7 +26,22 @@ export const GET = withApiSlimNoParams(async () => {
 }, "Exibir_Metadados")
 
 /**
- * Cria uma nova situação (metadado).
+ * POST - Cria uma nova situação (metadado).
+ *
+ * Descrição:
+ * - Recebe no corpo da requisição um objeto com os campos do modelo `situacao`.
+ * - Cria um novo registro definindo `active: true` e `exclusionDate: null`.
+ *
+ * Entrada:
+ * - Body JSON com os campos do metadado `situacao`.
+ *
+ * Saída:
+ * - Em sucesso: retorna Response JSON com o objeto criado e status 201.
+ * - Em erro interno: retorna Response JSON com `{ error: "Erro interno do servidor" }` e status 500.
+ *
+ * Auditoria/Permissão:
+ * - Gera informação para auditoria (`depois`).
+ * - Requer a permissão `"Cadastrar_Metadados"`, ação de auditoria: AcaoAuditoria.CREATE.
  */
 export const POST = withApi(
   async ({ req }) => {

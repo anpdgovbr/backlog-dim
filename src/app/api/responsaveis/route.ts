@@ -1,10 +1,15 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
-
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-// 🔹 GET — Apenas responsáveis ativos
+/**
+ * Manipulador GET para responsáveis.
+ *
+ * Retorna todos os responsáveis ativos, incluindo dados do usuário vinculado.
+ *
+ * @returns Response JSON com lista de responsáveis ativos.
+ */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.responsavel.findMany({
     where: { active: true },
@@ -13,7 +18,14 @@ export const GET = withApiSlimNoParams(async () => {
   return Response.json(dados)
 }, "Exibir_Responsavel")
 
-// 🔹 POST — Criação com `active: true`
+/**
+ * Manipulador POST para criação de responsável.
+ *
+ * Cria um novo responsável com status ativo e sem data de exclusão.
+ *
+ * @param req - Request HTTP contendo os dados do responsável.
+ * @returns Response JSON com o responsável criado e dados para auditoria.
+ */
 export const POST = withApi(
   async ({ req }) => {
     const data = await req.json()
@@ -40,7 +52,14 @@ export const POST = withApi(
   }
 )
 
-// 🔹 PATCH — Atualiza vínculo com user
+/**
+ * Manipulador PATCH para atualização de vínculo de usuário.
+ *
+ * Atualiza o campo userId do responsável informado.
+ *
+ * @param req - Request HTTP contendo responsavelId e userId.
+ * @returns Response JSON com o responsável atualizado e dados para auditoria.
+ */
 export const PATCH = withApi(
   async ({ req }) => {
     const { responsavelId, userId } = await req.json()
@@ -72,7 +91,14 @@ export const PATCH = withApi(
   }
 )
 
-// 🔹 DELETE — Soft delete com auditoria
+/**
+ * Manipulador DELETE para soft delete de responsável.
+ *
+ * Desativa o responsável (active: false) e registra data de exclusão.
+ *
+ * @param req - Request HTTP contendo o id do responsável.
+ * @returns Response JSON com mensagem de sucesso e dados para auditoria.
+ */
 export const DELETE = withApi(
   async ({ req }) => {
     const { id } = await req.json()
