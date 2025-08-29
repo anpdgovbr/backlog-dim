@@ -6,6 +6,17 @@ import { withApiForId } from "@/lib/withApi"
 import { withApiSlim } from "@/lib/withApiSlim"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
 
+/**
+ * Handler para requisições GET na rota de metadados dinâmicos.
+ *
+ * @remarks
+ * Retorna uma lista paginada de registros ativos da entidade informada via parâmetro dinâmico.
+ * Permite ordenação e paginação via query params.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
+ * @returns Response JSON com os dados paginados e total de registros.
+ */
 const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => {
   const validacao = validarEntidadeParams(params)
   if (!validacao.valid) return validacao.response
@@ -31,6 +42,13 @@ const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => 
   return NextResponse.json({ data, total })
 }, "Exibir_Metadados")
 
+/**
+ * Função exportada para tratar requisições GET.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param context - Contexto da rota, incluindo params dinâmicos.
+ * @returns Response JSON com os dados da entidade.
+ */
 export async function GET(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -38,7 +56,17 @@ export async function GET(
   return handlerGET(req, { params: await context.params })
 }
 
-// POST
+/**
+ * Handler para requisições POST na rota de metadados dinâmicos.
+ *
+ * @remarks
+ * Cria um novo registro na entidade informada via parâmetro dinâmico.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição.
+ * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
+ * @returns Response JSON com o novo registro criado ou erro.
+ */
 const handlerPOST = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -64,6 +92,13 @@ const handlerPOST = withApiForId<{ entidade: string }>(
   }
 )
 
+/**
+ * Função exportada para tratar requisições POST.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param context - Contexto da rota, incluindo params dinâmicos.
+ * @returns Response JSON com o novo registro criado.
+ */
 export async function POST(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -71,7 +106,17 @@ export async function POST(
   return handlerPOST(req, { params: await context.params })
 }
 
-// PUT
+/**
+ * Handler para requisições PUT na rota de metadados dinâmicos.
+ *
+ * @remarks
+ * Atualiza um registro existente na entidade informada via parâmetro dinâmico.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição.
+ * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
+ * @returns Response JSON com o registro atualizado ou erro.
+ */
 const handlerPUT = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -98,6 +143,13 @@ const handlerPUT = withApiForId<{ entidade: string }>(
   }
 )
 
+/**
+ * Função exportada para tratar requisições PUT.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param context - Contexto da rota, incluindo params dinâmicos.
+ * @returns Response JSON com o registro atualizado.
+ */
 export async function PUT(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -105,7 +157,17 @@ export async function PUT(
   return handlerPUT(req, { params: await context.params })
 }
 
-// DELETE
+/**
+ * Handler para requisições DELETE na rota de metadados dinâmicos.
+ *
+ * @remarks
+ * Desabilita (soft delete) um registro existente na entidade informada via parâmetro dinâmico.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição.
+ * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
+ * @returns Response JSON com mensagem de sucesso ou erro.
+ */
 const handlerDELETE = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
@@ -139,6 +201,13 @@ const handlerDELETE = withApiForId<{ entidade: string }>(
   }
 )
 
+/**
+ * Função exportada para tratar requisições DELETE.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param context - Contexto da rota, incluindo params dinâmicos.
+ * @returns Response JSON com mensagem de sucesso ou erro.
+ */
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ entidade: string }> }

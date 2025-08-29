@@ -5,7 +5,13 @@ import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Lista evidências ativas (metadados).
+ * Manipulador para requisições GET na rota de evidências.
+ *
+ * @remarks
+ * Retorna todos os registros ativos de evidência do banco de dados.
+ * Utiliza o Prisma para buscar os dados e retorna em formato JSON.
+ *
+ * @returns Response JSON com a lista de evidências ativas.
  */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.evidencia.findMany({
@@ -16,7 +22,15 @@ export const GET = withApiSlimNoParams(async () => {
 }, "Exibir_Metadados")
 
 /**
- * Cria uma nova evidência (metadado).
+ * Manipulador para requisições POST na rota de evidências.
+ *
+ * @remarks
+ * Cria um novo registro de evidência no banco de dados.
+ * Define o campo `active` como true e `exclusionDate` como null por padrão.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição com os dados da evidência.
+ * @returns Response JSON com o novo registro criado ou erro detalhado.
  */
 export const POST = withApi(
   async ({ req }) => {

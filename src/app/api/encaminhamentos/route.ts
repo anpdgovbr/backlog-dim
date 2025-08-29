@@ -5,7 +5,13 @@ import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Lista encaminhamentos ativos (metadados).
+ * Manipulador para requisições GET na rota de encaminhamentos.
+ *
+ * @remarks
+ * Retorna todos os registros ativos de encaminhamento do banco de dados.
+ * Utiliza o Prisma para buscar os dados e retorna em formato JSON.
+ *
+ * @returns Response JSON com a lista de encaminhamentos ativos.
  */
 export const GET = withApiSlimNoParams(async () => {
   const dados = await prisma.encaminhamento.findMany({
@@ -16,7 +22,15 @@ export const GET = withApiSlimNoParams(async () => {
 }, "Exibir_Metadados")
 
 /**
- * Cria um novo encaminhamento (metadado).
+ * Manipulador para requisições POST na rota de encaminhamentos.
+ *
+ * @remarks
+ * Cria um novo registro de encaminhamento no banco de dados.
+ * Define o campo `active` como true e `exclusionDate` como null por padrão.
+ * Realiza auditoria da ação conforme convenção do projeto.
+ *
+ * @param req - Objeto Request contendo o corpo da requisição com os dados do encaminhamento.
+ * @returns Response JSON com o novo registro criado ou erro detalhado.
  */
 export const POST = withApi(
   async ({ req }) => {

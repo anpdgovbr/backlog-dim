@@ -1,3 +1,22 @@
+/**
+ * @file Rota de API para leitura do arquivo de rotas de desenvolvimento.
+ *
+ * Esta rota expõe o conteúdo do arquivo `dev-routes.json` presente na pasta `public`,
+ * permitindo que ferramentas e desenvolvedores obtenham a lista de rotas geradas
+ * durante o desenvolvimento do projeto.
+ *
+ * @remarks
+ * - Utiliza o App Router do Next.js.
+ * - Retorna o conteúdo do arquivo como JSON.
+ * - Em caso de erro ou ausência do arquivo, retorna status apropriado.
+ */
+
+/**
+ * Manipulador para requisições GET na rota de dev-routes.
+ *
+ * @returns {Promise<NextResponse>} Retorna o conteúdo do arquivo `dev-routes.json` como resposta JSON,
+ * ou mensagem de erro caso o arquivo não exista ou ocorra falha interna.
+ */
 import fs from "fs"
 import path from "path"
 

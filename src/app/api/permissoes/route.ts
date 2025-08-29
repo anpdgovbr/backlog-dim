@@ -1,3 +1,15 @@
+/**
+ * API de Permissões.
+ *
+ * Este arquivo define os handlers para a rota `/api/permissoes`, permitindo
+ * recuperar permissões por perfil ou usuário autenticado, e criar/atualizar permissões.
+ *
+ * - GET: Retorna permissões do perfil informado ou do usuário autenticado.
+ * - POST: Cria ou atualiza permissões para um perfil específico.
+ *
+ * @packageDocumentation
+ */
+
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import type { PermissaoPayload } from "@anpdgovbr/shared-types"
 
@@ -7,9 +19,15 @@ import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Recupera permissões. Se `perfilId` for fornecido na query string,
- * retorna permissões daquele perfil; caso contrário, retorna permissões do
- * usuário autenticado (via email da sessão).
+ * Handler para requisições GET na rota de permissões.
+ *
+ * Recupera permissões do perfil informado via query string (`perfilId`)
+ * ou, se não informado, do usuário autenticado (identificado pelo e-mail da sessão).
+ *
+ * @param req - Request HTTP recebida.
+ * @param email - E-mail do usuário autenticado.
+ * @returns Response JSON com as permissões do perfil ou do usuário.
+ *
  * @example
  * GET /api/permissoes?perfilId=3
  */
@@ -47,10 +65,19 @@ export const GET = withApiSlimNoParams(async ({ req, email }) => {
   return Response.json(permissoes)
 })
 
-// ✅ MÉTODO POST → Criar Nova Permissão com auditoria
 /**
- * Cria ou atualiza uma permissão para um perfil.
- * Corpo esperado: { perfilId, acao, recurso, permitido }
+ * Handler para requisições POST na rota de permissões.
+ *
+ * Cria ou atualiza uma permissão para um perfil específico.
+ * Espera no corpo da requisição: `{ perfilId, acao, recurso, permitido }`.
+ * Realiza auditoria da operação.
+ *
+ * @param req - Request HTTP recebida.
+ * @returns Response JSON com a permissão criada/atualizada e dados de auditoria.
+ *
+ * @example
+ * POST /api/permissoes
+ * Body: { "perfilId": 1, "acao": "Editar", "recurso": "Processo", "permitido": true }
  */
 export const POST = withApi<PermissaoPayload>(
   async ({ req }) => {

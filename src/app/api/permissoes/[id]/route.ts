@@ -3,7 +3,18 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
 
-// Handler isolado
+/**
+ * Handler PATCH para atualização de permissão.
+ *
+ * @remarks
+ * Recebe o ID da permissão via params, valida o corpo da requisição (campo 'permitido'),
+ * busca a permissão no banco, verifica se está ativa e atualiza o campo 'permitido'.
+ * Retorna o registro atualizado e dados para auditoria.
+ *
+ * @param params - Parâmetros da rota, incluindo o ID da permissão.
+ * @param req - Objeto Request da requisição HTTP.
+ * @returns Objeto contendo a resposta HTTP e dados de auditoria.
+ */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const permissaoId = parseInt(params.id, 10)
@@ -49,7 +60,16 @@ const handlerPATCH = withApiForId<{ id: string }>(
   }
 )
 
-// Export padrão com await em context.params
+/**
+ * Função PATCH exportada para rota /api/permissoes/[id].
+ *
+ * @remarks
+ * Aguarda o parâmetro 'id' do contexto, delega para o handlerPATCH e retorna a resposta.
+ *
+ * @param req - Objeto Request da requisição HTTP.
+ * @param context - Contexto da rota, contendo params (promessa com o ID).
+ * @returns Promise<Response> com o resultado da operação.
+ */
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }
