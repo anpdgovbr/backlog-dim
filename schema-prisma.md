@@ -1,0 +1,2 @@
+# Prisma schema (schema.prisma)
+

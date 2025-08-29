@@ -1,0 +1,596 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@anpdgovbr/backlog-dim - v0.3.0</title><meta name="description" content="Documentation for @anpdgovbr/backlog-dim"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@anpdgovbr/backlog-dim - v0.3.0</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@anpdgovbr/backlog-dim - v0.3.0</h1></div><div class="tsd-panel tsd-typography"><h1 id="🏛️-backlog-dim---sistema-de-gestão-de-processos" class="tsd-anchor-link">🏛️ Backlog DIM - Sistema de Gestão de Processos<a href="#🏛️-backlog-dim---sistema-de-gestão-de-processos" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p><a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&amp;logo=next.js&amp;logoColor=white" alt="Next.js"></a>
+<a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" alt="TypeScript"></a>
+<a href="https://www.prisma.io/"><img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&amp;logo=prisma&amp;logoColor=white" alt="Prisma"></a>
+<a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&amp;logo=postgresql&amp;logoColor=white" alt="PostgreSQL"></a>
+<a href="https://react.dev/"><img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=white" alt="React"></a>
+<a href="https://mui.com/"><img src="https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&amp;logo=mui&amp;logoColor=white" alt="MUI"></a>
+<a href="https://next-auth.js.org/"><img src="https://img.shields.io/badge/NextAuth.js-black?style=for-the-badge&amp;logo=next.js&amp;logoColor=white" alt="NextAuth.js"></a>
+<a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&amp;logo=docker&amp;logoColor=white" alt="Docker"></a>
+<a href="https://eslint.org/"><img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&amp;logo=eslint&amp;logoColor=white" alt="ESLint"></a>
+<a href="https://prettier.io/"><img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&amp;logo=prettier&amp;logoColor=white" alt="Prettier"></a>
+<a href="https://typicode.github.io/husky/"><img src="https://img.shields.io/badge/Husky-black?style=for-the-badge&amp;logo=husky&amp;logoColor=white" alt="Husky"></a>
+<a href="package.json"><img src="https://img.shields.io/badge/vers%C3%A3o-0.2.90-brightgreen?style=for-the-badge" alt="Versão"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg?style=for-the-badge" alt="Licença"></a></p>
+<p>O <strong>Backlog DIM</strong> é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.</p>
+<h2 id="📑-sumário" class="tsd-anchor-link">📑 Sumário<a href="#📑-sumário" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><a href="#-vis%C3%A3o-geral">Visão Geral</a></li>
+<li><a href="#-arquitetura">Arquitetura</a></li>
+<li><a href="#-funcionalidades-principais">Funcionalidades Principais</a></li>
+<li><a href="#-estrutura-do-projeto">Estrutura do Projeto</a></li>
+<li><a href="#-endpoints-da-api">Endpoints da API</a></li>
+<li><a href="#-tecnologias">Tecnologias</a></li>
+<li><a href="#-guia-de-instala%C3%A7%C3%A3o">Guia de Instalação</a>
+<ul>
+<li><a href="#pr%C3%A9-requisitos">Pré-requisitos</a></li>
+<li><a href="#passo-a-passo">Passo a Passo</a></li>
+</ul>
+</li>
+<li><a href="#-vari%C3%A1veis-de-ambiente">Variáveis de Ambiente</a></li>
+<li><a href="#-scripts-dispon%C3%ADveis">Scripts Disponíveis</a></li>
+<li><a href="#-gest%C3%A3o-do-banco-de-dados-com-prisma">Gestão do Banco de Dados com Prisma</a></li>
+<li><a href="#-fluxo-de-cicd">Fluxo de CI/CD</a></li>
+<li><a href="#-padr%C3%B5es-de-c%C3%B3digo">Padrões de Código</a></li>
+<li><a href="#-como-contribuir">Como Contribuir</a></li>
+<li><a href="#-licen%C3%A7a">Licença</a></li>
+</ul>
+<h2 id="🔭-visão-geral" class="tsd-anchor-link">🔭 Visão Geral<a href="#🔭-visão-geral" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Este sistema foi projetado para otimizar a gestão de processos administrativos na ANPD. Ele centraliza o registro de informações, permite o upload de dados via arquivos CSV e oferece uma interface rica para visualização, filtragem e edição de dados. A autenticação é integrada com o Azure Active Directory (Entra ID), garantindo o acesso seguro para os membros da organização.</p>
+<h2 id="🏗️-arquitetura" class="tsd-anchor-link">🏗️ Arquitetura<a href="#🏗️-arquitetura" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>A aplicação é um monorepo que utiliza o framework <strong>Next.js</strong>, aproveitando o <strong>App Router</strong> para renderização no servidor (SSR) e componentização.</p>
+<ul>
+<li><strong>Frontend:</strong> Construído com <strong>React</strong>, <strong>TypeScript</strong> e <strong>Material-UI (MUI)</strong>, seguindo as diretrizes do <strong>Design System do <a href="http://Gov.br">Gov.br</a></strong>.</li>
+<li><strong>Backend:</strong> As rotas da API são servidas pelo próprio Next.js na pasta <code>src/app/api</code>.</li>
+<li><strong>Banco de Dados:</strong> PostgreSQL gerenciado via <strong>docker-infra-pg</strong> (padrão ANPD) ou configuração manual.</li>
+<li><strong>ORM:</strong> <strong>Prisma</strong> para migrations, modelagem e acesso aos dados.</li>
+<li><strong>Autenticação:</strong> <strong>NextAuth.js</strong> gerencia o fluxo de autenticação, utilizando o provedor do Azure AD.</li>
+<li><strong>Infraestrutura:</strong> Padronizada com <strong>docker-infra-pg</strong> para consistência entre projetos da ANPD.</li>
+</ul>
+<h2 id="✨-funcionalidades-principais" class="tsd-anchor-link">✨ Funcionalidades Principais<a href="#✨-funcionalidades-principais" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong>Gestão de Processos:</strong> CRUD completo para processos administrativos.</li>
+<li><strong>Visualização Avançada:</strong> Tabela de dados com filtros, ordenação e busca em tempo real (MUI X DataGrid).</li>
+<li><strong>Importação em Massa:</strong> Funcionalidade para importar processos a partir de arquivos CSV.</li>
+<li><strong>Controle de Acesso:</strong> Sistema de perfis e permissões para granular o acesso às funcionalidades.</li>
+<li><strong>Auditoria:</strong> Logs detalhados de criação, alteração e exclusão de registros importantes.</li>
+<li><strong>Dashboard:</strong> Painéis com visões gerais e estatísticas (em desenvolvimento).</li>
+<li><strong>Gestão de Entidades:</strong> CRUDs para entidades de apoio como Requeridos, Responsáveis, Situações, etc.</li>
+</ul>
+<h2 id="📂-estrutura-do-projeto" class="tsd-anchor-link">📂 Estrutura do Projeto<a href="#📂-estrutura-do-projeto" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>A estrutura de pastas segue as convenções do Next.js e foi organizada para separar claramente as responsabilidades.</p>
+<pre><code><span class="hl-0">/</span><br/><span class="hl-0">├── .</span><span class="hl-1">github</span><span class="hl-0">/          # </span><span class="hl-1">Workflows</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-2">CI</span><span class="hl-0">/</span><span class="hl-3">CD</span><span class="hl-0"> (</span><span class="hl-1">GitHub</span><span class="hl-0"> </span><span class="hl-1">Actions</span><span class="hl-0">)</span><br/><span class="hl-0">├── .</span><span class="hl-1">husky</span><span class="hl-0">/           # </span><span class="hl-1">Git</span><span class="hl-0"> </span><span class="hl-1">hooks</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">automatização</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">qualidade</span><br/><span class="hl-0">├── </span><span class="hl-1">docs</span><span class="hl-0">/             # </span><span class="hl-1">Documentação</span><span class="hl-0"> </span><span class="hl-1">técnica</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">guias</span><br/><span class="hl-0">│   ├── </span><span class="hl-2">DESENVOLVIMENTO</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0">       # </span><span class="hl-1">Guia</span><span class="hl-0"> </span><span class="hl-1">completo</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">desenvolvimento</span><br/><span class="hl-0">│   ├── </span><span class="hl-2">ESLINT</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0">               # </span><span class="hl-1">Configuração</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">uso</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">ESLint</span><br/><span class="hl-0">│   ├── </span><span class="hl-2">MODERNIZACAO_CONFIGURACOES</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0"> # </span><span class="hl-1">Processo</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">modernização</span><br/><span class="hl-0">│   ├── </span><span class="hl-2">RESOLUCAO_WARNINGS</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0">  # </span><span class="hl-1">Documentação</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">warnings</span><span class="hl-0"> </span><span class="hl-1">resolvidos</span><br/><span class="hl-0">│   ├── </span><span class="hl-2">VERSIONING</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0">           # </span><span class="hl-1">Sistema</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">versionamento</span><br/><span class="hl-0">│   └── ...                     # </span><span class="hl-1">Outros</span><span class="hl-0"> </span><span class="hl-1">documentos</span><span class="hl-0"> </span><span class="hl-1">técnicos</span><br/><span class="hl-0">├── </span><span class="hl-1">prisma</span><span class="hl-0">/           # </span><span class="hl-1">Schema</span><span class="hl-0">, </span><span class="hl-1">migrações</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">seeds</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">Prisma</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">migrations</span><span class="hl-0">/   # </span><span class="hl-1">Histórico</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">migrações</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">banco</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">dados</span><br/><span class="hl-0">│   └── </span><span class="hl-1">schema</span><span class="hl-0">.</span><span class="hl-1">prisma</span><span class="hl-0"> # </span><span class="hl-1">Definição</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">esquema</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">banco</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">dados</span><br/><span class="hl-0">├── </span><span class="hl-1">public</span><span class="hl-0">/           # </span><span class="hl-1">Arquivos</span><span class="hl-0"> </span><span class="hl-1">estáticos</span><span class="hl-0"> </span><span class="hl-1">servidos</span><span class="hl-0"> </span><span class="hl-1">diretamente</span><br/><span class="hl-0">│   └── </span><span class="hl-1">version</span><span class="hl-0">.</span><span class="hl-1">json</span><span class="hl-0">  # </span><span class="hl-1">Informações</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">versão</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">build</span><br/><span class="hl-0">├── </span><span class="hl-1">scripts</span><span class="hl-0">/          # </span><span class="hl-1">Scripts</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">automação</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">desenvolvimento</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">bump</span><span class="hl-0">-</span><span class="hl-1">version</span><span class="hl-0">-</span><span class="hl-1">advanced</span><span class="hl-0">.</span><span class="hl-1">cjs</span><span class="hl-0">  # </span><span class="hl-1">Bump</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">versão</span><span class="hl-0"> </span><span class="hl-1">com</span><span class="hl-0"> </span><span class="hl-1">tipos</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">fix</span><span class="hl-0">-</span><span class="hl-1">mui</span><span class="hl-0">-</span><span class="hl-1">imports</span><span class="hl-0">-</span><span class="hl-1">advanced</span><span class="hl-0">.</span><span class="hl-1">mjs</span><span class="hl-0"> # </span><span class="hl-1">Correção</span><span class="hl-0"> </span><span class="hl-1">avançada</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">imports</span><span class="hl-0"> </span><span class="hl-2">MUI</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">dev</span><span class="hl-0">-</span><span class="hl-1">server</span><span class="hl-0">.</span><span class="hl-1">mjs</span><span class="hl-0">             # </span><span class="hl-1">Servidor</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">desenvolvimento</span><span class="hl-0"> </span><span class="hl-2">HTTPS</span><br/><span class="hl-0">│   └── ...                        # </span><span class="hl-1">Outros</span><span class="hl-0"> </span><span class="hl-1">scripts</span><span class="hl-0"> </span><span class="hl-1">utilitários</span><br/><span class="hl-0">├── </span><span class="hl-1">src</span><span class="hl-0">/              # </span><span class="hl-1">Código</span><span class="hl-0"> </span><span class="hl-1">fonte</span><span class="hl-0"> </span><span class="hl-1">da</span><span class="hl-0"> </span><span class="hl-1">aplicação</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">app</span><span class="hl-0">/          # </span><span class="hl-1">Coração</span><span class="hl-0"> </span><span class="hl-1">da</span><span class="hl-0"> </span><span class="hl-3">aplicação</span><span class="hl-0"> (</span><span class="hl-1">App</span><span class="hl-0"> </span><span class="hl-1">Router</span><span class="hl-0"> </span><span class="hl-1">do</span><span class="hl-0"> </span><span class="hl-1">Next</span><span class="hl-0">.</span><span class="hl-1">js</span><span class="hl-0">)</span><br/><span class="hl-0">│   │   ├── (</span><span class="hl-1">admin</span><span class="hl-0">)/  # </span><span class="hl-1">Rotas</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">layouts</span><span class="hl-0"> </span><span class="hl-1">específicos</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">a</span><span class="hl-0"> </span><span class="hl-1">área</span><span class="hl-0"> </span><span class="hl-1">administrativa</span><br/><span class="hl-0">│   │   ├── (</span><span class="hl-1">auth</span><span class="hl-0">)/   # </span><span class="hl-1">Rotas</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">lógica</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">autenticação</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">usuários</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">api</span><span class="hl-0">/      # </span><span class="hl-1">Endpoints</span><span class="hl-0"> </span><span class="hl-1">da</span><span class="hl-0"> </span><span class="hl-2">API</span><span class="hl-0"> </span><span class="hl-1">RESTful</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">backend</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">dashboard</span><span class="hl-0">/ # </span><span class="hl-1">Páginas</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">componentes</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">dashboard</span><span class="hl-0"> </span><span class="hl-1">principal</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">perfil</span><span class="hl-0">/   # </span><span class="hl-1">Páginas</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">componentes</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">gestão</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">perfil</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">usuário</span><br/><span class="hl-0">│   │   └── ...       # </span><span class="hl-1">Outras</span><span class="hl-0"> </span><span class="hl-1">rotas</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">páginas</span><span class="hl-0"> </span><span class="hl-1">da</span><span class="hl-0"> </span><span class="hl-1">aplicação</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">components</span><span class="hl-0">/   # </span><span class="hl-1">Componentes</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-3">reutilizáveis</span><span class="hl-0"> (</span><span class="hl-2">UI</span><span class="hl-0">, </span><span class="hl-1">formulários</span><span class="hl-0">, </span><span class="hl-1">modais</span><span class="hl-0">, </span><span class="hl-1">etc</span><span class="hl-0">.)</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">form</span><span class="hl-0">/     # </span><span class="hl-1">Componentes</span><span class="hl-0"> </span><span class="hl-1">genéricos</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">construção</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">formulários</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">ui</span><span class="hl-0">/       # </span><span class="hl-1">Componentes</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-2">UI</span><span class="hl-0"> </span><span class="hl-3">básicos</span><span class="hl-0"> (</span><span class="hl-1">botões</span><span class="hl-0">, </span><span class="hl-1">inputs</span><span class="hl-0">, </span><span class="hl-1">etc</span><span class="hl-0">.)</span><br/><span class="hl-0">│   │   └── ...       # </span><span class="hl-1">Componentes</span><span class="hl-0"> </span><span class="hl-1">específicos</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-3">domínio</span><span class="hl-0"> (</span><span class="hl-1">processo</span><span class="hl-0">, </span><span class="hl-1">requerido</span><span class="hl-0">)</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">context</span><span class="hl-0">/      # </span><span class="hl-1">Provedores</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">contexto</span><span class="hl-0"> </span><span class="hl-1">React</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">gerenciar</span><span class="hl-0"> </span><span class="hl-1">estado</span><span class="hl-0"> </span><span class="hl-1">global</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">hooks</span><span class="hl-0">/        # </span><span class="hl-1">Hooks</span><span class="hl-0"> </span><span class="hl-1">customizados</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">lógica</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">negócio</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">acesso</span><span class="hl-0"> </span><span class="hl-1">a</span><span class="hl-0"> </span><span class="hl-1">dados</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">lib</span><span class="hl-0">/          # </span><span class="hl-1">Funções</span><span class="hl-0"> </span><span class="hl-1">utilitárias</span><span class="hl-0">, </span><span class="hl-1">clientes</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-2">API</span><span class="hl-0">, </span><span class="hl-1">configurações</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">integrações</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">api</span><span class="hl-0">.</span><span class="hl-1">ts</span><span class="hl-0">    # </span><span class="hl-1">Funções</span><span class="hl-0"> </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">interação</span><span class="hl-0"> </span><span class="hl-1">com</span><span class="hl-0"> </span><span class="hl-1">a</span><span class="hl-0"> </span><span class="hl-2">API</span><span class="hl-0"> </span><span class="hl-1">interna</span><br/><span class="hl-0">│   │   ├── </span><span class="hl-1">prisma</span><span class="hl-0">/   # </span><span class="hl-1">Configuração</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">instância</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">cliente</span><span class="hl-0"> </span><span class="hl-1">Prisma</span><br/><span class="hl-0">│   │   └── </span><span class="hl-1">helpers</span><span class="hl-0">/  # </span><span class="hl-1">Funções</span><span class="hl-0"> </span><span class="hl-1">auxiliares</span><span class="hl-0"> </span><span class="hl-1">diversas</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">schemas</span><span class="hl-0">/      # </span><span class="hl-1">Schemas</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-3">validação</span><span class="hl-0"> (</span><span class="hl-1">Yup</span><span class="hl-0">/</span><span class="hl-1">Zod</span><span class="hl-0">) </span><span class="hl-1">para</span><span class="hl-0"> </span><span class="hl-1">formulários</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">dados</span><br/><span class="hl-0">│   ├── </span><span class="hl-1">styles</span><span class="hl-0">/       # </span><span class="hl-1">Estilos</span><span class="hl-0"> </span><span class="hl-1">globais</span><span class="hl-0">, </span><span class="hl-1">configurações</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">tema</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">overrides</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-2">CSS</span><br/><span class="hl-0">│   └── </span><span class="hl-1">utils</span><span class="hl-0">/        # </span><span class="hl-1">Funções</span><span class="hl-0"> </span><span class="hl-1">utilitárias</span><span class="hl-0"> </span><span class="hl-3">diversas</span><span class="hl-0"> (</span><span class="hl-1">formatação</span><span class="hl-0">, </span><span class="hl-1">datas</span><span class="hl-0">, </span><span class="hl-1">validação</span><span class="hl-0">)</span><br/><span class="hl-0">├── .</span><span class="hl-1">env</span><span class="hl-0">.</span><span class="hl-1">local</span><span class="hl-0">.</span><span class="hl-1">example</span><span class="hl-0"> # </span><span class="hl-1">Template</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">variáveis</span><span class="hl-0"> </span><span class="hl-1">de</span><span class="hl-0"> </span><span class="hl-1">ambiente</span><br/><span class="hl-0">├── </span><span class="hl-1">eslint</span><span class="hl-0">.</span><span class="hl-1">config</span><span class="hl-0">.</span><span class="hl-1">mjs</span><span class="hl-0">  # </span><span class="hl-1">Configuração</span><span class="hl-0"> </span><span class="hl-1">moderna</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-3">ESLint</span><span class="hl-0"> (</span><span class="hl-1">flat</span><span class="hl-0"> </span><span class="hl-1">config</span><span class="hl-0">)</span><br/><span class="hl-0">├── </span><span class="hl-1">next</span><span class="hl-0">.</span><span class="hl-1">config</span><span class="hl-0">.</span><span class="hl-1">ts</span><span class="hl-0">     # </span><span class="hl-1">Configuração</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">Next</span><span class="hl-0">.</span><span class="hl-1">js</span><span class="hl-0"> </span><span class="hl-1">otimizada</span><br/><span class="hl-0">├── </span><span class="hl-1">package</span><span class="hl-0">.</span><span class="hl-1">json</span><span class="hl-0">       # </span><span class="hl-1">Dependências</span><span class="hl-0"> </span><span class="hl-1">e</span><span class="hl-0"> </span><span class="hl-1">scripts</span><span class="hl-0"> </span><span class="hl-4">do</span><span class="hl-0"> </span><span class="hl-1">projeto</span><br/><span class="hl-0">└── </span><span class="hl-2">README</span><span class="hl-0">.</span><span class="hl-1">md</span><span class="hl-0">          # </span><span class="hl-1">Este</span><span class="hl-0"> </span><span class="hl-1">arquivo</span>
+</code><button>Copy</button></pre>
+
+<h2 id="🌐-endpoints-da-api" class="tsd-anchor-link">🌐 Endpoints da API<a href="#🌐-endpoints-da-api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>As rotas da API estão localizadas em <code>src/app/api</code> e seguem o padrão de roteamento do Next.js.</p>
+<ul>
+<li><code>GET /api/processos</code>: Lista todos os processos.</li>
+<li><code>POST /api/processos</code>: Cria um novo processo.</li>
+<li><code>GET /api/processos/{id}</code>: Obtém um processo específico.</li>
+<li><code>PUT /api/processos/{id}</code>: Atualiza um processo específico.</li>
+<li><code>DELETE /api/processos/{id}</code>: Remove um processo.</li>
+<li><code>POST /api/importar-processos</code>: Rota para o upload de arquivos CSV.</li>
+<li><code>GET /api/usuarios</code>: Lista os usuários do sistema.</li>
+<li><code>GET /api/perfis</code>: Lista os perfis de acesso.</li>
+<li><code>GET /api/permissoes</code>: Lista as permissões.</li>
+<li><code>GET /api/responsaveis</code>: Lista os responsáveis.</li>
+<li><code>GET /api/cnaes</code>, <code>GET /api/controladores</code>: Endpoints para consumir microsserviços.</li>
+<li><code>GET /api/auditoria</code>: Retorna os logs de auditoria.</li>
+<li><code>GET /api/meta</code>: Fornece metadados para os formulários (situações, tipos, etc.).</li>
+</ul>
+<h2 id="💻-tecnologias" class="tsd-anchor-link">💻 Tecnologias<a href="#💻-tecnologias" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><table>
+<thead>
+<tr>
+<th>Categoria</th>
+<th>Tecnologia</th>
+<th>Versão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Framework Fullstack</strong></td>
+<td><a href="https://nextjs.org/">Next.js</a></td>
+<td>15.4.6</td>
+</tr>
+<tr>
+<td><strong>Linguagem</strong></td>
+<td><a href="https://www.typescriptlang.org/">TypeScript</a></td>
+<td>5.9.2</td>
+</tr>
+<tr>
+<td><strong>ORM</strong></td>
+<td><a href="https://www.prisma.io/">Prisma</a></td>
+<td>6.13.0</td>
+</tr>
+<tr>
+<td><strong>Banco de Dados</strong></td>
+<td><a href="https://www.postgresql.org/">PostgreSQL</a></td>
+<td>15+</td>
+</tr>
+<tr>
+<td><strong>UI Framework</strong></td>
+<td><a href="https://react.dev/">React</a></td>
+<td>19.1.1</td>
+</tr>
+<tr>
+<td><strong>Componentes UI</strong></td>
+<td><a href="https://mui.com/">Material-UI (MUI)</a></td>
+<td>7.3.1</td>
+</tr>
+<tr>
+<td><strong>Design System</strong></td>
+<td><a href="https://www.gov.br/ds/">Gov.br Design System</a> (<code>@govbr-ds/core</code>)</td>
+<td>3.6.2</td>
+</tr>
+<tr>
+<td><strong>Autenticação</strong></td>
+<td><a href="https://next-auth.js.org/">NextAuth.js</a></td>
+<td>4.24.11</td>
+</tr>
+<tr>
+<td><strong>Infraestrutura Local</strong></td>
+<td><a href="https://www.docker.com/">Docker</a> + <a href="https://github.com/anpdgovbr/docker-infra-pg">docker-infra-pg</a></td>
+<td>Latest</td>
+</tr>
+<tr>
+<td><strong>Validação de Dados</strong></td>
+<td><a href="https://github.com/jquense/yup">Yup</a> / <a href="https://react-hook-form.com/">React Hook Form</a></td>
+<td>Latest</td>
+</tr>
+<tr>
+<td><strong>Qualidade de Código</strong></td>
+<td><a href="https://eslint.org/">ESLint</a> (flat config), <a href="https://prettier.io/">Prettier</a>, <a href="https://typicode.github.io/husky/">Husky</a></td>
+<td>9.33.0</td>
+</tr>
+<tr>
+<td><strong>Build Tool</strong></td>
+<td><a href="https://turbo.build/">Turbopack</a> (desenvolvimento)</td>
+<td>Next.js</td>
+</tr>
+</tbody>
+</table>
+<h2 id="🚀-guia-de-instalação" class="tsd-anchor-link">🚀 Guia de Instalação<a href="#🚀-guia-de-instalação" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="pré-requisitos" class="tsd-anchor-link">Pré-requisitos<a href="#pré-requisitos" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><a href="https://nodejs.org/en/">Node.js</a> (v20 ou superior)</li>
+<li><a href="https://www.npmjs.com/">NPM</a> (v10 ou superior)</li>
+<li><a href="https://git-scm.com/">Git</a></li>
+<li><a href="https://www.docker.com/products/docker-desktop/">Docker</a> (<strong>Obrigatório</strong> para infraestrutura padrão ANPD)</li>
+</ul>
+<h3 id="passo-a-passo" class="tsd-anchor-link">Passo a Passo<a href="#passo-a-passo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>
+<p><strong>Clone o repositório:</strong></p>
+<pre><code class="bash"><span class="hl-3">git</span><span class="hl-0"> </span><span class="hl-5">clone</span><span class="hl-0"> </span><span class="hl-5">https://github.com/anpd/backlog-dim.git</span><br/><span class="hl-3">cd</span><span class="hl-0"> </span><span class="hl-5">backlog-dim</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Instale as dependências:</strong></p>
+<pre><code class="bash"><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">install</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Configure as variáveis de ambiente:</strong>
+Copie o arquivo de exemplo e preencha com suas credenciais.</p>
+<pre><code class="bash"><span class="hl-3">cp</span><span class="hl-0"> </span><span class="hl-5">.env.example</span><span class="hl-0"> </span><span class="hl-5">.env</span>
+</code><button type="button">Copy</button></pre>
+
+<p><em>Consulte a seção <a href="#-vari%C3%A1veis-de-ambiente">Variáveis de Ambiente</a> para mais detalhes.</em></p>
+</li>
+<li>
+<p><strong>Configure a infraestrutura do banco de dados:</strong></p>
+<p><strong>🚀 Opção 1: Docker PostgreSQL (Padrão ANPD - Recomendado)</strong></p>
+<pre><code class="bash"><span class="hl-6"># Setup automatizado da infraestrutura padrão</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">infra:setup</span><br/><br/><span class="hl-6"># Subir banco PostgreSQL</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">infra:up</span><br/><br/><span class="hl-6"># Setup completo (infra + migrations + seed)</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">infra:db:init</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>⚙️ Opção 2: PostgreSQL Manual (Configuração Avançada)</strong></p>
+<pre><code class="bash"><span class="hl-6"># Instalar e configurar PostgreSQL manualmente</span><br/><span class="hl-6"># Criar banco: backlog_dim_dev</span><br/><span class="hl-6"># Configurar usuário e permissões</span><br/><span class="hl-6"># Ajustar DATABASE_URL no .env</span><br/><br/><span class="hl-6"># Aplicar migrations</span><br/><span class="hl-3">npx</span><span class="hl-0"> </span><span class="hl-5">prisma</span><span class="hl-0"> </span><span class="hl-5">migrate</span><span class="hl-0"> </span><span class="hl-5">dev</span><br/><br/><span class="hl-6"># Popular banco (opcional)</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">db:seed</span>
+</code><button type="button">Copy</button></pre>
+
+<blockquote>
+<p>💡 <strong>Recomendação ANPD:</strong> Use sempre a Opção 1 (docker-infra-pg) para consistência entre projetos e facilidade de manutenção.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Execute a aplicação:</strong></p>
+<pre><code class="bash"><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">dev</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+</ol>
+<p>A aplicação estará disponível em <a href="http://localhost:3000">http://localhost:3000</a>.</p>
+<h2 id="🔑-variáveis-de-ambiente" class="tsd-anchor-link">🔑 Variáveis de Ambiente<a href="#🔑-variáveis-de-ambiente" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>O arquivo <code>.env</code> é crucial para a configuração da aplicação. Use o <code>.env.example</code> como template.</p>
+<table>
+<thead>
+<tr>
+<th>Variável</th>
+<th>Descrição</th>
+<th>Exemplo (Local)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td>String de conexão do PostgreSQL para o Prisma.</td>
+<td><code>postgresql://postgres:postgres@127.0.0.1:54322/postgres</code></td>
+</tr>
+<tr>
+<td><code>NEXTAUTH_URL</code></td>
+<td>URL base da aplicação para o NextAuth.</td>
+<td><code>http://localhost:3000</code></td>
+</tr>
+<tr>
+<td><code>NEXTAUTH_SECRET</code></td>
+<td>Chave para assinar os tokens JWT.</td>
+<td>(Gerar com <code>openssl rand -base64 32</code>)</td>
+</tr>
+<tr>
+<td><code>AZURE_AD_CLIENT_ID</code></td>
+<td>ID do Cliente da aplicação no Azure AD.</td>
+<td>(Obtido no portal do Azure)</td>
+</tr>
+<tr>
+<td><code>AZURE_AD_CLIENT_SECRET</code></td>
+<td>Segredo do Cliente da aplicação no Azure AD.</td>
+<td>(Obtido no portal do Azure)</td>
+</tr>
+<tr>
+<td><code>AZURE_AD_TENANT_ID</code></td>
+<td>ID do Tenant (diretório) do Azure AD.</td>
+<td>(Obtido no portal do Azure)</td>
+</tr>
+<tr>
+<td><code>NODE_TLS_REJECT_UNAUTHORIZED</code></td>
+<td>Controle de verificação de certificados TLS.</td>
+<td><code>0</code> (desenvolvimento) / <code>1</code> (produção)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="📋-configuração-rápida" class="tsd-anchor-link">📋 Configuração Rápida<a href="#📋-configuração-rápida" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>
+<p><strong>Copie o template:</strong></p>
+<pre><code class="bash"><span class="hl-3">cp</span><span class="hl-0"> </span><span class="hl-5">.env.example</span><span class="hl-0"> </span><span class="hl-5">.env</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Configure a infraestrutura padrão:</strong></p>
+<pre><code class="bash"><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">infra:setup</span><span class="hl-0">  </span><span class="hl-6"># Setup automatizado</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">infra:db:init</span><span class="hl-0"> </span><span class="hl-6"># Banco pronto para uso</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Configure o Azure AD:</strong></p>
+<ul>
+<li>Acesse o <a href="https://portal.azure.com">Portal do Azure</a></li>
+<li>Registre uma nova aplicação</li>
+<li>Configure as URLs de redirect: <code>http://localhost:3000/api/auth/callback/azure-ad</code></li>
+<li>Copie as credenciais para o <code>.env.local</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="⚙️-scripts-disponíveis" class="tsd-anchor-link">⚙️ Scripts Disponíveis<a href="#⚙️-scripts-disponíveis" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run dev</code></td>
+<td>Inicia o servidor de desenvolvimento com Turbopack.</td>
+</tr>
+<tr>
+<td><code>npm run dev:https</code></td>
+<td>Inicia o servidor com HTTPS (certificados auto-assinados).</td>
+</tr>
+<tr>
+<td><code>npm run devs</code></td>
+<td>Inicia o servidor de desenvolvimento alternativo.</td>
+</tr>
+<tr>
+<td><code>npm run build</code></td>
+<td>Compila a aplicação para produção.</td>
+</tr>
+<tr>
+<td><code>npm run start</code></td>
+<td>Inicia o servidor de produção.</td>
+</tr>
+<tr>
+<td><code>npm run lint</code></td>
+<td>Executa o ESLint para análise de código.</td>
+</tr>
+<tr>
+<td><code>npm run format</code></td>
+<td>Formata o código com Prettier.</td>
+</tr>
+<tr>
+<td><code>npm run type-check</code></td>
+<td>Verifica tipos TypeScript sem gerar arquivos.</td>
+</tr>
+<tr>
+<td><code>npm run db:seed</code></td>
+<td>Popula o banco com dados do <code>prisma/seed.ts</code>.</td>
+</tr>
+<tr>
+<td><code>npm run bump</code></td>
+<td>Incrementa a versão patch automaticamente.</td>
+</tr>
+<tr>
+<td><code>npm run bump:patch</code></td>
+<td>Incrementa a versão patch (1.0.0 → 1.0.1).</td>
+</tr>
+<tr>
+<td><code>npm run bump:minor</code></td>
+<td>Incrementa a versão minor (1.0.0 → 1.1.0).</td>
+</tr>
+<tr>
+<td><code>npm run bump:major</code></td>
+<td>Incrementa a versão major (1.0.0 → 2.0.0).</td>
+</tr>
+<tr>
+<td><code>npm run build-routes</code></td>
+<td>Gera rotas de desenvolvimento automaticamente.</td>
+</tr>
+<tr>
+<td><code>npm run build-routes:verbose</code></td>
+<td>Gera rotas com saída detalhada.</td>
+</tr>
+<tr>
+<td><code>npm run generate:version</code></td>
+<td>Gera o arquivo version.json com informações de build.</td>
+</tr>
+<tr>
+<td><code>npm run version:env</code></td>
+<td>Define variáveis de ambiente de versão.</td>
+</tr>
+<tr>
+<td><code>npm run infra:setup</code></td>
+<td>Setup automatizado da infraestrutura PostgreSQL.</td>
+</tr>
+<tr>
+<td><code>npm run infra:up</code></td>
+<td>Sobe a infraestrutura PostgreSQL (Docker).</td>
+</tr>
+<tr>
+<td><code>npm run infra:down</code></td>
+<td>Para a infraestrutura PostgreSQL.</td>
+</tr>
+<tr>
+<td><code>npm run infra:logs</code></td>
+<td>Visualiza logs do PostgreSQL em tempo real.</td>
+</tr>
+<tr>
+<td><code>npm run infra:reset</code></td>
+<td>Reset completo da infraestrutura (dados são perdidos).</td>
+</tr>
+<tr>
+<td><code>npm run infra:status</code></td>
+<td>Verifica status da infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:clean</code></td>
+<td>Limpa recursos da infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:psql</code></td>
+<td>Acessa o PostgreSQL via linha de comando.</td>
+</tr>
+<tr>
+<td><code>npm run infra:backup</code></td>
+<td>Cria backup do banco de dados.</td>
+</tr>
+<tr>
+<td><code>npm run infra:update</code></td>
+<td>Atualiza scripts da infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:debug</code></td>
+<td>Executa diagnósticos da infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:fix</code></td>
+<td>Corrige credenciais da infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:init</code></td>
+<td>Inicializa o banco de dados.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:fresh</code></td>
+<td>Cria um ambiente fresco de banco.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:migrate</code></td>
+<td>Executa migrações do banco.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:seed</code></td>
+<td>Popula o banco via infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:studio</code></td>
+<td>Abre Prisma Studio via infraestrutura.</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:reset</code></td>
+<td>Reset completo do banco.</td>
+</tr>
+<tr>
+<td><code>npm run prisma:migrate</code></td>
+<td>Cria e aplica nova migração.</td>
+</tr>
+<tr>
+<td><code>npm run prisma:push</code></td>
+<td>Sincroniza schema com banco (desenvolvimento).</td>
+</tr>
+<tr>
+<td><code>npm run prisma:studio</code></td>
+<td>Abre Prisma Studio diretamente.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="🗄️-gestão-do-banco-de-dados" class="tsd-anchor-link">🗄️ Gestão do Banco de Dados<a href="#🗄️-gestão-do-banco-de-dados" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="🐳-infraestrutura-postgresql-docker-infra-pg" class="tsd-anchor-link">🐳 Infraestrutura PostgreSQL (docker-infra-pg)<a href="#🐳-infraestrutura-postgresql-docker-infra-pg" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Nossa infraestrutura PostgreSQL é baseada no projeto <a href="https://github.com/anpdgovbr/docker-infra-pg">docker-infra-pg</a> da ANPD:</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run infra:setup</code></td>
+<td>Configura a infraestrutura PostgreSQL automaticamente</td>
+</tr>
+<tr>
+<td><code>npm run infra:up</code></td>
+<td>Sobe o banco PostgreSQL via Docker Compose</td>
+</tr>
+<tr>
+<td><code>npm run infra:down</code></td>
+<td>Para o banco PostgreSQL</td>
+</tr>
+<tr>
+<td><code>npm run infra:logs</code></td>
+<td>Visualiza logs do PostgreSQL em tempo real</td>
+</tr>
+<tr>
+<td><code>npm run infra:reset</code></td>
+<td>Reset completo (⚠️ todos os dados são perdidos)</td>
+</tr>
+<tr>
+<td><code>npm run infra:status</code></td>
+<td>Verifica status da infraestrutura</td>
+</tr>
+<tr>
+<td><code>npm run infra:clean</code></td>
+<td>Limpa recursos da infraestrutura</td>
+</tr>
+<tr>
+<td><code>npm run infra:psql</code></td>
+<td>Acessa PostgreSQL via linha de comando</td>
+</tr>
+<tr>
+<td><code>npm run infra:backup</code></td>
+<td>Cria backup do banco de dados</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:init</code></td>
+<td>Inicializa o banco de dados</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:fresh</code></td>
+<td>Cria um ambiente fresco de banco</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:migrate</code></td>
+<td>Executa migrações do banco</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:seed</code></td>
+<td>Popula o banco via infraestrutura</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:studio</code></td>
+<td>Abre Prisma Studio via infraestrutura</td>
+</tr>
+<tr>
+<td><code>npm run infra:db:reset</code></td>
+<td>Reset completo do banco</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuração automática:</strong></p>
+<ul>
+<li>✅ PostgreSQL 15+ na porta 5432</li>
+<li>✅ Banco <code>backlog_dim_dev</code> criado automaticamente</li>
+<li>✅ Usuário <code>backlog_user_db</code> com privilégios específicos</li>
+<li>✅ Volume persistente para dados</li>
+<li>✅ Configuração isolada por projeto</li>
+</ul>
+<h3 id="🛠️-comandos-prisma" class="tsd-anchor-link">🛠️ Comandos Prisma<a href="#🛠️-comandos-prisma" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npx prisma migrate dev</code></td>
+<td>Cria e aplica uma nova migração a partir do <code>schema.prisma</code>.</td>
+</tr>
+<tr>
+<td><code>npx prisma generate</code></td>
+<td>(Re)gera o Prisma Client após alterações no schema.</td>
+</tr>
+<tr>
+<td><code>npx prisma studio</code></td>
+<td>Abre uma GUI web para visualizar e editar os dados do banco.</td>
+</tr>
+<tr>
+<td><code>npx prisma db push</code></td>
+<td>Sincroniza o schema com o banco (não cria migrações, ideal para prototipagem).</td>
+</tr>
+<tr>
+<td><code>npx prisma migrate reset</code></td>
+<td><strong>CUIDADO:</strong> Apaga o banco e aplica todas as migrações novamente.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="🔄-fluxo-de-cicd" class="tsd-anchor-link">🔄 Fluxo de CI/CD<a href="#🔄-fluxo-de-cicd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>O projeto utiliza <strong>GitHub Actions</strong> para Integração Contínua. O workflow em <code>.github/workflows/ci.yml</code> é acionado em cada <code>pull request</code> para a branch <code>stable</code> e executa:</p>
+<ol>
+<li>Instalação de dependências.</li>
+<li>Verificação de lint (<code>npm run lint</code>).</li>
+<li>Verificação de formatação (<code>npm run format</code>).</li>
+<li>Build do projeto (<code>npm run build</code>).</li>
+</ol>
+<p>Isso garante que o código integrado à base principal esteja sempre funcional e padronizado.</p>
+<h2 id="🚀-melhorias-recentes" class="tsd-anchor-link">🚀 Melhorias Recentes<a href="#🚀-melhorias-recentes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="✅-correções-de-build-implementadas" class="tsd-anchor-link">✅ Correções de Build Implementadas<a href="#✅-correções-de-build-implementadas" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>TypeScript:</strong> Todos os erros de compilação resolvidos</li>
+<li><strong>ESLint:</strong> Migração para flat config (v9.31.0) completa</li>
+<li><strong>NextAuth:</strong> Compatibilidade com v4.24.11 garantida</li>
+<li><strong>Material-UI:</strong> Imports otimizados automaticamente</li>
+</ul>
+<h3 id="🛠️-scripts-de-versionamento" class="tsd-anchor-link">🛠️ Scripts de Versionamento<a href="#🛠️-scripts-de-versionamento" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Sistema robusto de bump de versão implementado:</p>
+<pre><code class="bash"><span class="hl-6"># Incremento automático de patch</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">bump</span><br/><br/><span class="hl-6"># Incrementos específicos</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">bump:patch</span><span class="hl-0">  </span><span class="hl-6"># 1.0.0 → 1.0.1</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">bump:minor</span><span class="hl-0">  </span><span class="hl-6"># 1.0.0 → 1.1.0</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">bump:major</span><span class="hl-0">  </span><span class="hl-6"># 1.0.0 → 2.0.0</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="📚-documentação-técnica" class="tsd-anchor-link">📚 Documentação Técnica<a href="#📚-documentação-técnica" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Documentação completa disponível em <code>/docs</code>:</p>
+<ul>
+<li><code>DESENVOLVIMENTO.md</code> - Guia de desenvolvimento</li>
+<li><code>ESLINT.md</code> - Configuração do ESLint</li>
+<li><code>RESOLUCAO_WARNINGS.md</code> - Warnings resolvidos</li>
+<li><code>VERSIONING.md</code> - Sistema de versionamento</li>
+</ul>
+<h3 id="🔒-ambiente-seguro" class="tsd-anchor-link">🔒 Ambiente Seguro<a href="#🔒-ambiente-seguro" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>HTTPS local:</strong> Scripts dev:https com certificados auto-assinados</li>
+<li><strong>Variáveis TLS:</strong> Configuração cross-platform para certificados</li>
+<li><strong>Git hooks:</strong> Prevenção de commits com código problemático</li>
+</ul>
+<h2 id="🎨-padrões-de-código" class="tsd-anchor-link">🎨 Padrões de Código<a href="#🎨-padrões-de-código" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="🔧-ferramentas-de-qualidade" class="tsd-anchor-link">🔧 Ferramentas de Qualidade<a href="#🔧-ferramentas-de-qualidade" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>ESLint 9.31.0</strong> com flat config para análise estática de código</li>
+<li><strong>Prettier</strong> para formatação automática e consistente</li>
+<li><strong>Husky</strong> para git hooks automatizados</li>
+<li><strong>lint-staged</strong> para análise incremental nos commits</li>
+</ul>
+<h3 id="🏗️-configurações-modernas" class="tsd-anchor-link">🏗️ Configurações Modernas<a href="#🏗️-configurações-modernas" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>TypeScript 5.8.3</strong> com strict mode ativado</li>
+<li><strong>Next.js 15.4.4</strong> com App Router e Turbopack</li>
+<li><strong>Material-UI imports</strong> otimizados automaticamente</li>
+<li><strong>Git hooks</strong> previnem commits com código fora do padrão</li>
+</ul>
+<h3 id="📋-comandos-de-qualidade" class="tsd-anchor-link">📋 Comandos de Qualidade<a href="#📋-comandos-de-qualidade" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-6"># Análise e correção automática de código</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">lint</span><br/><br/><span class="hl-6"># Formatação de todos os arquivos</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">format</span><br/><br/><span class="hl-6"># Verificação de tipos TypeScript</span><br/><span class="hl-3">npm</span><span class="hl-0"> </span><span class="hl-5">run</span><span class="hl-0"> </span><span class="hl-5">type-check</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="⚙️-integração-automática" class="tsd-anchor-link">⚙️ Integração Automática<a href="#⚙️-integração-automática" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Os hooks do git executam automaticamente:</p>
+<ul>
+<li><strong>Pre-commit:</strong> ESLint + Prettier nos arquivos modificados</li>
+<li><strong>Pre-push:</strong> Validação completa do build</li>
+<li><strong>Bump de versão:</strong> Atualização automática da versão no commit</li>
+</ul>
+<h2 id="🤝-como-contribuir" class="tsd-anchor-link">🤝 Como Contribuir<a href="#🤝-como-contribuir" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ol>
+<li><strong>Faça um Fork</strong> do repositório.</li>
+<li><strong>Crie uma branch</strong> para a sua feature (<code>git checkout -b feature/nova-funcionalidade</code>).</li>
+<li><strong>Implemente</strong> suas alterações.</li>
+<li><strong>Faça o commit</strong> das suas mudanças (<code>git commit -m 'feat: Adiciona nova funcionalidade'</code>).</li>
+<li><strong>Envie para a sua branch</strong> (<code>git push origin feature/nova-funcionalidade</code>).</li>
+<li><strong>Abra um Pull Request</strong> para a branch <code>develop</code> do repositório original.</li>
+</ol>
+<h2 id="📜-licença" class="tsd-anchor-link">📜 Licença<a href="#📜-licença" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Este projeto está licenciado sob a <strong>Licença MIT</strong>. Veja o arquivo <a href="media/LICENSE">LICENSE</a> para mais detalhes.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#🏛️-backlog-dim---sistema-de-gestão-de-processos"><span>🏛️ <wbr/>Backlog <wbr/>DIM -<wbr/> <wbr/>Sistema de <wbr/>Gestão de <wbr/>Processos</span></a><ul><li><a href="#📑-sumário"><span>📑 <wbr/>Sumário</span></a></li><li><a href="#🔭-visão-geral"><span>🔭 <wbr/>Visão <wbr/>Geral</span></a></li><li><a href="#🏗️-arquitetura"><span>🏗️ <wbr/>Arquitetura</span></a></li><li><a href="#✨-funcionalidades-principais"><span>✨ <wbr/>Funcionalidades <wbr/>Principais</span></a></li><li><a href="#📂-estrutura-do-projeto"><span>📂 <wbr/>Estrutura do <wbr/>Projeto</span></a></li><li><a href="#🌐-endpoints-da-api"><span>🌐 <wbr/>Endpoints da <wbr/>API</span></a></li><li><a href="#💻-tecnologias"><span>💻 <wbr/>Tecnologias</span></a></li><li><a href="#🚀-guia-de-instalação"><span>🚀 <wbr/>Guia de <wbr/>Instalação</span></a></li><li><ul><li><a href="#pré-requisitos"><span>Pré-<wbr/>requisitos</span></a></li><li><a href="#passo-a-passo"><span>Passo a <wbr/>Passo</span></a></li></ul></li><li><a href="#🔑-variáveis-de-ambiente"><span>🔑 <wbr/>Variáveis de <wbr/>Ambiente</span></a></li><li><ul><li><a href="#📋-configuração-rápida"><span>📋 <wbr/>Configuração <wbr/>Rápida</span></a></li></ul></li><li><a href="#⚙️-scripts-disponíveis"><span>⚙️ <wbr/>Scripts <wbr/>Disponíveis</span></a></li><li><a href="#🗄️-gestão-do-banco-de-dados"><span>🗄️ <wbr/>Gestão do <wbr/>Banco de <wbr/>Dados</span></a></li><li><ul><li><a href="#🐳-infraestrutura-postgresql-docker-infra-pg"><span>🐳 <wbr/>Infraestrutura <wbr/>Postgre<wbr/>SQL (docker-<wbr/>infra-<wbr/>pg)</span></a></li><li><a href="#🛠️-comandos-prisma"><span>🛠️ <wbr/>Comandos <wbr/>Prisma</span></a></li></ul></li><li><a href="#🔄-fluxo-de-cicd"><span>🔄 <wbr/>Fluxo de <wbr/>CI/<wbr/>CD</span></a></li><li><a href="#🚀-melhorias-recentes"><span>🚀 <wbr/>Melhorias <wbr/>Recentes</span></a></li><li><ul><li><a href="#✅-correções-de-build-implementadas"><span>✅ <wbr/>Correções de <wbr/>Build <wbr/>Implementadas</span></a></li><li><a href="#🛠️-scripts-de-versionamento"><span>🛠️ <wbr/>Scripts de <wbr/>Versionamento</span></a></li><li><a href="#📚-documentação-técnica"><span>📚 <wbr/>Documentação <wbr/>Técnica</span></a></li><li><a href="#🔒-ambiente-seguro"><span>🔒 <wbr/>Ambiente <wbr/>Seguro</span></a></li></ul></li><li><a href="#🎨-padrões-de-código"><span>🎨 <wbr/>Padrões de <wbr/>Código</span></a></li><li><ul><li><a href="#🔧-ferramentas-de-qualidade"><span>🔧 <wbr/>Ferramentas de <wbr/>Qualidade</span></a></li><li><a href="#🏗️-configurações-modernas"><span>🏗️ <wbr/>Configurações <wbr/>Modernas</span></a></li><li><a href="#📋-comandos-de-qualidade"><span>📋 <wbr/>Comandos de <wbr/>Qualidade</span></a></li><li><a href="#⚙️-integração-automática"><span>⚙️ <wbr/>Integração <wbr/>Automática</span></a></li></ul></li><li><a href="#🤝-como-contribuir"><span>🤝 <wbr/>Como <wbr/>Contribuir</span></a></li><li><a href="#📜-licença"><span>📜 <wbr/>Licença</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@anpdgovbr/backlog-dim - v0.3.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer></footer><div class="overlay"></div></body></html>
