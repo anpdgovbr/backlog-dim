@@ -36,16 +36,16 @@ jobs:
 
       - name: Add Prisma schema to docs
         run: |
-          mkdir -p docs/api
-          printf "%s\n" "# Prisma schema (schema.prisma)" > docs/api/schema-prisma.md
-          printf "```prisma\n" >> docs/api/schema-prisma.md
-          cat prisma/schema.prisma >> docs/api/schema-prisma.md
-          printf "\n```\n" >> docs/api/schema-prisma.md
+          mkdir -p docs
+          printf "%s\n" "# Prisma schema (schema.prisma)" > docs/schema-prisma.md
+          printf "```prisma\n" >> docs/schema-prisma.md
+          cat prisma/schema.prisma >> docs/schema-prisma.md
+          printf "\n```\n" >> docs/schema-prisma.md
 
       - name: Verify TypeDoc output
         run: |
-          if [ ! -f ./docs/api/index.html ]; then
-            echo "TypeDoc output not found at ./docs/api/index.html";
+          if [ ! -f ./docs/index.html ]; then
+            echo "TypeDoc output not found at ./docs/index.html";
             exit 1;
           fi
 
@@ -53,7 +53,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/api
+          publish_dir: ./docs
           publish_branch: gh-pages
           user_name: "github-actions[bot]"
           user_email: "41898282+github-actions[bot]@users.noreply.github.com"
