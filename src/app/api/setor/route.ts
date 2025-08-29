@@ -53,6 +53,6 @@ export const POST = withApi(
   {
     tabela: "setor",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

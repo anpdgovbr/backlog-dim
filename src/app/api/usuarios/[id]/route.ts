@@ -10,6 +10,14 @@ interface PatchRequestBody {
   responsavelId?: number | null
 }
 
+/**
+ * Atualiza dados do usuário por `id` (e.g., `responsavelId`, nome, email).
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com o usuário atualizado e auditoria.
+ * @example PATCH /api/usuarios/123 { "responsavelId": 1 }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Usuario"}.
+ */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ req, params }) => {
     const { id } = params
@@ -55,7 +63,7 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "user",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Alterar_Usuario", // @todo: adicionar essa permissão no banco de dados
+    permissao: { acao: "Alterar", recurso: "Usuario" }, // @todo: adicionar essa permissão no banco de dados
   }
 )
 

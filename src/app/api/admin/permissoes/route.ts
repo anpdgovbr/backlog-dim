@@ -3,6 +3,16 @@ import { AcaoAuditoria, type PermissaoPayload } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 
+/**
+ * Cria ou atualiza uma permissão (via painel admin).
+ *
+ * @see {@link withApi}
+ * @returns JSON com a permissão criada/atualizada.
+ * @example
+ * PATCH /api/admin/permissoes
+ * { "perfilId": 1, "acao": "Editar", "recurso": "Usuario", "permitido": true }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
+ */
 export const PATCH = withApi(
   async ({ req }) => {
     const { perfilId, acao, recurso, permitido }: PermissaoPayload = await req.json()
@@ -56,6 +66,6 @@ export const PATCH = withApi(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )

@@ -26,6 +26,16 @@ async function gerarNumeroProcesso(): Promise<string> {
   return `${prefixo}-${String(totalMes + 1).padStart(4, "0")}` // Ex: P202504-0001
 }
 
+/**
+ * Cria um novo processo.
+ *
+ * @see {@link withApi}
+ * @returns JSON com o processo criado (201) e auditoria de criação.
+ * @example
+ * POST /api/processos
+ * { "requerente": "Empresa X", "formaEntradaId": 1, "responsavelId": 2 }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Processo"}.
+ */
 export const POST = withApi(
   /**
    * Cria um novo processo.
@@ -79,10 +89,18 @@ export const POST = withApi(
   {
     tabela: "processo",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Processo",
+    permissao: { acao: "Cadastrar", recurso: "Processo" },
   }
 )
 
+/**
+ * Lista processos com paginação, ordenação e busca.
+ *
+ * @see {@link withApi}
+ * @returns JSON no formato { data: Processo[], total: number }.
+ * @example GET /api/processos?page=1&pageSize=20&search=empresa
+ * @remarks Permissão {acao: "Exibir", recurso: "Processo"}.
+ */
 export const GET = withApi(
   /**
    * Lista processos com paginação e busca simples.
@@ -165,6 +183,6 @@ export const GET = withApi(
   {
     tabela: "processo",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )

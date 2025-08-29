@@ -4,16 +4,35 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-// 🔹 GET — Apenas responsáveis ativos
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.responsavel.findMany({
-    where: { active: true },
-    include: { user: true },
-  })
-  return Response.json(dados)
-}, "Exibir_Responsavel")
+/**
+ * Lista responsáveis ativos.
+ *
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de responsáveis (inclui relação `user`).
+ * @example GET /api/responsaveis
+ * @remarks Requer permissão {acao: "Exibir", recurso: "Responsavel"}.
+ */
+export const GET = withApiSlimNoParams(
+  async () => {
+    const dados = await prisma.responsavel.findMany({
+      where: { active: true },
+      include: { user: true },
+    })
+    return Response.json(dados)
+  },
+  { acao: "Exibir", recurso: "Responsavel" }
+)
 
-// 🔹 POST — Criação com `active: true`
+/**
+ * Cria um responsável com `active: true`.
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro criado (201).
+ * @example
+ * POST /api/responsaveis
+ * { "nome": "Fulano", "userId": 123 }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Responsavel"}.
+ */
 export const POST = withApi(
   async ({ req }) => {
     const data = await req.json()
@@ -36,11 +55,20 @@ export const POST = withApi(
   {
     tabela: "responsavel",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Responsavel",
+    permissao: { acao: "Cadastrar", recurso: "Responsavel" },
   }
 )
 
-// 🔹 PATCH — Atualiza vínculo com user
+/**
+ * Atualiza vínculo de responsável com um usuário (`userId`).
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro atualizado.
+ * @example
+ * PATCH /api/responsaveis
+ * { "responsavelId": 1, "userId": 2 }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Cadastrar", recurso: "Responsavel"}.
+ */
 export const PATCH = withApi(
   async ({ req }) => {
     const { responsavelId, userId } = await req.json()
@@ -68,11 +96,20 @@ export const PATCH = withApi(
   {
     tabela: "responsavel",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Cadastrar_Responsavel",
+    permissao: { acao: "Cadastrar", recurso: "Responsavel" },
   }
 )
 
-// 🔹 DELETE — Soft delete com auditoria
+/**
+ * Desativa (soft delete) um responsável.
+ *
+ * @see {@link withApi}
+ * @returns JSON com mensagem de sucesso.
+ * @example
+ * DELETE /api/responsaveis
+ * { "id": 10 }
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Responsavel"}.
+ */
 export const DELETE = withApi(
   async ({ req }) => {
     const { id } = await req.json()
@@ -105,6 +142,6 @@ export const DELETE = withApi(
   {
     tabela: "responsavel",
     acao: AcaoAuditoria.DELETE,
-    permissao: "Desabilitar_Responsavel",
+    permissao: { acao: "Desabilitar", recurso: "Responsavel" },
   }
 )

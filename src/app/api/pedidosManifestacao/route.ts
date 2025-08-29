@@ -4,14 +4,33 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.pedidoManifestacao.findMany({
-    where: { active: true },
-  })
+/**
+ * Lista pedidos de manifestação ativos (metadados).
+ *
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de pedidos de manifestação.
+ * @example GET /api/pedidosManifestacao
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
+ */
+export const GET = withApiSlimNoParams(
+  async () => {
+    const dados = await prisma.pedidoManifestacao.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { acao: "Exibir", recurso: "Metadados" }
+)
 
+/**
+ * Cria um novo pedido de manifestação (metadado).
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro criado (201).
+ * @example POST /api/pedidosManifestacao { "nome": "Pedido X" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
+ */
 export const POST = withApi(
   async ({ req }) => {
     try {
@@ -39,6 +58,6 @@ export const POST = withApi(
   {
     tabela: "pedidomanifestacao",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )
