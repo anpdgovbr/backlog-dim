@@ -19,7 +19,7 @@ import type { PerfilDto, PermissaoDto } from "@anpdgovbr/shared-types"
 import { useNotification } from "@/context/NotificationProvider"
 import withPermissao from "@/hoc/withPermissao"
 import { fetcher } from "@/lib/fetcher"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 
 function GerenciarPermissoesContent() {
   const { notify } = useNotification()

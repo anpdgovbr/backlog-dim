@@ -28,7 +28,7 @@ import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import { useProcessos } from "@/hooks/useProcessos"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 
 /**
  * Props do `ProcessoDataGrid`.

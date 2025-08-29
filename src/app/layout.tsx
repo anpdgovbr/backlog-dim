@@ -2,8 +2,8 @@ import "@govbr-ds/core/dist/core.min.css"
 import "@govbr-ds/core/dist/core-tokens.min.css"
 import "@anpdgovbr/shared-ui/styles"
 
-import ClientRootLayout from "./layout.client"
-import { globalMetadata } from "./metadata"
+import ClientRootLayout from "@/app/layout.client"
+import { globalMetadata } from "@/app/metadata"
 
 export const metadata = globalMetadata
 
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>
+      <body style={{ marginBottom: 0 }}>
         <ClientRootLayout>{children}</ClientRootLayout>
       </body>
     </html>

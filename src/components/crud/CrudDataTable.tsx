@@ -14,7 +14,7 @@ import type {
 import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 
-import { dataGridStyles } from "@/styles/dataGridStyles"
+import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { SxProps, Theme } from "@mui/material"
 
 export interface Item {
