@@ -1,7 +1,7 @@
 "use client"
 
 import type { ComponentType } from "react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 import { useRouter } from "next/navigation"
 
@@ -30,13 +30,20 @@ export default function withPermissao<T extends object>(
     const { permissoes, loading } = usePermissoes()
     const router = useRouter()
 
+    const acaoRef = useRef<AcaoPermissao>(acao)
+    const recursoRef = useRef<RecursoPermissao>(recurso)
+    const redirecionarRef = useRef<boolean>(redirecionar)
+
     useEffect(() => {
       if (loading) return
 
-      if (!pode(permissoes, acao, recurso) && redirecionar) {
+      if (
+        !pode(permissoes, acaoRef.current, recursoRef.current) &&
+        redirecionarRef.current
+      ) {
         router.push("/acesso-negado")
       }
-    }, [loading, permissoes, acao, recurso, router, redirecionar])
+    }, [loading, permissoes, router])
 
     if (loading) {
       return (

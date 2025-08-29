@@ -12,29 +12,15 @@ const nextConfig: NextConfig = {
     // configuração detectável do plugin esteja presente.
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    serverActions: {
-      allowedOrigins: [
-        "http://hml-dim.anpd.gov.br", // Permite HTTP
-        "https://hml-dim.anpd.gov.br", // Permite HTTPS
-        "http://localhost:3000", // Permite Localhost
-        "https://10.120.10.170:3000", // Permite IP
-      ],
-    },
+  // Rewrites para servir favicons 16/32 apontando para o arquivo existente
+  // `public/favicon.ico`. Isso evita 404 quando browsers pedem as imagens
+  // padrão sem precisar criar arquivos separados.
+  async rewrites() {
+    return [
+      { source: "/favicon-16x16.png", destination: "/favicon.ico" },
+      { source: "/favicon-32x32.png", destination: "/favicon.ico" },
+    ]
   },
-  // Configurações de segurança para evitar warnings TLS em desenvolvimento
-  ...(process.env.NODE_ENV === "development" && {
-    webpack: (config: any) => {
-      // Permite certificados auto-assinados apenas em desenvolvimento
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        tls: false,
-        net: false,
-        fs: false,
-      }
-      return config
-    },
-  }),
 }
 
 export default nextConfig

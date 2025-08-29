@@ -1,7 +1,7 @@
 "use client"
 
-import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
 import Box from "@mui/material/Box"
+import CssBaseline from "@mui/material/CssBaseline"
 
 import CookieManager from "@/components/cookie/CookieManager"
 import Footer from "@/components/layout/Footer"
@@ -10,14 +10,20 @@ import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
 import { AuditProvider } from "@/context/AuditProvider"
 import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
+import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
+
+// GlobalStyles was used for diagnostics and removed
 
 export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <AuthProvider>
-      <AuditProvider>
-        <GovBRThemeProvider>
+    <GovBRThemeProvider>
+      {/* GlobalStyles removido: o `govbrTheme` agora define variantes dinâmicas e
+      defaultProps inline para garantir prioridade de estilos locais. */}
+      <AuthProvider>
+        <AuditProvider>
+          <CssBaseline />
           <NotificationProvider>
             <CookieManager>
               <Box
@@ -58,8 +64,8 @@ export default function ClientRootLayout({
               <FloatingDevMenu />
             </CookieManager>
           </NotificationProvider>
-        </GovBRThemeProvider>
-      </AuditProvider>
-    </AuthProvider>
+        </AuditProvider>
+      </AuthProvider>
+    </GovBRThemeProvider>
   )
 }
