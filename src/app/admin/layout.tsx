@@ -79,4 +79,4 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default withPermissao(AdminLayout, "Desabilitar", "Relatorios")
+export default withPermissao(AdminLayout, "Acessar", "Admin")

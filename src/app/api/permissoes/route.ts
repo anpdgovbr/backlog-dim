@@ -2,6 +2,7 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import type { PermissaoPayload } from "@anpdgovbr/shared-types"
 
 import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
+import { verificarPermissao } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 import { withApiSlimNoParams } from "@/lib/withApiSlim"
@@ -19,6 +20,13 @@ export const GET = withApiSlimNoParams(async ({ req, email }) => {
   const perfilId = searchParams.get("perfilId")
 
   if (perfilId) {
+    // Restringe consulta de permissões por perfil a usuários autorizados
+    const podeExibir = await verificarPermissao(email, "Exibir", "Permissoes")
+    const podeAlterar = await verificarPermissao(email, "Alterar", "Permissoes")
+    if (!podeExibir && !podeAlterar) {
+      return Response.json({ error: "Acesso negado" }, { status: 403 })
+    }
+
     const perfil = await prisma.perfil.findUnique({
       where: { id: Number(perfilId), active: true },
       select: { nome: true },

@@ -737,6 +737,60 @@ async function main() {
       permitido: true,
       perfilId: perfis.superAdmin.id,
     },
+
+    // 🔹 Auditoria (RBAC dedicado)
+    {
+      acao: "Exibir",
+      recurso: "Auditoria",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Auditoria",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
+    {
+      acao: "Registrar",
+      recurso: "Auditoria",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Registrar",
+      recurso: "Auditoria",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
+
+    // 🔹 Gate Admin semântico
+    {
+      acao: "Acessar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Acessar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
+
+    // 🔹 Consulta de permissões por perfil (Exibir)
+    {
+      acao: "Exibir",
+      recurso: "Permissoes",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Exibir",
+      recurso: "Permissoes",
+      permitido: true,
+      perfilId: perfis.superAdmin.id,
+    },
   ]
   // 🔹 Atualiza as permissões corretamente no banco
   for (const permissao of permissoes) {
