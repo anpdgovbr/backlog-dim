@@ -100,9 +100,7 @@ export default function CrudManager(props: Readonly<CrudManagerProps>) {
         height: "100%",
         minHeight: "60vh",
         gap: 2,
-        p: 2,
-        bgcolor: "grey.25",
-        borderRadius: 2,
+        px: 2,
       }}
     >
       <CrudHeader title={entityName} onAdd={openAddModal} canAdd={canAdd} />

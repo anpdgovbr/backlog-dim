@@ -16,6 +16,7 @@ import { ptBR } from "@mui/x-data-grid/locales"
 
 import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { SxProps, Theme } from "@mui/material"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 export interface Item {
   id: number
@@ -96,38 +97,28 @@ export default function CrudDataTable({
                     // padding ou comportamento de flex do DataGrid
                   }}
                 >
-                  <IconButton
-                    size="small"
+                  <GovBRButton
+                    variant="circle"
                     color="primary"
                     disabled={!canEdit}
                     onClick={() => onEdit(params.row)}
                     sx={{
-                      "&:hover": {
-                        bgcolor: "primary.light",
-                        color: "primary.contrastText",
-                        transform: "scale(1.1)",
-                      },
-                      transition: "all 0.2s ease",
+                      border: "none",
                     }}
                   >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
+                    <EditIcon color="primary" fontSize="small" />
+                  </GovBRButton>
+                  <GovBRButton
+                    variant="circle"
                     color="error"
                     disabled={!canDelete}
                     onClick={() => onDelete(params.row.id)}
                     sx={{
-                      "&:hover": {
-                        bgcolor: "error.light",
-                        color: "error.contrastText",
-                        transform: "scale(1.1)",
-                      },
-                      transition: "all 0.2s ease",
+                      border: "none",
                     }}
                   >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+                    <DeleteIcon color="error" fontSize="small" />
+                  </GovBRButton>
                 </Box>
               ),
             },
