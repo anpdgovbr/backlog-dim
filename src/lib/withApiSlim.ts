@@ -5,6 +5,9 @@
  *
  * @remarks
  * Usa `PermissionsMap` e o helper `pode` de `@/lib/permissions` para checagem de acesso.
+ *
+ * @deprecated Planeja-se unificar com `withApi` em uma única API que suporte
+ * execução "slim" via opções, evitando duplicação de lógica.
  */
 // lib/withApiSlim.ts
 import { getServerSession } from "next-auth/next"
@@ -25,6 +28,10 @@ import { pode } from "@/lib/permissions"
  * @property userId - Identificador do usuário (quando presente).
  * @property params - Parâmetros resolvidos da rota.
  */
+/**
+ * Contexto fornecido para handlers "slim".
+ * @deprecated Preferir a API unificada de `withApi` quando disponível.
+ */
 export type SlimHandlerContext<TParams extends object = object> = {
   req: Request | NextRequest
   email: string
@@ -37,6 +44,10 @@ export type SlimHandlerContext<TParams extends object = object> = {
  *
  * @typeParam TParams - Tipo do objeto de parâmetros.
  * @param ctx - {@link SlimHandlerContext} com `req`, `email`, `userId` e `params`.
+ */
+/**
+ * Handler enxuto para rotas que não precisam da sessão completa.
+ * @deprecated Preferir a API unificada de `withApi` quando disponível.
  */
 export type SlimHandler<TParams extends object = object> = (
   ctx: SlimHandlerContext<TParams>
@@ -51,6 +62,10 @@ export type SlimHandler<TParams extends object = object> = (
  * @param permissao - Par `{ acao, recurso }` requerido, quando aplicável.
  * @param params - Parâmetros resolvidos da rota (quando existirem).
  * @returns `Response` com erro apropriado (401/403) ou a resposta do `handler`.
+ */
+/**
+ * Executa autenticação e autorização básicas e chama o handler fornecido.
+ * @deprecated Função interna transitória; use `withApi` quando a unificação ocorrer.
  */
 async function handleApiRequestSlim<TParams extends object = object>(
   req: Request | NextRequest,
@@ -96,6 +111,10 @@ async function handleApiRequestSlim<TParams extends object = object>(
  * }, { acao: 'Exibir', recurso: 'Usuario' })
  * ```
  */
+/**
+ * Wrapper para rotas Next que recebem `params` (por exemplo, rotas dinâmicas).
+ * @deprecated Prefira `withApi` quando a API unificada estiver disponível.
+ */
 export function withApiSlim<TParams extends object = Record<string, unknown>>(
   handler: SlimHandler<TParams>,
   permissao?: { acao: AcaoPermissao; recurso: RecursoPermissao }
@@ -125,6 +144,10 @@ export function withApiSlim<TParams extends object = Record<string, unknown>>(
  *   return Response.json({ hello: email })
  * }, { acao: 'Exibir', recurso: 'Usuario' })
  * ```
+ */
+/**
+ * Wrapper para rotas sem `params`.
+ * @deprecated Prefira `withApi` quando a API unificada estiver disponível.
  */
 export function withApiSlimNoParams(
   handler: SlimHandler<Record<string, never>>,

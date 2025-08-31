@@ -156,10 +156,19 @@ function GerenciarPermissoesContent() {
   )
 }
 
+/**
+ * Protege a página de gerenciamento de permissões exigindo a permissão adequada
+ * no domínio correto.
+ *
+ * @remarks
+ * Anteriormente estava usando "Desabilitar/Relatorios", o que não refletia o
+ * domínio real desta tela. Agora a exigência é "Alterar/Permissoes", garantindo
+ * que apenas administradores de permissões acessem esta UI.
+ */
 const GerenciarPermissoes = withPermissao(
   GerenciarPermissoesContent,
-  "Desabilitar",
-  "Relatorios",
+  "Alterar",
+  "Permissoes",
   { redirecionar: false }
 )
 

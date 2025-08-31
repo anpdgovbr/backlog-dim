@@ -2,6 +2,11 @@
  * @fileoverview
  * Tipos e utilitários para autorização (RBAC) usando `PermissionsMap`,
  * mapeando pares `{ acao, recurso }` para flags booleanas.
+ *
+ * @remarks
+ * Futuro: `AcaoPermissao` e `RecursoPermissao` devem se tornar enums do Prisma
+ * (ou FKs) para integridade em nível de banco. Esta camada não deve assumir
+ * herança; a agregação deve ocorrer no servidor antes de chegar aqui.
  */
 import type {
   AcaoPermissao,
@@ -20,6 +25,9 @@ import type {
  * }
  * ```
  */
+/**
+ * Estrutura de dados para checagem de acesso por par `{acao,recurso}`.
+ */
 export type PermissionsMap = Partial<
   Record<AcaoPermissao, Partial<Record<RecursoPermissao, boolean>>>
 >
@@ -29,6 +37,9 @@ export type PermissionsMap = Partial<
  *
  * @param list - Lista de permissões vinda do banco/perfil.
  * @returns Mapa de permissões por `{ acao, recurso }`.
+ */
+/**
+ * Converte uma lista de permissões (DTO) para `PermissionsMap`.
  */
 export function toPermissionsMap(list?: PermissaoDto[] | null): PermissionsMap {
   const map: PermissionsMap = {}
@@ -74,13 +85,19 @@ export function hasAny(
   return false
 }
 
-/** Compatibilidade transitória (opcional): mapa por chave concatenada */
+/**
+ * Compatibilidade transitória (opcional): mapa por chave concatenada.
+ *
+ * @deprecated Prefira `PermissionsMap`. Este formato plano será removido após a
+ * migração completa para checagens por `{acao,recurso}`.
+ */
 export type FlatKey = `${AcaoPermissao}_${RecursoPermissao}`
 /**
  * Converte para um mapa plano por chave concatenada `Acao_Recurso`.
  *
  * @param list - Lista de permissões.
  * @returns Mapa plano `{ ["Acao_Recurso"]: boolean }`.
+ * @deprecated Utilize `toPermissionsMap` e `pode(...)`. Previsto para remoção.
  */
 export function toFlatKeyMap(
   list?: PermissaoDto[] | null

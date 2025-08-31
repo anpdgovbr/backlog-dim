@@ -10,7 +10,8 @@
 import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
-import { pode, type PermissionsMap } from "@/lib/permissions"
+import { pode, toPermissionsMap, type PermissionsMap } from "@/lib/permissions"
+import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
 
 /**
  * Busca permissões concedidas ao usuário e as converte para `PermissionsMap`.
@@ -23,29 +24,35 @@ import { pode, type PermissionsMap } from "@/lib/permissions"
  * if (pode(perms, 'Exibir', 'Processo')) { /* ... *\/ }
  * ```
  */
+/**
+ * Busca as permissões efetivas de um usuário alinhadas à mesma fonte utilizada no frontend.
+ *
+ * @remarks
+ * Alinha o backend ao frontend utilizando `getPermissoesPorPerfil(perfil.nome)`
+ * como fonte única de verdade (inclui herança configurada) e converte o
+ * resultado para `PermissionsMap` via `toPermissionsMap`. Evita divergências
+ * onde a UI indicava acesso e o servidor negava.
+ *
+ * @param email - Email do usuário autenticado.
+ * @returns `PermissionsMap` com flags por `{acao, recurso}`.
+ *
+ * @example
+ * const perms = await buscarPermissoesConcedidas('user@example.com')
+ * if (pode(perms, 'Exibir', 'Processo')) { /* ... *\/ }
+ */
 export async function buscarPermissoesConcedidas(email: string): Promise<PermissionsMap> {
+  // Carrega o usuário com seu perfil
   const usuario = await prisma.user.findUnique({
     where: { email },
-    include: {
-      perfil: {
-        include: {
-          permissoes: true,
-        },
-      },
-    },
+    include: { perfil: true },
   })
 
-  const map: PermissionsMap = {}
-  if (!usuario?.perfil?.permissoes) return map
+  // Se não houver perfil ativo, retorna mapa vazio (sem acesso)
+  if (!usuario?.perfil?.active) return {}
 
-  for (const p of usuario.perfil.permissoes) {
-    const acao = p.acao as AcaoPermissao
-    const recurso = p.recurso as RecursoPermissao
-    map[acao] ??= {}
-    map[acao]![recurso] = !!p.permitido
-  }
-
-  return map
+  // Mesma agregação de permissões usada no endpoint /api/permissoes (UI)
+  const permissoesLista = await getPermissoesPorPerfil(usuario.perfil.nome)
+  return toPermissionsMap(permissoesLista)
 }
 
 /**

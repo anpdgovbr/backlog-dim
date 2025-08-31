@@ -7,6 +7,9 @@
  * A autorização utiliza um `PermissionsMap` (ver `@/lib/permissions`) e o helper `pode`.
  * Quando `options.permissao` é informado, a rota só é executada se o par
  * `{ acao, recurso }` estiver permitido para o usuário autenticado.
+ *
+ * Futuro: unificação com `withApiSlim`. `withApi` deve suportar cenários "slim"
+ * (sem sessão completa) por meio de opções, permitindo deprecar `withApiSlim`.
  */
 // lib/withApi.ts
 import type { Session } from "next-auth"
@@ -141,7 +144,6 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   return response
 }
 
-// Wrapper para rotas padrão
 /**
  * Wrapper para rotas API que trata autenticação, autorização (RBAC) e auditoria.
  *
@@ -155,6 +157,7 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
  *   return Response.json({ message: `Hello ${email}` })
  * }, { permissao: { acao: 'Exibir', recurso: 'Processo' } })
  * ```
+ * @see withApiForId
  */
 export function withApi<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,
@@ -165,7 +168,6 @@ export function withApi<TParams extends object = object, TExtra = object>(
   }
 }
 
-// Wrapper para rotas com params
 /**
  * Wrapper para rotas que recebem `params` (por exemplo, `[id]`).
  *
@@ -181,6 +183,8 @@ export function withApi<TParams extends object = object, TExtra = object>(
  *   return new Response(null, { status: 204 })
  * }, { permissao: { acao: 'Editar', recurso: 'Usuario' } })
  * ```
+ * @remarks
+ * Considerar no futuro a fusão com `withApi` via assinatura única.
  */
 export function withApiForId<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,
