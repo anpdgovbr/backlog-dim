@@ -1,7 +1,7 @@
 "use client"
 
 import useSWR from "swr"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -32,11 +32,7 @@ function HerancaPerfisContent() {
   const [parentId, setParentId] = useState<number | "">("")
   const [childId, setChildId] = useState<number | "">("")
 
-  const perfisMap = useMemo(() => {
-    const m = new Map<number, string>()
-    perfis?.forEach((p) => m.set(p.id, p.nome))
-    return m
-  }, [perfis])
+  // mapa de perfis removido (não utilizado)
 
   async function adicionar() {
     if (!parentId || !childId || parentId === childId) return

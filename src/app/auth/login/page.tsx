@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
-export default function LoginPage() {
+function LoginPageInner() {
   const { status } = useSession()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -86,7 +86,6 @@ export default function LoginPage() {
       setError("Não foi possível iniciar o login. Tente novamente.")
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
-      console.error("Erro de login:", err)
       setIsLoading(false)
     }
   }
@@ -163,5 +162,13 @@ export default function LoginPage() {
         </Typography>
       </Box>
     </Container>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<GovBrLoading message="Carregando..." />}>
+      <LoginPageInner />
+    </Suspense>
   )
 }

@@ -1,7 +1,6 @@
 // app/api/auditoria/route.ts
 import type { Prisma } from "@prisma/client"
 
-import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"

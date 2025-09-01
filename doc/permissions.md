@@ -133,7 +133,7 @@ Cada usuário é criado/atualizado via upsert com o perfil correspondente.
 8) Plano de Release/Backout
 - Sequência sugerida: testes -> staging -> produção com feature flag para novos paths.
 - Scripts de migração com dry-run e logs detalhados.
-- Plano de rollback: manter migrations reversíveis e retain backups.
+ - Plano de rollback: manter migrations reversíveis e retain backups.
 
 
 # Segurança — ABAC em Processo (Editar Próprio) - Verificar para inserir junto nessa Task
@@ -156,3 +156,54 @@ Referência: plano-mapa-aninhado.md (seção 4)
 ## Critérios de Aceite
 - Usuários com `EditarProprio` conseguem editar apenas os processos atribuídos a si.
 - Usuários sem `EditarGeral` não conseguem editar processos de outros.
+
+
+## Estado Atual (2025-09-01)
+
+- Enums no banco: `AcaoPermissao` e `RecursoPermissao` ativos no Prisma e utilizados nas rotas e seed.
+- Unificação da fonte de permissões: backend e frontend usam `getPermissoesPorPerfil` + `toPermissionsMap` para gerar `PermissionsMap`.
+- Wrappers: `withApi`/`withApiForId` em uso com `permissao: {acao,recurso}`; `withApiSlim*` mantido no repo e marcado como `@deprecated` (sem usos).
+- Cache: TTL 60s em memória por email; invalidação disparada em `POST /api/permissoes`, `PATCH /api/permissoes/[id]` e `POST/DELETE /api/perfis/heranca`.
+- Herança de Perfis: implementada via tabela `PerfilHeranca` + endpoints `GET/POST/DELETE /api/perfis/heranca` e UI básica em `/admin/perfis/heranca`.
+- ABAC (Processo): `PUT /api/processos/[id]` aplica RBAC + verificação “EditarProprio” vs “EditarGeral” com vínculo `responsavel.userId`.
+
+## Próximos Passos Imediatos
+
+- Remover `withApiSlim*` do código:
+  - Ações: excluir `src/lib/withApiSlim.ts` e referências (não há usos), atualizar docs.
+  - Critérios: build e lint sem erros; docs atualizados apontando apenas para `withApi`/`withApiForId`.
+
+- Garantir paridade de tipos entre Prisma e `@anpdgovbr/shared-types`:
+  - Ações: revisar e, se necessário, gerar/alinhar enums TS para refletir os enums Prisma.
+  - Critérios: sem cast “as unknown as Enum” no código de produção/seed; type-check limpo.
+
+- Testes unitários prioritários:
+  - `src/lib/permissions` (pode/hasAny/toPermissionsMap) e `src/lib/permissoes` (cache + integração com getPermissoesPorPerfil).
+  - Política ABAC do `PUT /api/processos/[id]` (cenários: próprio vs geral; sem acesso).
+  - Critérios: cobertura mínima 80% nesses módulos; cenários de negação retornam 403.
+
+- Observabilidade de autorização:
+  - Ações: adicionar logs estruturados (nível info) para 401/403 nas rotas protegidas (sem dados sensíveis) e métrica por `{acao,recurso}`.
+  - Critérios: dashboards básicos (contagem de 401/403) e amostras de caminho/ação.
+
+- Cache de permissões: ajustes finos
+  - Ações: avaliar TTL (60s) vs. necessidade; estudar invalidação por perfil/usuário ao alterar permissões/herança.
+  - Critérios: latência de first-call razoável e consistência após alterações administrativas (<1s com invalidação).
+
+- UI de Herança de Perfis:
+  - Ações: melhorar UX (ex.: arrastar/soltar ou seletor múltiplo com busca), indicar invalidação de cache pós-alteração.
+  - Critérios: criar/remover relações de forma mais fluida; feedback visual de sucesso/erro.
+
+## Itens de Médio Prazo
+
+- Embutir permissões no JWT (opcional):
+  - Ações: prototipar inclusão de claims com permissões e estratégia de refresh/invalidade.
+  - Trade-off: simplicidade vs. coerência com alterações dinâmicas.
+
+- E2E para administração de permissões:
+  - Ações: fluxo completo (toggle em `/admin/permissoes` -> efeito em UI/rotas), incluindo herança.
+  - Critérios: cenários críticos cobertos (conceder/retirar, herança, cache).
+
+- Políticas de domínio adicionais (além de RBAC):
+  - Ações: documentar e implementar helpers por recurso (ex.: edição condicional por proprietário para outros domínios além de Processo).
+  - Critérios: decisões isoladas, testadas e auditáveis.

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, AcaoPermissao, RecursoPermissao } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -817,16 +817,24 @@ async function main() {
   ]
   // 🔹 Atualiza as permissões corretamente no banco
   for (const permissao of permissoes) {
+    const acaoEnum = permissao.acao as unknown as AcaoPermissao
+    const recursoEnum = permissao.recurso as unknown as RecursoPermissao
+
     await prisma.permissao.upsert({
       where: {
         perfilId_acao_recurso: {
           perfilId: permissao.perfilId,
-          acao: permissao.acao,
-          recurso: permissao.recurso,
+          acao: acaoEnum,
+          recurso: recursoEnum,
         },
       },
       update: { permitido: permissao.permitido },
-      create: permissao,
+      create: {
+        perfilId: permissao.perfilId,
+        acao: acaoEnum,
+        recurso: recursoEnum,
+        permitido: permissao.permitido,
+      },
     })
   }
 
