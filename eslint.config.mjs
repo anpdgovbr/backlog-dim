@@ -43,7 +43,17 @@ const eslintConfig = [
   },
 
   {
-    ignores: ["node_modules/", ".next/", "public/", "prisma/", "scripts/*.cjs", "docs/"],
+    ignores: [
+      "node_modules/",
+      ".next/",
+      "public/",
+      "prisma/",
+      "scripts/*.cjs",
+      "docs/",
+      // Ignorar submódulos e monorepos externos
+      "rbac/**",
+      "external/**",
+    ],
   },
 
   {

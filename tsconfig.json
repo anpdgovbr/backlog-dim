@@ -35,5 +35,13 @@
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next", "dist", "build", "packages/**/src"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    "packages/**/src",
+    "rbac/**",
+    "external/**"
+  ]
 }
