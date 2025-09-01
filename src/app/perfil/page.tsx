@@ -20,15 +20,47 @@ import Link from "next/link"
 import { PageLayout } from "@/components/layouts"
 import { fetcher } from "@/lib/fetcher"
 
+/**
+ * DTO que representa o perfil do usuário retornado pela API.
+ *
+ * @property id - Identificador único do perfil.
+ * @property nome - Nome legível do perfil (ex.: "Administrador").
+ */
 type PerfilDto = { id: number; nome: string }
+
+/**
+ * DTO que descreve uma permissão efetiva para um recurso.
+ *
+ * @property acao - Ação permitida/examinada (ex.: "read", "create", "delete").
+ * @property recurso - Recurso ao qual a ação se aplica (ex.: "processos").
+ * @property permitido - Indica se a ação está efetivamente permitida.
+ * @property perfilNome - (Opcional) nome do perfil que conferiu essa permissão.
+ */
 type PermissaoDto = {
   acao: string
   recurso: string
   permitido: boolean
   perfilNome?: string
 }
+
+/**
+ * DTO que descreve a herança de perfis aplicada ao usuário.
+ *
+ * @property base - Nome do perfil base na cadeia de herança.
+ * @property cadeia - Lista de nomes de perfis aplicados, em ordem (da base para o mais específico).
+ */
 type HerancaDto = { base: string; cadeia: string[] }
 
+/**
+ * Página do Meu Perfil (componente cliente).
+ *
+ * Exibe informações da conta autenticada, perfil associado, permissões efetivas agrupadas por recurso
+ * e a cadeia de herança de perfis. Os dados são carregados via SWR a partir das rotas internas de API.
+ *
+ * Observações:
+ * - Componente executado no cliente ("use client").
+ * - Utiliza next-auth para obter sessão e SWR para fetch de dados.
+ */
 export default function PerfilPage() {
   const { data: session, status } = useSession()
   const user = (session?.user ?? undefined) as

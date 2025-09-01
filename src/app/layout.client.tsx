@@ -12,6 +12,26 @@ import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
 import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
 
+/**
+ * ClientRootLayout
+ *
+ * Layout raiz executado no lado do cliente que envolve a aplicação com os
+ * providers necessários e estrutura de página:
+ * - GovBRThemeProvider: tema compartilhado
+ * - AuthProvider: contexto de sessão/autenticação
+ * - AuditProvider: provedor de auditoria
+ * - NotificationProvider: provedor de notificações
+ * - CookieManager: gerenciamento de cookies
+ *
+ * A estrutura de layout inclui Header, Footer, a área principal (onde os
+ * children são renderizados) e o FloatingDevMenu. Também aplica CssBaseline
+ * para reset de estilos globais.
+ *
+ * Props:
+ * @param children - Conteúdo ReactNode renderizado dentro do layout (imutável).
+ *
+ * @returns JSX.Element - Estrutura de layout com providers e área principal.
+ */
 export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

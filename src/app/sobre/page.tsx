@@ -17,41 +17,69 @@ import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 
+/**
+ * Lista de tecnologias utilizadas pelo projeto.
+ *
+ * Cada item é uma string com o nome (e quando aplicável, a versão) da tecnologia
+ * usada no stack do Backlog DIM. Utilizado para renderizar chips na seção
+ * "Tecnologias" da página.
+ */
+const tecnologias = [
+  "Next.js 15",
+  "React 19",
+  "TypeScript",
+  "Material-UI v7",
+  "Prisma 6",
+  "PostgreSQL",
+  "Azure AD",
+  "Docker",
+]
+
+/**
+ * Dados das principais funcionalidades exibidas na página.
+ *
+ * Cada item contém:
+ * - icon: elemento React usado como ícone visual (React.ReactElement)
+ * - titulo: título curto da funcionalidade
+ * - descricao: descrição resumida da funcionalidade
+ *
+ * Tipagem implícita esperada: Array<{ icon: React.ReactElement; titulo: string; descricao: string }>
+ */
+const funcionalidades = [
+  {
+    icon: <DashboardIcon />,
+    titulo: "Dashboard Avançado",
+    descricao: "Painéis interativos com estatísticas e métricas em tempo real",
+  },
+  {
+    icon: <SecurityIcon />,
+    titulo: "Segurança Robusta",
+    descricao: "Autenticação Azure AD e controle granular de permissões",
+  },
+  {
+    icon: <SpeedIcon />,
+    titulo: "Performance",
+    descricao: "Tecnologias modernas para máxima velocidade e eficiência",
+  },
+  {
+    icon: <GroupIcon />,
+    titulo: "Gestão Colaborativa",
+    descricao: "Controle de responsáveis e auditoria completa de ações",
+  },
+]
+
+/**
+ * Componente de página "Sobre".
+ *
+ * Renderiza a página institucional com:
+ * - Cabeçalho e descrição do projeto
+ * - Lista de funcionalidades principais (cards)
+ * - Lista de tecnologias (chips)
+ * - Informações institucionais e navegação
+ *
+ * @returns JSX.Element - Conteúdo da página "Sobre o Backlog DIM"
+ */
 export default function SobrePage() {
-  const tecnologias = [
-    "Next.js 15",
-    "React 19",
-    "TypeScript",
-    "Material-UI v7",
-    "Prisma 6",
-    "PostgreSQL",
-    "Azure AD",
-    "Docker",
-  ]
-
-  const funcionalidades = [
-    {
-      icon: <DashboardIcon />,
-      titulo: "Dashboard Avançado",
-      descricao: "Painéis interativos com estatísticas e métricas em tempo real",
-    },
-    {
-      icon: <SecurityIcon />,
-      titulo: "Segurança Robusta",
-      descricao: "Autenticação Azure AD e controle granular de permissões",
-    },
-    {
-      icon: <SpeedIcon />,
-      titulo: "Performance",
-      descricao: "Tecnologias modernas para máxima velocidade e eficiência",
-    },
-    {
-      icon: <GroupIcon />,
-      titulo: "Gestão Colaborativa",
-      descricao: "Controle de responsáveis e auditoria completa de ações",
-    },
-  ]
-
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
       {/* Header */}
