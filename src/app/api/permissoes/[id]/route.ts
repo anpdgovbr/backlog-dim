@@ -1,6 +1,7 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { invalidatePermissionsCache } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
 
 /**
@@ -40,6 +41,9 @@ const handlerPATCH = withApiForId<{ id: string }>(
       where: { id: permissaoId },
       data: { permitido },
     })
+
+    // Invalida o cache de permissões após alteração
+    invalidatePermissionsCache()
 
     return {
       response: Response.json(permissaoAtualizada),

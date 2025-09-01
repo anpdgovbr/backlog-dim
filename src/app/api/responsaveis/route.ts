@@ -2,7 +2,6 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
  * Lista responsáveis ativos.
@@ -12,7 +11,7 @@ import { withApiSlimNoParams } from "@/lib/withApiSlim"
  * @example GET /api/responsaveis
  * @remarks Requer permissão {acao: "Exibir", recurso: "Responsavel"}.
  */
-export const GET = withApiSlimNoParams(
+export const GET = withApi(
   async () => {
     const dados = await prisma.responsavel.findMany({
       where: { active: true },
@@ -20,7 +19,7 @@ export const GET = withApiSlimNoParams(
     })
     return Response.json(dados)
   },
-  { acao: "Exibir", recurso: "Responsavel" }
+  { permissao: { acao: "Exibir", recurso: "Responsavel" } }
 )
 
 /**

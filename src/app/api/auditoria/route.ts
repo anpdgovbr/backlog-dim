@@ -7,7 +7,7 @@ import { NextResponse } from "next/server"
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
-import { withApiSlim, withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 /**
  * Registra uma entrada de auditoria no banco.
@@ -19,7 +19,7 @@ import { withApiSlim, withApiSlimNoParams } from "@/lib/withApiSlim"
  * { "tabela": "processo", "acao": "CREATE", "registroId": 1 }
  * @remarks Protegido por RBAC: {acao: "Registrar", recurso: "Auditoria"}.
  */
-export const POST = withApiSlimNoParams(
+export const POST = withApi(
   async ({ req }) => {
     try {
       const { tabela, acao, registroId, userId, email, contexto, antes, depois } =
@@ -64,7 +64,7 @@ export const POST = withApiSlimNoParams(
       )
     }
   },
-  { acao: "Registrar", recurso: "Auditoria" }
+  { permissao: { acao: "Registrar", recurso: "Auditoria" } }
 )
 
 /**
@@ -75,7 +75,7 @@ export const POST = withApiSlimNoParams(
  * @example GET /api/auditoria?page=1&pageSize=20&acao=CREATE
  * @remarks Protegido por RBAC: {acao: "Exibir", recurso: "Auditoria"}.
  */
-const handleGET = withApiSlim(
+export const GET = withApi(
   async ({ req }) => {
     const { searchParams } = new URL(req.url)
 
@@ -131,19 +131,5 @@ const handleGET = withApiSlim(
 
     return NextResponse.json({ total, dados })
   },
-  { acao: "Exibir", recurso: "Auditoria" }
+  { permissao: { acao: "Exibir", recurso: "Auditoria" } }
 )
-
-/**
- * Handler Next.js de GET para auditoria.
- *
- * @param req - Requisição HTTP.
- * @param context - Contexto com `params` assíncrono.
- * @returns Resposta JSON com logs paginados.
- */
-export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  return handleGET(req, { params: await context.params })
-}

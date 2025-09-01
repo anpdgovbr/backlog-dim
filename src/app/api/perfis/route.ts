@@ -1,6 +1,6 @@
 // app/api/perfis/route.ts
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 /**
  * Lista perfis ativos.
@@ -9,7 +9,7 @@ import { withApiSlimNoParams } from "@/lib/withApiSlim"
  * Exige permissão `{acao: "Exibir", recurso: "Permissoes"}` pois expõe
  * metadados de perfis usados na administração de permissões.
  */
-export const GET = withApiSlimNoParams(
+export const GET = withApi(
   async () => {
     const perfis = await prisma.perfil.findMany({
       where: { active: true },
@@ -17,5 +17,5 @@ export const GET = withApiSlimNoParams(
 
     return Response.json(perfis)
   },
-  { acao: "Exibir", recurso: "Permissoes" }
+  { permissao: { acao: "Exibir", recurso: "Permissoes" } }
 )

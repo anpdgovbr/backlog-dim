@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 interface ResponsavelProcessos {
   id: number
@@ -8,7 +8,12 @@ interface ResponsavelProcessos {
   totalProcessos: number
 }
 
-export const GET = withApiSlimNoParams(async ({ req }) => {
+/**
+ * Top responsáveis por número de processos.
+ *
+ * @remarks Migrado para `withApi` (antes `withApiSlimNoParams`).
+ */
+export const GET = withApi(async ({ req }) => {
   try {
     if (!req.url) {
       return new Response("URL inválida", { status: 400 })

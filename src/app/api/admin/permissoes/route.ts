@@ -1,6 +1,7 @@
 import { AcaoAuditoria, type PermissaoPayload } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { invalidatePermissionsCache } from "@/lib/permissoes"
 import { withApi } from "@/lib/withApi"
 
 /**
@@ -50,6 +51,9 @@ export const PATCH = withApi(
         update: { permitido },
         create: { perfilId, acao, recurso, permitido },
       })
+
+      // Invalida o cache de permissões após alteração
+      invalidatePermissionsCache()
 
       return {
         response: Response.json(novaPermissao),

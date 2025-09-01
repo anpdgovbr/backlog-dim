@@ -1,6 +1,7 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { verificarPermissao } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
 
 // === GET ===
@@ -70,15 +71,22 @@ export async function GET(
  * @see {@link withApiForId}
  * @returns JSON com o processo atualizado (200) ou erro (404/400).
  * @example PUT /api/processos/123 { "requerente": "Empresa Y" }
- * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "EditarGeral", recurso: "Processo"}.
+ * @remarks
+ * Auditoria ({@link AcaoAuditoria.UPDATE}). Autorização híbrida (RBAC + ABAC):
+ * - Se o usuário possuir `{acao: "EditarGeral", recurso: "Processo"}`, pode editar qualquer registro.
+ * - Caso contrário, se possuir `{acao: "EditarProprio", recurso: "Processo"}` e o processo pertencer a si
+ *   (via `responsavel.userId === session.user.id`), pode editar apenas o próprio.
+ * - Caso nenhum dos critérios seja satisfeito, retorna 403.
  */
 const handlerPUT = withApiForId<{ id: string }>(
-  async ({ params, req }) => {
+  async ({ params, req, email, userId }) => {
     const { id } = params
     const body = await req.json()
 
+    // Carrega processo atual com o vínculo do responsável (para ABAC)
     const processoAtual = await prisma.processo.findUnique({
       where: { id: Number(id) },
+      include: { responsavel: { select: { userId: true } } },
     })
 
     if (!processoAtual?.active) {
@@ -86,6 +94,24 @@ const handlerPUT = withApiForId<{ id: string }>(
         { error: "Processo não encontrado ou inativo" },
         { status: 404 }
       )
+    }
+
+    // Autorização RBAC + ABAC
+    const podeEditarGeral = await verificarPermissao(email, "EditarGeral", "Processo")
+    if (!podeEditarGeral) {
+      const podeEditarProprio = await verificarPermissao(
+        email,
+        "EditarProprio",
+        "Processo"
+      )
+      const ehProprio =
+        processoAtual.responsavel?.userId && userId
+          ? processoAtual.responsavel.userId === userId
+          : false
+
+      if (!(podeEditarProprio && ehProprio)) {
+        return Response.json({ error: "Acesso negado" }, { status: 403 })
+      }
     }
 
     const camposComparaveis: (keyof typeof body)[] = [
@@ -183,7 +209,7 @@ const handlerPUT = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.UPDATE,
-    permissao: { acao: "EditarGeral", recurso: "Processo" },
+    // Permissão tratada dentro do handler (RBAC + ABAC)
   }
 )
 

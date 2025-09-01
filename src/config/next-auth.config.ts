@@ -13,9 +13,24 @@ export const authOptions = {
       },
     }),
   ],
+  debug: true as const,
+  // Confia no host do proxy/dev ao inferir URLs (útil em portas customizadas)
+  trustHost: true as const,
   session: {
     strategy: "jwt" as const,
     maxAge: 4 * 60 * 60,
+  },
+  // Loga eventos no console para facilitar diagnóstico em dev
+  logger: {
+    error(code: string, metadata: unknown) {
+      console.error("[next-auth:error]", code, metadata)
+    },
+    warn(code: string) {
+      console.warn("[next-auth:warn]", code)
+    },
+    debug(code: string, metadata: unknown) {
+      console.debug("[next-auth:debug]", code, metadata)
+    },
   },
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

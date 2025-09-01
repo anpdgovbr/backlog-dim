@@ -4,9 +4,9 @@
  * mapeando pares `{ acao, recurso }` para flags booleanas.
  *
  * @remarks
- * Futuro: `AcaoPermissao` e `RecursoPermissao` devem se tornar enums do Prisma
- * (ou FKs) para integridade em nível de banco. Esta camada não deve assumir
- * herança; a agregação deve ocorrer no servidor antes de chegar aqui.
+ * `AcaoPermissao` e `RecursoPermissao` estão modelados como enums no Prisma
+ * (ver `prisma/schema.prisma`). Esta camada não assume herança; a agregação
+ * ocorre no servidor antes de chegar aqui.
  */
 import type {
   AcaoPermissao,

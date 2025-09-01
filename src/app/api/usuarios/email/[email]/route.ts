@@ -1,8 +1,11 @@
 // app/api/usuarios/email/[email]/route.ts
 import { prisma } from "@/lib/prisma"
-import { withApiSlim } from "@/lib/withApiSlim"
+import { withApiForId } from "@/lib/withApi"
 
-const handlerGET = withApiSlim<{ email: string }>(async ({ params }) => {
+/**
+ * Migrado para `withApiForId` (antes `withApiSlim`).
+ */
+const handlerGET = withApiForId<{ email: string }>(async ({ params }) => {
   const { email } = params
 
   const user = await prisma.user.findUnique({

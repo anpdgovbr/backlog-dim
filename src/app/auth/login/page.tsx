@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -19,7 +19,14 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
-  const showLoading = redirecting || isLoading || status === "loading"
+  const showLoading = redirecting || isLoading
+
+  // Exibe erros retornados pelo NextAuth (ex.: callback falhou)
+  const search = useSearchParams()
+  useEffect(() => {
+    const err = search.get("error")
+    if (err) setError("Falha ao realizar o login. Tente novamente.")
+  }, [search])
 
   // Controle de redirecionamento
   useEffect(() => {
@@ -34,21 +41,49 @@ export default function LoginPage() {
     }
   }, [status, router])
 
+  /**
+   * Inicia o fluxo de login OAuth no Azure AD.
+   *
+   * Observação: para provedores OAuth, quando `redirect: false` é usado,
+   * `signIn` retorna um objeto com a `url` para onde devemos navegar manualmente.
+   * Caso contrário, a sessão nunca muda para "authenticated" e a UI parece travar.
+   * Aqui simplificamos, deixando o NextAuth redirecionar automaticamente.
+   */
   const handleLogin = async () => {
     try {
       setIsLoading(true)
       setError(null)
+      // Usar redirect: false para capturar a URL e navegar manualmente.
       const result = await signIn("azure-ad", {
         redirect: false,
         callbackUrl: "/dashboard",
       })
 
-      if (result?.error) {
+      // Erro explícito reportado pelo NextAuth
+      if (result && typeof result === "object" && "error" in result && result.error) {
         setError("Falha ao realizar o login. Tente novamente.")
-        setIsLoading(false) // só desliga o loading se falhou
+        setIsLoading(false)
+        return
       }
 
-      // Se deu certo, não faz nada — o `useEffect` cuidará do redirecionamento
+      // Navega para a URL do provedor (fluxo OAuth)
+      const url = (result as unknown as { url?: string })?.url
+      if (url) {
+        // Redirecionamento full page para evitar qualquer bloqueio
+        window.location.href = url
+        // Fallback de segurança: se nada acontecer em 8s, libera a UI e mostra erro
+        setTimeout(() => {
+          setIsLoading(false)
+          setError(
+            "Não foi possível redirecionar para o provedor. Verifique sua conexão e tente novamente."
+          )
+        }, 8000)
+        return
+      }
+
+      // Caso não haja URL nem erro, libera a UI e mostra mensagem genérica
+      setIsLoading(false)
+      setError("Não foi possível iniciar o login. Tente novamente.")
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
       console.error("Erro de login:", err)
@@ -56,7 +91,7 @@ export default function LoginPage() {
     }
   }
 
-  // Exibir loading durante transições críticas
+  // Exibir loading apenas durante transições críticas iniciadas pelo usuário
   if (showLoading) {
     return (
       <GovBrLoading

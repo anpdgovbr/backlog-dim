@@ -57,34 +57,60 @@ Com isso, UI e servidor avaliam exatamente o mesmo conjunto de permissões.
 - Passos práticos (A ou B):
   - Criar migration, escrever script de backfill e validação.
   - Rodar em ambiente de staging e validar UI/rotas.
-  - Publicar com janela de manutenção curta.
+ - Publicar com janela de manutenção curta.
+  - Comandos úteis:
+    - `npx prisma migrate dev --name perfil-heranca` (cria tabela `PerfilHeranca`).
+    - `npm run db:seed` (popula herança e permissões padrão).
+
+## Seed de Usuários de Teste
+
+- Preferencial: definir `SEED_USERS_JSON` no `.env` com um array de usuários:
+
+  `SEED_USERS_JSON=[{"email":"admin@example.com","nome":"Admin","perfil":"Administrador"}]`
+
+- Alternativa (variáveis individuais): se `SEED_USERS_JSON` não estiver definido, o seed utiliza as variáveis abaixo quando presentes:
+  - `SEED_SUPERADMIN_EMAIL` / `SEED_SUPERADMIN_NOME`
+  - `SEED_ADMIN_EMAIL` / `SEED_ADMIN_NOME`
+  - `SEED_SUPERVISOR_EMAIL` / `SEED_SUPERVISOR_NOME`
+  - `SEED_ATENDENTE_EMAIL` / `SEED_ATENDENTE_NOME`
+  - `SEED_LEITOR_EMAIL` / `SEED_LEITOR_NOME`
+
+Cada usuário é criado/atualizado via upsert com o perfil correspondente.
 
 2) Unificar wrappers de API
-- Objetivo: remover duplicidade entre `withApi` e `withApiSlim`.
-- Implementar um único `withApi` com opções: `{ permissao?, auditoria?, slim?: boolean }`.
-- Marcar `withApiSlim*` como deprecated (já marcado) e migrar chamadas gradualmente.
-- Checklist:
-  - Implementar assinatura única.
-  - Migrar rotas mais usadas primeiro; manter compatibilidade por um ciclo de release.
-  - Remover `withApiSlim*` após migração completa.
+- Estado atual:
+  - `withApi` e `withApiForId` mantidos como wrappers padrão.
+  - `withApiSlim*` marcados como `@deprecated` e rotas migradas para `withApi`.
+- Próximos passos:
+  - Opcional: adicionar opções no `withApi` para controlar sessão/auditoria finamente.
+  - Remover `withApiSlim*` após um ciclo de release sem usos.
 
 3) Estratégia para Herança de Perfis
-- Opção simplificada (recomendada): remover herança dinâmica em runtime.
-  - Congelar `HIERARQUIA_PERFIS`; criar ação de "Clonar perfil" na UI/seed.
-  - Atualizar `getPermissoesPorPerfil` para retornar apenas permissões explícitas.
-  - Benefícios: previsibilidade e menor complexidade.
-- Opção modelada em DB:
-  - Adicionar `Perfil.parentId` (ou tabela `PerfilHeranca`).
-  - Atualizar `getPermissoesPorPerfil` para computar a união via consulta.
-  - Remover `HIERARQUIA_PERFIS` do código.
-- Em ambos os casos: garantir que backend e frontend continuem usando a mesma função central.
+- Implementado no DB via tabela `PerfilHeranca` (DAG):
+  - Seed configura: SuperAdmin > Administrador > Supervisor > Atendente > Leitor.
+  - `getPerfisHerdadosNomes(perfil)` resolve a cadeia de pais ativos (evita ciclos).
+  - `getPermissoesPorPerfil` agrega permissões dos perfis herdados.
+- Regras de união: concessões (true) prevalecem; negações (false) não removem uma concessão herdada.
+- Próximos passos:
+  - Adicionar UI para gerenciar herança (arrastar/soltar ou lista de pais).
+  - Invalidação de cache de permissões ao alterar heranças.
+  - Endpoints de herança:
+    - `GET /api/perfis/heranca`: lista (requer `{Exibir, Permissoes}`).
+    - `POST /api/perfis/heranca` `{ parentId, childId }`: cria (requer `{Alterar, Permissoes}`) e invalida cache.
+    - `DELETE /api/perfis/heranca?parentId=&childId=`: remove (requer `{Alterar, Permissoes}`) e invalida cache.
+  - UI mínima: `/admin/perfis/heranca` com formulário simples para criar/remover relações.
 
 4) Cache de Permissões
-- Adicionar cache em memória (TTL 30–60s) para `buscarPermissoesConcedidas`/função central:
-  - Chave: `userId` ou `email`.
-  - Invalidação: ao criar/atualizar permissão (`POST/PATCH /api/permissoes`), invalidar cache do perfil afetado.
-- Alternativa: embutir permissões no JWT (com atenção a invalidar/atualizar token após mudanças).
-- Observação: medir impacto via logs/telemetria.
+- Implementado: cache em memória (TTL 60s) em `src/lib/permissoes.ts` (chave por `email`).
+  - Funções:
+    - `buscarPermissoesConcedidas(email)`: lê/grava cache.
+    - `invalidatePermissionsCache()`: limpa todos os itens (estratégia segura e simples).
+  - Invalidação conectada em:
+    - `POST /api/permissoes` e `PATCH /api/permissoes/[id]` e `PATCH /api/admin/permissoes`: limpam cache após alterações.
+- Alternativas futuras:
+  - Invalidação mais granular (por `perfilId`).
+  - Embutir permissões no JWT (exige estratégia de refresh quando houver mudanças).
+  - Medir impacto via logs/telemetria.
 
 5) Políticas por Domínio (além do RBAC)
 - Para regras contextuais (ex.: "editar somente se for dono"), criar helpers `canEditX(contexto)` por recurso.
@@ -108,3 +134,25 @@ Com isso, UI e servidor avaliam exatamente o mesmo conjunto de permissões.
 - Sequência sugerida: testes -> staging -> produção com feature flag para novos paths.
 - Scripts de migração com dry-run e logs detalhados.
 - Plano de rollback: manter migrations reversíveis e retain backups.
+
+
+# Segurança — ABAC em Processo (Editar Próprio) - Verificar para inserir junto nessa Task
+
+Aplicar controle de atributo (ABAC) para permitir edição apenas do próprio processo quando aplicável.
+
+Referência: plano-mapa-aninhado.md (seção 4)
+
+## Objetivos
+- Diferenciar edição geral vs. edição do próprio registro.
+- Garantir que `EditarProprio_Processo` só permita atualização quando o processo pertencer ao usuário (via `responsavel.userId`).
+
+## Tarefas
+- [x] `src/app/api/processos/[id]/route.ts` (PUT):
+  - [x] Se não houver `{acao: "EditarGeral", recurso: "Processo"}`:
+    - [x] Validar `{acao: "EditarProprio", recurso: "Processo"}` e `responsavel.userId === session.user.id`.
+    - [x] Caso contrário, responder 403.
+  - Implementado no handler PUT com verificação RBAC+ABAC inline; a opção `permissao` do wrapper foi retirada e a decisão é tomada no handler.
+
+## Critérios de Aceite
+- Usuários com `EditarProprio` conseguem editar apenas os processos atribuídos a si.
+- Usuários sem `EditarGeral` não conseguem editar processos de outros.
