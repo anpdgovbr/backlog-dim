@@ -1,19 +1,16 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { invalidatePermissionsCache } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
 
 /**
- * Handler PATCH para atualização de permissão.
+ * Atualiza o campo `permitido` de uma permissão por `id`.
  *
- * @remarks
- * Recebe o ID da permissão via params, valida o corpo da requisição (campo 'permitido'),
- * busca a permissão no banco, verifica se está ativa e atualiza o campo 'permitido'.
- * Retorna o registro atualizado e dados para auditoria.
- *
- * @param params - Parâmetros da rota, incluindo o ID da permissão.
- * @param req - Objeto Request da requisição HTTP.
- * @returns Objeto contendo a resposta HTTP e dados de auditoria.
+ * @see {@link withApiForId}
+ * @returns JSON com a permissão atualizada.
+ * @example PATCH /api/permissoes/10 { "permitido": false }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
  */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
@@ -45,6 +42,9 @@ const handlerPATCH = withApiForId<{ id: string }>(
       data: { permitido },
     })
 
+    // Invalida o cache de permissões após alteração
+    invalidatePermissionsCache()
+
     return {
       response: Response.json(permissaoAtualizada),
       audit: {
@@ -56,20 +56,11 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )
 
-/**
- * Função PATCH exportada para rota /api/permissoes/[id].
- *
- * @remarks
- * Aguarda o parâmetro 'id' do contexto, delega para o handlerPATCH e retorna a resposta.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo params (promessa com o ID).
- * @returns Promise<Response> com o resultado da operação.
- */
+// Export padrão com await em context.params
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }

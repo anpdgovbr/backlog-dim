@@ -9,17 +9,11 @@ const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.b
 const endpoint = `${baseUrl}/controladores`
 
 /**
- * Manipulador para requisições GET na rota de controladores.
+ * Proxy para listar controladores na API externa.
  *
- * @remarks
- * Este endpoint atua como proxy para a API externa de controladores, repassando a query string recebida
- * e retornando o JSON obtido da API de metadados.
- *
- * @param req - Objeto Request contendo a URL e parâmetros de consulta.
- * @returns NextResponse com os dados dos controladores obtidos da API externa.
- *
- * @example
- * GET /api/controladores?nome=Empresa
+ * @param req - Requisição HTTP (query string é repassada).
+ * @returns JSON retornado pela API externa.
+ * @example GET /api/controladores?nome=Empresa
  */
 export async function GET(req: Request) {
   /**
@@ -41,22 +35,12 @@ export async function GET(req: Request) {
 }
 
 /**
- * Manipulador para requisições POST na rota de controladores.
+ * Cria um controlador via API externa.
  *
- * @remarks
- * Este endpoint cria um novo registro de controlador na API externa de metadados.
- * Em caso de erro na API externa, retorna o código HTTP e detalhes do erro.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição com os dados do controlador.
- * @returns Response JSON com o novo registro criado ou erro detalhado.
- *
- * @example
- * POST /api/controladores
- * {
- *   "nome": "Empresa Exemplo",
- *   "cnpj": "12345678000199"
- * }
+ * @see {@link withApi}
+ * @returns JSON com a resposta da API externa e auditoria de criação.
+ * @example POST /api/controladores { "nome": "Empresa X" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Responsavel"}.
  */
 export const POST = withApi(
   /**
@@ -86,6 +70,6 @@ export const POST = withApi(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Responsavel",
+    permissao: { acao: "Cadastrar", recurso: "Responsavel" },
   }
 )

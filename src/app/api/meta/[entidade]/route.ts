@@ -3,52 +3,44 @@ import { NextResponse } from "next/server"
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { withApiForId } from "@/lib/withApi"
-import { withApiSlim } from "@/lib/withApiSlim"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
 
 /**
- * Handler para requisições GET na rota de metadados dinâmicos.
+ * Lista metadados de uma entidade dinâmica (e.g., situacoes, encaminhamentos).
  *
- * @remarks
- * Retorna uma lista paginada de registros ativos da entidade informada via parâmetro dinâmico.
- * Permite ordenação e paginação via query params.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
- * @returns Response JSON com os dados paginados e total de registros.
+ * @see {@link withApiForId}
+ * @returns JSON com `{ data, total }`.
+ * @example GET /api/meta/situacoes?page=1&pageSize=10
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-const handlerGET = withApiSlim<{ entidade: string }>(async ({ req, params }) => {
-  const validacao = validarEntidadeParams(params)
-  if (!validacao.valid) return validacao.response
+const handlerGET = withApiForId<{ entidade: string }>(
+  async ({ req, params }) => {
+    const validacao = validarEntidadeParams(params)
+    if (!validacao.valid) return validacao.response
 
-  const { model } = validacao
-  const { searchParams } = new URL(req.url)
+    const { model } = validacao
+    const { searchParams } = new URL(req.url)
 
-  const page = Number(searchParams.get("page")) || 1
-  const pageSize = Number(searchParams.get("pageSize")) || 10
-  const orderBy = searchParams.get("orderBy") || "nome"
-  const ascending = searchParams.get("ascending") === "true"
+    const page = Number(searchParams.get("page")) || 1
+    const pageSize = Number(searchParams.get("pageSize")) || 10
+    const orderBy = searchParams.get("orderBy") || "nome"
+    const ascending = searchParams.get("ascending") === "true"
 
-  const [total, data] = await Promise.all([
-    model.count({ where: { active: true } }),
-    model.findMany({
-      where: { active: true },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { [orderBy]: ascending ? "asc" : "desc" },
-    }),
-  ])
+    const [total, data] = await Promise.all([
+      model.count({ where: { active: true } }),
+      model.findMany({
+        where: { active: true },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+      }),
+    ])
 
-  return NextResponse.json({ data, total })
-}, "Exibir_Metadados")
+    return NextResponse.json({ data, total })
+  },
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
+)
 
-/**
- * Função exportada para tratar requisições GET.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, incluindo params dinâmicos.
- * @returns Response JSON com os dados da entidade.
- */
 export async function GET(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -56,16 +48,14 @@ export async function GET(
   return handlerGET(req, { params: await context.params })
 }
 
+// POST
 /**
- * Handler para requisições POST na rota de metadados dinâmicos.
+ * Cria um item de metadado para a entidade dinâmica.
  *
- * @remarks
- * Cria um novo registro na entidade informada via parâmetro dinâmico.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição.
- * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
- * @returns Response JSON com o novo registro criado ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON com o item criado (201).
+ * @example POST /api/meta/situacoes { "nome": "Novo" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
  */
 const handlerPOST = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
@@ -86,19 +76,12 @@ const handlerPOST = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
     acao: AcaoAuditoria.CREATE,
     tabela: (params) => params.entidade,
   }
 )
 
-/**
- * Função exportada para tratar requisições POST.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, incluindo params dinâmicos.
- * @returns Response JSON com o novo registro criado.
- */
 export async function POST(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -106,16 +89,14 @@ export async function POST(
   return handlerPOST(req, { params: await context.params })
 }
 
+// PUT
 /**
- * Handler para requisições PUT na rota de metadados dinâmicos.
+ * Atualiza o nome de um metadado por `id` da entidade dinâmica.
  *
- * @remarks
- * Atualiza um registro existente na entidade informada via parâmetro dinâmico.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição.
- * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
- * @returns Response JSON com o registro atualizado ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON com o registro atualizado.
+ * @example PUT /api/meta/situacoes { "id": 1, "nome": "Atualizado" }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Editar", recurso: "Metadados"}.
  */
 const handlerPUT = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
@@ -137,19 +118,12 @@ const handlerPUT = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Editar_Metadados",
+    permissao: { acao: "Editar", recurso: "Metadados" },
     acao: AcaoAuditoria.UPDATE,
     tabela: (params) => params.entidade,
   }
 )
 
-/**
- * Função exportada para tratar requisições PUT.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, incluindo params dinâmicos.
- * @returns Response JSON com o registro atualizado.
- */
 export async function PUT(
   req: Request,
   context: { params: Promise<{ entidade: string }> }
@@ -157,16 +131,14 @@ export async function PUT(
   return handlerPUT(req, { params: await context.params })
 }
 
+// DELETE
 /**
- * Handler para requisições DELETE na rota de metadados dinâmicos.
+ * Desativa (soft delete) um metadado por `id` da entidade dinâmica.
  *
- * @remarks
- * Desabilita (soft delete) um registro existente na entidade informada via parâmetro dinâmico.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição.
- * @param params - Parâmetros dinâmicos da rota, incluindo o nome da entidade.
- * @returns Response JSON com mensagem de sucesso ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON com mensagem de sucesso.
+ * @example DELETE /api/meta/situacoes { "id": 1 }
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Metadados"}.
  */
 const handlerDELETE = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
@@ -195,19 +167,12 @@ const handlerDELETE = withApiForId<{ entidade: string }>(
     }
   },
   {
-    permissao: "Desabilitar_Metadados",
+    permissao: { acao: "Desabilitar", recurso: "Metadados" },
     acao: AcaoAuditoria.DELETE,
     tabela: (params) => params.entidade,
   }
 )
 
-/**
- * Função exportada para tratar requisições DELETE.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, incluindo params dinâmicos.
- * @returns Response JSON com mensagem de sucesso ou erro.
- */
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ entidade: string }> }

@@ -43,15 +43,7 @@ const eslintConfig = [
   },
 
   {
-    ignores: [
-      "node_modules/",
-      ".next/",
-      "public/",
-      "prisma/",
-      "scripts/*.cjs",
-      "docs/",
-      "*.config.{js,ts,mjs}",
-    ],
+    ignores: ["node_modules/", ".next/", "public/", "prisma/", "scripts/*.cjs", "docs/"],
   },
 
   {

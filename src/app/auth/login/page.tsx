@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -13,30 +13,20 @@ import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
-/**
- * Componente de página de Login (Client Component).
- *
- * Descrição:
- * - Gerencia o fluxo de autenticação via NextAuth (provê integração com Azure AD).
- * - Exibe estados de loading durante verificação de sessão e redirecionamento.
- * - Dispara signIn("azure-ad") ao acionar o botão de login e trata erros locais.
- *
- * Comportamento:
- * - Quando a sessão está autenticada, inicia redirecionamento para "/dashboard".
- * - Mostra GovBrLoading enquanto verifica/realiza redirecionamento ou enquanto a ação de login está em andamento.
- *
- * Observações de implementação:
- * - É um componente client ( contém "use client" no topo do arquivo ).
- * - Não altera estado global externo; todo estado é local ao componente.
- * - Erros de login são exibidos via estado local `error`.
- */
-export default function LoginPage() {
+function LoginPageInner() {
   const { status } = useSession()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
-  const showLoading = redirecting || isLoading || status === "loading"
+  const showLoading = redirecting || isLoading
+
+  // Exibe erros retornados pelo NextAuth (ex.: callback falhou)
+  const search = useSearchParams()
+  useEffect(() => {
+    const err = search.get("error")
+    if (err) setError("Falha ao realizar o login. Tente novamente.")
+  }, [search])
 
   // Controle de redirecionamento
   useEffect(() => {
@@ -51,29 +41,56 @@ export default function LoginPage() {
     }
   }, [status, router])
 
+  /**
+   * Inicia o fluxo de login OAuth no Azure AD.
+   *
+   * Observação: para provedores OAuth, quando `redirect: false` é usado,
+   * `signIn` retorna um objeto com a `url` para onde devemos navegar manualmente.
+   * Caso contrário, a sessão nunca muda para "authenticated" e a UI parece travar.
+   * Aqui simplificamos, deixando o NextAuth redirecionar automaticamente.
+   */
   const handleLogin = async () => {
     try {
       setIsLoading(true)
       setError(null)
+      // Usar redirect: false para capturar a URL e navegar manualmente.
       const result = await signIn("azure-ad", {
         redirect: false,
         callbackUrl: "/dashboard",
       })
 
-      if (result?.error) {
+      // Erro explícito reportado pelo NextAuth
+      if (result && typeof result === "object" && "error" in result && result.error) {
         setError("Falha ao realizar o login. Tente novamente.")
-        setIsLoading(false) // só desliga o loading se falhou
+        setIsLoading(false)
+        return
       }
 
-      // Se deu certo, não faz nada — o `useEffect` cuidará do redirecionamento
+      // Navega para a URL do provedor (fluxo OAuth)
+      const url = (result as unknown as { url?: string })?.url
+      if (url) {
+        // Redirecionamento full page para evitar qualquer bloqueio
+        window.location.href = url
+        // Fallback de segurança: se nada acontecer em 8s, libera a UI e mostra erro
+        setTimeout(() => {
+          setIsLoading(false)
+          setError(
+            "Não foi possível redirecionar para o provedor. Verifique sua conexão e tente novamente."
+          )
+        }, 8000)
+        return
+      }
+
+      // Caso não haja URL nem erro, libera a UI e mostra mensagem genérica
+      setIsLoading(false)
+      setError("Não foi possível iniciar o login. Tente novamente.")
     } catch (err) {
       setError("Falha ao realizar o login. Tente novamente.")
-      console.error("Erro de login:", err)
       setIsLoading(false)
     }
   }
 
-  // Exibir loading durante transições críticas
+  // Exibir loading apenas durante transições críticas iniciadas pelo usuário
   if (showLoading) {
     return (
       <GovBrLoading
@@ -145,5 +162,13 @@ export default function LoginPage() {
         </Typography>
       </Box>
     </Container>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<GovBrLoading message="Carregando..." />}>
+      <LoginPageInner />
+    </Suspense>
   )
 }

@@ -1,20 +1,21 @@
 // app/api/perfis/route.ts
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 /**
- * Handler para requisições GET na rota de perfis.
+ * Lista perfis ativos.
  *
  * @remarks
- * Busca todos os perfis ativos no banco de dados.
- * Retorna um array de perfis no formato JSON.
- *
- * @returns Response JSON contendo os perfis ativos.
+ * Exige permissão `{acao: "Exibir", recurso: "Permissoes"}` pois expõe
+ * metadados de perfis usados na administração de permissões.
  */
-export const GET = withApiSlimNoParams(async () => {
-  const perfis = await prisma.perfil.findMany({
-    where: { active: true },
-  })
+export const GET = withApi(
+  async () => {
+    const perfis = await prisma.perfil.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(perfis)
-}, undefined) // <- sem permissão explícita
+    return Response.json(perfis)
+  },
+  { permissao: { acao: "Exibir", recurso: "Permissoes" } }
+)

@@ -1,35 +1,37 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Manipulador para requisições GET na rota de formas de entrada.
+ * Lista formas de entrada ativas (metadados).
  *
- * @remarks
- * Retorna todos os registros ativos de forma de entrada do banco de dados.
- * Utiliza o Prisma para buscar os dados e retorna em formato JSON.
- *
- * @returns Response JSON com a lista de formas de entrada ativas.
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de formas de entrada ativas.
+ * @example
+ * GET /api/formaEntrada
+ * @remarks Requer permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.formaEntrada.findMany({
-    where: { active: true },
-  })
+export const GET = withApi(
+  async () => {
+    const dados = await prisma.formaEntrada.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
+)
 
 /**
- * Manipulador para requisições POST na rota de formas de entrada.
+ * Cria uma nova forma de entrada (metadado).
  *
- * @remarks
- * Cria um novo registro de forma de entrada no banco de dados.
- * Define o campo `active` como true e `exclusionDate` como null por padrão.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição com os dados da forma de entrada.
- * @returns Response JSON com o novo registro criado ou erro detalhado.
+ * @see {@link withApi}
+ * @returns JSON com o registro criado e status 201.
+ * @example
+ * POST /api/formaEntrada
+ * { "nome": "E-mail" }
+ * @remarks Registra auditoria ({@link AcaoAuditoria.CREATE}) e exige {acao: "Cadastrar", recurso: "Metadados"}.
  */
 export const POST = withApi(
   async ({ req }) => {
@@ -58,6 +60,6 @@ export const POST = withApi(
   {
     tabela: "formaEntrada",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

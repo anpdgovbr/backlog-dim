@@ -1,13 +1,46 @@
+/**
+ * @fileoverview
+ * Tipos e utilitários para autorização (RBAC) usando `PermissionsMap`,
+ * mapeando pares `{ acao, recurso }` para flags booleanas.
+ *
+ * @remarks
+ * `AcaoPermissao` e `RecursoPermissao` estão modelados como enums no Prisma
+ * (ver `prisma/schema.prisma`). Esta camada não assume herança; a agregação
+ * ocorre no servidor antes de chegar aqui.
+ */
 import type {
   AcaoPermissao,
   PermissaoDto,
   RecursoPermissao,
 } from "@anpdgovbr/shared-types"
 
+/**
+ * Mapa de permissões indexado por `acao` e `recurso`.
+ *
+ * @example
+ * ```ts
+ * const perms: PermissionsMap = {
+ *   Exibir: { Processo: true },
+ *   Editar: { Usuario: false },
+ * }
+ * ```
+ */
+/**
+ * Estrutura de dados para checagem de acesso por par `{acao,recurso}`.
+ */
 export type PermissionsMap = Partial<
   Record<AcaoPermissao, Partial<Record<RecursoPermissao, boolean>>>
 >
 
+/**
+ * Converte uma lista de `PermissaoDto` em `PermissionsMap`.
+ *
+ * @param list - Lista de permissões vinda do banco/perfil.
+ * @returns Mapa de permissões por `{ acao, recurso }`.
+ */
+/**
+ * Converte uma lista de permissões (DTO) para `PermissionsMap`.
+ */
 export function toPermissionsMap(list?: PermissaoDto[] | null): PermissionsMap {
   const map: PermissionsMap = {}
   if (!Array.isArray(list)) return map
@@ -20,6 +53,14 @@ export function toPermissionsMap(list?: PermissaoDto[] | null): PermissionsMap {
   return map
 }
 
+/**
+ * Verifica se um par `{ acao, recurso }` está permitido.
+ *
+ * @param perms - Mapa de permissões.
+ * @param acao - Ação requerida.
+ * @param recurso - Recurso alvo.
+ * @returns `true` quando permitido, `false` caso contrário.
+ */
 export function pode(
   perms: PermissionsMap,
   acao: AcaoPermissao,
@@ -28,6 +69,12 @@ export function pode(
   return !!perms?.[acao]?.[recurso]
 }
 
+/**
+ * Retorna `true` se qualquer par do conjunto estiver permitido.
+ *
+ * @param perms - Mapa de permissões.
+ * @param pairs - Lista de pares `[acao, recurso]` a validar.
+ */
 export function hasAny(
   perms: PermissionsMap,
   pairs: Array<readonly [AcaoPermissao, RecursoPermissao]>
@@ -38,8 +85,20 @@ export function hasAny(
   return false
 }
 
-// Compatibilidade transitória (opcional): mapa por chave concatenada
+/**
+ * Compatibilidade transitória (opcional): mapa por chave concatenada.
+ *
+ * @deprecated Prefira `PermissionsMap`. Este formato plano será removido após a
+ * migração completa para checagens por `{acao,recurso}`.
+ */
 export type FlatKey = `${AcaoPermissao}_${RecursoPermissao}`
+/**
+ * Converte para um mapa plano por chave concatenada `Acao_Recurso`.
+ *
+ * @param list - Lista de permissões.
+ * @returns Mapa plano `{ ["Acao_Recurso"]: boolean }`.
+ * @deprecated Utilize `toPermissionsMap` e `pode(...)`. Previsto para remoção.
+ */
 export function toFlatKeyMap(
   list?: PermissaoDto[] | null
 ): Partial<Record<FlatKey, boolean>> {

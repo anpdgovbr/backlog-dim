@@ -22,7 +22,11 @@ export default function Header() {
         sx={{
           justifyContent: "space-between",
           alignItems: "center",
-          minHeight: { xs: 64, sm: 72 },
+          // reduzir a altura para eliminar espaço superior do título
+          minHeight: { xs: 56, sm: 64 },
+          // remover padding vertical e manter padding horizontal
+          py: 0,
+
           px: { xs: 2, sm: 3 },
           maxWidth: "100%",
         }}
@@ -33,6 +37,9 @@ export default function Header() {
             alignItems: "center",
             flex: 1,
             minWidth: 0,
+            height: "100%",
+
+            color: (theme) => theme.palette.primary.contrastText, // passar cor para filhos
           }}
         >
           <SystemTitle />
@@ -43,6 +50,7 @@ export default function Header() {
             display: "flex",
             alignItems: "center",
             ml: 2,
+            height: "100%",
           }}
         >
           <GovBRAvatar />

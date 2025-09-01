@@ -2,35 +2,33 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Manipulador para requisições GET na rota de encaminhamentos.
+ * Lista encaminhamentos ativos (metadados).
  *
- * @remarks
- * Retorna todos os registros ativos de encaminhamento do banco de dados.
- * Utiliza o Prisma para buscar os dados e retorna em formato JSON.
- *
- * @returns Response JSON com a lista de encaminhamentos ativos.
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de encaminhamentos ativos.
+ * @example GET /api/encaminhamentos
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.encaminhamento.findMany({
-    where: { active: true },
-  })
+export const GET = withApi(
+  async () => {
+    const dados = await prisma.encaminhamento.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
+)
 
 /**
- * Manipulador para requisições POST na rota de encaminhamentos.
+ * Cria um novo encaminhamento (metadado).
  *
- * @remarks
- * Cria um novo registro de encaminhamento no banco de dados.
- * Define o campo `active` como true e `exclusionDate` como null por padrão.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição com os dados do encaminhamento.
- * @returns Response JSON com o novo registro criado ou erro detalhado.
+ * @see {@link withApi}
+ * @returns JSON com o registro criado (201).
+ * @example POST /api/encaminhamentos { "nome": "Encaminhado a Ouvidoria" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
  */
 export const POST = withApi(
   async ({ req }) => {
@@ -59,6 +57,6 @@ export const POST = withApi(
   {
     tabela: "encaminhamento",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

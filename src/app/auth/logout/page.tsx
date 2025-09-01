@@ -67,7 +67,6 @@ export default function LogoutPage() {
         callbackUrl: "/",
       })
     } catch (err) {
-      console.error(err)
       setError("Falha ao sair do sistema. Tente novamente.")
     } finally {
       setIsLoading(false)

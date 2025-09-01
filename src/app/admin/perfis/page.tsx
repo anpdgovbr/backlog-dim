@@ -191,11 +191,15 @@ function GerenciarPerfisContent() {
   )
 }
 
-const GerenciarPerfis = withPermissao(
-  GerenciarPerfisContent,
-  "Desabilitar",
-  "Relatorios",
-  { redirecionar: false }
-)
+/**
+ * Protege a tela de gestão de perfis/usuários exigindo permissão adequada.
+ *
+ * @remarks
+ * Atualizado para `{acao: "Alterar", recurso: "Usuario"}`, refletindo o
+ * domínio desta tela (atribuição de perfis e responsáveis a usuários).
+ */
+const GerenciarPerfis = withPermissao(GerenciarPerfisContent, "Alterar", "Usuario", {
+  redirecionar: false,
+})
 
 export default GerenciarPerfis

@@ -1,26 +1,18 @@
-/**
- * @file Rota de API para operações sobre Controladores por ID.
- *
- * Esta rota implementa os endpoints GET, PATCH e DELETE para buscar, atualizar e excluir
- * registros de controladores, utilizando a API externa definida em CONTROLADORES_API_URL.
- * Inclui auditoria das ações realizadas conforme convenção do projeto.
- */
-
+// src/app/api/requeridos/[id]/route.ts
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+
 import { withApiForId } from "@/lib/withApi"
 
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 
+// === GET ===
 /**
- * Handler para requisições GET na rota de Controlador por ID.
+ * Recupera um controlador por `id` via API externa.
  *
- * @remarks
- * Busca informações de um controlador específico na API externa.
- * Realiza auditoria da ação.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com os dados do controlador ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON do controlador externo.
+ * @example GET /api/controladores/10
+ * @remarks Auditoria ({@link AcaoAuditoria.GET}).
  */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -41,17 +33,10 @@ const handlerGET = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )
 
-/**
- * Endpoint GET para buscar controlador por ID.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com os dados do controlador ou erro.
- */
 export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -59,16 +44,14 @@ export async function GET(
   return handlerGET(req, { params: await context.params })
 }
 
+// === PATCH ===
 /**
- * Handler para requisições PATCH na rota de Controlador por ID.
+ * Atualiza um controlador via API externa.
  *
- * @remarks
- * Atualiza informações de um controlador específico na API externa.
- * Realiza auditoria da ação, incluindo estado anterior e posterior.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com os dados atualizados ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON com dados atualizados e auditoria.
+ * @example PATCH /api/controladores/10 { "nome": "Novo" }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Editar", recurso: "Responsavel"}.
  */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
@@ -104,17 +87,10 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Editar_Responsavel",
+    permissao: { acao: "Editar", recurso: "Responsavel" },
   }
 )
 
-/**
- * Endpoint PATCH para atualizar controlador por ID.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com os dados atualizados ou erro.
- */
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -122,16 +98,14 @@ export async function PATCH(
   return handlerPATCH(req, { params: await context.params })
 }
 
+// === DELETE ===
 /**
- * Handler para requisições DELETE na rota de Controlador por ID.
+ * Exclui um controlador via API externa.
  *
- * @remarks
- * Exclui um controlador específico na API externa.
- * Realiza auditoria da ação.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com o resultado da exclusão ou erro.
+ * @see {@link withApiForId}
+ * @returns JSON com resultado e auditoria.
+ * @example DELETE /api/controladores/10
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Responsavel"}.
  */
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -155,17 +129,10 @@ const handlerDELETE = withApiForId<{ id: string }>(
   {
     tabela: "requerido",
     acao: AcaoAuditoria.DELETE,
-    permissao: "Desabilitar_Responsavel",
+    permissao: { acao: "Desabilitar", recurso: "Responsavel" },
   }
 )
 
-/**
- * Endpoint DELETE para excluir controlador por ID.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do controlador.
- * @returns Promise<Response> com o resultado da exclusão ou erro.
- */
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }

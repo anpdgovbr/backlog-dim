@@ -1,21 +1,17 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { verificarPermissao } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
 
 // === GET ===
 /**
- * Recupera um processo por id (param path `id`).
+ * Recupera um processo por `id`.
  *
- * Parâmetros:
- * - id: identificador numérico do processo (string no path, convertido internamente)
- *
- * Respostas:
- * - 200: objeto processo
- * - 404: { error: 'Processo não encontrado' }
- *
- * Exemplo:
- * GET /api/processos/123
+ * @see {@link withApiForId}
+ * @returns JSON com o processo (200) ou erro 404.
+ * @example GET /api/processos/123
+ * @remarks Permissão {acao: "Exibir", recurso: "Processo"} e auditoria ({@link AcaoAuditoria.GET}).
  */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -50,10 +46,17 @@ const handlerGET = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )
 
+/**
+ * Handler Next.js de GET (resolve `context.params` e delega ao handler tipado).
+ *
+ * @param req - Requisição HTTP.
+ * @param context - Contexto com `params` assíncrono.
+ * @returns Resposta do handler GET.
+ */
 export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -63,18 +66,27 @@ export async function GET(
 
 // === PUT ===
 /**
- * Atualiza parcial/totalmente um processo por id.
+ * Atualiza parcial/totalmente um processo por `id`.
  *
- * O corpo deve conter os campos que serão atualizados. Campos de data aceitam string ISO.
- * Retorna 200 com o processo atualizado ou 404 se não encontrado.
+ * @see {@link withApiForId}
+ * @returns JSON com o processo atualizado (200) ou erro (404/400).
+ * @example PUT /api/processos/123 { "requerente": "Empresa Y" }
+ * @remarks
+ * Auditoria ({@link AcaoAuditoria.UPDATE}). Autorização híbrida (RBAC + ABAC):
+ * - Se o usuário possuir `{acao: "EditarGeral", recurso: "Processo"}`, pode editar qualquer registro.
+ * - Caso contrário, se possuir `{acao: "EditarProprio", recurso: "Processo"}` e o processo pertencer a si
+ *   (via `responsavel.userId === session.user.id`), pode editar apenas o próprio.
+ * - Caso nenhum dos critérios seja satisfeito, retorna 403.
  */
 const handlerPUT = withApiForId<{ id: string }>(
-  async ({ params, req }) => {
+  async ({ params, req, email, userId }) => {
     const { id } = params
     const body = await req.json()
 
+    // Carrega processo atual com o vínculo do responsável (para ABAC)
     const processoAtual = await prisma.processo.findUnique({
       where: { id: Number(id) },
+      include: { responsavel: { select: { userId: true } } },
     })
 
     if (!processoAtual?.active) {
@@ -82,6 +94,24 @@ const handlerPUT = withApiForId<{ id: string }>(
         { error: "Processo não encontrado ou inativo" },
         { status: 404 }
       )
+    }
+
+    // Autorização RBAC + ABAC
+    const podeEditarGeral = await verificarPermissao(email, "EditarGeral", "Processo")
+    if (!podeEditarGeral) {
+      const podeEditarProprio = await verificarPermissao(
+        email,
+        "EditarProprio",
+        "Processo"
+      )
+      const ehProprio =
+        processoAtual.responsavel?.userId && userId
+          ? processoAtual.responsavel.userId === userId
+          : false
+
+      if (!(podeEditarProprio && ehProprio)) {
+        return Response.json({ error: "Acesso negado" }, { status: 403 })
+      }
     }
 
     const camposComparaveis: (keyof typeof body)[] = [
@@ -179,7 +209,7 @@ const handlerPUT = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "EditarGeral_Processo",
+    // Permissão tratada dentro do handler (RBAC + ABAC)
   }
 )
 
@@ -192,9 +222,12 @@ export async function PUT(
 
 // === DELETE ===
 /**
- * Remove (marca como inactive) um processo por id.
+ * Desativa (soft delete) um processo por `id`.
  *
- * Retorna 200 em sucesso, 404 se não encontrado/inativo.
+ * @see {@link withApiForId}
+ * @returns JSON com mensagem de sucesso (200) ou erro 404.
+ * @example DELETE /api/processos/123
+ * @remarks Auditoria ({@link AcaoAuditoria.DELETE}) e permissão {acao: "Desabilitar", recurso: "Processo"}.
  */
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
@@ -233,7 +266,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
   {
     tabela: "processo",
     acao: AcaoAuditoria.DELETE,
-    permissao: "Desabilitar_Processo",
+    permissao: { acao: "Desabilitar", recurso: "Processo" },
   }
 )
 

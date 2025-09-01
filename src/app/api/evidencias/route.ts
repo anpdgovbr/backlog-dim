@@ -2,35 +2,33 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Manipulador para requisições GET na rota de evidências.
+ * Lista evidências ativas (metadados).
  *
- * @remarks
- * Retorna todos os registros ativos de evidência do banco de dados.
- * Utiliza o Prisma para buscar os dados e retorna em formato JSON.
- *
- * @returns Response JSON com a lista de evidências ativas.
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de evidências ativas.
+ * @example GET /api/evidencias
+ * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.evidencia.findMany({
-    where: { active: true },
-  })
+export const GET = withApi(
+  async () => {
+    const dados = await prisma.evidencia.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
+)
 
 /**
- * Manipulador para requisições POST na rota de evidências.
+ * Cria uma nova evidência (metadado).
  *
- * @remarks
- * Cria um novo registro de evidência no banco de dados.
- * Define o campo `active` como true e `exclusionDate` como null por padrão.
- * Realiza auditoria da ação conforme convenção do projeto.
- *
- * @param req - Objeto Request contendo o corpo da requisição com os dados da evidência.
- * @returns Response JSON com o novo registro criado ou erro detalhado.
+ * @see {@link withApi}
+ * @returns JSON com o registro criado (201).
+ * @example POST /api/evidencias { "nome": "Documento X" }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
  */
 export const POST = withApi(
   async ({ req }) => {
@@ -59,6 +57,6 @@ export const POST = withApi(
   {
     tabela: "evidencia",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

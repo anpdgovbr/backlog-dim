@@ -6,6 +6,11 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
   const { pathname } = request.nextUrl
 
+  // Bypass total para rotas NextAuth (signin/callback/jwt/etc.)
+  if (pathname.startsWith("/api/auth")) {
+    return NextResponse.next()
+  }
+
   // 1. Redirecionar usuários autenticados que tentam acessar login
   if (token && pathname === "/auth/login") {
     return NextResponse.redirect(new URL("/dashboard", request.url))

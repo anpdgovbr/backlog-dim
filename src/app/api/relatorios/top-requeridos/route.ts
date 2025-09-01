@@ -3,30 +3,18 @@ import fetch from "node-fetch"
 import type { ControladorDto } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 // npm install node-fetch
 
 /**
- * Handler GET para o relatório dos "top requeridos".
+ * Top requeridos por número de processos.
  *
- * Retorna uma lista dos controladores (requeridos) mais recorrentes em processos,
- * ordenados pelo número de processos associados, limitado pelo parâmetro `limit` (máx. 100).
- * Para cada requerido, busca detalhes via API externa definida em `CONTROLADORES_API_URL`.
- *
- * Resposta: Array de objetos `ControladorDto` estendidos com o campo `totalProcessos`.
- *
- * @param req - Request HTTP recebida.
- * @returns Response JSON com os top requeridos e total de processos por requerido.
- *
- * @example
- * GET /api/relatorios/top-requeridos?limit=10
- * [
- *   { id: 123, nome: "Empresa X", totalProcessos: 42, ... },
- *   { id: 456, nome: "Empresa Y", totalProcessos: 37, ... }
- * ]
+ * @remarks
+ * Migrado para `withApi` (antes `withApiSlimNoParams`). Sem permissão explícita
+ * adicional além de autenticação.
  */
-export const GET = withApiSlimNoParams(async ({ req }) => {
+export const GET = withApi(async ({ req }) => {
   const { searchParams } = new URL(req.url)
   const limit = Math.min(Number(searchParams.get("limit")) || 5, 100)
 

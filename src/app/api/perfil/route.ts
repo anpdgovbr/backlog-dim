@@ -1,17 +1,12 @@
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 /**
- * Handler para requisições GET na rota de perfil.
+ * Perfil do usuário autenticado.
  *
- * @remarks
- * Busca o usuário pelo e-mail e retorna os dados do perfil associado.
- * Retorna erro 404 se o perfil não for encontrado, ou 403 se estiver desativado.
- *
- * @param email - E-mail do usuário para busca.
- * @returns Response JSON com os dados do perfil ou erro.
+ * @remarks Migrado para `withApi` (antes `withApiSlimNoParams`).
  */
-export const GET = withApiSlimNoParams(async ({ email }) => {
+export const GET = withApi(async ({ email }) => {
   const user = await prisma.user.findUnique({
     where: { email },
     include: { perfil: true },

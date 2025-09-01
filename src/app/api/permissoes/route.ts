@@ -1,41 +1,34 @@
-/**
- * API de Permissões.
- *
- * Este arquivo define os handlers para a rota `/api/permissoes`, permitindo
- * recuperar permissões por perfil ou usuário autenticado, e criar/atualizar permissões.
- *
- * - GET: Retorna permissões do perfil informado ou do usuário autenticado.
- * - POST: Cria ou atualiza permissões para um perfil específico.
- *
- * @packageDocumentation
- */
-
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import type { PermissaoPayload } from "@anpdgovbr/shared-types"
 
 import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
+import { verificarPermissao, invalidatePermissionsCache } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
- * Handler para requisições GET na rota de permissões.
+ * Recupera permissões.
  *
- * Recupera permissões do perfil informado via query string (`perfilId`)
- * ou, se não informado, do usuário autenticado (identificado pelo e-mail da sessão).
- *
- * @param req - Request HTTP recebida.
- * @param email - E-mail do usuário autenticado.
- * @returns Response JSON com as permissões do perfil ou do usuário.
- *
- * @example
- * GET /api/permissoes?perfilId=3
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com a lista de permissões (por perfil ou do usuário autenticado).
+ * @example GET /api/permissoes?perfilId=3
+ * @remarks Sem auditoria; consulta simples e permissões derivadas do perfil.
  */
-export const GET = withApiSlimNoParams(async ({ req, email }) => {
+/**
+ * Migrado para `withApi` (antes `withApiSlimNoParams`).
+ */
+export const GET = withApi(async ({ req, email }) => {
   const { searchParams } = new URL(req.url)
   const perfilId = searchParams.get("perfilId")
 
   if (perfilId) {
+    // Restringe consulta de permissões por perfil a usuários autorizados
+    const podeExibir = await verificarPermissao(email, "Exibir", "Permissoes")
+    const podeAlterar = await verificarPermissao(email, "Alterar", "Permissoes")
+    if (!podeExibir && !podeAlterar) {
+      return Response.json({ error: "Acesso negado" }, { status: 403 })
+    }
+
     const perfil = await prisma.perfil.findUnique({
       where: { id: Number(perfilId), active: true },
       select: { nome: true },
@@ -66,18 +59,14 @@ export const GET = withApiSlimNoParams(async ({ req, email }) => {
 })
 
 /**
- * Handler para requisições POST na rota de permissões.
+ * Cria ou atualiza uma permissão para um perfil.
  *
- * Cria ou atualiza uma permissão para um perfil específico.
- * Espera no corpo da requisição: `{ perfilId, acao, recurso, permitido }`.
- * Realiza auditoria da operação.
- *
- * @param req - Request HTTP recebida.
- * @returns Response JSON com a permissão criada/atualizada e dados de auditoria.
- *
+ * @see {@link withApi}
+ * @returns JSON com a permissão criada/atualizada.
  * @example
  * POST /api/permissoes
- * Body: { "perfilId": 1, "acao": "Editar", "recurso": "Processo", "permitido": true }
+ * { "perfilId": 1, "acao": "Exibir", "recurso": "Usuario", "permitido": true }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
  */
 export const POST = withApi<PermissaoPayload>(
   async ({ req }) => {
@@ -106,6 +95,9 @@ export const POST = withApi<PermissaoPayload>(
       create: { perfilId, acao, recurso, permitido },
     })
 
+    // Invalida o cache de permissões para refletir alterações imediatamente
+    invalidatePermissionsCache()
+
     return {
       response: Response.json(novaPermissao),
       audit: {
@@ -117,6 +109,6 @@ export const POST = withApi<PermissaoPayload>(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )

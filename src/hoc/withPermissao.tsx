@@ -16,10 +16,27 @@ import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 import usePermissoes from "@/hooks/usePermissoes"
 import { pode } from "@/lib/permissions"
 
+/**
+ * Opções do HOC `withPermissao`.
+ *
+ * @remarks
+ * Este HOC atua como camada de UX no cliente. A segurança real deve ser
+ * garantida no servidor via `withApi`/`withApiSlim`. No futuro, é possível
+ * migrar para habilitar/ocultar ações com base em capacidades vindas da sessão
+ * (ou cache leve no servidor), reduzindo dependência de chamadas SWR.
+ */
 export interface WithPermissaoOptions {
   redirecionar?: boolean
 }
 
+/**
+ * HOC para proteger componentes/client-side com base em permissões RBAC.
+ *
+ * @remarks
+ * - Útil para UX (exibir/ocultar ações), mas não substitui checagens no servidor.
+ * - Futuro: pode ser substituído por um provider de "capabilities" hidratado do
+ *   servidor, ou por hooks que leem permissões consolidadas na sessão JWT.
+ */
 export default function withPermissao<T extends object>(
   Componente: ComponentType<T>,
   acao: AcaoPermissao,

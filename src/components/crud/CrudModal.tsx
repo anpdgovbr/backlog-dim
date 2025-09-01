@@ -3,27 +3,27 @@
 import { useTheme } from "@mui/material/styles"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 export interface Item {
   id?: number
   nome: string
 }
 
-export interface CrudModalProps {
+export type CrudModalProps = Readonly<{
   open: boolean
   onClose: () => void
   onSave: () => void
   item: Partial<Item>
   onItemChange: (updates: Partial<Item>) => void
   title: string
-}
+}>
 
 export default function CrudModal({
   open,
@@ -43,10 +43,12 @@ export default function CrudModal({
       onClose={onClose}
       maxWidth="sm"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 2,
-          boxShadow: theme.shadows[8],
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: "8px",
+            boxShadow: theme.shadows[8],
+          },
         },
       }}
     >
@@ -55,11 +57,7 @@ export default function CrudModal({
           bgcolor: "primary.main",
           color: "primary.contrastText",
           py: 2,
-
-          "& .MuiTypography-root": {
-            fontWeight: theme.typography.fontWeightBold,
-            fontSize: theme.typography.h6.fontSize,
-          },
+          mt: "0 !important",
         }}
       >
         {title}
@@ -86,22 +84,8 @@ export default function CrudModal({
             value={item.nome || ""}
             onChange={(e) => onItemChange({ nome: e.target.value })}
             variant="outlined"
-            size="medium"
             required
             helperText="Campo obrigatório"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "primary.main",
-                },
-
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderWidth: "2px",
-                },
-              },
-            }}
           />
         </Box>
       </DialogContent>
@@ -114,54 +98,18 @@ export default function CrudModal({
           bgcolor: "grey.25",
         }}
       >
-        <Button
-          onClick={onClose}
-          variant="outlined"
-          color="inherit"
-          sx={{
-            textTransform: "none",
-            borderRadius: 2,
-            px: 3,
-            color: "text.secondary",
-            borderColor: "divider",
-
-            "&:hover": {
-              bgcolor: "grey.100",
-              borderColor: "grey.400",
-            },
-          }}
-        >
+        <GovBRButton onClick={onClose} variant="outlined" color="error">
           Cancelar
-        </Button>
+        </GovBRButton>
 
-        <Button
+        <GovBRButton
           onClick={onSave}
           variant="contained"
           color="primary"
           disabled={!canSave}
-          sx={{
-            textTransform: "none",
-            borderRadius: 2,
-            px: 3,
-            fontWeight: theme.typography.fontWeightMedium,
-            boxShadow: theme.shadows[2],
-
-            "&:hover": {
-              boxShadow: theme.shadows[4],
-              transform: "translateY(-1px)",
-            },
-
-            "&:disabled": {
-              bgcolor: "grey.300",
-              color: "grey.600",
-              boxShadow: "none",
-            },
-
-            transition: "all 0.2s ease",
-          }}
         >
           {isEdit ? "Salvar" : "Criar"}
-        </Button>
+        </GovBRButton>
       </DialogActions>
     </Dialog>
   )
