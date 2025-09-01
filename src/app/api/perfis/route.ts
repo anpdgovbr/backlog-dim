@@ -1,6 +1,7 @@
 // app/api/perfis/route.ts
 import { prisma } from "@/lib/prisma"
-import { withApi } from "@/lib/withApi"
+import { withApi } from "../../../../rbac/packages/rbac-next/src"
+import { getIdentity, rbacProvider } from "@/rbac/server"
 
 /**
  * Lista perfis ativos.
@@ -17,5 +18,9 @@ export const GET = withApi(
 
     return Response.json(perfis)
   },
-  { permissao: { acao: "Exibir", recurso: "Permissoes" } }
+  {
+    permissao: { acao: "Exibir", recurso: "Permissoes" },
+    provider: rbacProvider,
+    getIdentity,
+  }
 )
