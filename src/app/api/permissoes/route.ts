@@ -2,10 +2,9 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import type { PermissaoPayload } from "@anpdgovbr/shared-types"
 
 import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
-import { verificarPermissao } from "@/lib/permissoes"
+import { verificarPermissao, invalidatePermissionsCache } from "@/lib/permissoes"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
  * Recupera permissões.
@@ -15,7 +14,10 @@ import { withApiSlimNoParams } from "@/lib/withApiSlim"
  * @example GET /api/permissoes?perfilId=3
  * @remarks Sem auditoria; consulta simples e permissões derivadas do perfil.
  */
-export const GET = withApiSlimNoParams(async ({ req, email }) => {
+/**
+ * Migrado para `withApi` (antes `withApiSlimNoParams`).
+ */
+export const GET = withApi(async ({ req, email }) => {
   const { searchParams } = new URL(req.url)
   const perfilId = searchParams.get("perfilId")
 
@@ -92,6 +94,9 @@ export const POST = withApi<PermissaoPayload>(
       update: { permitido },
       create: { perfilId, acao, recurso, permitido },
     })
+
+    // Invalida o cache de permissões para refletir alterações imediatamente
+    invalidatePermissionsCache()
 
     return {
       response: Response.json(novaPermissao),

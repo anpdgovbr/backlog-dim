@@ -1,7 +1,12 @@
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
-export const GET = withApiSlimNoParams(async ({ email }) => {
+/**
+ * Perfil do usuário autenticado.
+ *
+ * @remarks Migrado para `withApi` (antes `withApiSlimNoParams`).
+ */
+export const GET = withApi(async ({ email }) => {
   const user = await prisma.user.findUnique({
     where: { email },
     include: { perfil: true },

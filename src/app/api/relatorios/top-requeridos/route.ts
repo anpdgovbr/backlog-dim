@@ -3,11 +3,18 @@ import fetch from "node-fetch"
 import type { ControladorDto } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 // npm install node-fetch
 
-export const GET = withApiSlimNoParams(async ({ req }) => {
+/**
+ * Top requeridos por número de processos.
+ *
+ * @remarks
+ * Migrado para `withApi` (antes `withApiSlimNoParams`). Sem permissão explícita
+ * adicional além de autenticação.
+ */
+export const GET = withApi(async ({ req }) => {
   const { searchParams } = new URL(req.url)
   const limit = Math.min(Number(searchParams.get("limit")) || 5, 100)
 

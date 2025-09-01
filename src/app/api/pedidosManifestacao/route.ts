@@ -2,7 +2,6 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
  * Lista pedidos de manifestação ativos (metadados).
@@ -12,7 +11,7 @@ import { withApiSlimNoParams } from "@/lib/withApiSlim"
  * @example GET /api/pedidosManifestacao
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-export const GET = withApiSlimNoParams(
+export const GET = withApi(
   async () => {
     const dados = await prisma.pedidoManifestacao.findMany({
       where: { active: true },
@@ -20,7 +19,7 @@ export const GET = withApiSlimNoParams(
 
     return Response.json(dados)
   },
-  { acao: "Exibir", recurso: "Metadados" }
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
 )
 
 /**

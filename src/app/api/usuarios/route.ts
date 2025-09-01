@@ -1,6 +1,6 @@
 // src/app/api/usuarios/route.ts
 import { mapearUsuariosComResponsaveis } from "@/helpers/mapaUserComResponsavel"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@/lib/withApi"
 
 /**
  * Lista usuários mapeados com seus responsáveis.
@@ -10,11 +10,14 @@ import { withApiSlimNoParams } from "@/lib/withApiSlim"
  * @example GET /api/usuarios
  * @remarks Permissão {acao: "Exibir", recurso: "Usuario"}.
  */
-export const GET = withApiSlimNoParams(
+/**
+ * Migrado para `withApi` (antes `withApiSlimNoParams`).
+ */
+export const GET = withApi(
   async ({ req: _req }) => {
     const result = await mapearUsuariosComResponsaveis()
 
     return Response.json(result)
   },
-  { acao: "Exibir", recurso: "Usuario" }
+  { permissao: { acao: "Exibir", recurso: "Usuario" } }
 )

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, AcaoPermissao, RecursoPermissao } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -199,6 +199,19 @@ async function main() {
     }),
   }
 
+  // 🔹 Herança de Perfis (SuperAdmin > Administrador > Supervisor > Atendente > Leitor)
+  // A herança apenas ADICIONA permissões; negações não removem concessões herdadas.
+  console.log("🔹 Configurando herança de perfis...")
+  await prisma.perfilHeranca.createMany({
+    data: [
+      { parentId: perfis.administrador.id, childId: perfis.superAdmin.id },
+      { parentId: perfis.supervisor.id, childId: perfis.administrador.id },
+      { parentId: perfis.atendente.id, childId: perfis.supervisor.id },
+      { parentId: perfis.leitor.id, childId: perfis.atendente.id },
+    ],
+    skipDuplicates: true,
+  })
+
   console.log("🔹 Criando Permissões...")
   const permissoes = [
     // 🔹 Permissões da entidade Processo (cada perfil tem sua permissão individual)
@@ -272,6 +285,7 @@ async function main() {
       perfilId: perfis.administrador.id,
     },
 
+    // RBAC/ABAC: edição do próprio Processo (usado no ABAC do PUT /api/processos/[id])
     {
       acao: "EditarProprio",
       recurso: "Processo",
@@ -297,6 +311,7 @@ async function main() {
       perfilId: perfis.administrador.id,
     },
 
+    // RBAC: edição geral de Processo (sem restrição por usuário)
     {
       acao: "EditarGeral",
       recurso: "Processo",
@@ -444,6 +459,12 @@ async function main() {
     {
       acao: "Desabilitar",
       recurso: "Responsavel",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Acessar",
+      recurso: "Admin",
       permitido: true,
       perfilId: perfis.administrador.id,
     },
@@ -765,6 +786,7 @@ async function main() {
     },
 
     // 🔹 Gate Admin semântico
+    // Gate Admin semântico (protege layout e rotas admin)
     {
       acao: "Acessar",
       recurso: "Admin",
@@ -778,7 +800,70 @@ async function main() {
       perfilId: perfis.superAdmin.id,
     },
 
+    // 🔹 Administrador com todas as ações no recurso Admin
+    {
+      acao: "Exibir",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Cadastrar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Editar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Desabilitar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "VerHistorico",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "EditarProprio",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "EditarGeral",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Registrar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Criar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+
     // 🔹 Consulta de permissões por perfil (Exibir)
+    // Consulta e alteração de permissões (protege telas/rotas de administração de perfis/permissões)
     {
       acao: "Exibir",
       recurso: "Permissoes",
@@ -794,20 +879,30 @@ async function main() {
   ]
   // 🔹 Atualiza as permissões corretamente no banco
   for (const permissao of permissoes) {
+    const acaoEnum = permissao.acao as unknown as AcaoPermissao
+    const recursoEnum = permissao.recurso as unknown as RecursoPermissao
+
     await prisma.permissao.upsert({
       where: {
         perfilId_acao_recurso: {
           perfilId: permissao.perfilId,
-          acao: permissao.acao,
-          recurso: permissao.recurso,
+          acao: acaoEnum,
+          recurso: recursoEnum,
         },
       },
       update: { permitido: permissao.permitido },
-      create: permissao,
+      create: {
+        perfilId: permissao.perfilId,
+        acao: acaoEnum,
+        recurso: recursoEnum,
+        permitido: permissao.permitido,
+      },
     })
   }
 
-  console.log("🔹 Criando Usuários a partir de SEED_USERS_JSON...")
+  console.log(
+    "🔹 Criando Usuários a partir de SEED_USERS_JSON ou variáveis específicas..."
+  )
   if (process.env.SEED_USERS_JSON) {
     try {
       const usersToCreate = JSON.parse(process.env.SEED_USERS_JSON)
@@ -855,7 +950,45 @@ async function main() {
       )
     }
   } else {
-    console.log("⏩ SEED_USERS_JSON não definido. Pulando criação de usuários.")
+    // Fallback: usar variáveis individuais no .env (ex.: SEED_ADMIN_EMAIL, SEED_ADMIN_NOME, ...)
+    const entries: Array<{ email: string; nome: string; perfil: string }> = []
+
+    const addIfPresent = (perfil: string, emailVar: string, nomeVar: string) => {
+      const email = process.env[emailVar]
+      const nome = process.env[nomeVar]
+      if (email && nome) entries.push({ email, nome, perfil })
+    }
+
+    addIfPresent("SuperAdmin", "SEED_SUPERADMIN_EMAIL", "SEED_SUPERADMIN_NOME")
+    addIfPresent("Administrador", "SEED_ADMIN_EMAIL", "SEED_ADMIN_NOME")
+    addIfPresent("Supervisor", "SEED_SUPERVISOR_EMAIL", "SEED_SUPERVISOR_NOME")
+    addIfPresent("Atendente", "SEED_ATENDENTE_EMAIL", "SEED_ATENDENTE_NOME")
+    addIfPresent("Leitor", "SEED_LEITOR_EMAIL", "SEED_LEITOR_NOME")
+
+    if (entries.length) {
+      const perfilNameToIdMap = {
+        Leitor: perfis.leitor.id,
+        Atendente: perfis.atendente.id,
+        Supervisor: perfis.supervisor.id,
+        Administrador: perfis.administrador.id,
+        SuperAdmin: perfis.superAdmin.id,
+      }
+
+      for (const { email, nome, perfil } of entries) {
+        const perfilId = perfilNameToIdMap[perfil as keyof typeof perfilNameToIdMap]
+        if (!perfilId) continue
+        await prisma.user.upsert({
+          where: { email },
+          update: { nome, perfilId },
+          create: { email, nome, perfilId },
+        })
+      }
+      console.log(`✅ ${entries.length} usuários processados a partir de variáveis .env.`)
+    } else {
+      console.log(
+        "⏩ Nenhuma variável de usuário inicial definida. Pulando criação de usuários."
+      )
+    }
   }
 
   console.log("✅ Seed aplicado com sucesso!")

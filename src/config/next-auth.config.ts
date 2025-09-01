@@ -13,10 +13,15 @@ export const authOptions = {
       },
     }),
   ],
+  // Desativa logs de debug do NextAuth
+  debug: false as const,
+  // Confia no host do proxy/dev ao inferir URLs (útil em portas customizadas)
+  trustHost: true as const,
   session: {
     strategy: "jwt" as const,
     maxAge: 4 * 60 * 60,
   },
+  // Remove logger customizado para evitar ruído em logs
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user, account }: any) {

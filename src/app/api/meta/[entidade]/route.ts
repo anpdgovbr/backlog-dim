@@ -3,18 +3,17 @@ import { NextResponse } from "next/server"
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { withApiForId } from "@/lib/withApi"
-import { withApiSlim } from "@/lib/withApiSlim"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
 
 /**
  * Lista metadados de uma entidade dinâmica (e.g., situacoes, encaminhamentos).
  *
- * @see {@link withApiSlim}
+ * @see {@link withApiForId}
  * @returns JSON com `{ data, total }`.
  * @example GET /api/meta/situacoes?page=1&pageSize=10
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-const handlerGET = withApiSlim<{ entidade: string }>(
+const handlerGET = withApiForId<{ entidade: string }>(
   async ({ req, params }) => {
     const validacao = validarEntidadeParams(params)
     if (!validacao.valid) return validacao.response
@@ -39,7 +38,7 @@ const handlerGET = withApiSlim<{ entidade: string }>(
 
     return NextResponse.json({ data, total })
   },
-  { acao: "Exibir", recurso: "Metadados" }
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
 )
 
 export async function GET(
