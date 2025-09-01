@@ -14,12 +14,45 @@ import Typography from "@mui/material/Typography"
 import { BaseDashboardCard } from "@/components/ui/dashboard-card"
 import type { TopRequerido } from "@/types/TopRequeridos"
 
+/**
+ * Valor padrão máximo de requeridos exibidos no card.
+ *
+ * É usado como fallback quando a prop `limit` não é informada.
+ */
 const MAX_REQUERIDOS = 5
 
+/**
+ * Props do componente RequeridosDashboardCard.
+ *
+ * - limit: número máximo de requeridos a serem exibidos. O valor padrão é
+ *   {@link MAX_REQUERIDOS}.
+ */
 export type RequeridosDashboardCardProps = Readonly<{
   limit?: number
 }>
 
+/**
+ * Card do dashboard que exibe o "top" de requeridos (empresas) com mais processos.
+ *
+ * Comportamento:
+ * - Ao montar, busca via fetch em /api/relatorios/top-requeridos?limit={limit} os
+ *   dados dos principais requeridos (cache: no-store).
+ * - Exibe estado de loading com Skeletons enquanto os dados não chegam.
+ * - Em caso de erro de rede ou resposta inesperada, mostra uma mensagem de aviso
+ *   e lista vazia.
+ * - Possui um botão de ação que navega para "/dashboard/requeridos".
+ *
+ * Efeitos colaterais:
+ * - Realiza uma requisição HTTP (fetch) no useEffect dependente de `limit`.
+ * - Atualiza estados locais `topRequeridos` e `erro`.
+ *
+ * Observações:
+ * - As props são imutáveis (tipadas com Readonly).
+ * - O componente é cliente ("use client") e usa hooks de navegação do Next.js.
+ *
+ * @param props.limit limite opcional de itens a serem exibidos
+ * @returns JSX.Element representando o card de requeridos
+ */
 function RequeridosDashboardCard({
   limit = MAX_REQUERIDOS,
 }: RequeridosDashboardCardProps) {

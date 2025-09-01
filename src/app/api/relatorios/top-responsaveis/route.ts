@@ -1,6 +1,18 @@
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 
+/**
+ * Representa um responsável e a contagem de processos associada.
+ *
+ * @remarks
+ * Tipo retornado pela API de "top responsáveis" contendo os dados essenciais
+ * para exibição em relatórios ou dashboards.
+ *
+ * @property id - Identificador numérico do responsável.
+ * @property nome - Nome do responsável.
+ * @property userId - Identificador do usuário relacionado (pode ser null).
+ * @property totalProcessos - Total de processos atribuídos a este responsável.
+ */
 interface ResponsavelProcessos {
   id: number
   nome: string
@@ -9,9 +21,20 @@ interface ResponsavelProcessos {
 }
 
 /**
- * Top responsáveis por número de processos.
+ * Retorna os responsáveis com maior número de processos.
  *
- * @remarks Migrado para `withApi` (antes `withApiSlimNoParams`).
+ * Endpoint GET que agrega processos por `responsavelId`, busca os responsáveis
+ * correspondentes e retorna uma lista contendo o total de processos por
+ * responsável, ordenada do maior para o menor.
+ *
+ * @remarks
+ * - O parâmetro de query `limit` define quantos itens retornar (padrão 5, máximo 100).
+ * - O wrapper `withApi` aplica autenticação/permissões e tratamento padrão.
+ *
+ * @example
+ * GET /api/relatorios/top-responsaveis?limit=10
+ *
+ * @returns Response JSON com um array de objetos do tipo ResponsavelProcessos.
  */
 export const GET = withApi(async ({ req }) => {
   try {

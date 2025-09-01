@@ -13,6 +13,21 @@ import Typography from "@mui/material/Typography"
 
 import { BaseDashboardCard } from "@/components/ui/dashboard-card"
 
+/**
+ * Componente de card para o dashboard que apresenta um resumo dos processos do
+ * sistema e fornece uma ação direta para navegar ao gerenciador de processos.
+ *
+ * Comportamento:
+ * - Mostra métricas resumidas (ex.: total ativo, pendentes) em pequenos cards.
+ * - Exibe chips com estados/filtragens rápidas (Ex.: "Em Análise", "Aguardando").
+ * - Fornece um botão principal que redireciona para a rota "/dashboard/processos".
+ *
+ * Uso:
+ * <ProcessDashboardCard />
+ *
+ * Retorno:
+ * JSX.Element contendo a estrutura visual do card compatível com o layout do dashboard.
+ */
 export function ProcessDashboardCard() {
   const router = useRouter()
 
