@@ -22,7 +22,7 @@ import Typography from "@mui/material/Typography"
 import type { PermissaoDto } from "@anpdgovbr/shared-types"
 
 import { useNotification } from "@/context/NotificationProvider"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 import { fetcher } from "@/lib/fetcher"
 
 interface Perfil {
@@ -280,5 +280,5 @@ const SuperAdminPage = () => {
 }
 
 export default withPermissao(SuperAdminPage, "Desabilitar", "Relatorios", {
-  redirecionar: false,
+  redirect: false,
 })

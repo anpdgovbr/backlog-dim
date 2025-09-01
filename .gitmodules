@@ -1,13 +1,13 @@
 [submodule "external/shared-types"]
 	path = external/shared-types
 	url = git@github.com:anpdgovbr/shared-types.git
-	branch = migrando-rbac
+	branch = main
 [submodule "external/docker-infra-pg"]
 	path = external/docker-infra-pg
 	url = git@github.com:anpdgovbr/docker-infra-pg.git
-	branch = migrando-rbac
+	branch = main
 
 [submodule "rbac"]
 	path = rbac
 	url = git@github.com:anpdgovbr/rbac.git
-	branch = migrando-rbac
+	branch = main

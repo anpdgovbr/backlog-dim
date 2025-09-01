@@ -1,13 +1,13 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function ContatoPrevioPageContent() {
   return <CrudManager tableName="contatoPrevio" entityName="Contato Prévio" />
 }
 const ContatoPrevioPage = withPermissao(ContatoPrevioPageContent, "Exibir", "Metadados", {
-  redirecionar: false,
+  redirect: false,
 })
 
 export default ContatoPrevioPage

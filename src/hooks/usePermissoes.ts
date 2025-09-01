@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react"
 import type { PermissaoDto } from "@anpdgovbr/shared-types"
 
 import { fetcher } from "@/lib/fetcher"
-import type { PermissionsMap } from "@/lib/permissions"
-import { toPermissionsMap } from "@/lib/permissions"
+import type { PermissionsMap } from "@anpdgovbr/rbac-core"
+import { toPermissionsMap } from "@anpdgovbr/rbac-core"
 
 export default function usePermissoes() {
   const { data: session } = useSession()

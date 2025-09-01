@@ -32,8 +32,8 @@
   },
   "scripts": {
     "build": "npx prisma generate && next build",
-    "build-routes": "tsx scripts/generateDevRoutes.ts",
-    "build-routes:verbose": "tsx scripts/generateDevRoutes.ts --verbose",
+    "build-routes": "node scripts/generateDevRoutes.cjs",
+    "build-routes:verbose": "node scripts/generateDevRoutes.cjs --verbose",
     "bump": "node scripts/bump-version.cjs",
     "bump:patch": "node scripts/bump-version-advanced.cjs patch",
     "bump:minor": "node scripts/bump-version-advanced.cjs minor",
@@ -124,11 +124,12 @@
     "swr": "^2.3.6",
     "tsx": "^4.20.5",
     "yup": "^1.7.0",
-    "@anpdgovbr/rbac-core": "^0.1.0-beta.1",
-    "@anpdgovbr/rbac-provider": "^0.1.0-beta.1",
-    "@anpdgovbr/rbac-prisma": "^0.1.0-beta.1",
-    "@anpdgovbr/rbac-next": "^0.1.0-beta.1",
-    "@anpdgovbr/rbac-react": "^0.1.0-beta.1"
+    "@anpdgovbr/rbac-core": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-provider": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-prisma": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-next": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-react": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-admin": "^0.0.1-beta.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",

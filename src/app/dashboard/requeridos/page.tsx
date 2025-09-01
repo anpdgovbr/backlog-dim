@@ -1,7 +1,7 @@
 "use client"
 
 import RequeridoDataGrid from "@/components/requerido/RequeridoDataGrid"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function GerenciarRequeridosContent() {
   return <RequeridoDataGrid />
@@ -12,7 +12,7 @@ const GerenciarRequeridos = withPermissao(
   "Exibir",
   "Responsavel",
   {
-    redirecionar: false,
+    redirect: false,
   }
 )
 

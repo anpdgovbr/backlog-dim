@@ -8,7 +8,7 @@ RBAC: a documentação foi movida para os repositórios responsáveis.
   - Padrões de desenvolvimento: `rbac/docs/dev-standards.md`
   - Seeds e ambiente de dev: `rbac/docs/dev-seed.md`
   - Roadmap: `rbac/docs/roadmap.md`
+  - Uso no app: `doc/rbac/USAGE.md`
 
 - Infra PG (ambiente de dev): `external/docker-infra-pg/docs/rbac-dev-setup.md`
 - Tipos compartilhados: `external/shared-types/README.md`
-

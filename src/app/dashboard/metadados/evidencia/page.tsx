@@ -1,14 +1,14 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function EvidenciaPageContent() {
   return <CrudManager tableName="Evidencia" entityName="Evidência" />
 }
 
 const EvidenciaPage = withPermissao(EvidenciaPageContent, "Exibir", "Metadados", {
-  redirecionar: false,
+  redirect: false,
 })
 
 export default EvidenciaPage

@@ -19,7 +19,7 @@ import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 
 import { useNotification } from "@/context/NotificationProvider"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 import { usePerfis } from "@/hooks/usePerfis"
 import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
@@ -199,7 +199,7 @@ function GerenciarPerfisContent() {
  * domínio desta tela (atribuição de perfis e responsáveis a usuários).
  */
 const GerenciarPerfis = withPermissao(GerenciarPerfisContent, "Alterar", "Usuario", {
-  redirecionar: false,
+  redirect: false,
 })
 
 export default GerenciarPerfis

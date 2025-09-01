@@ -33,7 +33,7 @@ import { StatusInterno } from "@anpdgovbr/shared-types"
 import { DashboardLayout } from "@/components/layouts"
 import MetricCard from "@/components/ui/MetricCard"
 import { useNotification } from "@/context/NotificationProvider"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 const EXPECTED_COLUMNS = 7
 
@@ -525,7 +525,7 @@ const ImportarProcessos = withPermissao(
   "Cadastrar",
   "Processo",
   {
-    redirecionar: false,
+    redirect: false,
   }
 )
 
