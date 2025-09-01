@@ -66,6 +66,7 @@ export async function getPermissoesPorPerfil(perfilNome: string) {
     select: {
       id: true,
       perfilId: true,
+      perfil: { select: { nome: true } },
       acao: true,
       recurso: true,
       permitido: true,
@@ -74,13 +75,27 @@ export async function getPermissoesPorPerfil(perfilNome: string) {
 
   const permissoesMap = new Map<
     string,
-    { id: number; perfilId: number; acao: string; recurso: string; permitido: boolean }
+    {
+      id: number
+      perfilId: number
+      perfilNome?: string
+      acao: string
+      recurso: string
+      permitido: boolean
+    }
   >()
 
   for (const p of permissoes) {
     const key = `${p.acao}_${p.recurso}`
     if (!permissoesMap.has(key) || p.permitido) {
-      permissoesMap.set(key, p)
+      permissoesMap.set(key, {
+        id: p.id,
+        perfilId: p.perfilId,
+        perfilNome: p.perfil?.nome,
+        acao: p.acao,
+        recurso: p.recurso,
+        permitido: p.permitido,
+      })
     }
   }
 

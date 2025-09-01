@@ -800,6 +800,68 @@ async function main() {
       perfilId: perfis.superAdmin.id,
     },
 
+    // 🔹 Administrador com todas as ações no recurso Admin
+    {
+      acao: "Exibir",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Cadastrar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Editar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Desabilitar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "VerHistorico",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "EditarProprio",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "EditarGeral",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Alterar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Registrar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+    {
+      acao: "Criar",
+      recurso: "Admin",
+      permitido: true,
+      perfilId: perfis.administrador.id,
+    },
+
     // 🔹 Consulta de permissões por perfil (Exibir)
     // Consulta e alteração de permissões (protege telas/rotas de administração de perfis/permissões)
     {
