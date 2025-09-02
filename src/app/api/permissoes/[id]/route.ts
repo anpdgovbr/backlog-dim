@@ -3,6 +3,8 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { invalidatePermissionsCache } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { permissaoPatchSchema } from "@/schemas/server/Permissao.zod"
 
 /**
  * Atualiza o campo `permitido` de uma permissão por `id`.
@@ -19,12 +21,14 @@ const handlerPATCH = withApiForId<{ id: string }>(
       return Response.json({ error: "ID inválido" }, { status: 400 })
     }
 
-    const body = await req.json()
-    const { permitido } = body
-
-    if (typeof permitido !== "boolean") {
-      return Response.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(
+      permissaoPatchSchema,
+      raw,
+      `PATCH /api/permissoes/${permissaoId}`
+    )
+    if (!valid.ok) return valid.response
+    const { permitido } = valid.data
 
     const permissao = await prisma.permissao.findUnique({
       where: { id: permissaoId },

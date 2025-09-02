@@ -13,6 +13,7 @@
  */
 // lib/withApi.ts
 import { getServerSession } from "next-auth/next"
+import type { Session } from "next-auth"
 import type { NextRequest } from "next/server"
 
 import type {
@@ -90,7 +91,7 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   options?: WithApiOptions<TParams>,
   params: TParams = {} as TParams
 ): Promise<Response> {
-  const session = await getServerSession(authOptions)
+  const session = (await getServerSession(authOptions)) as Session | null
 
   if (!session?.user?.email) {
     return Response.json({ error: "Usuário não autenticado" }, { status: 401 })
