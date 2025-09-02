@@ -33,7 +33,7 @@ export const POST = withApi(
       return Response.json({ error: "Body inválido" }, { status: 400 })
     }
     const { nome } = body as { nome?: string }
-    if (!nome || !nome.trim()) {
+    if (!nome?.trim()) {
       return Response.json({ error: "'nome' obrigatório" }, { status: 400 })
     }
     const exists = await prisma.perfil.findUnique({ where: { nome } })

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 import type { MetaEntidade } from "@/types/MetaEntidades"
 import { allowedEntities } from "@/types/MetaEntidades"
 
-export type PrismaDelegate<T> = {
+export interface PrismaDelegate<T> {
   findMany: (args?: Prisma.Args<T, "findMany">) => Promise<T[]>
   create: (args: Prisma.Args<T, "create">) => Promise<T>
   update: (args: Prisma.Args<T, "update">) => Promise<T>

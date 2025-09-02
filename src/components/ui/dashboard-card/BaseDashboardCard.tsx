@@ -57,7 +57,7 @@ export function BaseDashboardCard({
             ? React.cloneElement(icon, {
                 ...(icon.props as Record<string, unknown>),
                 sx: {
-                  ...((icon.props as Record<string, unknown>)["sx"] as Record<
+                  ...((icon.props as Record<string, unknown>).sx as Record<
                     string,
                     unknown
                   >),

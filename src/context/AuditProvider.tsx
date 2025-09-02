@@ -7,13 +7,13 @@ import { usePathname } from "next/navigation"
 
 import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
-type AuditContextData = {
+interface AuditContextData {
   userId?: string
   email?: string | null
   contexto: string
 }
 
-export type LogAuditoriaInput = {
+export interface LogAuditoriaInput {
   tabela: string
   acao: AcaoAuditoria
   registroId?: number

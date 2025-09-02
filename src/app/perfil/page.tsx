@@ -20,14 +20,20 @@ import Link from "next/link"
 import { PageLayout } from "@/components/layouts"
 import { fetcher } from "@/lib/fetcher"
 
-type PerfilDto = { id: number; nome: string }
-type PermissaoDto = {
+interface PerfilDto {
+  id: number
+  nome: string
+}
+interface PermissaoDto {
   acao: string
   recurso: string
   permitido: boolean
   perfilNome?: string
 }
-type HerancaDto = { base: string; cadeia: string[] }
+interface HerancaDto {
+  base: string
+  cadeia: string[]
+}
 
 export default function PerfilPage() {
   const { data: session, status } = useSession()
@@ -48,7 +54,7 @@ export default function PerfilPage() {
   )
 
   const permissoesPorRecurso = useMemo(() => {
-    const map = new Map<string, Array<{ acao: string; perfilNome?: string }>>()
+    const map = new Map<string, { acao: string; perfilNome?: string }[]>()
     if (!Array.isArray(permissoes)) return map
     for (const p of permissoes) {
       if (!p.permitido) continue

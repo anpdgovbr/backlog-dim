@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography"
 
 import type { LinkItem } from "./SideMenu"
 
-export type MobileMenuProps = {
+export interface MobileMenuProps {
   links: LinkItem[]
   pathname: string
   title?: string

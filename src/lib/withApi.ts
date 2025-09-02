@@ -12,7 +12,6 @@
  * (sem sessão completa) por meio de opções, permitindo deprecar `withApiSlim`.
  */
 // lib/withApi.ts
-import type { Session } from "next-auth"
 import { getServerSession } from "next-auth/next"
 import type { NextRequest } from "next/server"
 
@@ -78,7 +77,7 @@ export type Handler<TParams extends object = object, TExtra = object> = (
  * Quando `permissao` é informada, a autorização verifica `pode(perms, acao, recurso)`
  * usando um `PermissionsMap` derivado do perfil do usuário.
  */
-export type WithApiOptions<TParams extends object = object> = {
+export interface WithApiOptions<TParams extends object = object> {
   tabela?: string | ((params: TParams) => string)
   acao?: (typeof AcaoAuditoria)[keyof typeof AcaoAuditoria]
   permissao?: { acao: AcaoPermissao; recurso: RecursoPermissao }
@@ -91,7 +90,7 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   options?: WithApiOptions<TParams>,
   params: TParams = {} as TParams
 ): Promise<Response> {
-  const session = (await getServerSession(authOptions)) as Session | null
+  const session = await getServerSession(authOptions)
 
   if (!session?.user?.email) {
     return Response.json({ error: "Usuário não autenticado" }, { status: 401 })
