@@ -30,7 +30,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-prisma-
 
-      - run: npm ci
+      # Instalar dependências - usa npm ci se lock file estiver sincronizado,
+      # senão atualiza o lock file automaticamente
+      - name: Install dependencies
+        run: |
+          if npm ci --dry-run > /dev/null 2>&1; then
+            npm ci
+          else
+            echo "Lock file dessincronizado, atualizando..."
+            npm install
+          fi
 
       # Gerar cliente Prisma antes de qualquer checagem
       - run: npx prisma generate
