@@ -1,5 +1,0 @@
-{
-  "root": true,
-  "plugins": ["next"],
-  "extends": ["next", "next/core-web-vitals"]
-}

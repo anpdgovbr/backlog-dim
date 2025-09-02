@@ -107,8 +107,8 @@ const FloatingDevMenu = () => {
         if (!groups[group]) groups[group] = []
         groups[group].push(route)
       } else {
-        if (!groups["root"]) groups["root"] = []
-        groups["root"].push(route)
+        if (!groups.root) groups.root = []
+        groups.root.push(route)
       }
     })
     return groups

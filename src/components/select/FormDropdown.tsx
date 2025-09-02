@@ -10,7 +10,7 @@ import Tooltip from "@mui/material/Tooltip"
 
 import type { EnumData } from "@anpdgovbr/shared-types"
 
-export type FormDropdownProps = {
+export interface FormDropdownProps {
   name: string
   label: string
   options: EnumData[]

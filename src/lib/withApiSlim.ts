@@ -32,7 +32,7 @@ import { pode, type Action, type Resource } from "@anpdgovbr/rbac-core"
  * Contexto fornecido para handlers "slim".
  * @deprecated Preferir a API unificada de `withApi` quando disponível.
  */
-export type SlimHandlerContext<TParams extends object = object> = {
+export interface SlimHandlerContext<TParams extends object = object> {
   req: Request | NextRequest
   email: string
   userId?: string

@@ -115,7 +115,7 @@ export default function GovBRAvatar() {
             key={item.label}
             className="br-item"
             role="menuitem"
-            onClick={() => handleNavigation(item.href!)}
+            onClick={() => handleNavigation(item.href)}
             style={{
               width: "100%",
               textAlign: "left",

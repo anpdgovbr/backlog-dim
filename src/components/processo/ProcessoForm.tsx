@@ -144,7 +144,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                   fullWidth
                   size="small"
                   error={!!errors.numero}
-                  helperText={errors.numero?.message as string}
+                  helperText={errors.numero?.message}
                 />
               </Grid>
             )}
@@ -205,7 +205,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 fullWidth
                 size="small"
                 error={!!errors.requerente}
-                helperText={errors.requerente?.message as string}
+                helperText={errors.requerente?.message}
               />
             </Grid>
             <Grid
@@ -222,7 +222,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 size="small"
                 slotProps={{ select: { native: true } }}
                 error={!!errors.tipoRequerimento}
-                helperText={errors.tipoRequerimento?.message as string}
+                helperText={errors.tipoRequerimento?.message}
               >
                 <option value=""></option>
                 <option value="PETICAO_TITULAR">Petição de Titular</option>
@@ -347,7 +347,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 fullWidth
                 size="small"
                 error={!!errors.prazoPedido}
-                helperText={errors.prazoPedido?.message as string}
+                helperText={errors.prazoPedido?.message}
               />
             </Grid>
             <Grid
@@ -396,7 +396,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 rows={3}
                 size="small"
                 error={!!errors.resumo}
-                helperText={errors.resumo?.message as string}
+                helperText={errors.resumo?.message}
               />
             </Grid>
             <Grid size={12}>
@@ -408,7 +408,7 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
                 size="small"
                 rows={2}
                 error={!!errors.observacoes}
-                helperText={errors.observacoes?.message as string}
+                helperText={errors.observacoes?.message}
               />
             </Grid>
           </Grid>

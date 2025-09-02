@@ -30,7 +30,7 @@ const handlerPATCH = withApiForId<{ id: string }>(
       where: { id: permissaoId },
     })
 
-    if (!permissao || !permissao.active) {
+    if (!permissao?.active) {
       return Response.json(
         { error: "Permissão não encontrada ou desativada" },
         { status: 404 }

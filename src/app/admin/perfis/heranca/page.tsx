@@ -18,7 +18,7 @@ import type { PerfilDto } from "@anpdgovbr/shared-types"
 import { withPermissao } from "@anpdgovbr/rbac-react"
 import { fetcher } from "@/lib/fetcher"
 
-type Edge = {
+interface Edge {
   parentId: number
   parentNome: string
   childId: number

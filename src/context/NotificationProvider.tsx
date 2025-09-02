@@ -13,7 +13,7 @@ import TopNotification from "@/components/notification/TopNotification"
  */
 export type NotificationType = "success" | "error" | "info" | "warning"
 
-export type NotificationOptions = {
+export interface NotificationOptions {
   /** Mensagem a ser exibida na notificação */
   message: string
   /** Tipo/estilo da notificação (opcional) */

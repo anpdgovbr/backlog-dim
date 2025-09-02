@@ -19,13 +19,13 @@ import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 
-export type LinkItem = {
+export interface LinkItem {
   href: string
   text: string
   icon: React.ReactNode
 }
 
-export type SideMenuProps = {
+export interface SideMenuProps {
   links: LinkItem[]
   pathname: string
   storageKey?: string

@@ -44,7 +44,18 @@ const eslintConfig = [
 
   {
     // Ignorar arquivos e pastas que não fazem parte do linting do app
-    ignores: ["node_modules/", ".next/", "public/", "prisma/", "scripts/*.cjs", "docs/"],
+    ignores: [
+      "node_modules/",
+      ".next/",
+      "public/",
+      "prisma/",
+      "scripts/*.cjs",
+      "doc/",
+      "docs/",
+      // Arquivos gerados/ambientais do Next
+      "next-env.d.ts",
+      "next-auth.d.ts",
+    ],
   },
 
   {
@@ -97,7 +108,11 @@ const eslintConfig = [
       },
     },
     rules: {
+      // TypeScript recommended (non type-checked) to keep signal high without overwhelming noise
+      ...(typescriptPlugin.configs.recommended?.rules ?? {}),
+
       // TypeScript rules
+      "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -115,10 +130,12 @@ const eslintConfig = [
       // Desabilitar no-unused-vars padrão do ESLint (conflita com @typescript-eslint)
       "no-unused-vars": "off",
 
+      // Não usar no-undef em TS (o TS já cuida disso)
+      "no-undef": "off",
+
       // General rules (relaxados temporariamente)
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
-      "no-undef": "warn",
       "no-useless-escape": "warn",
     },
   },

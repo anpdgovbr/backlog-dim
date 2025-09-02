@@ -13,7 +13,7 @@ export interface GovBrBreadcrumbProps {
   basePath?: string // opcional: para cortar parte inicial da rota
 }
 
-type CrumbItem = {
+interface CrumbItem {
   label: string
   href: string
   icon?: React.ReactNode

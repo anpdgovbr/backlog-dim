@@ -38,8 +38,11 @@ import { withPermissao } from "@anpdgovbr/rbac-react"
 const EXPECTED_COLUMNS = 7
 
 type CsvRow = string[]
-type Relatorio = { sucesso: number; falhas: string[] }
-type ResumoImportacao = {
+interface Relatorio {
+  sucesso: number
+  falhas: string[]
+}
+interface ResumoImportacao {
   totalRegistros: number
   totalAnonimos: number
   responsaveis: Record<string, number>
