@@ -161,7 +161,7 @@ const SuperAdminPage = () => {
           >
             <MenuItem value="">Selecione um perfil</MenuItem>
             {perfis?.map((perfil) => (
-              <MenuItem key={perfil.id} value={perfil.id}>
+              <MenuItem key={`perfil-${perfil.id}`} value={perfil.id}>
                 {perfil.nome}
               </MenuItem>
             ))}
@@ -194,7 +194,7 @@ const SuperAdminPage = () => {
                   <List>
                     {permissoesRecurso.map((p) => (
                       <ListItem
-                        key={p.id}
+                        key={`permissao-${recurso}-${String(p.id)}`}
                         divider
                         secondaryAction={
                           <Switch
@@ -244,7 +244,7 @@ const SuperAdminPage = () => {
             >
               <MenuItem value="">Selecione um perfil</MenuItem>
               {perfis?.map((perfil) => (
-                <MenuItem key={perfil.id} value={perfil.id}>
+                <MenuItem key={`perfil-${perfil.id}`} value={perfil.id}>
                   {perfil.nome}
                 </MenuItem>
               ))}
