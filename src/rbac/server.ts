@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth/next"
+import type { Session } from "next-auth"
 import { redirect } from "next/navigation"
 import { pode as podeCore } from "@anpdgovbr/rbac-core"
 import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
@@ -22,7 +23,7 @@ export const rbacProvider = withTTLCache(
 /** IdentityResolver usando NextAuth (email como identidade). */
 export const getIdentity: IdentityResolver<Request> = {
   async resolve(_req: Request) {
-    const session = await getServerSession(authOptions)
+    const session = (await getServerSession(authOptions)) as Session | null
     if (!session?.user?.email) {
       throw new Error("Usuário não autenticado")
     }

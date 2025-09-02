@@ -33,6 +33,15 @@ npm run type-check
 
 ---
 
+### 2.1 **✅ Validação (Yup → Zod v4)**
+
+- ❌ **REMOVIDO**: `yup` (validação de formulários)
+- ✅ **ADOTADO**: `zod` (v4) + `@hookform/resolvers/zod`
+- ✅ **UNIFICAÇÃO**: back e front padronizados em Zod, com erros 400 padronizados no server
+- 📄 Documentado em `doc/SERVER_VALIDATION.md`
+
+---
+
 ### 3. **⚙️ TypeScript Modernizado**
 
 ```jsonc

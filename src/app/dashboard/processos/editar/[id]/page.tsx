@@ -1,6 +1,6 @@
 "use client"
 
-import { yupResolver } from "@hookform/resolvers/yup"
+import { zodResolver } from "@hookform/resolvers/zod"
 import type { TipoRequerimento } from "@prisma/client"
 import { isEqual } from "lodash"
 import { useForm } from "react-hook-form"
@@ -26,8 +26,8 @@ import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import useProcessoById from "@/hooks/useProcessoById"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
-import { processoSchema } from "@/schemas/ProcessoSchema"
+import type { ProcessoFormData } from "@/schemas/ProcessoForm.zod"
+import { processoFormSchema } from "@/schemas/ProcessoForm.zod"
 import { toProcessoInput } from "@/types/Processo"
 import { safeToISO } from "@/utils/date"
 
@@ -40,11 +40,11 @@ export default function EditarProcessoPage() {
   const { processo, isLoading, mutate } = useProcessoById(id)
 
   const methods = useForm<ProcessoFormData>({
-    resolver: yupResolver(processoSchema),
+    resolver: zodResolver(processoFormSchema),
   })
   const { reset, handleSubmit } = methods
-  const defaultValues = useMemo(() => {
-    return processo ? toProcessoInput(processo) : undefined
+  const defaultValues = useMemo<ProcessoFormData | undefined>(() => {
+    return processo ? (toProcessoInput(processo) as ProcessoFormData) : undefined
   }, [processo])
 
   const isAlterado = !isEqual(methods.getValues(), defaultValues)

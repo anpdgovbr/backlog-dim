@@ -103,7 +103,7 @@ A estrutura de pastas segue as convenções do Next.js e foi organizada para sep
 │   │   ├── api.ts    # Funções para interação com a API interna
 │   │   ├── prisma/   # Configuração e instância do cliente Prisma
 │   │   └── helpers/  # Funções auxiliares diversas
-│   ├── schemas/      # Schemas de validação (Yup/Zod) para formulários e dados
+│   ├── schemas/      # Schemas de validação (Zod v4) para formulários e dados
 │   ├── styles/       # Estilos globais, configurações de tema e overrides de CSS
 │   └── utils/        # Funções utilitárias diversas (formatação, datas, validação)
 ├── .env.local.example # Template de variáveis de ambiente
@@ -144,7 +144,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 | **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | 3.6.2   |
 | **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
 | **Infraestrutura Local** | [Docker](https://www.docker.com/) + [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg)                       | Latest  |
-| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [React Hook Form](https://react-hook-form.com/)                                   | Latest  |
+| **Validação de Dados**   | [Zod v4](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)                                              | Latest  |
 | **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.33.0  |
 | **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { yupResolver } from "@hookform/resolvers/yup"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { useRouter } from "next/navigation"
@@ -20,11 +20,11 @@ import ProcessoForm from "@/components/processo/ProcessoForm"
 import { useNotification } from "@/context/NotificationProvider"
 import usePode from "@/hooks/usePode"
 import { useUsuarioIdLogado } from "@/hooks/useUsuarioIdLogado"
-import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
-import { processoSchema } from "@/schemas/ProcessoSchema"
+import type { ProcessoFormData } from "@/schemas/ProcessoForm.zod"
+import { getProcessoDefaultValues, processoFormSchema } from "@/schemas/ProcessoForm.zod"
 import { safeToISO } from "@/utils/date"
 
-const defaultValues = processoSchema.getDefault()
+const defaultValues = getProcessoDefaultValues()
 
 export default function NovoProcessoPage() {
   const router = useRouter()
@@ -33,8 +33,7 @@ export default function NovoProcessoPage() {
   const { loading: loadingUserId } = useUsuarioIdLogado()
 
   const methods = useForm<ProcessoFormData>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolver: yupResolver(processoSchema) as any,
+    resolver: zodResolver(processoFormSchema),
     defaultValues,
   })
 

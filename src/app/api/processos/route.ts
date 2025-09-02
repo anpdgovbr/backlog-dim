@@ -2,6 +2,8 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { processoCreateSchema } from "@/schemas/server/Processo.zod"
 
 async function gerarNumeroProcesso(): Promise<string> {
   const agora = new Date()
@@ -56,16 +58,23 @@ export const POST = withApi(
    * Este endpoint também grava entrada de auditoria via middleware `withApi`.
    */
   async ({ req }) => {
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(processoCreateSchema, raw, "POST /api/processos")
+    if (!valid.ok) return valid.response
+
+    const data = valid.data
     try {
-      const data = await req.json()
       const numero = await gerarNumeroProcesso()
 
       const processo = await prisma.processo.create({
         data: {
           ...data,
           numero,
-          dataEnvioPedido: data.dataEnvioPedido ? new Date(data.dataEnvioPedido) : null,
-          dataConclusao: data.dataConclusao ? new Date(data.dataConclusao) : null,
+          dataCriacao: new Date(),
+          anonimo: data.anonimo ?? false,
+          temaRequerimento: Array.isArray(data.temaRequerimento)
+            ? data.temaRequerimento
+            : [],
         },
         include: {
           formaEntrada: true,
@@ -77,12 +86,10 @@ export const POST = withApi(
 
       return {
         response: Response.json(processo, { status: 201 }),
-        audit: {
-          depois: processo,
-        },
+        audit: { depois: processo },
       }
     } catch (err) {
-      console.error("Erro geral no POST:", err)
+      console.error("Erro interno ao criar processo:", err)
       return Response.json({ error: "Erro interno no servidor" }, { status: 500 })
     }
   },

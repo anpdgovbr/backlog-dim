@@ -7,6 +7,10 @@ on:
   schedule:
     - cron: "0 3 * * 1"
 
+env:
+  # DATABASE_URL necessário para Prisma generate no build
+  DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -22,12 +26,25 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # (Opcional) Preparar Node para builds/instalação se necessário
+      # Preparar Node para builds/instalação
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
+
+      # Instalar dependências de forma robusta
+      - name: Install dependencies
+        run: |
+          if npm ci --dry-run > /dev/null 2>&1; then
+            npm ci
+          else
+            echo "Lock file dessincronizado, atualizando..."
+            npm install
+          fi
+
+      # Gerar cliente Prisma antes do build
+      - run: npx prisma generate
+
       - run: npm run build --if-present
 
       - uses: github/codeql-action/init@v3

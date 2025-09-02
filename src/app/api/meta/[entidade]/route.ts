@@ -4,6 +4,12 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { withApiForId } from "@/lib/withApi"
 import { validarEntidadeParams } from "@/utils/validarEntidadeParams"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import {
+  metaCreateSchema,
+  metaDeleteSchema,
+  metaUpdateSchema,
+} from "@/schemas/server/Meta.zod"
 
 /**
  * Lista metadados de uma entidade dinâmica (e.g., situacoes, encaminhamentos).
@@ -63,12 +69,15 @@ const handlerPOST = withApiForId<{ entidade: string }>(
     if (!validacao.valid) return validacao.response
 
     const { model } = validacao
-    const { nome } = await req.json()
-    if (!nome) {
-      return NextResponse.json({ error: "Nome é obrigatório" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(
+      metaCreateSchema,
+      raw,
+      `POST /api/meta/${params.entidade}`
+    )
+    if (!valid.ok) return valid.response
 
-    const novo = await model.create({ data: { nome } })
+    const novo = await model.create({ data: { nome: valid.data.nome } })
 
     return {
       response: NextResponse.json(novo, { status: 201 }),
@@ -104,11 +113,15 @@ const handlerPUT = withApiForId<{ entidade: string }>(
     if (!validacao.valid) return validacao.response
 
     const { model } = validacao
-    const { id, nome } = await req.json()
-    if (!id || !nome) {
-      return NextResponse.json({ error: "ID e Nome são obrigatórios" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(
+      metaUpdateSchema,
+      raw,
+      `PUT /api/meta/${params.entidade}`
+    )
+    if (!valid.ok) return valid.response
 
+    const { id, nome } = valid.data
     const antes = await model.findUnique({ where: { id } })
     const depois = await model.update({ where: { id }, data: { nome } })
 
@@ -146,18 +159,22 @@ const handlerDELETE = withApiForId<{ entidade: string }>(
     if (!validacao.valid) return validacao.response
 
     const { model } = validacao
-    const { id } = await req.json()
-    if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: "ID inválido ou ausente" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(
+      metaDeleteSchema,
+      raw,
+      `DELETE /api/meta/${params.entidade}`
+    )
+    if (!valid.ok) return valid.response
 
-    const antes = await model.findUnique({ where: { id: Number(id) } })
+    const { id } = valid.data
+    const antes = await model.findUnique({ where: { id } })
     if (!antes) {
       return NextResponse.json({ error: "Item não encontrado" }, { status: 404 })
     }
 
     const depois = await model.update({
-      where: { id: Number(id) },
+      where: { id },
       data: { active: false, exclusionDate: new Date() },
     })
 
