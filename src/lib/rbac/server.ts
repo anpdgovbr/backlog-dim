@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client"
 import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
 import { withTTLCache, type IdentityResolver } from "@anpdgovbr/rbac-provider"
 import { auth } from "@/auth"
+import { prisma } from "@/lib/prisma"
 
 // TODO: Idealmente, use uma instância singleton do Prisma Client em todo o projeto.
-const prisma = new PrismaClient()
+// Usando a instância singleton de prisma importada de "@/lib/prisma"
 
 /**
  * Provider de permissões para o lado do servidor, com cache de 5 minutos.
