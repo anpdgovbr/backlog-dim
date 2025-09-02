@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { type JSX } from "react"
 import { withPermissao } from "@anpdgovbr/rbac-react"
 import RbacAdminShell from "@anpdgovbr/rbac-admin"
 
