@@ -47,7 +47,7 @@ Padrões de código e exemplos práticos:
   - CRUD manager em `src/components/CrudManager.tsx`
   - Avatar em `src/components/avatar`
 - Requests para backend: use `lib/api.ts` e `lib/fetcher.ts` para consistência (SWR é usado para cache de dados).
-- Formulários: use `react-hook-form` e validação com `yup` como nos componentes existentes (`components/form/*`).
+- Formulários: use `react-hook-form` e validação com `zod` (v4) com o resolver `@hookform/resolvers/zod`, seguindo os componentes existentes (`components/form/*`).
 
 Recomendações de convenções de nomenclatura (padrão recomendado):
 

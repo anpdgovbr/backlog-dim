@@ -6,6 +6,7 @@ import type { DefaultSession } from "next-auth/next"
 
 declare module "next-auth" {
   interface Session {
+    expires: string
     user: {
       id: string
       name?: string | null

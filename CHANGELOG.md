@@ -24,6 +24,16 @@ Todas as novas funcionalidades, correções e melhorias serão registradas aqui,
 
 ---
 
+## 🔒 Validação Server-side e Client-side — Migração para Zod v4
+
+- Adotado Zod v4 como padrão único de validação (server e client).
+- Endpoints críticos com validação server-side e erro 400 padronizado (`src/lib/validation.ts`).
+- Formulários de Processo migrados para `zodResolver` (RHF) e novos schemas (`src/schemas/ProcessoForm.zod.ts`).
+- Removido Yup do projeto (código, dependências e docs); documentado em `doc/SERVER_VALIDATION.md` e `.github/copilot-instructions.md`.
+- Observação de regra de negócio: `PUT /api/processos/[id]` permite limpar campos opcionais com `null`; atualização de `numero` e `dataCriacao` permanece habilitada e poderá ser restrita por perfil no futuro.
+
+---
+
 ## 🧱 Refactor RequeridoForm and Introduce RequeridoModalForm
 
 - Refactored `RequeridoForm` to use `react-hook-form` with `forwardRef` to expose `submit()` externally.

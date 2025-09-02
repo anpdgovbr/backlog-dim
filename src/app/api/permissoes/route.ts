@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@anpdgovbr/rbac-next"
 import { getPermissoesPorPerfil, type PrismaLike } from "@anpdgovbr/rbac-prisma"
 import type { AcaoPermissao, RecursoPermissao } from "@prisma/client"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { permissaoCreateSchema } from "@/schemas/server/Permissao.zod"
 
 export const GET = withApi(
   async ({ req }: { req: Request }) => {
@@ -49,25 +51,10 @@ export const GET = withApi(
 // Cria explicitamente uma permissão (além do toggle)
 export const POST = withApi(
   async ({ req }) => {
-    const body = await req.json().catch(() => null)
-    if (!body || typeof body !== "object") {
-      return Response.json({ error: "Body inválido" }, { status: 400 })
-    }
-    const { perfilId, perfilNome, acao, recurso, permitido } = body as {
-      perfilId?: number
-      perfilNome?: string
-      acao?: string
-      recurso?: string
-      permitido?: boolean
-    }
-    if (
-      !(perfilId || perfilNome) ||
-      !acao ||
-      !recurso ||
-      typeof permitido !== "boolean"
-    ) {
-      return Response.json({ error: "Campos obrigatórios ausentes" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(permissaoCreateSchema, raw, "POST /api/permissoes")
+    if (!valid.ok) return valid.response
+    const { perfilId, perfilNome, acao, recurso, permitido } = valid.data
     let perfilIdResolved: number | null = null
     if (perfilId) perfilIdResolved = Number(perfilId)
     else if (perfilNome) {

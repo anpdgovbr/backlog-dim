@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography"
 
 import type { ProcessoOutput } from "@anpdgovbr/shared-types"
 
-import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
+import type { ProcessoFormData } from "@/schemas/ProcessoForm.zod"
 import { adicionarDiasUteis } from "@/utils/date"
 import { definirCorStatusInterno, formatarStatusInterno } from "@/utils/statusInterno"
 
@@ -86,8 +86,8 @@ export default function ProcessoForm({ processo, methods }: ProcessoFormProps) {
     formState: { errors },
   } = methods
   const emModoEdicao = Boolean(processo)
-  const dataEnvio = useWatch({ name: "dataEnvioPedido", control })
-  const prazoPedido = useWatch({ name: "prazoPedido", control })
+  const dataEnvio = useWatch({ name: "dataEnvioPedido", control }) as Date | null
+  const prazoPedido = useWatch({ name: "prazoPedido", control }) as number | null
 
   let dataVencimentoCalculada = ""
   if (dataEnvio && prazoPedido) {

@@ -5,17 +5,13 @@ import { useMemo } from "react"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import Box from "@mui/material/Box"
-import type {
-  GridColDef,
-  GridPaginationModel,
-  GridRenderCellParams,
-} from "@mui/x-data-grid"
+import type { GridColDef, GridPaginationModel } from "@mui/x-data-grid"
 import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 
 import { dataGridStyles } from "@/theme/dataGridStyles"
-import type { SxProps, Theme } from "@mui/material"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
+import type { SxProps, Theme } from "@mui/material"
 
 export interface Item {
   id: number
@@ -52,16 +48,16 @@ export default function CrudDataTable({
   showActions = true,
   sx,
 }: Readonly<CrudDataTableProps>) {
-  const columns = useMemo(() => {
-    const cols = [
+  const columns = useMemo<GridColDef<Item>[]>(() => {
+    const cols: GridColDef<Item>[] = [
       // Coluna ID (opcional)
       ...(showId
         ? [
             {
               field: "id",
               headerName: "ID",
-              align: "center",
-              headerAlign: "center",
+              align: "center" as const,
+              headerAlign: "center" as const,
               flex: 0.4,
             },
           ]
@@ -80,52 +76,54 @@ export default function CrudDataTable({
               headerName: "Ações",
               sortable: false,
               flex: 0.6,
-              align: "center",
-              headerAlign: "center",
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              renderCell: (params: GridRenderCellParams<any, Item>) => (
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: 0.5,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "100%",
-                    // garantir que o conteúdo fique centralizado mesmo que a célula tenha
-                    // padding ou comportamento de flex do DataGrid
-                  }}
-                >
-                  <GovBRButton
-                    variant="circle"
-                    color="primary"
-                    disabled={!canEdit}
-                    onClick={() => onEdit(params.row)}
+              align: "center" as const,
+              headerAlign: "center" as const,
+              renderCell: (params: unknown) => {
+                const p = params as { row: Item }
+                return (
+                  <Box
                     sx={{
-                      border: "none",
+                      display: "flex",
+                      gap: 0.5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                      height: "100%",
+                      // garantir que o conteúdo fique centralizado mesmo que a célula tenha
+                      // padding ou comportamento de flex do DataGrid
                     }}
                   >
-                    <EditIcon color="primary" fontSize="small" />
-                  </GovBRButton>
-                  <GovBRButton
-                    variant="circle"
-                    color="error"
-                    disabled={!canDelete}
-                    onClick={() => onDelete(params.row.id)}
-                    sx={{
-                      border: "none",
-                    }}
-                  >
-                    <DeleteIcon color="error" fontSize="small" />
-                  </GovBRButton>
-                </Box>
-              ),
+                    <GovBRButton
+                      variant="circle"
+                      color="primary"
+                      disabled={!canEdit}
+                      onClick={() => onEdit(p.row)}
+                      sx={{
+                        border: "none",
+                      }}
+                    >
+                      <EditIcon color="primary" fontSize="small" />
+                    </GovBRButton>
+                    <GovBRButton
+                      variant="circle"
+                      color="error"
+                      disabled={!canDelete}
+                      onClick={() => onDelete(p.row.id)}
+                      sx={{
+                        border: "none",
+                      }}
+                    >
+                      <DeleteIcon color="error" fontSize="small" />
+                    </GovBRButton>
+                  </Box>
+                )
+              },
             },
           ]
         : []),
     ]
 
-    return cols as unknown as GridColDef<Item>[]
+    return cols
   }, [canEdit, canDelete, onEdit, onDelete, showId, showActions])
 
   return (
