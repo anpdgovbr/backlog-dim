@@ -17,7 +17,7 @@ import MobileMenu from "@/components/menu/MobileMenu"
 import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 // Adiciona tipo Readonly para as props do componente
 type AdminLayoutProps = Readonly<{
@@ -31,6 +31,7 @@ const links: LinkItem[] = [
   { href: "/admin/perfis/heranca", text: "Herança de Perfis", icon: <Group /> },
   { href: "/admin/auditoria", text: "Auditoria", icon: <SupervisedUserCircleOutlined /> },
   { href: "/admin/permissoes", text: "Permissões", icon: <LockPerson /> },
+  { href: "/rbac-admin", text: "RBAC Admin", icon: <Shield /> },
   { href: "/admin/superadmin", text: "SuperAdmin", icon: <Shield /> },
 ]
 

@@ -1,7 +1,7 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function ResponsaveisPageContent() {
   return (
@@ -10,7 +10,7 @@ function ResponsaveisPageContent() {
 }
 
 const ResponsaveisPage = withPermissao(ResponsaveisPageContent, "Exibir", "Responsavel", {
-  redirecionar: false,
+  redirect: false,
 })
 
 export default ResponsaveisPage

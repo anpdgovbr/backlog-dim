@@ -1,6 +1,6 @@
 # Permissões e Perfis (RBAC)
 
-Este documento descreve como o sistema define e aplica permissões.
+Este documento descreve como o RBAC está integrado no projeto usando os pacotes `@anpdgovbr/rbac-*`, como proteger rotas, consumir permissões no cliente e (opcionalmente) operar a UI administrativa.
 
 ## Conceitos
 
@@ -8,202 +8,166 @@ Este documento descreve como o sistema define e aplica permissões.
 - Permissão: par `{ acao, recurso }` com flag `permitido` atrelado a um perfil.
 - RBAC: as rotas exigem permissões específicas para executar ações.
 
+## Pacotes RBAC
+
+- `@anpdgovbr/rbac-core`: tipos e utilitários (`PermissionsMap`, `toPermissionsMap`, `pode`, `hasAny`).
+- `@anpdgovbr/rbac-provider`: contrato do provider e `withTTLCache` (cache em memória por identidade).
+- `@anpdgovbr/rbac-prisma`: provider baseado em Prisma + helpers (`getPerfisHerdadosNomes`, `getPermissoesPorPerfil`).
+- `@anpdgovbr/rbac-next`: wrappers `withApi`/`withApiForId` para proteger rotas (Next.js App Router).
+- `@anpdgovbr/rbac-react`: `PermissionsProvider`, `usePermissions`, `usePode`, `withPermissao` (UX no cliente).
+- `@anpdgovbr/rbac-admin` (opt‑in): UI administrativa mínima (Perfis/Permissões; Usuários opcional).
+
+Observação: Prisma é opcional. Qualquer fonte pode prover um `PermissionsProvider` que implemente o contrato de `@anpdgovbr/rbac-provider`.
+
 ## Modelo de Dados (Prisma)
 
 - `Perfil { id, nome, active }`
-- `Permissao { id, perfilId, acao, recurso, permitido, active }`
+- `Permissao { id, perfilId, acao, recurso, permitido }`
+- `PerfilHeranca { parentId, childId }` (opcional para herança entre perfis; direção: filho herda dos pais)
 - `User { id, email, perfilId }`
 
-## Consulta de Permissões
+Recomendado usar enums Prisma (`AcaoPermissao`, `RecursoPermissao`) para evitar typos em `Permissao`.
 
-Há uma única fonte de verdade para as permissões efetivas de um usuário:
+## Configuração no Servidor
 
-- Backend e frontend usam a mesma lógica de agregação, baseada no nome do perfil.
-- A função `getPermissoesPorPerfil(perfilNome)` resolve permissões a partir do nome do perfil (inclui herança, quando configurada), e retorna uma lista `[{ acao, recurso, permitido }]`.
-- A função `buscarPermissoesConcedidas(email)` (em `src/lib/permissoes.ts`) chama `getPermissoesPorPerfil` e converte o resultado para `PermissionsMap` via `toPermissionsMap`.
+Arquivo de bootstrap RBAC no servidor: `src/rbac/server.ts`.
 
-Com isso, UI e servidor avaliam exatamente o mesmo conjunto de permissões.
+- Provider com cache TTL (ex.: 60s):
 
-## Enforcement em Rotas
+```ts
+import { withTTLCache } from "@anpdgovbr/rbac-provider"
+import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
+import { prisma } from "@/lib/prisma"
 
-- Use `withApi`/`withApiSlim` com a opção `permissao: { acao, recurso }` para proteger a rota. Ex.: `{ acao: "Alterar", recurso: "Permissoes" }`.
-- As rotas que alteram dados relevantes registram auditoria (AcaoAuditoria) via `withApi`.
+export const rbacProvider = withTTLCache(
+  createPrismaPermissionsProvider({ prisma }),
+  60_000
+)
+```
 
-## Uso no Cliente
+- Resolvedor de identidade (NextAuth no exemplo):
 
-- `usePermissoes` consome `/api/permissoes` e converte para `PermissionsMap`.
-- `withPermissao` e `usePode` usam `pode(perms, acao, recurso)` para habilitar/ocultar ações na UI.
+```ts
+import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
 
-## Boas Práticas e Próximos Passos
+export const getIdentity: IdentityResolver<Request> = {
+  async resolve(req) {
+    // Obter sessão e retornar { id, email }
+  },
+}
+```
 
-- Tipos fortes no banco: migrar `acao` e `recurso` para enums Prisma ou FKs (evita typos).
-- Herança: preferir herança modelada em banco ou remover herança dinâmica; como alternativa simples, "clonar perfil" para evitar lógica implícita.
-- Cache: considerar cache leve (30–60s) das permissões por usuário no servidor.
+- Auditoria (opcional): função `auditLog(args)` para uso nos wrappers.
 
-## Próximos Passos Detalhados (Roadmap)
+## Proteção de Rotas (Next.js)
 
-1) Integridade no Banco (enums ou FKs)
-- Objetivo: eliminar typos e garantir integridade referencial para `acao` e `recurso`.
-- Opção A — Enums Prisma:
-  - Definir `enum AcaoPermissao` e `enum RecursoPermissao` no `schema.prisma`.
-  - Alterar `model Permissao` para usar esses enums.
-  - Migrar dados: script para mapear strings existentes para os enums (validar quedas).
-  - Ajustar tipos TS: garantir que `@anpdgovbr/shared-types` espelhe os enums.
-  - Vantagens: simples, estável; Desvantagem: lista é versionada via migration.
-- Opção B — Tabelas normalizadas (`Acao`, `Recurso`):
-  - Criar tabelas com chaves naturais (nome) + IDs; `Permissao` referencia por FK.
-  - Seeds para popular ações/recursos e migração de dados do estado atual.
-  - Vantagens: gestão dinâmica via DB; Desvantagem: consultas com joins e manutenção extra.
-- Passos práticos (A ou B):
-  - Criar migration, escrever script de backfill e validação.
-  - Rodar em ambiente de staging e validar UI/rotas.
- - Publicar com janela de manutenção curta.
-  - Comandos úteis:
-    - `npx prisma migrate dev --name perfil-heranca` (cria tabela `PerfilHeranca`).
-    - `npm run db:seed` (popula herança e permissões padrão).
+Use `withApi`/`withApiForId` de `@anpdgovbr/rbac-next` com `permissao: { acao, recurso }`.
 
-## Seed de Usuários de Teste
+```ts
+import { withApi } from "@anpdgovbr/rbac-next"
+import { rbacProvider, getIdentity, auditLog } from "@/rbac/server"
 
-- Preferencial: definir `SEED_USERS_JSON` no `.env` com um array de usuários:
+export const POST = withApi(
+  async ({ req, email, userId }) => {
+    // handler
+    return Response.json({ ok: true })
+  },
+  {
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
+    provider: rbacProvider,
+    getIdentity,
+    audit: ({ tabela = "Permissao", ...ctx }) => auditLog({ tabela, ...ctx }),
+  }
+)
+```
 
-  `SEED_USERS_JSON=[{"email":"admin@example.com","nome":"Admin","perfil":"Administrador"}]`
+## Endpoints disponíveis (admin/integração)
 
-- Alternativa (variáveis individuais): se `SEED_USERS_JSON` não estiver definido, o seed utiliza as variáveis abaixo quando presentes:
-  - `SEED_SUPERADMIN_EMAIL` / `SEED_SUPERADMIN_NOME`
-  - `SEED_ADMIN_EMAIL` / `SEED_ADMIN_NOME`
-  - `SEED_SUPERVISOR_EMAIL` / `SEED_SUPERVISOR_NOME`
-  - `SEED_ATENDENTE_EMAIL` / `SEED_ATENDENTE_NOME`
-  - `SEED_LEITOR_EMAIL` / `SEED_LEITOR_NOME`
+- `GET /api/perfis` — lista perfis ativos (requer `{ Exibir, Permissoes }`).
+- `POST /api/perfis` — cria perfil (requer `{ Cadastrar, Permissoes }`).
+- `GET /api/permissoes` —
+  - sem query: permissões do usuário autenticado (expandido em lista).
+  - `?perfil=<id|nome>`: permissões efetivas do perfil (com herança, se houver).
+  - requer `{ Exibir, Permissoes }`.
+- `POST /api/permissoes` — upsert explícito (requer `{ Cadastrar, Permissoes }`).
+- `POST /api/permissoes/toggle` — alterna `permitido` (requer `{ Alterar, Permissoes }`).
+- Herança de perfis (quando habilitado): `GET/POST/DELETE /api/perfis/heranca`.
 
-Cada usuário é criado/atualizado via upsert com o perfil correspondente.
+Boas práticas de cache: após alterações administrativas (criar/toggle permissões, herança), invalide o cache com `rbacProvider.invalidate()` para refletir a mudança imediatamente.
 
-2) Unificar wrappers de API
-- Estado atual:
-  - `withApi` e `withApiForId` mantidos como wrappers padrão.
-  - `withApiSlim*` marcados como `@deprecated` e rotas migradas para `withApi`.
-- Próximos passos:
-  - Opcional: adicionar opções no `withApi` para controlar sessão/auditoria finamente.
-  - Remover `withApiSlim*` após um ciclo de release sem usos.
+## Consumo no Cliente (React)
 
-3) Estratégia para Herança de Perfis
-- Implementado no DB via tabela `PerfilHeranca` (DAG):
-  - Seed configura: SuperAdmin > Administrador > Supervisor > Atendente > Leitor.
-  - `getPerfisHerdadosNomes(perfil)` resolve a cadeia de pais ativos (evita ciclos).
-  - `getPermissoesPorPerfil` agrega permissões dos perfis herdados.
-- Regras de união: concessões (true) prevalecem; negações (false) não removem uma concessão herdada.
-- Próximos passos:
-  - Adicionar UI para gerenciar herança (arrastar/soltar ou lista de pais).
-  - Invalidação de cache de permissões ao alterar heranças.
-  - Endpoints de herança:
-    - `GET /api/perfis/heranca`: lista (requer `{Exibir, Permissoes}`).
-    - `POST /api/perfis/heranca` `{ parentId, childId }`: cria (requer `{Alterar, Permissoes}`) e invalida cache.
-    - `DELETE /api/perfis/heranca?parentId=&childId=`: remove (requer `{Alterar, Permissoes}`) e invalida cache.
-  - UI mínima: `/admin/perfis/heranca` com formulário simples para criar/remover relações.
+- Via contexto (quando permissões vêm do servidor) ou via endpoint:
 
-4) Cache de Permissões
-- Implementado: cache em memória (TTL 60s) em `src/lib/permissoes.ts` (chave por `email`).
-  - Funções:
-    - `buscarPermissoesConcedidas(email)`: lê/grava cache.
-    - `invalidatePermissionsCache()`: limpa todos os itens (estratégia segura e simples).
-  - Invalidação conectada em:
-    - `POST /api/permissoes` e `PATCH /api/permissoes/[id]` e `PATCH /api/admin/permissoes`: limpam cache após alterações.
-- Alternativas futuras:
-  - Invalidação mais granular (por `perfilId`).
-  - Embutir permissões no JWT (exige estratégia de refresh quando houver mudanças).
-  - Medir impacto via logs/telemetria.
+```tsx
+import { PermissionsProvider, usePermissions, usePode, withPermissao } from "@anpdgovbr/rbac-react"
 
-5) Políticas por Domínio (além do RBAC)
-- Para regras contextuais (ex.: "editar somente se for dono"), criar helpers `canEditX(contexto)` por recurso.
-- Padrão sugerido:
-  - Primeiro checar RBAC (`pode`), depois aplicar política específica de negócio.
-  - Cobrir com testes unitários (entrada/saída determinística).
+// Hidratar permissões do servidor
+<PermissionsProvider value={serverPermissions}>{children}</PermissionsProvider>
 
-6) Testes e Observabilidade
-- Unit: `permissions.ts` (`pode`, `hasAny`, conversões) e políticas de domínio.
-- Integração: wrappers `withApi` retornando 401/403/200 conforme cenários.
-- E2E: fluxo de admin de permissões (toggle -> efeito em UI e backend).
-- Observabilidade: logs de negações (403), métricas por recurso/ação.
+// Hook com fetch automático (fallback para endpoint)
+const { permissoes, loading, error } = usePermissions({ endpoint: "/api/permissoes" })
 
-7) Descontinuações Planejadas
-- `withApiSlim*`: já anotado como `@deprecated`; remover após unificação.
-- Formato plano `FlatKey`/`toFlatKeyMap`: marcado como `@deprecated`; remover após garantir que não há consumidores.
-- `HIERARQUIA_PERFIS`: remover quando herança estiver no DB ou for eliminada.
-- `withPermissao` (HOC): manter para UX; a médio prazo, considerar provider de “capabilities” hidratadas do servidor.
+// Verificação declarativa
+const { pode } = usePode()
+if (pode("Exibir", "Dashboard")) { /* ... */ }
 
-8) Plano de Release/Backout
-- Sequência sugerida: testes -> staging -> produção com feature flag para novos paths.
-- Scripts de migração com dry-run e logs detalhados.
- - Plano de rollback: manter migrations reversíveis e retain backups.
+// HOC para proteger componente/página
+export default withPermissao(MyPage, "Exibir", "Relatorios")
+```
 
+## UI Administrativa (opt‑in)
 
-# Segurança — ABAC em Processo (Editar Próprio) - Verificar para inserir junto nessa Task
+É possível habilitar a UI mínima em `/rbac-admin` usando `@anpdgovbr/rbac-admin`.
 
-Aplicar controle de atributo (ABAC) para permitir edição apenas do próprio processo quando aplicável.
+- A UI espera endpoints de perfis e permissões (listagem/toggle).
+- Endpoints de usuários (listar/atribuir perfil) são opcionais e podem ser adicionados depois.
+- DTOs de integração estão em `@anpdgovbr/shared-types`.
 
-Referência: plano-mapa-aninhado.md (seção 4)
+Exemplo (ver `src/app/rbac-admin/page.tsx`):
 
-## Objetivos
-- Diferenciar edição geral vs. edição do próprio registro.
-- Garantir que `EditarProprio_Processo` só permita atualização quando o processo pertencer ao usuário (via `responsavel.userId`).
+```tsx
+import RbacAdminShell from "@anpdgovbr/rbac-admin"
 
-## Tarefas
-- [x] `src/app/api/processos/[id]/route.ts` (PUT):
-  - [x] Se não houver `{acao: "EditarGeral", recurso: "Processo"}`:
-    - [x] Validar `{acao: "EditarProprio", recurso: "Processo"}` e `responsavel.userId === session.user.id`.
-    - [x] Caso contrário, responder 403.
-  - Implementado no handler PUT com verificação RBAC+ABAC inline; a opção `permissao` do wrapper foi retirada e a decisão é tomada no handler.
+export default function Page() {
+  return (
+    <RbacAdminShell
+      config={{
+        endpoints: {
+          profiles: "/api/perfis",
+          permissions: (id) => `/api/permissoes?perfil=${id}`,
+          toggle: "/api/permissoes/toggle",
+          // users?: "/api/users" (opcional)
+          // assignUserProfile?: "/api/users/assign-profile" (opcional)
+        },
+      }}
+    />
+  )
+}
+```
 
-## Critérios de Aceite
-- Usuários com `EditarProprio` conseguem editar apenas os processos atribuídos a si.
-- Usuários sem `EditarGeral` não conseguem editar processos de outros.
+## Consulta/Aggregação de Permissões
 
+- Servidor: `getPermissoesPorPerfil(prisma, perfilNome)` (de `@anpdgovbr/rbac-prisma`) — inclui herança via `PerfilHeranca`, quando configurada.
+- Provider: `createPrismaPermissionsProvider` resolve permissões do usuário (email/id) e retorna `PermissionsMap`.
+- Cliente: `toPermissionsMap` converte listas (ex.: do endpoint) para `PermissionsMap`.
 
-## Estado Atual (2025-09-01)
+Regra de união na herança: concessões (`permitido: true`) prevalecem sobre negações (`false`).
 
-- Enums no banco: `AcaoPermissao` e `RecursoPermissao` ativos no Prisma e utilizados nas rotas e seed.
-- Unificação da fonte de permissões: backend e frontend usam `getPermissoesPorPerfil` + `toPermissionsMap` para gerar `PermissionsMap`.
-- Wrappers: `withApi`/`withApiForId` em uso com `permissao: {acao,recurso}`; `withApiSlim*` mantido no repo e marcado como `@deprecated` (sem usos).
-- Cache: TTL 60s em memória por email; invalidação disparada em `POST /api/permissoes`, `PATCH /api/permissoes/[id]` e `POST/DELETE /api/perfis/heranca`.
-- Herança de Perfis: implementada via tabela `PerfilHeranca` + endpoints `GET/POST/DELETE /api/perfis/heranca` e UI básica em `/admin/perfis/heranca`.
-- ABAC (Processo): `PUT /api/processos/[id]` aplica RBAC + verificação “EditarProprio” vs “EditarGeral” com vínculo `responsavel.userId`.
+## Observações e Boas Práticas
 
-## Próximos Passos Imediatos
+- Prefira enums Prisma (`AcaoPermissao`, `RecursoPermissao`) para evitar typos.
+- Invalide cache (`rbacProvider.invalidate()`) após mudanças administrativas.
+- `withPermissao` é apenas UX; a segurança real está no servidor (wrappers `withApi`).
+- Prisma é opcional: qualquer fonte pode prover um `PermissionsProvider` equivalente.
 
-- Remover `withApiSlim*` do código:
-  - Ações: excluir `src/lib/withApiSlim.ts` e referências (não há usos), atualizar docs.
-  - Critérios: build e lint sem erros; docs atualizados apontando apenas para `withApi`/`withApiForId`.
+## ABAC (quando aplicável)
 
-- Garantir paridade de tipos entre Prisma e `@anpdgovbr/shared-types`:
-  - Ações: revisar e, se necessário, gerar/alinhar enums TS para refletir os enums Prisma.
-  - Critérios: sem cast “as unknown as Enum” no código de produção/seed; type-check limpo.
+Para casos de “editar o próprio registro”, combine RBAC com verificação de atributos no handler (ex.: checar `responsavel.userId === userId`). Um exemplo existe em `PUT /api/processos/[id]`.
 
-- Testes unitários prioritários:
-  - `src/lib/permissions` (pode/hasAny/toPermissionsMap) e `src/lib/permissoes` (cache + integração com getPermissoesPorPerfil).
-  - Política ABAC do `PUT /api/processos/[id]` (cenários: próprio vs geral; sem acesso).
-  - Critérios: cobertura mínima 80% nesses módulos; cenários de negação retornam 403.
+## Estado Atual (2025‑09‑01)
 
-- Observabilidade de autorização:
-  - Ações: adicionar logs estruturados (nível info) para 401/403 nas rotas protegidas (sem dados sensíveis) e métrica por `{acao,recurso}`.
-  - Critérios: dashboards básicos (contagem de 401/403) e amostras de caminho/ação.
+- Wrappers `withApi`/`withApiForId` em uso com `permissao: { acao, recurso }`.
+- Provider `@anpdgovbr/rbac-prisma` com cache TTL ativo.
+- Endpoints e UI de permissões ativos; herança opcional via `PerfilHeranca`.
 
-- Cache de permissões: ajustes finos
-  - Ações: avaliar TTL (60s) vs. necessidade; estudar invalidação por perfil/usuário ao alterar permissões/herança.
-  - Critérios: latência de first-call razoável e consistência após alterações administrativas (<1s com invalidação).
-
-- UI de Herança de Perfis:
-  - Ações: melhorar UX (ex.: arrastar/soltar ou seletor múltiplo com busca), indicar invalidação de cache pós-alteração.
-  - Critérios: criar/remover relações de forma mais fluida; feedback visual de sucesso/erro.
-
-## Itens de Médio Prazo
-
-- Embutir permissões no JWT (opcional):
-  - Ações: prototipar inclusão de claims com permissões e estratégia de refresh/invalidade.
-  - Trade-off: simplicidade vs. coerência com alterações dinâmicas.
-
-- E2E para administração de permissões:
-  - Ações: fluxo completo (toggle em `/admin/permissoes` -> efeito em UI/rotas), incluindo herança.
-  - Critérios: cenários críticos cobertos (conceder/retirar, herança, cache).
-
-- Políticas de domínio adicionais (além de RBAC):
-  - Ações: documentar e implementar helpers por recurso (ex.: edição condicional por proprietário para outros domínios além de Processo).
-  - Critérios: decisões isoladas, testadas e auditáveis.

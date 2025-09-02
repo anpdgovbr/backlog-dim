@@ -1,7 +1,7 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function TipoReclamacaoPageContent() {
   return <CrudManager tableName="TipoReclamacao" entityName="Tipos de Reclamação" />
@@ -11,7 +11,7 @@ const TipoReclamacaoPage = withPermissao(
   "Exibir",
   "Metadados",
   {
-    redirecionar: false,
+    redirect: false,
   }
 )
 export default TipoReclamacaoPage

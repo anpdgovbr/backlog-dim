@@ -2,7 +2,7 @@
 
 import ProcessoDataGrid from "@/components/processo/ProcessoDataGrid"
 import { DashboardLayout } from "@/components/layouts"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function ListarProcessosPage() {
   return (
@@ -16,5 +16,5 @@ function ListarProcessosPage() {
 }
 
 export default withPermissao(ListarProcessosPage, "Exibir", "Processo", {
-  redirecionar: false,
+  redirect: false,
 })

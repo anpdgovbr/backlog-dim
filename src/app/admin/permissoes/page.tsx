@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography"
 import type { PerfilDto, PermissaoDto } from "@anpdgovbr/shared-types"
 
 import { useNotification } from "@/context/NotificationProvider"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 import { fetcher } from "@/lib/fetcher"
 import { dataGridStyles } from "@/theme/dataGridStyles"
 
@@ -196,7 +196,7 @@ const GerenciarPermissoes = withPermissao(
   GerenciarPermissoesContent,
   "Alterar",
   "Permissoes",
-  { redirecionar: false }
+  { redirect: false }
 )
 
 export default GerenciarPermissoes

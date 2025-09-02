@@ -9,7 +9,7 @@ import CrudHeader from "@/components/crud/CrudHeader"
 import CrudModal from "@/components/crud/CrudModal"
 import DialogAlert from "@/components/ui/DialogAlert"
 import usePermissoes from "@/hooks/usePermissoes"
-import { pode } from "@/lib/permissions"
+import { pode } from "@anpdgovbr/rbac-core"
 import { useCrudManager } from "@/hooks/useCrudManager"
 
 export interface CrudManagerProps {
