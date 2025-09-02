@@ -13,7 +13,7 @@ import type { AcaoAuditoria, Prisma } from "@prisma/client"
 /** Provider RBAC com cache TTL (60s) baseado em Prisma. */
 export const rbacProvider = withTTLCache(
   // cast do prisma para PrismaLike para satisfazer a assinatura esperada pela lib
-  createPrismaPermissionsProvider({ prisma: prisma as unknown as PrismaLike }),
+  createPrismaPermissionsProvider({ prisma: prismaAdapter }),
   60_000
 )
 
