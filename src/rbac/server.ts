@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next"
 import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
 import { withTTLCache } from "@anpdgovbr/rbac-provider"
 import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
+import type { PrismaLike } from "@anpdgovbr/rbac-prisma"
 
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/config/next-auth.config"
@@ -9,7 +10,8 @@ import type { AcaoAuditoria, Prisma } from "@prisma/client"
 
 /** Provider RBAC com cache TTL (60s) baseado em Prisma. */
 export const rbacProvider = withTTLCache(
-  createPrismaPermissionsProvider({ prisma }),
+  // cast do prisma para PrismaLike para satisfazer a assinatura esperada pela lib
+  createPrismaPermissionsProvider({ prisma: prisma as unknown as PrismaLike }),
   60_000
 )
 
