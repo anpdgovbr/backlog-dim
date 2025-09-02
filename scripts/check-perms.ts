@@ -13,8 +13,8 @@ async function main() {
      WHERE recurso NOT IN ('Processo','Responsavel','Metadados','Relatorios','Usuario','Permissoes','Auditoria','Admin')`
   )
 
-  console.warn("Invalid acoes:", invalidAcoes)
-  console.warn("Invalid recursos:", invalidRecursos)
+  console.log("Invalid acoes:", invalidAcoes)
+  console.log("Invalid recursos:", invalidRecursos)
 }
 
 main()
