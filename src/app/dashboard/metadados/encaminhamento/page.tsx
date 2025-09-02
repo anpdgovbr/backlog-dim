@@ -1,7 +1,7 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function EncaminhamentoPageContent() {
   return <CrudManager tableName="Encaminhamento" entityName="Encaminhamento" />
@@ -12,7 +12,7 @@ const EncaminhamentoPage = withPermissao(
   "Exibir",
   "Metadados",
   {
-    redirecionar: false,
+    redirect: false,
   }
 )
 

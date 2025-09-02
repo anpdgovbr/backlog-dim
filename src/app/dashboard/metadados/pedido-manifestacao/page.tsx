@@ -1,7 +1,7 @@
 "use client"
 
 import CrudManager from "@/components/CrudManager"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function PedidoManifestacaoPageContent() {
   return (
@@ -12,7 +12,7 @@ const PedidoManifestacaoPage = withPermissao(
   PedidoManifestacaoPageContent,
   "Exibir",
   "Metadados",
-  { redirecionar: false }
+  { redirect: false }
 )
 
 export default PedidoManifestacaoPage

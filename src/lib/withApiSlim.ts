@@ -17,7 +17,7 @@ import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 import { authOptions } from "@/config/next-auth.config"
 import { buscarPermissoesConcedidas } from "@/lib/permissoes"
-import { pode } from "@/lib/permissions"
+import { pode, type Action, type Resource } from "@anpdgovbr/rbac-core"
 
 /**
  * Contexto fornecido para handlers "slim".
@@ -85,7 +85,7 @@ async function handleApiRequestSlim<TParams extends object = object>(
   if (permissao) {
     const permissoes = await buscarPermissoesConcedidas(email)
     const { acao, recurso } = permissao
-    if (!pode(permissoes, acao, recurso)) {
+    if (!pode(permissoes, acao as unknown as Action, recurso as unknown as Resource)) {
       return Response.json({ error: "Acesso negado" }, { status: 403 })
     }
   }

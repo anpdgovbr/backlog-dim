@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/backlog-dim",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Aplicação CRUD para gerenciar processamentos administrativos relacionados à atuação da DIM na ANPD. Sistema moderno, seguro e escalável, desenvolvido com React, Next.js, TypeScript e Prisma.",
@@ -32,8 +32,8 @@
   },
   "scripts": {
     "build": "npx prisma generate && next build",
-    "build-routes": "tsx scripts/generateDevRoutes.ts",
-    "build-routes:verbose": "tsx scripts/generateDevRoutes.ts --verbose",
+    "build-routes": "node scripts/generateDevRoutes.cjs",
+    "build-routes:verbose": "node scripts/generateDevRoutes.cjs --verbose",
     "bump": "node scripts/bump-version.cjs",
     "bump:patch": "node scripts/bump-version-advanced.cjs patch",
     "bump:minor": "node scripts/bump-version-advanced.cjs minor",
@@ -98,6 +98,12 @@
     ]
   },
   "dependencies": {
+    "@anpdgovbr/rbac-admin": "^0.2.0-beta.4",
+    "@anpdgovbr/rbac-core": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-next": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-prisma": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-provider": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-react": "^0.2.0-beta.2",
     "@anpdgovbr/shared-types": "^0.1.5-beta",
     "@anpdgovbr/shared-ui": "^0.3.4-beta.0",
     "@emotion/react": "^11.14.0",
@@ -143,7 +149,7 @@
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.5",
+    "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "prisma": "^6.15.0",
     "typedoc": "^0.28.12",

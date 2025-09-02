@@ -20,7 +20,7 @@ import SituacaoPage from "@/app/dashboard/metadados/situacao/page"
 import { SidebarLayout } from "@/components/layouts"
 import type { SidebarSection, NonEmptyArray } from "@/components/layouts"
 import usePermissoes from "@/hooks/usePermissoes"
-import { pode } from "@/lib/permissions"
+import { pode } from "@anpdgovbr/rbac-core"
 
 import TipoReclamacaoPage from "./tipo-reclamacao/page"
 

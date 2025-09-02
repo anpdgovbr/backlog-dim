@@ -24,7 +24,7 @@ import type {
 
 import { authOptions } from "@/config/next-auth.config"
 import { registrarAuditoria } from "@/helpers/auditoria-server"
-import { pode } from "@/lib/permissions"
+import { pode, type Action, type Resource } from "@anpdgovbr/rbac-core"
 import { buscarPermissoesConcedidas } from "@/lib/permissoes"
 
 /**
@@ -103,7 +103,7 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   if (options?.permissao) {
     const permissoes = await buscarPermissoesConcedidas(email)
     const { acao, recurso } = options.permissao
-    if (!pode(permissoes, acao, recurso)) {
+    if (!pode(permissoes, acao as unknown as Action, recurso as unknown as Resource)) {
       return Response.json({ error: "Acesso negado" }, { status: 403 })
     }
   }
