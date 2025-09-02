@@ -10,7 +10,13 @@ const prisma = new PrismaClient()
  * Provider de permissões para o lado do servidor, com cache de 5 minutos.
  */
 export const rbacProvider = withTTLCache(
-  createPrismaPermissionsProvider({ prisma }),
+  // Evita usar `any`. Faz um cast seguro para o tipo do parâmetro `prisma`
+  // esperado por createPrismaPermissionsProvider.
+  createPrismaPermissionsProvider({
+    prisma: prisma as unknown as Parameters<
+      typeof createPrismaPermissionsProvider
+    >[0]["prisma"],
+  }),
   5 * 60 * 1000 // 5 minutos
 )
 

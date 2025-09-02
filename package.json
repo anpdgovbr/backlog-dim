@@ -98,6 +98,12 @@
     ]
   },
   "dependencies": {
+    "@anpdgovbr/rbac-admin": "^0.2.0-beta.4",
+    "@anpdgovbr/rbac-core": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-next": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-prisma": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-provider": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-react": "^0.2.0-beta.2",
     "@anpdgovbr/shared-types": "^0.1.5-beta",
     "@anpdgovbr/shared-ui": "^0.3.4-beta.0",
     "@emotion/react": "^11.14.0",
@@ -123,13 +129,7 @@
     "remask": "^1.2.2",
     "swr": "^2.3.6",
     "tsx": "^4.20.5",
-    "yup": "^1.7.0",
-    "@anpdgovbr/rbac-core": "^0.1.1-beta.4",
-    "@anpdgovbr/rbac-provider": "^0.1.1-beta.4",
-    "@anpdgovbr/rbac-prisma": "^0.1.1-beta.4",
-    "@anpdgovbr/rbac-next": "^0.1.1-beta.4",
-    "@anpdgovbr/rbac-react": "^0.2.0-beta.2",
-    "@anpdgovbr/rbac-admin": "^0.2.0-beta.3"
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
