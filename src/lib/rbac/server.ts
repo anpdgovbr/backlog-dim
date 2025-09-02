@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma"
 // Define a type alias for the expected Prisma type for createPrismaPermissionsProvider
 type PrismaPermissionsProviderPrisma = Parameters<
   typeof createPrismaPermissionsProvider
->[0]["prisma"];
+>[0]["prisma"]
 
 // If PrismaClient is not directly assignable, create an adapter here.
 // For now, assume PrismaClient is compatible. If not, uncomment and implement the adapter below.
@@ -22,7 +22,9 @@ type PrismaPermissionsProviderPrisma = Parameters<
  */
 export const rbacProvider = withTTLCache(
   createPrismaPermissionsProvider({
-    prisma: prisma as PrismaPermissionsProviderPrisma,
+    // converter via `unknown` primeiro para evitar erro TS2352 quando os tipos
+    // do PrismaClient não se sobrepõem exatamente ao tipo esperado pela lib
+    prisma: prisma as unknown as PrismaPermissionsProviderPrisma,
   }),
   5 * 60 * 1000 // 5 minutos
 )
