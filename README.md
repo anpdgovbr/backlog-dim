@@ -1,5 +1,5 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
-
+[![CI](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml/badge.svg)](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
@@ -11,7 +11,7 @@
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)](https://prettier.io/)
 [![Husky](https://img.shields.io/badge/Husky-black?style=for-the-badge&logo=husky&logoColor=white)](https://typicode.github.io/husky/)
-[![Versão](https://img.shields.io/badge/versão-0.2.90-brightgreen?style=for-the-badge)](package.json)
+[![Versão](https://img.shields.io/badge/versão-0.4.x-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
