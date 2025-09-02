@@ -1,17 +1,46 @@
 name: CI
 on:
   pull_request:
-    branches: ["main", "develop", "stable"]
+    branches: ["main", "develop"]
   push:
-    branches: ["develop"]
+    branches: ["main", "develop"]
+
+env:
+  # DATABASE_URL necessário para Prisma generate (mesmo sem conectar ao banco nos testes)
+  DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # Cache dos artefatos do Prisma para acelerar builds
+      - uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.prisma
+            prisma/generated
+          key: ${{ runner.os }}-prisma-${{ hashFiles('prisma/schema.prisma') }}
+          restore-keys: |
+            ${{ runner.os }}-prisma-
+
       - run: npm ci
+
+      # Gerar cliente Prisma antes de qualquer checagem
+      - run: npx prisma generate
+
+      # Checagens estáticas primeiro (mais rápidas)
       - run: npm run type-check
       - run: npm run lint
+
+      # Testes antes do build (falham mais rápido)
+      - run: npm test
+
+      # Build por último (mais demorado)
       - run: npm run build
