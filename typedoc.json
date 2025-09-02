@@ -10,5 +10,44 @@
   "disableSources": false,
   "hideGenerator": true,
   "includeVersion": true,
-  "cleanOutputDir": true
+  "cleanOutputDir": true,
+  "externalSymbolLinkMappings": {
+    "@anpdgovbr/shared-types": {
+      "AcaoAuditoria": "https://github.com/anpdgovbr/shared-types#acaoauditoria",
+      "AcaoAuditoria.CREATE": "https://github.com/anpdgovbr/shared-types#acaoauditoria",
+      "AcaoAuditoria.UPDATE": "https://github.com/anpdgovbr/shared-types#acaoauditoria",
+      "AcaoAuditoria.DELETE": "https://github.com/anpdgovbr/shared-types#acaoauditoria"
+    }
+  },
+  "blockTags": [
+    "@alpha",
+    "@beta",
+    "@defaultValue",
+    "@decorator",
+    "@deprecated",
+    "@eventProperty",
+    "@example",
+    "@experimental",
+    "@inheritDoc",
+    "@internal",
+    "@label",
+    "@override",
+    "@packageDocumentation",
+    "@param",
+    "@privateRemarks",
+    "@public",
+    "@readonly",
+    "@remarks",
+    "@returns",
+    "@sealed",
+    "@see",
+    "@since",
+    "@throws",
+    "@typeParam",
+    "@virtual"
+  ],
+  "validation": {
+    "invalidLink": false,
+    "notExported": false
+  }
 }

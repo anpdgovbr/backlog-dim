@@ -1,5 +1,5 @@
 /**
- * @file Rota de autenticação via NextAuth.
+ * Rota de autenticação via NextAuth.
  *
  * Esta rota implementa o handler de autenticação utilizando NextAuth, delegando
  * os métodos GET e POST para o adaptador NextAuth com as opções configuradas em

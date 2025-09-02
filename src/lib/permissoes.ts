@@ -1,5 +1,4 @@
 /**
- * @fileoverview
  * Adaptação de permissões por usuário para o formato `PermissionsMap` e helpers
  * para verificação de acesso por par `{ acao, recurso }`.
  *

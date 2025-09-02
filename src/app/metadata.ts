@@ -10,8 +10,6 @@ import type { Metadata } from "next"
  * É exportado como `globalMetadata` e pode ser utilizado nos layouts/rotas para
  * definir metadados padrão da aplicação.
  *
- * @constant
- * @type {Metadata}
  * @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata
  */
 export const globalMetadata: Metadata = {

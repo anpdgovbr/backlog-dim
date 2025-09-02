@@ -64,12 +64,11 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoFormData {
 
 /**
  * Representa uma contagem de ocorrências por tema.
- *
- * @property tema - Nome do tema
- * @property total - Quantidade total de ocorrências desse tema
  */
 export interface TemaCount {
+  /** Nome do tema */
   tema: string
+  /** Quantidade total de ocorrências desse tema */
   total: number
 }
 

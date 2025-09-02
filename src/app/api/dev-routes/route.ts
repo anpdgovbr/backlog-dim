@@ -1,5 +1,5 @@
 /**
- * @file Rota de API para leitura do arquivo de rotas de desenvolvimento.
+ * Rota de API para leitura do arquivo de rotas de desenvolvimento.
  *
  * Esta rota expõe o conteúdo do arquivo `dev-routes.json` presente na pasta `public`,
  * permitindo que ferramentas e desenvolvedores obtenham a lista de rotas geradas

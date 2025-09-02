@@ -1,5 +1,5 @@
 /**
- * @file Rota de API para consulta de CNAE por ID.
+ * Rota de API para consulta de CNAE por ID.
  *
  * Esta rota implementa o endpoint GET para buscar informações de um CNAE específico,
  * utilizando o serviço externo definido em CONTROLADORES_API_URL.

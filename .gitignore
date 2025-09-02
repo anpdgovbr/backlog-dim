@@ -57,5 +57,6 @@ logs/combined-0.log
 
 # generated
 docs/
+.typedocs/
 public/dev-routes.json
 issues/

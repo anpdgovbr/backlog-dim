@@ -1,5 +1,4 @@
 /**
- * @fileoverview
  * Wrappers utilitários para rotas de API que centralizam autenticação, autorização (RBAC)
  * baseada em pares `{ acao, recurso }` e registro de auditoria.
  *
@@ -32,17 +31,17 @@ import { buscarPermissoesConcedidas } from "@/lib/permissoes"
  *
  * @typeParam TParams - Tipo do objeto de parâmetros (por exemplo, de rotas dinâmicas).
  * @typeParam TExtra - Dados extras opcionais a serem mesclados ao contexto.
- * @property req - Requisição original (`Request`/`NextRequest`).
- * @property session - Sessão do NextAuth (quando disponível).
- * @property email - Email do usuário autenticado.
- * @property userId - Identificador do usuário autenticado (quando disponível).
- * @property params - Parâmetros resolvidos da rota.
  */
 export type HandlerContext<TParams extends object = object, TExtra = object> = {
+  /** Requisição original (`Request`/`NextRequest`). */
   req: Request | NextRequest
+  /** Sessão do NextAuth (quando disponível). */
   session: Awaited<ReturnType<typeof getServerSession>>
+  /** Email do usuário autenticado. */
   email: string
+  /** Identificador do usuário autenticado (quando disponível). */
   userId?: string
+  /** Parâmetros resolvidos da rota. */
   params: TParams
 } & TExtra
 
@@ -71,16 +70,16 @@ export type Handler<TParams extends object = object, TExtra = object> = (
  * Opções para `withApi`/`withApiForId`.
  *
  * @typeParam TParams - Tipo do objeto de parâmetros.
- * @property tabela - Nome da tabela/entidade de auditoria ou função baseada em `params`.
- * @property acao - Ação de auditoria (enum {@link AcaoAuditoria}).
- * @property permissao - Par `{ acao, recurso }` exigido para a rota (RBAC).
  * @remarks
  * Quando `permissao` é informada, a autorização verifica `pode(perms, acao, recurso)`
  * usando um `PermissionsMap` derivado do perfil do usuário.
  */
 export type WithApiOptions<TParams extends object = object> = {
+  /** Nome da tabela/entidade de auditoria ou função baseada em `params`. */
   tabela?: string | ((params: TParams) => string)
+  /** Ação de auditoria (enum {@link AcaoAuditoria}). */
   acao?: (typeof AcaoAuditoria)[keyof typeof AcaoAuditoria]
+  /** Par `{ acao, recurso }` exigido para a rota (RBAC). */
   permissao?: { acao: AcaoPermissao; recurso: RecursoPermissao }
 }
 

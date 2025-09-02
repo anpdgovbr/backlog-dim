@@ -1,5 +1,4 @@
 /**
- * @fileoverview
  * Wrappers "slim" para rotas de API que exigem apenas autenticação e autorização (RBAC)
  * com pares `{ acao, recurso }`, sem necessidade de sessão completa.
  *

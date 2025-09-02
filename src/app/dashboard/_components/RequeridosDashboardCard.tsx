@@ -19,7 +19,7 @@ import type { TopRequerido } from "@/types/TopRequeridos"
  *
  * É usado como fallback quando a prop `limit` não é informada.
  */
-const MAX_REQUERIDOS = 5
+export const MAX_REQUERIDOS = 5
 
 /**
  * Props do componente RequeridosDashboardCard.
@@ -50,7 +50,7 @@ export type RequeridosDashboardCardProps = Readonly<{
  * - As props são imutáveis (tipadas com Readonly).
  * - O componente é cliente ("use client") e usa hooks de navegação do Next.js.
  *
- * @param props.limit limite opcional de itens a serem exibidos
+ * @param limit limite opcional de itens a serem exibidos (padrão: {@link MAX_REQUERIDOS})
  * @returns JSX.Element representando o card de requeridos
  */
 function RequeridosDashboardCard({
