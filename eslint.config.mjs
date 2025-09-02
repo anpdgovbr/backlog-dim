@@ -43,6 +43,7 @@ const eslintConfig = [
   },
 
   {
+    // Ignorar arquivos e pastas que não fazem parte do linting do app
     ignores: [
       "node_modules/",
       ".next/",
@@ -50,9 +51,6 @@ const eslintConfig = [
       "prisma/",
       "scripts/*.cjs",
       "docs/",
-      // Ignorar submódulos e monorepos externos
-      "rbac/**",
-      "external/**",
     ],
   },
 
