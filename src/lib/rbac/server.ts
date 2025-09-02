@@ -6,16 +6,23 @@ import { prisma } from "@/lib/prisma"
 // TODO: Idealmente, use uma instância singleton do Prisma Client em todo o projeto.
 // Usando a instância singleton de prisma importada de "@/lib/prisma"
 
+// Define a type alias for the expected Prisma type for createPrismaPermissionsProvider
+type PrismaPermissionsProviderPrisma = Parameters<
+  typeof createPrismaPermissionsProvider
+>[0]["prisma"];
+
+// If PrismaClient is not directly assignable, create an adapter here.
+// For now, assume PrismaClient is compatible. If not, uncomment and implement the adapter below.
+// const prismaAdapter: PrismaPermissionsProviderPrisma = {
+//   ...implement required methods by delegating to prisma...
+// };
+
 /**
  * Provider de permissões para o lado do servidor, com cache de 5 minutos.
  */
 export const rbacProvider = withTTLCache(
-  // Evita usar `any`. Faz um cast seguro para o tipo do parâmetro `prisma`
-  // esperado por createPrismaPermissionsProvider.
   createPrismaPermissionsProvider({
-    prisma: prisma as unknown as Parameters<
-      typeof createPrismaPermissionsProvider
-    >[0]["prisma"],
+    prisma: prisma as PrismaPermissionsProviderPrisma,
   }),
   5 * 60 * 1000 // 5 minutos
 )
