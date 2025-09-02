@@ -6,7 +6,6 @@
 	path = external/docker-infra-pg
 	url = git@github.com:anpdgovbr/docker-infra-pg.git
 	branch = main
-
 [submodule "external/rbac"]
 	path = external/rbac
 	url = git@github.com:anpdgovbr/rbac.git
