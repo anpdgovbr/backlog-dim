@@ -1,4 +1,6 @@
 import { getServerSession } from "next-auth/next"
+import { redirect } from "next/navigation"
+import { pode as podeCore } from "@anpdgovbr/rbac-core"
 import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
 import { withTTLCache } from "@anpdgovbr/rbac-provider"
 import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
@@ -24,6 +26,29 @@ export const getIdentity: IdentityResolver<Request> = {
     }
     return { id: session.user.id ?? session.user.email, email: session.user.email }
   },
+}
+
+/**
+ * Helper server-side para checagem de permissão em pages/server components.
+ * Faz resolve de identidade, obtém permissões e redireciona se não autorizado.
+ * Retorna o objeto { identity, perms } quando autorizado.
+ */
+export async function ensurePermissionOrRedirect(
+  req: Request,
+  acao: string,
+  recurso: string,
+  redirectTo = "/acesso-negado"
+) {
+  try {
+    const identity = await getIdentity.resolve(req)
+    const email = identity.email ?? identity.id
+    if (!email) return redirect(redirectTo)
+    const perms = await rbacProvider.getPermissionsByIdentity(email)
+    if (!podeCore(perms, acao, recurso)) return redirect(redirectTo)
+    return { identity, perms }
+  } catch {
+    return redirect(redirectTo)
+  }
 }
 
 /** Auditoria simples: grava em AuditLog quando fornecido via withApi */

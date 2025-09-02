@@ -1,21 +1,25 @@
-"use client"
+import { redirect } from "next/navigation"
+import { protectPage } from "@anpdgovbr/rbac-next"
+import { getIdentity, rbacProvider } from "@/lib/rbac/server"
+import ClientShell from "./ClientShell"
 
-import { withPermissao } from "@anpdgovbr/rbac-react"
-import RbacAdminShell from "@anpdgovbr/rbac-admin"
-
-function RbacAdminPage() {
-  return (
-    <RbacAdminShell
-      config={{
-        baseUrl: "",
-        endpoints: {
-          permissions: (id: string | number) => `/api/permissoes?perfil=${id}`,
-          toggle: "/api/permissoes/toggle",
-          profiles: "/api/perfis",
-        },
-      }}
-    />
-  )
-}
-
-export default withPermissao(RbacAdminPage, "Exibir", "Permissoes", { redirect: false })
+/**
+ * Protege a página de administração do RBAC.
+ * A verificação de permissão é feita no servidor antes da renderização.
+ * Em caso de falha, o usuário é redirecionado.
+ */
+export default protectPage(
+  ClientShell,
+  {
+    getIdentity,
+    provider: rbacProvider,
+    // Permissão necessária para acessar esta página
+    permissao: { acao: "Exibir", recurso: "Permissoes" },
+  },
+  {
+    // A função de redirect do Next.js é passada para o helper
+    redirectFn: redirect,
+    // Opcional: customizar os destinos do redirect
+    // redirects: { unauth: '/login', forbidden: '/acesso-negado' }
+  }
+)

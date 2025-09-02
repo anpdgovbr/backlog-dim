@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/backlog-dim",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Aplicação CRUD para gerenciar processamentos administrativos relacionados à atuação da DIM na ANPD. Sistema moderno, seguro e escalável, desenvolvido com React, Next.js, TypeScript e Prisma.",
@@ -124,12 +124,12 @@
     "swr": "^2.3.6",
     "tsx": "^4.20.5",
     "yup": "^1.7.0",
-    "@anpdgovbr/rbac-core": "^0.1.1-beta.3",
-    "@anpdgovbr/rbac-provider": "^0.1.1-beta.3",
-    "@anpdgovbr/rbac-prisma": "^0.1.1-beta.3",
-    "@anpdgovbr/rbac-next": "^0.1.1-beta.3",
-    "@anpdgovbr/rbac-react": "^0.2.0-beta.1",
-    "@anpdgovbr/rbac-admin": "^0.2.0-beta.2"
+    "@anpdgovbr/rbac-core": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-provider": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-prisma": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-next": "^0.1.1-beta.4",
+    "@anpdgovbr/rbac-react": "^0.2.0-beta.2",
+    "@anpdgovbr/rbac-admin": "^0.2.0-beta.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",

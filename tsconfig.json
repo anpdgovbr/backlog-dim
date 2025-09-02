@@ -42,7 +42,7 @@
     "dist",
     "build",
     "packages/**/src",
-    "rbac/**",
+    "external/rbac/**",
     "external/**"
   ]
 }
