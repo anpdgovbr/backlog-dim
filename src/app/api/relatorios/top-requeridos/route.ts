@@ -1,11 +1,7 @@
-import fetch from "node-fetch"
-
 import type { ControladorDto } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-
-// npm install node-fetch
 
 /**
  * Top requeridos por número de processos.
