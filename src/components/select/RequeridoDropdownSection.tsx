@@ -10,12 +10,40 @@ import TextField from "@mui/material/TextField"
 
 import { useControladores } from "@/hooks/useControladores"
 
+/**
+ * Propriedades para o componente RequeridoDropdownSection.
+ *
+ * @remarks
+ * - Utilizado dentro de formulários com react-hook-form (usa Controller).
+ * - Quando hasAllOption for true, é adicionada uma opção especial `{ id: "ALL", nome: "Todos" }`.
+ *
+ * @property label - Texto do rótulo exibido no TextField/Autocomplete.
+ * @property name - Nome do campo utilizado pelo react-hook-form.
+ * @property hasAllOption - Opcional. Se true, inclui a opção "Todos" no início da lista.
+ *
+ * @example
+ * <RequeridoDropdownSection label="Requerido" name="requeridoId" hasAllOption />
+ */
 export interface RequeridoDropdownSectionProps {
   label: string
   name: string
   hasAllOption?: boolean
 }
 
+/**
+ * Componente de seleção (Autocomplete) para escolher um "requerido" (controlador).
+ *
+ * Comportamento:
+ * - Busca controladores via hook useControladores quando o termo de busca tem >= 3 caracteres.
+ * - Garante que, se um id já selecionado não estiver na lista atual, o item seja carregado individualmente (extraRequerido).
+ * - Integra-se com react-hook-form através do Controller e useWatch.
+ *
+ * @param props.label - Rótulo exibido no campo.
+ * @param props.name - Nome do campo no form controlado.
+ * @param props.hasAllOption - Se true, adiciona a opção "Todos" com id "ALL".
+ *
+ * @returns JSX.Element - Componente Autocomplete integrado ao react-hook-form.
+ */
 export function RequeridoDropdownSection({
   label,
   name,

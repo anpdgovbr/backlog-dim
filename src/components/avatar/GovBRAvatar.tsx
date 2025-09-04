@@ -1,5 +1,17 @@
 "use client"
 
+/**
+ * Componente e utilitários relacionados ao avatar de autenticação Gov.br.
+ *
+ * Este arquivo contém o componente GovBRAvatar utilizado na barra de navegação
+ * para exibir o avatar do usuário (imagem ou iniciais), abrir um menu de ações
+ * (ex.: Meu perfil, Sair) e interagir com o script de login gov.br quando disponível.
+ *
+ * Notas:
+ * - Mantém a diretiva "use client" para execução no cliente.
+ * - Usa next-auth para sessão e logout, e next/navigation para navegação.
+ */
+
 import { useEffect, useRef, useState } from "react"
 
 import { useSession } from "next-auth/react"
@@ -11,12 +23,40 @@ import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutl
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 
+/**
+ * Interface para a extensão global carregada pelo script gov.br.
+ *
+ * A propriedade BRSignIn pode ser injetada externamente e expor um método
+ * `activate` utilizado para inicializar comportamentos de autenticação
+ * da biblioteca gov.br no escopo da página.
+ *
+ * Exemplo de uso:
+ *   if (window.BRSignIn?.activate) {
+ *     window.BRSignIn.activate()
+ *   }
+ */
 declare global {
   interface Window {
     BRSignIn?: { activate?: () => void }
   }
 }
 
+/**
+ * Componente GovBRAvatar
+ *
+ * Exibe um botão estilo Gov.BR com o avatar do usuário (imagem ou iniciais),
+ * nome reduzido, e um menu com ações (perfil, logout). O componente:
+ * - Lê a sessão via next-auth (useSession).
+ * - Usa um estado local para controlar a abertura do menu.
+ * - Detecta cliques fora do menu para fechá-lo.
+ * - Ativa o script gov.br quando presente (window.BRSignIn.activate).
+ *
+ * Retorno:
+ * - JSX.Element contendo o botão e a lista de ações.
+ *
+ * Observações:
+ * - Não altera rotas do servidor; usa signOut para logout com callback.
+ */
 export default function GovBRAvatar() {
   const { data: session } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
