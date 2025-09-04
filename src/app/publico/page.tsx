@@ -13,6 +13,21 @@ import RequeridosDashboardCard from "@/app/dashboard/_components/RequeridosDashb
 import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisDashboardCard"
 import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
 
+/**
+ * Componente de página pública que renderiza o "Dashboard Público - ANPD".
+ *
+ * Apresenta:
+ * - Cabeçalho com título e descrição.
+ * - Indicadores principais e cartões de métricas detalhadas (ProcessDashboardCard, StatsDashboardCard, etc.).
+ * - Seção de dados detalhados com responsáveis, requeridos e metadados.
+ * - Rodapé informativo sobre o escopo público dos dados.
+ *
+ * Observações:
+ * - Este arquivo é um client component (usa "use client").
+ * - Não recebe props; compõe a UI a partir de componentes de dashboard internos.
+ *
+ * @returns {JSX.Element} Marcação da página pública com caixas, grids e cards.
+ */
 export default function PublicoPage() {
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>

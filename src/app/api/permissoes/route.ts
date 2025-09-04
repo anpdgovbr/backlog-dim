@@ -1,95 +1,94 @@
-import { AcaoAuditoria } from "@anpdgovbr/shared-types"
-import type { PermissaoPayload } from "@anpdgovbr/shared-types"
-
-import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
+// app/api/permissoes/route.ts
+import { getIdentity, rbacProvider } from "@/rbac/server"
 import { prisma } from "@/lib/prisma"
-import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
+import { withApi } from "@anpdgovbr/rbac-next"
+import { getPermissoesPorPerfil, type PrismaLike } from "@anpdgovbr/rbac-prisma"
+import type { AcaoPermissao, RecursoPermissao } from "@prisma/client"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { permissaoCreateSchema } from "@/schemas/server/Permissao.zod"
 
-/**
- * Recupera permissões. Se `perfilId` for fornecido na query string,
- * retorna permissões daquele perfil; caso contrário, retorna permissões do
- * usuário autenticado (via email da sessão).
- * @example
- * GET /api/permissoes?perfilId=3
- */
-export const GET = withApiSlimNoParams(async ({ req, email }) => {
-  const { searchParams } = new URL(req.url)
-  const perfilId = searchParams.get("perfilId")
+export const GET = withApi(
+  async ({ req }: { req: Request }) => {
+    const url = new URL(req.url)
+    const perfilParam = url.searchParams.get("perfil")
 
-  if (perfilId) {
-    const perfil = await prisma.perfil.findUnique({
-      where: { id: Number(perfilId), active: true },
-      select: { nome: true },
-    })
-
-    if (!perfil) {
-      return Response.json(
-        { error: "Perfil não encontrado ou desativado" },
-        { status: 404 }
-      )
+    if (!perfilParam) {
+      const identity = await getIdentity.resolve(req)
+      const email = identity.email ?? identity.id
+      const perms = await rbacProvider.getPermissionsByIdentity(email)
+      const list: Array<{ acao: string; recurso: string; permitido: boolean }> = []
+      for (const [acao, recursos] of Object.entries(perms ?? {})) {
+        for (const [recurso, permitido] of Object.entries(recursos ?? {})) {
+          if (permitido) list.push({ acao, recurso, permitido: true })
+        }
+      }
+      return Response.json(list)
     }
 
-    const permissoes = await getPermissoesPorPerfil(perfil.nome)
-    return Response.json(permissoes)
-  }
-
-  const usuario = await prisma.user.findUnique({
-    where: { email, active: true },
-    include: { perfil: { where: { active: true } } },
-  })
-
-  if (!usuario || !usuario.perfil) {
-    return Response.json({ error: "Perfil não definido ou desativado" }, { status: 403 })
-  }
-
-  const permissoes = await getPermissoesPorPerfil(usuario.perfil.nome)
-  return Response.json(permissoes)
-})
-
-// ✅ MÉTODO POST → Criar Nova Permissão com auditoria
-/**
- * Cria ou atualiza uma permissão para um perfil.
- * Corpo esperado: { perfilId, acao, recurso, permitido }
- */
-export const POST = withApi<PermissaoPayload>(
-  async ({ req }) => {
-    const { perfilId, acao, recurso, permitido }: PermissaoPayload = await req.json()
-
-    if (!perfilId || !acao || !recurso || permitido === undefined) {
-      return Response.json({ error: "Dados inválidos" }, { status: 400 })
+    let perfilNome: string | null = null
+    if (/^\d+$/.test(perfilParam)) {
+      const byId = await prisma.perfil.findUnique({
+        where: { id: Number(perfilParam) },
+        select: { nome: true },
+      })
+      perfilNome = byId?.nome ?? null
+    } else {
+      perfilNome = perfilParam
     }
+    if (!perfilNome)
+      return Response.json({ error: "Perfil não encontrado" }, { status: 404 })
 
-    const permissaoExistente = await prisma.permissao.findUnique({
-      where: {
-        perfilId_acao_recurso: { perfilId, acao, recurso },
-      },
-    })
-
-    if (permissaoExistente && !permissaoExistente.active) {
-      return Response.json(
-        { error: "Permissão está desabilitada. Reative ou exclua manualmente." },
-        { status: 409 }
-      )
-    }
-
-    const novaPermissao = await prisma.permissao.upsert({
-      where: { perfilId_acao_recurso: { perfilId, acao, recurso } },
-      update: { permitido },
-      create: { perfilId, acao, recurso, permitido },
-    })
-
-    return {
-      response: Response.json(novaPermissao),
-      audit: {
-        antes: permissaoExistente ?? undefined,
-        depois: novaPermissao,
-      },
-    }
+    const list = await getPermissoesPorPerfil(prisma as unknown as PrismaLike, perfilNome)
+    return Response.json(list)
   },
   {
-    tabela: "permissao",
-    acao: AcaoAuditoria.CREATE,
-    permissao: "Alterar_Permissoes",
+    provider: rbacProvider,
+    getIdentity,
+    permissao: { acao: "Exibir", recurso: "Permissoes" },
+  }
+)
+
+// Cria explicitamente uma permissão (além do toggle)
+export const POST = withApi(
+  async ({ req }) => {
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(permissaoCreateSchema, raw, "POST /api/permissoes")
+    if (!valid.ok) return valid.response
+    const { perfilId, perfilNome, acao, recurso, permitido } = valid.data
+    let perfilIdResolved: number | null = null
+    if (perfilId) perfilIdResolved = Number(perfilId)
+    else if (perfilNome) {
+      const p = await prisma.perfil.findUnique({
+        where: { nome: perfilNome },
+        select: { id: true },
+      })
+      perfilIdResolved = p?.id ?? null
+    }
+    if (!perfilIdResolved)
+      return Response.json({ error: "Perfil não encontrado" }, { status: 404 })
+
+    const saved = await prisma.permissao.upsert({
+      where: {
+        perfilId_acao_recurso: {
+          perfilId: perfilIdResolved,
+          acao: acao as AcaoPermissao,
+          recurso: recurso as RecursoPermissao,
+        },
+      },
+      update: { permitido: !!permitido },
+      create: {
+        perfilId: perfilIdResolved,
+        acao: acao as AcaoPermissao,
+        recurso: recurso as RecursoPermissao,
+        permitido: !!permitido,
+      },
+      select: { id: true, permitido: true },
+    })
+    return Response.json(saved, { status: 201 })
+  },
+  {
+    provider: rbacProvider,
+    getIdentity,
+    permissao: { acao: "Cadastrar", recurso: "Permissoes" },
   }
 )

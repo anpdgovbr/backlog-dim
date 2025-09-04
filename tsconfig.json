@@ -31,9 +31,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.d.ts",
     "next-auth.d.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next", "dist", "build"]
+  "exclude": ["node_modules", ".next", "dist", "build", "packages/**/src"]
 }

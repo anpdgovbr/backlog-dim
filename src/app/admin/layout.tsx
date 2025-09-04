@@ -17,18 +17,25 @@ import MobileMenu from "@/components/menu/MobileMenu"
 import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
+
+// Adiciona tipo Readonly para as props do componente
+type AdminLayoutProps = Readonly<{
+  children: React.ReactNode
+}>
 
 const links: LinkItem[] = [
   { href: "/admin", text: "Painel de Gestão", icon: <Home /> },
   { href: "/dashboard", text: "Painel de trabalho", icon: <ViewCompactAltOutlined /> },
   { href: "/admin/perfis", text: "Gerenciar Perfis", icon: <Group /> },
+  { href: "/admin/perfis/heranca", text: "Herança de Perfis", icon: <Group /> },
   { href: "/admin/auditoria", text: "Auditoria", icon: <SupervisedUserCircleOutlined /> },
   { href: "/admin/permissoes", text: "Permissões", icon: <LockPerson /> },
+  { href: "/rbac-admin", text: "RBAC Admin", icon: <Shield /> },
   { href: "/admin/superadmin", text: "SuperAdmin", icon: <Shield /> },
 ]
 
-function AdminLayout({ children }: { children: React.ReactNode }) {
+function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname()
   const theme = useTheme()
   const isXs = useMediaQuery(theme.breakpoints.only("xs"))
@@ -79,4 +86,4 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default withPermissao(AdminLayout, "Desabilitar", "Relatorios")
+export default withPermissao(AdminLayout, "Acessar", "Admin")

@@ -2,21 +2,36 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
-import { withApiSlimNoParams } from "@/lib/withApiSlim"
 
 /**
  * Lista formas de entrada ativas (metadados).
+ *
+ * @see {@link withApiSlimNoParams}
+ * @returns JSON com array de formas de entrada ativas.
+ * @example
+ * GET /api/formaEntrada
+ * @remarks Requer permissão {acao: "Exibir", recurso: "Metadados"}.
  */
-export const GET = withApiSlimNoParams(async () => {
-  const dados = await prisma.formaEntrada.findMany({
-    where: { active: true },
-  })
+export const GET = withApi(
+  async () => {
+    const dados = await prisma.formaEntrada.findMany({
+      where: { active: true },
+    })
 
-  return Response.json(dados)
-}, "Exibir_Metadados")
+    return Response.json(dados)
+  },
+  { permissao: { acao: "Exibir", recurso: "Metadados" } }
+)
 
 /**
  * Cria uma nova forma de entrada (metadado).
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro criado e status 201.
+ * @example
+ * POST /api/formaEntrada
+ * { "nome": "E-mail" }
+ * @remarks Registra auditoria ({@link AcaoAuditoria.CREATE}) e exige {acao: "Cadastrar", recurso: "Metadados"}.
  */
 export const POST = withApi(
   async ({ req }) => {
@@ -45,6 +60,6 @@ export const POST = withApi(
   {
     tabela: "formaEntrada",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

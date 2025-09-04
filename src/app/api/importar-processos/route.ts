@@ -12,6 +12,16 @@ const formatarData = (data: string): string => {
   return ano ? `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : ""
 }
 
+/**
+ * Importa uma lista de processos a partir de JSON (pré-processado de CSV).
+ *
+ * @see {@link withApi}
+ * @returns JSON com resumo/estatísticas da importação.
+ * @example
+ * POST /api/importar-processos
+ * { "processos": [ { "numeroProcesso": "P202504-0001", "responsavelNome": "Fulano" } ] }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Processo"}.
+ */
 export const POST = withApi(
   /**
    * Importa uma lista de processos (CSV já convertidos para JSON no frontend).
@@ -129,6 +139,6 @@ export const POST = withApi(
   {
     tabela: "processo",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Processo",
+    permissao: { acao: "Cadastrar", recurso: "Processo" },
   }
 )

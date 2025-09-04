@@ -21,6 +21,30 @@ export interface ResponsaveisDashboardCardProps {
   limit?: number
 }
 
+/**
+ * Card do dashboard que exibe os principais responsáveis (usuários) por processos.
+ *
+ * Descrição:
+ * - Componente client-side que, ao montar, faz uma requisição para
+ *   `/api/relatorios/top-responsaveis?limit={limit}` para carregar os dados.
+ * - Mostra Skeletons enquanto carrega, lista os responsáveis quando disponíveis
+ *   e exibe uma mensagem de aviso em caso de erro.
+ *
+ * Props:
+ * - limit (opcional): número máximo de responsáveis a serem exibidos (default: 6).
+ *
+ * Comportamento:
+ * - Faz fetch com cache: "no-store".
+ * - Em respostas inválidas ou erros de rede, define estado de erro e
+ *   mostra uma mensagem informativa.
+ * - Possui um botão de ação que navega para "/dashboard/responsaveis".
+ *
+ * Retorno:
+ * - JSX.Element representando o card com a lista dos responsáveis ou placeholders.
+ *
+ * Observações:
+ * - Componente exportado como default.
+ */
 function ResponsaveisDashboardCard({
   limit = MAX_RESPONSAVEIS,
 }: ResponsaveisDashboardCardProps) {

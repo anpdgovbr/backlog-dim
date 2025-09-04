@@ -1,20 +1,20 @@
-import type { PrismaClient } from "@prisma/client"
+type EntityMinimal = { id: number; active: boolean }
 
-// 🔹 Apenas os delegates de modelo (remove funções utilitárias)
-export type ModelKeysOnly = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in Extract<keyof PrismaClient, string>]: PrismaClient[K] extends { findFirst: any }
-    ? K
-    : never
-}[Extract<keyof PrismaClient, string>]
+type DelegateForName = {
+  findFirst: (args: { where: { nome: string } }) => Promise<EntityMinimal | null>
+  update: (args: {
+    where: { id: number }
+    data: { active: boolean; exclusionDate: Date | null }
+  }) => Promise<EntityMinimal>
+  create: (args: { data: { nome: string } }) => Promise<EntityMinimal>
+}
 
-export async function getOrRestoreByName<T extends ModelKeysOnly>(
-  tx: Pick<PrismaClient, T>,
-  modelName: T,
+export async function getOrRestoreByName(
+  tx: Record<string, unknown>,
+  modelName: string,
   nome: string
-): Promise<{ id: number; active: boolean }> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const model = tx[modelName] as any
+): Promise<EntityMinimal> {
+  const model = tx[modelName] as unknown as DelegateForName
 
   let entity = await model.findFirst({ where: { nome } })
 

@@ -28,7 +28,7 @@ import ResponsaveisPage from "@/app/dashboard/responsaveis/page"
 import type { ISectionConfig } from "@/components/dashboard/Dashboard25Wrapper"
 import Dashboard25Wrapper from "@/components/dashboard/Dashboard25Wrapper"
 import usePermissoes from "@/hooks/usePermissoes"
-import { pode } from "@/lib/permissions"
+import { pode } from "@anpdgovbr/rbac-core"
 import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 const allSections: ISectionConfig[] = [

@@ -1,5 +1,5 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
-
+[![CI](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml/badge.svg)](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
@@ -11,7 +11,7 @@
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)](https://prettier.io/)
 [![Husky](https://img.shields.io/badge/Husky-black?style=for-the-badge&logo=husky&logoColor=white)](https://typicode.github.io/husky/)
-[![Versão](https://img.shields.io/badge/versão-0.2.90-brightgreen?style=for-the-badge)](package.json)
+[![Versão](https://img.shields.io/badge/versão-0.4.x-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
@@ -103,7 +103,7 @@ A estrutura de pastas segue as convenções do Next.js e foi organizada para sep
 │   │   ├── api.ts    # Funções para interação com a API interna
 │   │   ├── prisma/   # Configuração e instância do cliente Prisma
 │   │   └── helpers/  # Funções auxiliares diversas
-│   ├── schemas/      # Schemas de validação (Yup/Zod) para formulários e dados
+│   ├── schemas/      # Schemas de validação (Zod v4) para formulários e dados
 │   ├── styles/       # Estilos globais, configurações de tema e overrides de CSS
 │   └── utils/        # Funções utilitárias diversas (formatação, datas, validação)
 ├── .env.local.example # Template de variáveis de ambiente
@@ -144,7 +144,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 | **Design System**        | [Gov.br Design System](https://www.gov.br/ds/) (`@govbr-ds/core`)                                                         | 3.6.2   |
 | **Autenticação**         | [NextAuth.js](https://next-auth.js.org/)                                                                                  | 4.24.11 |
 | **Infraestrutura Local** | [Docker](https://www.docker.com/) + [docker-infra-pg](https://github.com/anpdgovbr/docker-infra-pg)                       | Latest  |
-| **Validação de Dados**   | [Yup](https://github.com/jquense/yup) / [React Hook Form](https://react-hook-form.com/)                                   | Latest  |
+| **Validação de Dados**   | [Zod v4](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)                                              | Latest  |
 | **Qualidade de Código**  | [ESLint](https://eslint.org/) (flat config), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/) | 9.33.0  |
 | **Build Tool**           | [Turbopack](https://turbo.build/) (desenvolvimento)                                                                       | Next.js |
 

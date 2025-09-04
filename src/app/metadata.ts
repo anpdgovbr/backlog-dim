@@ -1,5 +1,17 @@
 import type { Metadata } from "next"
 
+/**
+ * Metadados globais da aplicação usados pelo App Router do Next.js.
+ *
+ * Este objeto segue a interface `Metadata` do Next.js e centraliza informações
+ * de SEO e compartilhamento (título padrão e template, descrição, palavras-chave,
+ * autores, publisher, instruções para robôs, Open Graph e ícones).
+ *
+ * É exportado como `globalMetadata` e pode ser utilizado nos layouts/rotas para
+ * definir metadados padrão da aplicação.
+ *
+ * @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata
+ */
 export const globalMetadata: Metadata = {
   title: {
     default: "Backlog DIM - ANPD",

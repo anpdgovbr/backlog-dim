@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 
 function RelatoriosPageContent() {
   return (
@@ -29,6 +29,6 @@ function RelatoriosPageContent() {
   )
 }
 const RelatoriosPage = withPermissao(RelatoriosPageContent, "Exibir", "Relatorios", {
-  redirecionar: false,
+  redirect: false,
 })
 export default RelatoriosPage

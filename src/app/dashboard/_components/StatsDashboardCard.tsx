@@ -40,6 +40,25 @@ const COLORS = [
   "rgba(255, 255, 255, 0.7)",
 ]
 
+/**
+ * Componente de dashboard que exibe estatísticas resumidas dos processos.
+ *
+ * - Renderiza um card com três abas: "Resumo", "Status" e "Temas".
+ * - Faz fetch para o endpoint `/api/relatorios/processos-dashboard` ao ser montado
+ *   (cache: "no-store") para obter os indicadores exibidos no card.
+ * - Enquanto os dados carregam, exibe skeletons; em caso de erro, mostra mensagem
+ *   de erro adequada.
+ * - Aba "Resumo": mostra totais, criados no mês, atrasados e quantos estão
+ *   atribuídos ao usuário.
+ * - Aba "Status": lista a contagem por status interno e apresenta um gráfico de barras.
+ * - Aba "Temas": exibe os temas mais frequentes e um gráfico correspondente.
+ *
+ * Observações:
+ * - Não recebe props; utiliza roteamento via `useRouter` para ação do botão.
+ * - Retorna um JSX.Element representando o card com gráficos (recharts) e MUI.
+ *
+ * @returns JSX.Element - Card com estatísticas e gráficos interativos.
+ */
 export function StatsDashboardCard() {
   const router = useRouter()
   const [tab, setTab] = useState(0)

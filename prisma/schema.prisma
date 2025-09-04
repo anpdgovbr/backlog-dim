@@ -162,19 +162,25 @@ model Perfil {
   active        Boolean     @default(true) 
   exclusionDate DateTime?  
 
+  // Herança de perfis (muitos-para-muitos auto-relacionado via tabela de junção)
+  // Pais deste perfil (dos quais herda permissões)
+  pais PerfilHeranca[] @relation("PerfilHerancaParent")
+  // Filhos deste perfil (que herdam deste)
+  filhos PerfilHeranca[] @relation("PerfilHerancaChild")
+
   @@map("Perfil")
   @@index([active])
 }
 
 model Permissao {
   id            Int       @id @default(autoincrement())
-  acao          String
-  recurso       String
+  acao          AcaoPermissao
+  recurso       RecursoPermissao
   permitido     Boolean
   perfilId      Int
   perfil        Perfil    @relation(fields: [perfilId], references: [id])
-  active        Boolean   @default(true) 
-  exclusionDate DateTime?  
+  active        Boolean   @default(true)
+  exclusionDate DateTime?
 
   @@unique([perfilId, acao, recurso])
   @@index([active])
@@ -211,6 +217,18 @@ model User {
   @@index([active])
 }
 
+// Relação de herança entre perfis (DAG): child herda de parent
+model PerfilHeranca {
+  parentId Int
+  childId  Int
+
+  parent Perfil @relation("PerfilHerancaParent", fields: [parentId], references: [id])
+  child  Perfil @relation("PerfilHerancaChild", fields: [childId], references: [id])
+
+  @@id([parentId, childId])
+  @@map("PerfilHeranca")
+}
+
 
 enum AcaoAuditoria {
   CREATE
@@ -218,6 +236,32 @@ enum AcaoAuditoria {
   DELETE
   PATCH
   GET
+}
+
+// Enums de Permissão (RBAC)
+enum AcaoPermissao {
+  Exibir
+  Cadastrar
+  Editar
+  Desabilitar
+  VerHistorico
+  EditarProprio
+  EditarGeral
+  Alterar
+  Registrar
+  Acessar
+  Criar
+}
+
+enum RecursoPermissao {
+  Processo
+  Responsavel
+  Metadados
+  Relatorios
+  Usuario
+  Permissoes
+  Auditoria
+  Admin
 }
 
 model AuditLog {

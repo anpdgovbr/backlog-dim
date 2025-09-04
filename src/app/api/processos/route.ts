@@ -2,6 +2,8 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { processoCreateSchema } from "@/schemas/server/Processo.zod"
 
 async function gerarNumeroProcesso(): Promise<string> {
   const agora = new Date()
@@ -26,6 +28,16 @@ async function gerarNumeroProcesso(): Promise<string> {
   return `${prefixo}-${String(totalMes + 1).padStart(4, "0")}` // Ex: P202504-0001
 }
 
+/**
+ * Cria um novo processo.
+ *
+ * @see {@link withApi}
+ * @returns JSON com o processo criado (201) e auditoria de criação.
+ * @example
+ * POST /api/processos
+ * { "requerente": "Empresa X", "formaEntradaId": 1, "responsavelId": 2 }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Processo"}.
+ */
 export const POST = withApi(
   /**
    * Cria um novo processo.
@@ -46,16 +58,23 @@ export const POST = withApi(
    * Este endpoint também grava entrada de auditoria via middleware `withApi`.
    */
   async ({ req }) => {
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(processoCreateSchema, raw, "POST /api/processos")
+    if (!valid.ok) return valid.response
+
+    const data = valid.data
     try {
-      const data = await req.json()
       const numero = await gerarNumeroProcesso()
 
       const processo = await prisma.processo.create({
         data: {
           ...data,
           numero,
-          dataEnvioPedido: data.dataEnvioPedido ? new Date(data.dataEnvioPedido) : null,
-          dataConclusao: data.dataConclusao ? new Date(data.dataConclusao) : null,
+          dataCriacao: new Date(),
+          anonimo: data.anonimo ?? false,
+          temaRequerimento: Array.isArray(data.temaRequerimento)
+            ? data.temaRequerimento
+            : [],
         },
         include: {
           formaEntrada: true,
@@ -67,22 +86,28 @@ export const POST = withApi(
 
       return {
         response: Response.json(processo, { status: 201 }),
-        audit: {
-          depois: processo,
-        },
+        audit: { depois: processo },
       }
     } catch (err) {
-      console.error("Erro geral no POST:", err)
+      console.error("Erro interno ao criar processo:", err)
       return Response.json({ error: "Erro interno no servidor" }, { status: 500 })
     }
   },
   {
     tabela: "processo",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Processo",
+    permissao: { acao: "Cadastrar", recurso: "Processo" },
   }
 )
 
+/**
+ * Lista processos com paginação, ordenação e busca.
+ *
+ * @see {@link withApi}
+ * @returns JSON no formato { data: Processo[], total: number }.
+ * @example GET /api/processos?page=1&pageSize=20&search=empresa
+ * @remarks Permissão {acao: "Exibir", recurso: "Processo"}.
+ */
 export const GET = withApi(
   /**
    * Lista processos com paginação e busca simples.
@@ -165,6 +190,6 @@ export const GET = withApi(
   {
     tabela: "processo",
     acao: AcaoAuditoria.GET,
-    permissao: "Exibir_Processo",
+    permissao: { acao: "Exibir", recurso: "Processo" },
   }
 )

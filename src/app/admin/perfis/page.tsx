@@ -19,7 +19,7 @@ import { DataGrid } from "@mui/x-data-grid"
 import { ptBR } from "@mui/x-data-grid/locales"
 
 import { useNotification } from "@/context/NotificationProvider"
-import withPermissao from "@/hoc/withPermissao"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 import { usePerfis } from "@/hooks/usePerfis"
 import { useResponsaveis } from "@/hooks/useResponsaveis"
 import { fetcher } from "@/lib/fetcher"
@@ -191,11 +191,15 @@ function GerenciarPerfisContent() {
   )
 }
 
-const GerenciarPerfis = withPermissao(
-  GerenciarPerfisContent,
-  "Desabilitar",
-  "Relatorios",
-  { redirecionar: false }
-)
+/**
+ * Protege a tela de gestão de perfis/usuários exigindo permissão adequada.
+ *
+ * @remarks
+ * Atualizado para `{acao: "Alterar", recurso: "Usuario"}`, refletindo o
+ * domínio desta tela (atribuição de perfis e responsáveis a usuários).
+ */
+const GerenciarPerfis = withPermissao(GerenciarPerfisContent, "Alterar", "Usuario", {
+  redirect: false,
+})
 
 export default GerenciarPerfis

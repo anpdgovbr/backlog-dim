@@ -1,34 +1,57 @@
+/**
+ * Wrappers utilitários para rotas de API que centralizam autenticação, autorização (RBAC)
+ * baseada em pares `{ acao, recurso }` e registro de auditoria.
+ *
+ * @remarks
+ * A autorização utiliza um `PermissionsMap` (ver `@/lib/permissions`) e o helper `pode`.
+ * Quando `options.permissao` é informado, a rota só é executada se o par
+ * `{ acao, recurso }` estiver permitido para o usuário autenticado.
+ *
+ * Futuro: unificação com `withApiSlim`. `withApi` deve suportar cenários "slim"
+ * (sem sessão completa) por meio de opções, permitindo deprecar `withApiSlim`.
+ */
 // lib/withApi.ts
 import type { Session } from "next-auth"
 import { getServerSession } from "next-auth/next"
 import type { NextRequest } from "next/server"
 
-import type { AcaoAuditoria, PermissaoConcedida } from "@anpdgovbr/shared-types"
+import type {
+  AcaoAuditoria,
+  AcaoPermissao,
+  RecursoPermissao,
+} from "@anpdgovbr/shared-types"
 
 import { authOptions } from "@/config/next-auth.config"
 import { registrarAuditoria } from "@/helpers/auditoria-server"
-import { buscarPermissoesConcedidas, pode } from "@/lib/permissoes"
+import { pode, type Action, type Resource } from "@anpdgovbr/rbac-core"
+import { buscarPermissoesConcedidas } from "@/lib/permissoes"
 
 /**
  * Contexto passado para handlers configurados com `withApi`.
  *
- * Contém a `req` original, sessão do NextAuth (quando disponível), email do usuário
- * autenticado, `userId`, e `params` (quando aplicável).
+ * @typeParam TParams - Tipo do objeto de parâmetros (por exemplo, de rotas dinâmicas).
+ * @typeParam TExtra - Dados extras opcionais a serem mesclados ao contexto.
  */
 export type HandlerContext<TParams extends object = object, TExtra = object> = {
+  /** Requisição original (`Request`/`NextRequest`). */
   req: Request | NextRequest
+  /** Sessão do NextAuth (quando disponível). */
   session: Awaited<ReturnType<typeof getServerSession>>
+  /** Email do usuário autenticado. */
   email: string
+  /** Identificador do usuário autenticado (quando disponível). */
   userId?: string
+  /** Parâmetros resolvidos da rota. */
   params: TParams
 } & TExtra
 
 /**
- * Tipo de função handler para rotas que usam `withApi`.
+ * Função handler para rotas que usam `withApi`.
  *
- * Um handler pode retornar diretamente um `Response` ou um objeto contendo
- * `response` e informações opcionais de `audit` que serão usadas pelo sistema
- * de auditoria.
+ * @typeParam TParams - Tipo do objeto de parâmetros.
+ * @typeParam TExtra - Dados extras opcionalmente adicionados ao contexto.
+ * @param ctx - {@link HandlerContext} com dados de requisição, sessão e permissões.
+ * @returns `Response` ou `{ response, audit? }` para integração com auditoria.
  */
 export type Handler<TParams extends object = object, TExtra = object> = (
   ctx: HandlerContext<TParams, TExtra>
@@ -44,17 +67,20 @@ export type Handler<TParams extends object = object, TExtra = object> = (
 >
 
 /**
- * Opções para `withApi`.
+ * Opções para `withApi`/`withApiForId`.
  *
- * - `tabela`: nome da tabela/entidade para gravar auditoria. Pode ser string ou uma função
- *   que recebe `params`.
- * - `acao`: ação de auditoria (do enum `AcaoAuditoria`).
- * - `permissao`: permissão requerida para acessar a rota.
+ * @typeParam TParams - Tipo do objeto de parâmetros.
+ * @remarks
+ * Quando `permissao` é informada, a autorização verifica `pode(perms, acao, recurso)`
+ * usando um `PermissionsMap` derivado do perfil do usuário.
  */
 export type WithApiOptions<TParams extends object = object> = {
+  /** Nome da tabela/entidade de auditoria ou função baseada em `params`. */
   tabela?: string | ((params: TParams) => string)
+  /** Ação de auditoria (enum {@link AcaoAuditoria}). */
   acao?: (typeof AcaoAuditoria)[keyof typeof AcaoAuditoria]
-  permissao?: PermissaoConcedida
+  /** Par `{ acao, recurso }` exigido para a rota (RBAC). */
+  permissao?: { acao: AcaoPermissao; recurso: RecursoPermissao }
 }
 
 // Função central de execução
@@ -75,7 +101,8 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
 
   if (options?.permissao) {
     const permissoes = await buscarPermissoesConcedidas(email)
-    if (!pode(permissoes, options.permissao)) {
+    const { acao, recurso } = options.permissao
+    if (!pode(permissoes, acao as unknown as Action, recurso as unknown as Resource)) {
       return Response.json({ error: "Acesso negado" }, { status: 403 })
     }
   }
@@ -116,16 +143,20 @@ async function handleApiRequest<TParams extends object = object, TExtra = object
   return response
 }
 
-// Wrapper para rotas padrão
 /**
- * Wrapper para rotas API internas que trata autenticação, autorização e auditoria.
+ * Wrapper para rotas API que trata autenticação, autorização (RBAC) e auditoria.
  *
+ * @typeParam TParams - Tipo do objeto de parâmetros.
+ * @typeParam TExtra - Dados extras opcionais no contexto do handler.
+ * @param handler - Função a ser executada quando autorizado.
+ * @param options - {@link WithApiOptions} incluindo `permissao?: { acao, recurso }`.
  * @example
- * // pages/api/protected.ts
- * export const GET = withApi(async ({ req, email }) => {
- *   const data = { message: `Hello ${email}` }
- *   return new Response(JSON.stringify(data), { status: 200 })
- * }, { permissao: 'Exibir' as any })
+ * ```ts
+ * export const GET = withApi(async ({ email }) => {
+ *   return Response.json({ message: `Hello ${email}` })
+ * }, { permissao: { acao: 'Exibir', recurso: 'Processo' } })
+ * ```
+ * @see withApiForId
  */
 export function withApi<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,
@@ -136,18 +167,23 @@ export function withApi<TParams extends object = object, TExtra = object>(
   }
 }
 
-// Wrapper para rotas com params
 /**
- * Wrapper para rotas que recebem `params` (por exemplo, [id]).
+ * Wrapper para rotas que recebem `params` (por exemplo, `[id]`).
  *
- * A função resolve o `context.params` passado pelo Next e repassa ao handler.
- *
+ * @typeParam TParams - Tipo do objeto de parâmetros dinâmicos.
+ * @typeParam TExtra - Dados extras opcionais no contexto do handler.
+ * @param handler - Handler da rota.
+ * @param options - {@link WithApiOptions} incluindo `permissao` em `{acao,recurso}`.
  * @example
+ * ```ts
  * export const PATCH = withApiForId(async ({ params, req }) => {
  *   const id = params.id
  *   // ...
  *   return new Response(null, { status: 204 })
- * })
+ * }, { permissao: { acao: 'Editar', recurso: 'Usuario' } })
+ * ```
+ * @remarks
+ * Considerar no futuro a fusão com `withApi` via assinatura única.
  */
 export function withApiForId<TParams extends object = object, TExtra = object>(
   handler: Handler<TParams, TExtra>,

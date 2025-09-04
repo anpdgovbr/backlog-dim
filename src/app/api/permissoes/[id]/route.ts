@@ -1,9 +1,19 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { invalidatePermissionsCache } from "@/lib/permissoes"
 import { withApiForId } from "@/lib/withApi"
+import { readJson, validateOrBadRequest } from "@/lib/validation"
+import { permissaoPatchSchema } from "@/schemas/server/Permissao.zod"
 
-// Handler isolado
+/**
+ * Atualiza o campo `permitido` de uma permissão por `id`.
+ *
+ * @see {@link withApiForId}
+ * @returns JSON com a permissão atualizada.
+ * @example PATCH /api/permissoes/10 { "permitido": false }
+ * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
+ */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const permissaoId = parseInt(params.id, 10)
@@ -11,12 +21,14 @@ const handlerPATCH = withApiForId<{ id: string }>(
       return Response.json({ error: "ID inválido" }, { status: 400 })
     }
 
-    const body = await req.json()
-    const { permitido } = body
-
-    if (typeof permitido !== "boolean") {
-      return Response.json({ error: "Campo 'permitido' inválido" }, { status: 400 })
-    }
+    const raw = await readJson(req)
+    const valid = validateOrBadRequest(
+      permissaoPatchSchema,
+      raw,
+      `PATCH /api/permissoes/${permissaoId}`
+    )
+    if (!valid.ok) return valid.response
+    const { permitido } = valid.data
 
     const permissao = await prisma.permissao.findUnique({
       where: { id: permissaoId },
@@ -34,6 +46,9 @@ const handlerPATCH = withApiForId<{ id: string }>(
       data: { permitido },
     })
 
+    // Invalida o cache de permissões após alteração
+    invalidatePermissionsCache()
+
     return {
       response: Response.json(permissaoAtualizada),
       audit: {
@@ -45,7 +60,7 @@ const handlerPATCH = withApiForId<{ id: string }>(
   {
     tabela: "permissao",
     acao: AcaoAuditoria.UPDATE,
-    permissao: "Alterar_Permissoes",
+    permissao: { acao: "Alterar", recurso: "Permissoes" },
   }
 )
 

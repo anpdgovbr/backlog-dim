@@ -8,6 +8,13 @@ import { withApi } from "@/lib/withApi"
 const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
 const endpoint = `${baseUrl}/cnaes`
 
+/**
+ * Proxy para listar CNAEs na API externa.
+ *
+ * @param req - Requisição HTTP (query string é repassada).
+ * @returns JSON retornado pela API externa.
+ * @example GET /api/cnaes?query=123
+ */
 export async function GET(req: Request) {
   /**
    * Proxy para listar CNAEs na API externa.
@@ -24,6 +31,14 @@ export async function GET(req: Request) {
   return NextResponse.json(dados)
 }
 
+/**
+ * Cria um CNAE via API externa.
+ *
+ * @see {@link withApi}
+ * @returns JSON com o registro criado e auditoria.
+ * @example POST /api/cnaes { "codigo": "1234-5/00", "descricao": "..." }
+ * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Metadados"}.
+ */
 export const POST = withApi(
   /**
    * Cria um registro de CNAE na API externa.
@@ -64,6 +79,6 @@ export const POST = withApi(
   {
     tabela: "CNAE",
     acao: AcaoAuditoria.CREATE,
-    permissao: "Cadastrar_Metadados",
+    permissao: { acao: "Cadastrar", recurso: "Metadados" },
   }
 )

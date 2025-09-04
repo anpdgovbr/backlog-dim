@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react"
 import type { ProcessoOutput } from "@anpdgovbr/shared-types"
 
 import { useNotification } from "@/context/NotificationProvider"
-import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
+import type { ProcessoFormData } from "@/schemas/ProcessoForm.zod"
 import { toProcessoInput } from "@/types/Processo"
 import { parseId } from "@/utils/parseId"
 

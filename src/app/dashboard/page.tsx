@@ -10,10 +10,30 @@ import ProcessDashboardCard from "@/app/dashboard/_components/ProcessDashboardCa
 import RequeridosDashboardCard from "@/app/dashboard/_components/RequeridosDashboardCard"
 import ResponsaveisDashboardCard from "@/app/dashboard/_components/ResponsaveisDashboardCard"
 import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
-import withPermissao from "@/hoc/withPermissao"
+import RbacAdminDashboardCard from "@/app/dashboard/_components/RbacAdminDashboardCard"
+import { withPermissao } from "@anpdgovbr/rbac-react"
 import usePermissoes from "@/hooks/usePermissoes"
-import { hasAny, pode } from "@/lib/permissions"
+import { hasAny, pode } from "@anpdgovbr/rbac-core"
 
+/**
+ * Componente da página de Dashboard administrativo da DIM/ANPD.
+ *
+ * Comportamento:
+ * - É um Client Component (usa "use client").
+ * - Obtém permissões do hook `usePermissoes` e decide quais seções exibir.
+ * - Se o usuário não possuir nenhuma das permissões relevantes, renderiza uma mensagem de acesso restrito.
+ * - Caso possua permissões, renderiza seções condicionais ("Visão Geral" e "Gerenciamento") com os cards apropriados.
+ *
+ * Dependências importantes:
+ * - usePermissoes: hook que fornece `permissoes` e `loading`.
+ * - hasAny, pode: funções utilitárias de RBAC para verificar permissões.
+ * - Vários cards de dashboard importados de `src/app/dashboard/_components`.
+ *
+ * Observações de uso:
+ * - Projetado para ser protegido com `withPermissao` na exportação padrão.
+ *
+ * @returns {JSX.Element} Marcações do layout do dashboard conforme permissões do usuário.
+ */
 function DashboardBacklog() {
   const { permissoes, loading } = usePermissoes()
 
@@ -56,6 +76,7 @@ function DashboardBacklog() {
           <CardGrid columns={{ xs: 12, lg: 6 }} minCardHeight={380}>
             {pode(permissoes, "Exibir", "Processo") && <ProcessDashboardCard />}
             {pode(permissoes, "Exibir", "Relatorios") && <StatsDashboardCard />}
+            {pode(permissoes, "Exibir", "Permissoes") && <RbacAdminDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}
@@ -80,4 +101,5 @@ function DashboardBacklog() {
 }
 
 // Protege toda a página: só usuários com Exibir_Processo podem ver o dashboard.
+// Exportação protegida com RBAC (verifica a permissão "Exibir" para o recurso "Processo")
 export default withPermissao(DashboardBacklog, "Exibir", "Processo")

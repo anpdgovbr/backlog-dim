@@ -9,7 +9,7 @@ import CrudHeader from "@/components/crud/CrudHeader"
 import CrudModal from "@/components/crud/CrudModal"
 import DialogAlert from "@/components/ui/DialogAlert"
 import usePermissoes from "@/hooks/usePermissoes"
-import { pode } from "@/lib/permissions"
+import { pode } from "@anpdgovbr/rbac-core"
 import { useCrudManager } from "@/hooks/useCrudManager"
 
 export interface CrudManagerProps {
@@ -100,9 +100,7 @@ export default function CrudManager(props: Readonly<CrudManagerProps>) {
         height: "100%",
         minHeight: "60vh",
         gap: 2,
-        p: 2,
-        bgcolor: "grey.25",
-        borderRadius: 2,
+        px: 2,
       }}
     >
       <CrudHeader title={entityName} onAdd={openAddModal} canAdd={canAdd} />

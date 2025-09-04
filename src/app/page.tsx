@@ -19,6 +19,19 @@ import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/material/styles"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 
+/**
+ * Componente de página inicial (Home) do aplicativo Backlog DIM.
+ *
+ * Renderiza a seção de destaque (hero), grade de funcionalidades, seção de
+ * informações e ações com botões de navegação para:
+ * - Acessar Sistema (rota /auth/login)
+ * - Dashboard Público (rota /publico)
+ * - Página "Sobre" (rota /sobre)
+ *
+ * Utiliza o tema do MUI via useTheme para estilização responsiva e cores.
+ *
+ * @returns JSX.Element - Elemento React que representa a página inicial.
+ */
 export default function HomePage() {
   const theme = useTheme()
 

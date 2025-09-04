@@ -1,6 +1,6 @@
-import type { ProcessoOutput, StatusInterno } from "@anpdgovbr/shared-types"
+import type { ProcessoOutput } from "@anpdgovbr/shared-types"
 
-import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
+import type { ProcessoFormData } from "@/schemas/ProcessoForm.zod"
 
 /**
  * Converte um objeto ProcessoOutput (do pacote shared-types) para o formato
@@ -15,9 +15,7 @@ import type { ProcessoFormData } from "@/schemas/ProcessoSchema"
  * @param processo - Objeto de origem contendo os dados do processo (ProcessoOutput)
  * @returns Um objeto compatível com ProcessoFormData acrescido de `statusInterno` opcional.
  */
-export function toProcessoInput(
-  processo: ProcessoOutput
-): ProcessoFormData & { statusInterno?: StatusInterno | null } {
+export function toProcessoInput(processo: ProcessoOutput): ProcessoFormData {
   return {
     numero: processo.numero,
 
@@ -66,12 +64,11 @@ export function toProcessoInput(
 
 /**
  * Representa uma contagem de ocorrências por tema.
- *
- * @property tema - Nome do tema
- * @property total - Quantidade total de ocorrências desse tema
  */
 export interface TemaCount {
+  /** Nome do tema */
   tema: string
+  /** Quantidade total de ocorrências desse tema */
   total: number
 }
 

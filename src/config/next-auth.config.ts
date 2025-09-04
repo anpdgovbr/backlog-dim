@@ -1,4 +1,6 @@
 import AzureADProvider from "next-auth/providers/azure-ad"
+import type { JWT } from "next-auth/jwt"
+import type { Session } from "next-auth"
 
 export const authOptions = {
   providers: [
@@ -13,33 +15,45 @@ export const authOptions = {
       },
     }),
   ],
+  // Desativa logs de debug do NextAuth
+  debug: false as const,
+  // Confia no host do proxy/dev ao inferir URLs (útil em portas customizadas)
+  trustHost: true as const,
   session: {
     strategy: "jwt" as const,
     maxAge: 4 * 60 * 60,
   },
+  // Remove logger customizado para evitar ruído em logs
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user, account }: any) {
+    async jwt(params: Record<string, unknown>) {
+      const token = params.token as JWT
+      const account = params.account as
+        | { access_token?: string; refresh_token?: string }
+        | null
+        | undefined
+      const user = params.user as { id?: string } | null | undefined
       if (account) {
         token.accessToken = account.access_token
         token.refreshToken = account.refresh_token
       }
-      if (user) {
+      if (user?.id) {
         token.id = user.id
       }
       return token
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, token }: any) {
-      return {
+    async session(params: Record<string, unknown>) {
+      const session = params.session as Session
+      const token = params.token as JWT
+      const updated: Session = {
         ...session,
         user: {
           ...session.user,
-          id: token.id,
+          id: token.id as string,
           accessToken: token.accessToken,
         },
       }
+      return updated
     },
   },
   pages: {
