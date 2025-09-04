@@ -3,26 +3,35 @@
 import { useTheme } from "@mui/material/styles"
 
 import Box from "@mui/material/Box"
-import Dialog from "@mui/material/Dialog"
+import Dialog, { type DialogProps } from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
-import DialogTitle from "@mui/material/DialogTitle"
+import DialogTitle, { type DialogTitleProps } from "@mui/material/DialogTitle"
 import TextField from "@mui/material/TextField"
-import Typography from "@mui/material/Typography"
+import Typography, { type TypographyProps } from "@mui/material/Typography"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 
-export interface Item {
+export interface CrudModalItem {
   id?: number
   nome: string
+}
+
+export type CrudModalMyTitleProps = {
+  sxDialogTitle?: DialogTitleProps["sx"]
+  title?: string
+  sxTypography?: TypographyProps["sx"]
 }
 
 export type CrudModalProps = Readonly<{
   open: boolean
   onClose: () => void
   onSave: () => void
-  item: Partial<Item>
-  onItemChange: (updates: Partial<Item>) => void
+  item: Partial<CrudModalItem>
+  onItemChange: (updates: Partial<CrudModalItem>) => void
   title: string
+  fullWidth?: boolean
+  sxDialog?: DialogProps
+  sxTitle?: CrudModalMyTitleProps
 }>
 
 export default function CrudModal({
@@ -32,6 +41,9 @@ export default function CrudModal({
   item,
   onItemChange,
   title,
+  fullWidth = false,
+  sxDialog,
+  sxTitle,
 }: CrudModalProps) {
   const theme = useTheme()
   const isEdit = !!item.id
@@ -42,7 +54,7 @@ export default function CrudModal({
       open={open}
       onClose={onClose}
       maxWidth="sm"
-      fullWidth
+      fullWidth={fullWidth}
       slotProps={{
         paper: {
           sx: {
@@ -51,8 +63,10 @@ export default function CrudModal({
           },
         },
       }}
+      {...sxDialog}
     >
       <DialogTitle
+        {...sxTitle}
         sx={{
           bgcolor: "primary.main",
           color: "primary.contrastText",

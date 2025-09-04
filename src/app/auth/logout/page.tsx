@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Typography from "@mui/material/Typography"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
@@ -94,13 +94,18 @@ export default function LogoutPage() {
           {error}
         </Typography>
 
-        <Button variant="contained" color="primary" onClick={handleLogout} sx={{ mt: 2 }}>
+        <GovBRButton
+          variant="contained"
+          color="primary"
+          onClick={handleLogout}
+          sx={{ mt: 2 }}
+        >
           Tentar novamente
-        </Button>
+        </GovBRButton>
 
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={() => router.push("/")}>
+        <GovBRButton variant="outlined" sx={{ mt: 2 }} onClick={() => router.push("/")}>
           Ir para página inicial
-        </Button>
+        </GovBRButton>
       </Box>
     )
   }

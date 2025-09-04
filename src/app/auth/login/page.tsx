@@ -6,7 +6,7 @@ import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import CircularProgress from "@mui/material/CircularProgress"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
@@ -134,7 +134,7 @@ function LoginPageInner() {
           </Typography>
         )}
 
-        <Button
+        <GovBRButton
           variant="contained"
           size="large"
           onClick={handleLogin}
@@ -155,7 +155,7 @@ function LoginPageInner() {
           ) : (
             "Entrar com Login Institucional"
           )}
-        </Button>
+        </GovBRButton>
 
         <Typography variant="body2" sx={{ mt: 3, color: "text.secondary" }}>
           Acesso restrito a usuários autorizados

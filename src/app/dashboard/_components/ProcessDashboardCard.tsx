@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined"
 import TrendingUpIcon from "@mui/icons-material/TrendingUp"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Chip from "@mui/material/Chip"
@@ -32,7 +32,7 @@ export function ProcessDashboardCard() {
   const router = useRouter()
 
   const actionButton = (
-    <Button
+    <GovBRButton
       fullWidth
       variant="contained"
       size="large"
@@ -48,7 +48,7 @@ export function ProcessDashboardCard() {
       }}
     >
       Gerenciar Processos
-    </Button>
+    </GovBRButton>
   )
 
   return (

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import BusinessIcon from "@mui/icons-material/Business"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Grid from "@mui/material/Grid"
 import Skeleton from "@mui/material/Skeleton"
 import Tooltip from "@mui/material/Tooltip"
@@ -94,7 +94,7 @@ function RequeridosDashboardCard({
   }, [limit])
 
   const actionButton = (
-    <Button
+    <GovBRButton
       fullWidth
       variant="contained"
       size="large"
@@ -110,7 +110,7 @@ function RequeridosDashboardCard({
       }}
     >
       Ver todos
-    </Button>
+    </GovBRButton>
   )
 
   return (

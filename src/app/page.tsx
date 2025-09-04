@@ -9,7 +9,7 @@ import LoginIcon from "@mui/icons-material/Login"
 import SecurityIcon from "@mui/icons-material/Security"
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Container from "@mui/material/Container"
@@ -17,7 +17,6 @@ import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/material/styles"
-import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 /**
  * Componente de página inicial (Home) do aplicativo Backlog DIM.
@@ -75,7 +74,7 @@ export default function HomePage() {
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
-          <Button
+          <GovBRButton
             variant="contained"
             size="large"
             startIcon={<LoginIcon />}
@@ -84,7 +83,7 @@ export default function HomePage() {
             sx={{ px: 4, py: 1.5, fontSize: "1.1rem" }}
           >
             Acessar Sistema
-          </Button>
+          </GovBRButton>
 
           <GovBRButton
             variant="outlined"
@@ -180,15 +179,15 @@ export default function HomePage() {
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
           Para mais informações sobre o sistema ou suporte técnico.
         </Typography>
-        <Button
+        <GovBRButton
           variant="outlined"
-          size="large"
+          size="small"
           startIcon={<InfoIcon />}
           component={Link}
           href="/sobre"
         >
           Saiba Mais
-        </Button>
+        </GovBRButton>
       </Box>
     </Container>
   )

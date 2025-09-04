@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined"
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 declare global {
   interface Window {
@@ -55,7 +56,7 @@ export default function GovBRAvatar() {
 
   return (
     <div ref={menuRef} style={{ position: "relative" }}>
-      <button
+      <GovBRButton
         style={{ height: "48px" }}
         className="br-sign-in"
         type="button"
@@ -96,7 +97,7 @@ export default function GovBRAvatar() {
           </span>
         </span>
         {menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />}
-      </button>
+      </GovBRButton>
 
       <div
         className="br-list"
@@ -111,7 +112,7 @@ export default function GovBRAvatar() {
         }}
       >
         {menuItems.map((item) => (
-          <button
+          <GovBRButton
             key={item.label}
             className="br-item"
             role="menuitem"
@@ -123,7 +124,7 @@ export default function GovBRAvatar() {
             }}
           >
             {item.label}
-          </button>
+          </GovBRButton>
         ))}
       </div>
     </div>

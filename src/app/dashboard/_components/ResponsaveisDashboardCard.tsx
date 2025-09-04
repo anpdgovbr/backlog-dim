@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 
 import PersonIcon from "@mui/icons-material/Person"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Grid from "@mui/material/Grid"
 import Skeleton from "@mui/material/Skeleton"
 import Tooltip from "@mui/material/Tooltip"
@@ -83,7 +83,7 @@ function ResponsaveisDashboardCard({
   }, [limit])
 
   const actionButton = (
-    <Button
+    <GovBRButton
       fullWidth
       variant="contained"
       size="large"
@@ -99,7 +99,7 @@ function ResponsaveisDashboardCard({
       }}
     >
       Ver todos
-    </Button>
+    </GovBRButton>
   )
 
   return (

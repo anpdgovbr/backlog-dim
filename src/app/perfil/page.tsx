@@ -14,7 +14,7 @@ import Chip from "@mui/material/Chip"
 import Divider from "@mui/material/Divider"
 import Typography from "@mui/material/Typography"
 // Usando CSS Grid via Box para garantir compatibilidade
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Link from "next/link"
 
 import { PageLayout } from "@/components/layouts"
@@ -152,22 +152,22 @@ export default function PerfilPage() {
               <Divider sx={{ my: 2 }} />
 
               <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                <Button
+                <GovBRButton
                   component={Link}
                   href="/auth/logout"
                   variant="outlined"
                   color="error"
                 >
                   Sair
-                </Button>
-                <Button
+                </GovBRButton>
+                <GovBRButton
                   component={Link}
                   href="/dashboard"
                   variant="contained"
                   color="primary"
                 >
                   Ir ao Dashboard
-                </Button>
+                </GovBRButton>
               </Box>
             </CardContent>
           </Card>

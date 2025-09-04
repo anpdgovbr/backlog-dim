@@ -22,7 +22,7 @@ import AssessmentOutlined from "@mui/icons-material/AssessmentOutlined"
 import InfoOutlined from "@mui/icons-material/InfoOutlined"
 import LabelOutlined from "@mui/icons-material/LabelOutlined"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Skeleton from "@mui/material/Skeleton"
 import Stack from "@mui/material/Stack"
 import Tab from "@mui/material/Tab"
@@ -302,7 +302,7 @@ export function StatsDashboardCard() {
   }
 
   const actionButton = (
-    <Button
+    <GovBRButton
       fullWidth
       variant="contained"
       size="large"
@@ -319,7 +319,7 @@ export function StatsDashboardCard() {
       }}
     >
       Ver Processos
-    </Button>
+    </GovBRButton>
   )
 
   return (

@@ -15,7 +15,7 @@ import { DashboardLayout } from "@/components/layouts"
   subtitle="Descrição da página"
   loading={false}
   loadingMessage="Carregando..."
-  actions={<Button>Ações</Button>}
+  actions={<GovBRButton>Ações</GovBRButton>}
   hasSidebar={false}
   sidebar={<Sidebar items={items} />}
 >
@@ -48,7 +48,7 @@ import { PageLayout, PageSection } from "@/components/layouts"
     subtitle: "ANPD",
     description: "Descrição da página",
     variant: "institutional", // "default" | "institutional" | "hero"
-    actions: <Button>Ação</Button>,
+    actions: <GovBRButton>Ação</GovBRButton>,
   }}
 >
   <PageSection title="Seção 1" elevation={1}>
@@ -66,7 +66,7 @@ import { CardGrid, DashboardSection } from "@/components/layouts"
 ;<DashboardSection
   title="Seção"
   subtitle="Descrição"
-  actions={<Button>Ver todos</Button>}
+  actions={<GovBRButton>Ver todos</GovBRButton>}
 >
   <CardGrid columns={{ xs: 12, sm: 6, md: 4 }} minCardHeight={280}>
     <Card1 />

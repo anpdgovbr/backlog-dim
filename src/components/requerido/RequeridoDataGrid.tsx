@@ -9,7 +9,7 @@ import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import IconButton from "@mui/material/IconButton"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
@@ -157,7 +157,7 @@ export default function RequeridoDataGrid() {
               Lista de Requeridos
             </Typography>
 
-            <Button
+            <GovBRButton
               variant="contained"
               startIcon={<GridAddIcon />}
               disabled={!pode(permissoes, "Cadastrar", "Responsavel")}
@@ -167,7 +167,7 @@ export default function RequeridoDataGrid() {
               }}
             >
               Adicionar Requerido
-            </Button>
+            </GovBRButton>
           </Box>
 
           <Box display="flex" gap={1} mb={2}>
@@ -184,7 +184,7 @@ export default function RequeridoDataGrid() {
                 }
               }}
             />
-            <Button
+            <GovBRButton
               variant="outlined"
               size="small"
               onClick={() => {
@@ -196,7 +196,7 @@ export default function RequeridoDataGrid() {
               startIcon={<Clear />}
             >
               Limpar
-            </Button>
+            </GovBRButton>
           </Box>
 
           <Box sx={dataGridStyles}>

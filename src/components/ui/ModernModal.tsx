@@ -4,7 +4,7 @@ import React from "react"
 
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -99,7 +99,7 @@ export default function ModernModal({
       {showActions && (
         <DialogActions sx={{ p: 3, pt: 2 }}>
           <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
-            <Button
+            <GovBRButton
               variant="outlined"
               onClick={onClose}
               disabled={loading}
@@ -114,10 +114,10 @@ export default function ModernModal({
               }}
             >
               {cancelText}
-            </Button>
+            </GovBRButton>
 
             {onSubmit && (
-              <Button
+              <GovBRButton
                 variant="contained"
                 onClick={onSubmit}
                 disabled={loading || disabled}
@@ -132,7 +132,7 @@ export default function ModernModal({
                 }}
               >
                 {loading ? "Processando..." : confirmText}
-              </Button>
+              </GovBRButton>
             )}
           </Stack>
         </DialogActions>
