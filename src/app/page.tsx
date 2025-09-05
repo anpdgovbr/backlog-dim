@@ -75,24 +75,20 @@ export default function HomePage() {
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
-          <Button
+          <GovBRButton
             variant="contained"
-            size="large"
             startIcon={<LoginIcon />}
             component={Link}
             href="/auth/login"
-            sx={{ px: 4, py: 1.5, fontSize: "1.1rem" }}
           >
             Acessar Sistema
-          </Button>
+          </GovBRButton>
 
           <GovBRButton
             variant="outlined"
-            size="large"
             startIcon={<DashboardIcon />}
             component={Link}
             href="/publico"
-            sx={{ px: 4, py: 1.5, fontSize: "1.1rem" }}
           >
             Dashboard Público
           </GovBRButton>
