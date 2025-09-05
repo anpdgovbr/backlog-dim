@@ -1,5 +1,6 @@
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import ChevronRight from "@mui/icons-material/ChevronRight"
-import Button from "@mui/material/Button"
+// import Button from "@mui/material/Button" // não utilizado diretamente
 import CardActions from "@mui/material/CardActions"
 import type { SxProps } from "@mui/material/styles"
 
@@ -40,7 +41,7 @@ export function DashboardCardActionButton({
         ...sx,
       }}
     >
-      <Button
+      <GovBRButton
         component="div"
         size="small"
         variant={variant}
@@ -54,7 +55,7 @@ export function DashboardCardActionButton({
       >
         {children}
         {title}
-      </Button>
+      </GovBRButton>
     </CardActions>
   )
 }

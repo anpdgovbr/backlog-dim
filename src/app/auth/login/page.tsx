@@ -1,13 +1,11 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
+import { Suspense, useEffect, useState, useRef } from "react"
 
 import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import CircularProgress from "@mui/material/CircularProgress"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 
@@ -19,6 +17,7 @@ function LoginPageInner() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redirecting, setRedirecting] = useState(false)
+  const autoStarted = useRef(false)
   const showLoading = redirecting || isLoading
 
   // Exibe erros retornados pelo NextAuth (ex.: callback falhou)
@@ -41,8 +40,16 @@ function LoginPageInner() {
     }
   }, [status, router])
 
+  // Inicia automaticamente o fluxo de login quando não autenticado
+  useEffect(() => {
+    if (status === "unauthenticated" && !autoStarted.current) {
+      autoStarted.current = true
+      handleLogin()
+    }
+  }, [status])
+
   /**
-   * Inicia o fluxo de login OAuth no Azure AD.
+   * Inicia o fluxo de login OAuth via Keycloak.
    *
    * Observação: para provedores OAuth, quando `redirect: false` é usado,
    * `signIn` retorna um objeto com a `url` para onde devemos navegar manualmente.
@@ -54,7 +61,8 @@ function LoginPageInner() {
       setIsLoading(true)
       setError(null)
       // Usar redirect: false para capturar a URL e navegar manualmente.
-      const result = await signIn("azure-ad", {
+      const providerId = process.env.NEXT_PUBLIC_AUTH_PROVIDER || "keycloak"
+      const result = await signIn(providerId, {
         redirect: false,
         callbackUrl: "/dashboard",
       })
@@ -124,42 +132,14 @@ function LoginPageInner() {
           backgroundColor: "background.paper",
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-          Acesso ao Sistema de Processamento
+        <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+          Redirecionando para o provedor de login...
         </Typography>
-
         {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
+          <Typography color="error" sx={{ mt: 1 }}>
             {error}
           </Typography>
         )}
-
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleLogin}
-          disabled={isLoading}
-          sx={{
-            mt: 2,
-            px: 4,
-            py: 2,
-            fontSize: "1.1rem",
-            backgroundColor: "primary.main",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Entrar com Login Institucional"
-          )}
-        </Button>
-
-        <Typography variant="body2" sx={{ mt: 3, color: "text.secondary" }}>
-          Acesso restrito a usuários autorizados
-        </Typography>
       </Box>
     </Container>
   )

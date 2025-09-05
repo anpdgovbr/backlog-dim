@@ -17,7 +17,7 @@ export default function CookieManager({ children }: Readonly<CookieManagerProps>
   return (
     <ConsentProvider
       categories={{
-        enabledCategories: ["analytics", "marketing"],
+        enabledCategories: ["analytics"],
       }}
       texts={{
         bannerMessage:
@@ -30,8 +30,9 @@ export default function CookieManager({ children }: Readonly<CookieManagerProps>
           "Para melhorar a sua experiência na plataforma e prover serviços personalizados, utilizamos cookies.",
         close: "Fechar",
         controllerInfo: "ANPD - Agência Nacional de Proteção de Dados",
-        contactInfo: "Contato: dpo@anpd.gov.br",
+        contactInfo: "Contato: encarregado@anpd.gov.br",
       }}
+      disableDeveloperGuidance={true}
       onConsentGiven={(state) => {
         // eslint-disable-next-line no-console
         console.info("🎉 Consentimento dado:", state)

@@ -122,8 +122,8 @@ export default function HomePage() {
                 Seguro e Confiável
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Autenticação institucional via Azure AD e controle rigoroso de permissões
-                de acesso.
+                Autenticação institucional via Keycloak (ANPD) e controle rigoroso de
+                permissões de acesso.
               </Typography>
             </CardContent>
           </Card>
@@ -163,8 +163,8 @@ export default function HomePage() {
         </Box>
         <Typography variant="body1" color="text.secondary">
           Este sistema é destinado exclusivamente a servidores e colaboradores autorizados
-          da ANPD. O acesso é realizado através de login institucional com credenciais do
-          Azure Active Directory.
+          da ANPD. O acesso é realizado através de login institucional utilizando
+          Keycloak.
         </Typography>
       </Paper>
 

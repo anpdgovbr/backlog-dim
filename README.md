@@ -37,7 +37,7 @@ O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvol
 
 ## 🔭 Visão Geral
 
-Este sistema foi projetado para otimizar a gestão de processos administrativos na ANPD. Ele centraliza o registro de informações, permite o upload de dados via arquivos CSV e oferece uma interface rica para visualização, filtragem e edição de dados. A autenticação é integrada com o Azure Active Directory (Entra ID), garantindo o acesso seguro para os membros da organização.
+Este sistema foi projetado para otimizar a gestão de processos administrativos na ANPD. Ele centraliza o registro de informações, permite o upload de dados via arquivos CSV e oferece uma interface rica para visualização, filtragem e edição de dados. A autenticação é integrada com o Keycloak da ANPD, garantindo o acesso seguro para os membros da organização.
 
 ## 🏗️ Arquitetura
 
@@ -47,7 +47,7 @@ A aplicação é um monorepo que utiliza o framework **Next.js**, aproveitando o
 - **Backend:** As rotas da API são servidas pelo próprio Next.js na pasta `src/app/api`.
 - **Banco de Dados:** PostgreSQL gerenciado via **docker-infra-pg** (padrão ANPD) ou configuração manual.
 - **ORM:** **Prisma** para migrations, modelagem e acesso aos dados.
-- **Autenticação:** **NextAuth.js** gerencia o fluxo de autenticação, utilizando o provedor do Azure AD.
+- **Autenticação:** **NextAuth.js** gerencia o fluxo de autenticação, utilizando o provedor Keycloak.
 - **Infraestrutura:** Padronizada com **docker-infra-pg** para consistência entre projetos da ANPD.
 
 ## ✨ Funcionalidades Principais
@@ -224,15 +224,18 @@ A aplicação estará disponível em [http://localhost:3000](http://localhost:30
 
 O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.example` como template.
 
+Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH_KEYCLOAK.md`.
+
 | Variável                       | Descrição                                      | Exemplo (Local)                                           |
 | ------------------------------ | ---------------------------------------------- | --------------------------------------------------------- |
 | `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
-| `NEXTAUTH_URL`                 | URL base da aplicação para o NextAuth.         | `http://localhost:3000`                                   |
+| `NEXTAUTH_URL`                 | URL base da aplicação para o NextAuth.         | `http://localhost:3000` (DEV) / `https://dim.dev.anpd.gov.br` (HML) |
 | `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                     |
-| `AZURE_AD_CLIENT_ID`           | ID do Cliente da aplicação no Azure AD.        | (Obtido no portal do Azure)                               |
-| `AZURE_AD_CLIENT_SECRET`       | Segredo do Cliente da aplicação no Azure AD.   | (Obtido no portal do Azure)                               |
-| `AZURE_AD_TENANT_ID`           | ID do Tenant (diretório) do Azure AD.          | (Obtido no portal do Azure)                               |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (desenvolvimento) / `1` (produção)                    |
+| `NEXT_PUBLIC_AUTH_PROVIDER`    | Id do provider de login do NextAuth.           | `keycloak`                                                |
+| `KEYCLOAK_ISSUER`              | URL do emissor OIDC do realm.                  | `http://localhost:8080/realms/ANPD`                       |
+| `KEYCLOAK_CLIENT_ID`           | Client ID do cliente do app no KC.             | `backlog-dim`                                             |
+| `KEYCLOAK_CLIENT_SECRET`       | Client Secret do cliente no KC.                | (Obtido no Keycloak)                                      |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (dev com self-signed) / `1` (prod)                    |
 
 ### 📋 Configuração Rápida
 
@@ -249,11 +252,19 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
    npm run infra:db:init # Banco pronto para uso
    ```
 
-3. **Configure o Azure AD:**
-   - Acesse o [Portal do Azure](https://portal.azure.com)
-   - Registre uma nova aplicação
-   - Configure as URLs de redirect: `http://localhost:3000/api/auth/callback/azure-ad`
-   - Copie as credenciais para o `.env.local`
+3. **Configure o Keycloak (Dev):**
+   - Acesse o Keycloak do ambiente de desenvolvimento.
+   - Importe o realm de exemplo `doc/realm-anpd.json` (opcional, base inicial).
+   - Crie um Client para o app (ex.: `backlog-dim`) com o tipo OpenID Connect:
+     - Access Type: `confidential`
+     - Standard Flow: habilitado
+     - Redirect URIs: `http://localhost:3000/api/auth/callback/keycloak`
+     - Web Origins: `http://localhost:3000`
+   - Gere o Client Secret e preencha `KEYCLOAK_CLIENT_SECRET`.
+   - Defina `KEYCLOAK_ISSUER` com a URL do realm: `http(s)://<host>/realms/ANPD`.
+   - Para obter refresh tokens longos em dev, garanta o escopo `offline_access`.
+
+> Observação: se o KC em dev usar certificado self-signed, você pode definir `NODE_TLS_REJECT_UNAUTHORIZED=0` localmente ao rodar o app.
 
 ## ⚙️ Scripts Disponíveis
 
