@@ -147,11 +147,11 @@ export default function DashboardAdmin() {
       setSections((prev) => {
         const prevIds = prev
           .map((s) => s.id)
-          .sort()
+          .sort((a, b) => String(a).localeCompare(String(b)))
           .join(",")
         const nextIds = filteredSections
           .map((s) => s.id)
-          .sort()
+          .sort((a, b) => String(a).localeCompare(String(b)))
           .join(",")
         return prevIds !== nextIds ? filteredSections : prev
       })

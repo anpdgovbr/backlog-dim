@@ -11,7 +11,12 @@ import MenuItem from "@mui/material/MenuItem"
 import Stack from "@mui/material/Stack"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
-import type { GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data-grid"
+import type {
+  GridColDef,
+  GridPaginationModel,
+  GridSortModel,
+  GridRenderCellParams,
+} from "@mui/x-data-grid"
 import { DataGrid } from "@mui/x-data-grid"
 
 import { dataGridStyles } from "@/theme/dataGridStyles"
@@ -21,21 +26,26 @@ interface AuditLogEntry {
   tabela: string
   acao: string
   email: string
-  criadoEm: string
+  criadoEm: string | Date | null
   contexto: string
   userAgent: string
   ip: string
 }
 
-const colunas: GridColDef[] = [
+const colunas: GridColDef<AuditLogEntry>[] = [
   { field: "tabela", headerName: "Entidade", width: 120 },
   { field: "acao", headerName: "Ação", width: 100 },
   { field: "email", headerName: "Usuário", width: 200 },
   {
     field: "criadoEm",
     headerName: "Data/Hora",
-    width: 160,
-    valueFormatter: ({ value }) => dayjs(value).format("DD/MM/YYYY HH:mm:ss"),
+    width: 180,
+    renderCell: (params: GridRenderCellParams<AuditLogEntry>) => {
+      const v = params.row.criadoEm
+      if (!v) return "-"
+      const d = dayjs(v)
+      return d.isValid() ? d.format("DD/MM/YYYY HH:mm:ss") : "-"
+    },
   },
   { field: "contexto", headerName: "Contexto", flex: 1 },
 ]
@@ -106,6 +116,7 @@ export default function AdminLogViewer() {
           <MenuItem value="requerido">requerido</MenuItem>
           <MenuItem value="user">user</MenuItem>
           <MenuItem value="permissao">permissao</MenuItem>
+          <MenuItem value="auth">auth</MenuItem>
         </TextField>
         <TextField
           sx={{ width: 120 }}

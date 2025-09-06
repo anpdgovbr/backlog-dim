@@ -37,7 +37,7 @@ export default function SideMenu({
   pathname,
   storageKey = "drawerOpen",
   title = "Menu",
-}: SideMenuProps) {
+}: Readonly<SideMenuProps>) {
   const [drawerOpen, setDrawerOpen] = useState(true)
   const [loaded, setLoaded] = useState(false)
   const theme = useTheme()
@@ -71,7 +71,7 @@ export default function SideMenu({
             position: "relative",
             width: drawerOpen ? 200 : 60,
             bgcolor: "background.paper",
-            borderRight: 1,
+            border: 1,
             borderColor: "divider",
             alignSelf: "flex-start",
             overflowX: "hidden",
@@ -84,16 +84,19 @@ export default function SideMenu({
         display="flex"
         alignItems="center"
         justifyContent={drawerOpen ? "space-between" : "center"}
-        px={2}
-        py={1}
+        p={1}
       >
-        {drawerOpen && <Typography variant="subtitle1">{title}</Typography>}
+        {drawerOpen && (
+          <Typography sx={{ mb: 0, pb: 0 }} variant="subtitle1">
+            {title}
+          </Typography>
+        )}
         <IconButton onClick={() => setDrawerOpen((prev) => !prev)} size="small">
           {drawerOpen ? <ChevronLeft /> : <ChevronRight />}
         </IconButton>
       </Box>
 
-      <Divider />
+      <Divider sx={{ m: 0, p: 0 }} />
 
       <MUIList>
         {links.map(({ href, text, icon }) => (

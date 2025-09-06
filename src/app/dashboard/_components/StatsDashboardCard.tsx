@@ -22,7 +22,6 @@ import AssessmentOutlined from "@mui/icons-material/AssessmentOutlined"
 import InfoOutlined from "@mui/icons-material/InfoOutlined"
 import LabelOutlined from "@mui/icons-material/LabelOutlined"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
 import Skeleton from "@mui/material/Skeleton"
 import Stack from "@mui/material/Stack"
 import Tab from "@mui/material/Tab"
@@ -31,6 +30,7 @@ import Typography from "@mui/material/Typography"
 
 import { BaseDashboardCard } from "@/components/ui/dashboard-card"
 import type { IndicadoresProcesso } from "@/types/Processo"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 const COLORS = [
   "rgba(255, 255, 255, 1)",
@@ -302,10 +302,9 @@ export function StatsDashboardCard() {
   }
 
   const actionButton = (
-    <Button
+    <GovBRButton
       fullWidth
       variant="contained"
-      size="large"
       onClick={() => router.push("/dashboard/processos")}
       sx={{
         /* tornar o botão um pouco mais discreto */
@@ -319,7 +318,7 @@ export function StatsDashboardCard() {
       }}
     >
       Ver Processos
-    </Button>
+    </GovBRButton>
   )
 
   return (

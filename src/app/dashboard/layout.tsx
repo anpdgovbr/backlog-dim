@@ -25,7 +25,9 @@ import type { LinkItem } from "@/components/menu/SideMenu"
 import SideMenu from "@/components/menu/SideMenu"
 import GovBrBreadcrumb from "@/components/ui/GovBrBreadcrumb"
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const { data: session, status } = useSession()
   const theme = useTheme()
   const pathname = usePathname()

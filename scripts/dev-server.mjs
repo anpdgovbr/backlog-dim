@@ -3,7 +3,7 @@
  * Script de desenvolvimento HTTPS
  * Este script é uma versão melhorada do server.js para desenvolvimento HTTPS
  *
- * NOTA: O server.js original usa IP específico (10.120.10.170) registrado no Entra ID
+ * NOTA: O server.js original usa IP específico (10.120.10.170) registrado no provedor de autenticação
  * Este script pode ser adaptado para diferentes IPs conforme necessário
  */
 import fs from "fs"
@@ -20,7 +20,7 @@ if (isDevelopment) {
   // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // REMOVIDO: Não desabilite a validação de certificado
   console.log("🔒 Use certificados válidos para evitar warnings TLS em desenvolvimento")
   console.log("⚠️  ATENÇÃO: Não desabilite a validação de certificado nem mesmo em desenvolvimento!")
-  console.log("📝 Para produção, server.js usa IP específico cadastrado no Entra ID")
+  console.log("📝 Para produção, server.js usa IP específico cadastrado no provedor de autenticação")
 }
 
 const app = next({ dev: isDevelopment, turbo: isDevelopment })

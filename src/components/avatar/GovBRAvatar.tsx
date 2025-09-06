@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import { useSession } from "next-auth/react"
-import { signOut } from "next-auth/react"
+// Nota: O logout agora é feito pela rota /auth/logout para suportar SLO (Keycloak)
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -42,7 +42,7 @@ export default function GovBRAvatar() {
   const handleNavigation = (href: string) => {
     setMenuOpen(false)
     if (href === "/auth/logout") {
-      signOut({ callbackUrl: "/auth/login" })
+      router.push("/auth/logout")
     } else {
       router.push(href)
     }

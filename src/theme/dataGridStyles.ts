@@ -4,7 +4,7 @@ import { alpha } from "@mui/material/styles"
 export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
   // Estilos do container do DataGrid
   border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 1,
   boxShadow: theme.shadows[1],
   backgroundColor: "theme.palette.background.paper",
   height: "100%",
@@ -19,14 +19,14 @@ export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
     flexGrow: 1,
     // aplicar borda arredondada também no elemento raiz para que as células/cabeçalho
     // respeitem os cantos do container pai
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 1,
     overflow: "hidden",
   },
 
   // Alguns elementos internos também precisam ter borderRadius/overflow em versões
   // diferentes do DataGrid
   "& .MuiDataGrid-main": {
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 1,
     overflow: "hidden",
   },
 

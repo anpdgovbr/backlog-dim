@@ -34,5 +34,8 @@ declare module "next-auth/jwt" {
     picture?: string
     role?: string // Adicionando um campo personalizado
     accessToken?: string // Adicionando um token de acesso
+    idToken?: string // id_token do OIDC (para SLO)
+    refreshToken?: string // refresh_token para renovar o access_token
+    expiresAt?: number // timestamp (ms) de expiração do access_token
   }
 }

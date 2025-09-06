@@ -9,7 +9,6 @@ import GridDeleteIcon from "@mui/icons-material/Delete"
 import SettingsIcon from "@mui/icons-material/Settings"
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
@@ -20,10 +19,12 @@ import { ptBR } from "@mui/x-data-grid/locales"
 import { useNotification } from "@/context/NotificationProvider"
 import { useControladores } from "@/hooks/useControladores"
 import usePermissoes from "@/hooks/usePermissoes"
-import { pode } from "@anpdgovbr/rbac-core"
 import { dataGridStyles } from "@/theme/dataGridStyles"
 import type { RequeridoOutput } from "@/types/Requerido"
 import { formatCpfCnpj } from "@/utils/formUtils"
+import { pode } from "@anpdgovbr/rbac-core"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
+import { Stack } from "@mui/material"
 
 const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
   ssr: false,
@@ -94,20 +95,7 @@ export default function RequeridoDataGrid() {
       flex: 1,
       renderCell: (params) => formatCpfCnpj(params.value || ""),
     },
-    /*{
-      field: "site",
-      headerName: "Site",
-      flex: 1,
-      renderCell: (params) =>
-        params.row.site ? (
-          <a href={params.row.site} target="_blank" rel="noopener noreferrer">
-            {params.row.site}
-          </a>
-        ) : (
-          "N/A"
-        ),
-    },
-    { field: "email", headerName: "E-mail", flex: 1 },*/
+
     {
       field: "setor",
       headerName: "Setor",
@@ -157,8 +145,9 @@ export default function RequeridoDataGrid() {
               Lista de Requeridos
             </Typography>
 
-            <Button
+            <GovBRButton
               variant="contained"
+              size="small"
               startIcon={<GridAddIcon />}
               disabled={!pode(permissoes, "Cadastrar", "Responsavel")}
               onClick={() => {
@@ -167,14 +156,19 @@ export default function RequeridoDataGrid() {
               }}
             >
               Adicionar Requerido
-            </Button>
+            </GovBRButton>
           </Box>
 
-          <Box display="flex" gap={1} mb={2}>
+          <Stack
+            display="flex"
+            gap={1}
+            mb={2}
+            direction={{ xs: "column", sm: "row" }}
+            alignItems="start"
+          >
             <TextField
               label="Buscar por nome, CNPJ ou CPF"
               variant="outlined"
-              fullWidth
               size="small"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -183,21 +177,23 @@ export default function RequeridoDataGrid() {
                   setSearch(searchInput)
                 }
               }}
+              sx={{ flex: "1 1 auto", m: 0 }}
             />
-            <Button
+
+            <GovBRButton
               variant="outlined"
               size="small"
+              color="error"
               onClick={() => {
                 setSearchInput("")
                 setSearch("")
                 setPaginationModel({ page: 0, pageSize: 10 })
               }}
-              sx={{ minWidth: "auto", px: 2 }}
               startIcon={<Clear />}
             >
               Limpar
-            </Button>
-          </Box>
+            </GovBRButton>
+          </Stack>
 
           <Box sx={dataGridStyles}>
             <DataGrid
