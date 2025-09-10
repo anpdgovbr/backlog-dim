@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation"
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined"
 import TrendingUpIcon from "@mui/icons-material/TrendingUp"
 import Box from "@mui/material/Box"
-import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Chip from "@mui/material/Chip"
@@ -12,6 +11,7 @@ import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
 import { BaseDashboardCard } from "@/components/ui/dashboard-card"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 /**
  * Componente de card para o dashboard que apresenta um resumo dos processos do
@@ -35,7 +35,6 @@ export function ProcessDashboardCard() {
     <GovBRButton
       fullWidth
       variant="contained"
-      size="large"
       onClick={() => router.push("/dashboard/processos")}
       sx={{
         bgcolor: "rgba(255, 255, 255, 0.2)",

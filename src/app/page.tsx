@@ -76,22 +76,18 @@ export default function HomePage() {
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
           <GovBRButton
             variant="contained"
-            size="large"
             startIcon={<LoginIcon />}
             component={Link}
             href="/auth/login"
-            sx={{ px: 4, py: 1.5, fontSize: "1.1rem" }}
           >
             Acessar Sistema
           </GovBRButton>
 
           <GovBRButton
             variant="outlined"
-            size="large"
             startIcon={<DashboardIcon />}
             component={Link}
             href="/publico"
-            sx={{ px: 4, py: 1.5, fontSize: "1.1rem" }}
           >
             Dashboard Público
           </GovBRButton>
@@ -125,8 +121,8 @@ export default function HomePage() {
                 Seguro e Confiável
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Autenticação institucional via Azure AD e controle rigoroso de permissões
-                de acesso.
+                Autenticação institucional via Keycloak (ANPD) e controle rigoroso de
+                permissões de acesso.
               </Typography>
             </CardContent>
           </Card>
@@ -166,8 +162,8 @@ export default function HomePage() {
         </Box>
         <Typography variant="body1" color="text.secondary">
           Este sistema é destinado exclusivamente a servidores e colaboradores autorizados
-          da ANPD. O acesso é realizado através de login institucional com credenciais do
-          Azure Active Directory.
+          da ANPD. O acesso é realizado através de login institucional utilizando
+          Keycloak.
         </Typography>
       </Paper>
 
@@ -181,7 +177,6 @@ export default function HomePage() {
         </Typography>
         <GovBRButton
           variant="outlined"
-          size="small"
           startIcon={<InfoIcon />}
           component={Link}
           href="/sobre"

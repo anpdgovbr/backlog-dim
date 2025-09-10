@@ -3,11 +3,15 @@
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
+import Button from "@mui/material/Button"
+import Link from "next/link"
+import { useSession } from "next-auth/react"
 
 import GovBRAvatar from "@/components/avatar/GovBRAvatar"
 import SystemTitle from "@/components/ui/SystemTitle"
 
 export default function Header() {
+  const { data: session, status } = useSession()
   return (
     <AppBar
       position="static"
@@ -53,7 +57,26 @@ export default function Header() {
             height: "100%",
           }}
         >
-          <GovBRAvatar />
+          {status === "authenticated" ? (
+            <GovBRAvatar
+              name={session?.user?.name || "Usuário"}
+              imageUrl={session?.user?.image || null}
+              items={[
+                { label: "Meu perfil", href: "/perfil" },
+                { label: "Sair", href: "/auth/logout" },
+              ]}
+            />
+          ) : (
+            <Button
+              component={Link}
+              href="/auth/login"
+              variant="outlined"
+              color="inherit"
+              size="small"
+            >
+              Entrar
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

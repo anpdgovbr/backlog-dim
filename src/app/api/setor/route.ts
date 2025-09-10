@@ -13,7 +13,7 @@ import { withApi } from "@/lib/withApi"
  * @constant
  * @type {string}
  */
-const baseUrl = process.env.CONTROLADORES_API_URL || "https://hml-dim.anpd.gov.br:3001"
+const baseUrl = process.env.CONTROLADORES_API_URL || "https://dim.dev.anpd.gov.br"
 
 /**
  * Endpoint completo para o recurso de setores.

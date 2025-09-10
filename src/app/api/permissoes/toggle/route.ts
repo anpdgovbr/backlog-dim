@@ -4,6 +4,36 @@ import { prisma } from "@/lib/prisma"
 import { getIdentity, rbacProvider, auditLog } from "@/rbac/server"
 import type { AcaoPermissao, RecursoPermissao } from "@prisma/client"
 
+/**
+ * Endpoint POST /api/permissoes/toggle
+ *
+ * Alterna (cria/atualiza) uma permissão para um perfil.
+ *
+ * Espera um corpo JSON com:
+ * {
+ *   profileIdOrName: number | string, // id numérico do perfil ou nome do perfil
+ *   acao: string,                     // nome da ação (ex.: "Alterar")
+ *   recurso: string,                  // nome do recurso (ex.: "Permissoes")
+ *   permitido: boolean                // verdadeiro para permitir, falso para negar
+ * }
+ *
+ * Comportamento:
+ * - Resolve o perfil indicado (por id ou por nome). Retorna 404 se não encontrado.
+ * - Realiza upsert na tabela `permissao` (cria ou atualiza o campo `permitido`).
+ * - Registra entrada de auditoria via `auditLog` com antes/depois.
+ *
+ * Respostas:
+ * - 200: { ok: true } — permissão atualizada com sucesso.
+ * - 400: { error: "..." } — body inválido ou campos obrigatórios ausentes.
+ * - 404: { error: "Perfil não encontrado" } — perfil não localizado.
+ *
+ * Autorização:
+ * - Requer a permissão RBAC { acao: "Alterar", recurso: "Permissoes" } fornecida pelo `rbacProvider`.
+ *
+ * Observações:
+ * - Não altera outros campos além de `permitido`.
+ * - O endpoint faz parsing seguro do body e valida presença mínima dos campos.
+ */
 export const POST = withApi(
   async ({ req, email, userId }: { req: Request; email: string; userId?: string }) => {
     const body = await req.json().catch(() => null)
@@ -21,7 +51,7 @@ export const POST = withApi(
     }
 
     // Resolver perfil
-    let perfil = null as null | { id: number; nome: string }
+    let perfil: { id: number; nome: string } | null
     if (/^\d+$/.test(String(profileIdOrName))) {
       perfil = await prisma.perfil.findUnique({
         where: { id: Number(profileIdOrName) },

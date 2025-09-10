@@ -22,6 +22,17 @@ Regras de estilo e padrões específicos:
     - `type MyComponentProps = Readonly<{ label: string; onClick?: () => void }>`
     - `export default function MyComponent(props: MyComponentProps) { /* ... */ }`
 
+Performance e carregamento de componentes não críticos:
+
+- Componentes que não precisam ser renderizados imediatamente no carregamento da página (por exemplo: modais, dialogs, visualizadores pesados, editores WYSIWYG) devem ser carregados dinamicamente com `next/dynamic` e renderizados condicionalmente quando a variável que controla sua abertura for verdadeira. Sempre envolva o import dinâmico em `React.Suspense` com um fallback leve.
+
+- Exemplo recomendado (padrão do repositório):
+  - Import dinâmico: `const MyModal = dynamic(() => import('@/components/modals/MyModal'), { ssr: false })`
+  - Render condicional + Suspense:
+    - `<Suspense fallback={<div />}>{isOpen && <MyModal onClose={close} />}</Suspense>`
+
+- Motivo: evita aumentar o bundle inicial, melhora TTI e reduz uso de memória em builds/execução. Siga esse padrão para componentes que não são necessários no primeiro paint.
+
 Arquitetura e fluxos importantes:
 
 - Rotas: `src/app` usa App Router; layouts e segmentação de pastas importam para roteamento.

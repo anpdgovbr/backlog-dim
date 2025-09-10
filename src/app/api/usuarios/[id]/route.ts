@@ -5,6 +5,13 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { prisma } from "@/lib/prisma"
 import { withApiForId } from "@/lib/withApi"
 
+/**
+ * Corpo da requisição PATCH para atualizar associações do usuário.
+ *
+ * - perfilId: quando presente, conecta o usuário ao perfil com o ID informado.
+ * - responsavelId: quando presente e numérico, conecta o usuário ao responsável;
+ *   quando explicitamente null, desconecta o responsável do usuário.
+ */
 interface PatchRequestBody {
   perfilId?: number
   responsavelId?: number | null
@@ -67,6 +74,16 @@ const handlerPATCH = withApiForId<{ id: string }>(
   }
 )
 
+/**
+ * Adaptador de rota para o verbo PATCH em /api/usuarios/{id}.
+ *
+ * Encaminha a Request e os parâmetros (contendo `id`) para o handler principal
+ * `handlerPATCH` (que já aplica validação, atualização no banco e auditoria).
+ *
+ * @param req - Objeto Request recebido pelo App Router.
+ * @param context - Contexto do App Router contendo `params` como Promise<{ id: string }>.
+ * @returns Promise<Response> - Resposta produzida pelo handler (JSON), com o resultado da operação.
+ */
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }

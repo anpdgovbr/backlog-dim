@@ -1,5 +1,6 @@
-import ChevronRight from "@mui/icons-material/ChevronRight"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
+import ChevronRight from "@mui/icons-material/ChevronRight"
+// import Button from "@mui/material/Button" // não utilizado diretamente
 import CardActions from "@mui/material/CardActions"
 import type { SxProps } from "@mui/material/styles"
 

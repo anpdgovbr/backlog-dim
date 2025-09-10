@@ -14,7 +14,8 @@ export interface UseCnaeResult {
   total: number
   isLoading: boolean
   error: unknown
-  mutate: () => void
+  // mutate vem do useApi e pode retornar void, os dados ou undefined — refletimos isso no tipo
+  mutate: () => Promise<void | { data: CnaeDto[]; total: number } | undefined>
   getById: (id: number) => Promise<CnaeDto | null>
 }
 

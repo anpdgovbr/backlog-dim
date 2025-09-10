@@ -3,15 +3,25 @@ import { z } from "zod"
 // Mantido sem imports de enums diretos para evitar acoplamento desnecessário no client
 
 /**
- * Schema Zod para validação do formulário (client-side) de Processo.
+ * Validator Zod que aceita uma Date válida ou null.
  *
- * - Aceita datas como `Date | null` e strings vazias transformadas para `null`.
- * - Define campos obrigatórios (numero, formaEntradaId, responsavelId, situacaoId).
- * - Fornece função utilitária para `defaultValues` do React Hook Form.
+ * Uso: utilizado para representar campos de data opcionais no formulário,
+ * garantindo que o valor seja ou uma instância Date ou null.
  */
-
 const dateOrNull = z.union([z.date(), z.null()])
 
+/**
+ * Schema Zod para o formulário de criação/edição de Processo.
+ *
+ * Valida os campos do formulário no cliente antes do envio:
+ * - Campos obrigatórios: numero, formaEntradaId, responsavelId, situacaoId.
+ * - Campos opcionais têm defaults apropriados (ex.: arrays vazios, null).
+ * - Alguns campos usam superRefine para mensagens customizadas de validação.
+ *
+ * Observações:
+ * - Não importa enums diretamente para evitar acoplamento no client.
+ * - Pode ser usado com react-hook-form via zodResolver.
+ */
 export const processoFormSchema = z.object({
   // obrigatórios
   numero: z.string().min(1, { message: "Número do processo é obrigatório" }),
@@ -66,10 +76,24 @@ export const processoFormSchema = z.object({
     .default(null),
 })
 
+/**
+ * Tipo usado pelo formulário (input) derivado do schema `processoFormSchema`.
+ *
+ * Representa a forma esperada dos valores que o formulário recebe/retorna,
+ * compatível com `z.input<typeof processoFormSchema>`.
+ */
 export type ProcessoFormData = z.input<typeof processoFormSchema>
 
 /**
- * Retorna os valores padrão do formulário de Processo para uso no `useForm`.
+ * Retorna os valores padrão para inicializar o `useForm` do React Hook Form.
+ *
+ * O retorno segue o tipo `ProcessoFormData` e provê defaults seguros:
+ * - Strings vazias para campos textuais,
+ * - null para selects/ids opcionais,
+ * - arrays vazios para listas (temaRequerimento), etc.
+ *
+ * Uso:
+ * const form = useForm<ProcessoFormData>({ defaultValues: getProcessoDefaultValues() })
  */
 export function getProcessoDefaultValues(): ProcessoFormData {
   return {

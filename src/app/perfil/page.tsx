@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography"
 // Usando CSS Grid via Box para garantir compatibilidade
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Link from "next/link"
+import Alert from "@mui/material/Alert"
 
 import { PageLayout } from "@/components/layouts"
 import { fetcher } from "@/lib/fetcher"
@@ -89,13 +90,40 @@ export default function PerfilPage() {
         list.push({ acao: p.acao, perfilNome: p.perfilNome })
       map.set(
         p.recurso,
-        list.sort((a, b) => a.acao.localeCompare(b.acao))
+        list.toSorted((a, b) => a.acao.localeCompare(b.acao))
       )
     }
     return map
   }, [permissoes])
 
   const isLoading = status === "loading" || loadingPerfil || loadingPerms
+
+  if (status === "unauthenticated") {
+    return (
+      <PageLayout
+        maxWidth="sm"
+        loading={false}
+        header={{
+          title: "Meu Perfil",
+          subtitle: "Acesso restrito a usuários autenticados",
+          description: "Faça login para visualizar os dados do seu perfil.",
+          variant: "default",
+        }}
+      >
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Você não está autenticado. Para acessar seu perfil, clique em “Entrar”.
+        </Alert>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button component={Link} href="/auth/login" variant="contained">
+            Entrar
+          </Button>
+          <Button component={Link} href="/" variant="outlined">
+            Voltar ao início
+          </Button>
+        </Box>
+      </PageLayout>
+    )
+  }
 
   return (
     <PageLayout
