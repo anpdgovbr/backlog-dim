@@ -114,12 +114,12 @@ export default function PerfilPage() {
           Você não está autenticado. Para acessar seu perfil, clique em “Entrar”.
         </Alert>
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Button component={Link} href="/auth/login" variant="contained">
+          <GovBRButton component={Link} href="/auth/login" variant="contained">
             Entrar
-          </Button>
-          <Button component={Link} href="/" variant="outlined">
+          </GovBRButton>
+          <GovBRButton component={Link} href="/" variant="outlined">
             Voltar ao início
-          </Button>
+          </GovBRButton>
         </Box>
       </PageLayout>
     )
