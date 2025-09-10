@@ -76,7 +76,6 @@ function DashboardBacklog() {
           <CardGrid columns={{ xs: 12, lg: 6 }} minCardHeight={380}>
             {pode(permissoes, "Exibir", "Processo") && <ProcessDashboardCard />}
             {pode(permissoes, "Exibir", "Relatorios") && <StatsDashboardCard />}
-            {pode(permissoes, "Exibir", "Permissoes") && <RbacAdminDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}
@@ -93,6 +92,7 @@ function DashboardBacklog() {
             {pode(permissoes, "Exibir", "Responsavel") && <RequeridosDashboardCard />}
             {pode(permissoes, "Exibir", "Metadados") && <MetadadosDashboardCard />}
             {pode(permissoes, "Exibir", "Metadados") && <ImportarDashboardCard />}
+            {pode(permissoes, "Exibir", "Permissoes") && <RbacAdminDashboardCard />}
           </CardGrid>
         </DashboardSection>
       )}

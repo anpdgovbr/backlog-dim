@@ -118,7 +118,7 @@ export const GET = withApi(
       }),
     }
 
-    const [total, dados] = await Promise.all([
+    const [total, rows] = await Promise.all([
       prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         where,
@@ -127,6 +127,12 @@ export const GET = withApi(
         take: pageSize,
       }),
     ])
+
+    // Normaliza datas para ISO string para consumo no client
+    const dados = rows.map((r) => ({
+      ...r,
+      criadoEm: r.criadoEm.toISOString(),
+    }))
 
     return NextResponse.json({ total, dados })
   },

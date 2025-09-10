@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import { useSession } from "next-auth/react"
-import { signOut } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -16,8 +14,32 @@ declare global {
   }
 }
 
-export default function GovBRAvatar() {
-  const { data: session } = useSession()
+export type AvatarMenuItem = {
+  label: string
+  href?: string
+  onClick?: () => void
+  disabled?: boolean
+}
+
+export type GovBRAvatarProps = {
+  name?: string
+  imageUrl?: string | null
+  items?: AvatarMenuItem[]
+  size?: number
+  greetingPrefix?: string
+  showGreeting?: boolean
+  onNavigate?: (href: string) => void
+}
+
+export default function GovBRAvatar({
+  name = "Usuário",
+  imageUrl = null,
+  items = [],
+  size = 40,
+  greetingPrefix = "Olá",
+  showGreeting = true,
+  onNavigate,
+}: Readonly<GovBRAvatarProps>) {
   const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
   const menuRef = useRef<HTMLDivElement>(null)
@@ -41,91 +63,94 @@ export default function GovBRAvatar() {
 
   const handleNavigation = (href: string) => {
     setMenuOpen(false)
-    if (href === "/auth/logout") {
-      signOut({ callbackUrl: "/auth/login" })
+    if (onNavigate) {
+      onNavigate(href)
     } else {
       router.push(href)
     }
   }
 
-  const menuItems = [
-    { label: "Meu perfil", href: "/perfil" },
-    { label: "Sair", href: "/auth/logout" },
-  ]
+  const initial = name?.charAt(0)?.toUpperCase() || "U"
 
   return (
     <div ref={menuRef} style={{ position: "relative" }}>
       <button
-        style={{ height: "48px" }}
+        style={{ height: `${size + 8}px` }}
         className="br-sign-in"
         type="button"
-        aria-label={`Olá, ${session?.user?.name}`}
+        aria-label={`${greetingPrefix}, ${name}`}
         onClick={() => setMenuOpen(!menuOpen)}
       >
-        {session?.user?.image ? (
+        {imageUrl ? (
           <span className="br-avatar">
             <Image
-              src={session.user.image}
-              alt={session.user.name || "Usuário"}
-              width={40}
-              height={40}
+              src={imageUrl}
+              alt={name || "Usuário"}
+              width={size}
+              height={size}
               className="br-avatar-img"
-              style={{ "--sign-in-img": "40px" } as React.CSSProperties}
+              style={{ "--sign-in-img": `${size}px` } as React.CSSProperties}
             />
           </span>
         ) : (
-          <span className="br-avatar" title={session?.user?.name || ""}>
-            <span className="content bg-orange-vivid-30 text-pure-0">
-              {session?.user?.name?.charAt(0).toUpperCase() || "U"}
-            </span>
+          <span className="br-avatar" title={name || "Usuário"}>
+            <span className="content bg-orange-vivid-30 text-pure-0">{initial}</span>
           </span>
         )}
-        <span
-          className="ml-2 text-gray-80 text-weight-regular"
-          style={{
-            display: "inline-block",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            maxWidth: "300px",
-          }}
-        >
-          Olá,{" "}
-          <span className="text-weight-semi-bold">
-            {session?.user?.name || "Usuário"}
-          </span>
-        </span>
-        {menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />}
-      </button>
-
-      <div
-        className="br-list"
-        hidden={!menuOpen}
-        style={{
-          position: "absolute",
-          right: 0,
-          top: "100%",
-          zIndex: 1000,
-          width: "240px",
-          marginTop: "0px",
-        }}
-      >
-        {menuItems.map((item) => (
-          <button
-            key={item.label}
-            className="br-item"
-            role="menuitem"
-            onClick={() => handleNavigation(item.href!)}
+        {showGreeting && (
+          <span
+            className="ml-2 text-gray-80 text-weight-regular"
             style={{
-              width: "100%",
-              textAlign: "left",
-              justifyContent: "flex-start",
+              display: "inline-block",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              maxWidth: "300px",
             }}
           >
-            {item.label}
-          </button>
-        ))}
-      </div>
+            {greetingPrefix},{" "}
+            <span className="text-weight-semi-bold">{name || "Usuário"}</span>
+          </span>
+        )}
+        {items.length > 0 &&
+          (menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />)}
+      </button>
+
+      {items.length > 0 && (
+        <div
+          className="br-list"
+          hidden={!menuOpen}
+          style={{
+            position: "absolute",
+            right: 0,
+            top: "100%",
+            zIndex: 1000,
+            width: "240px",
+            marginTop: "0px",
+          }}
+        >
+          {items.map((item) => (
+            <button
+              key={item.label}
+              className="br-item"
+              role="menuitem"
+              onClick={() => {
+                if (item.onClick) item.onClick()
+                if (item.href) handleNavigation(item.href)
+              }}
+              disabled={item.disabled}
+              style={{
+                width: "100%",
+                textAlign: "left",
+                justifyContent: "flex-start",
+                opacity: item.disabled ? 0.7 : 1,
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

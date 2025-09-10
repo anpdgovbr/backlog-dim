@@ -1,0 +1,312 @@
+{
+  "realm": "ANPD",
+  "enabled": true,
+  "sslRequired": "external",
+  "clients": [],
+  "roles": {
+    "realm": [
+      {
+        "name": "Admin",
+        "description": "Permissão: Admin Acessar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Acessar",
+        "description": "Permissão: Admin Acessar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Alterar",
+        "description": "Permissão: Admin Alterar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Cadastrar",
+        "description": "Permissão: Admin Cadastrar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Criar",
+        "description": "Permissão: Admin Criar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Desabilitar",
+        "description": "Permissão: Admin Desabilitar",
+        "composite": false
+      },
+      {
+        "name": "Admin:Editar",
+        "description": "Permissão: Admin Editar",
+        "composite": false
+      },
+      {
+        "name": "Admin:EditarGeral",
+        "description": "Permissão: Admin EditarGeral",
+        "composite": false
+      },
+      {
+        "name": "Admin:EditarProprio",
+        "description": "Permissão: Admin EditarProprio",
+        "composite": false
+      },
+      {
+        "name": "Admin:Exibir",
+        "description": "Permissão: Admin Exibir",
+        "composite": false
+      },
+      {
+        "name": "Admin:Registrar",
+        "description": "Permissão: Admin Registrar",
+        "composite": false
+      },
+      {
+        "name": "Admin:VerHistorico",
+        "description": "Permissão: Admin VerHistorico",
+        "composite": false
+      },
+      {
+        "name": "Auditoria:Exibir",
+        "description": "Permissão: Auditoria Exibir",
+        "composite": false
+      },
+      {
+        "name": "Auditoria:Registrar",
+        "description": "Permissão: Auditoria Registrar",
+        "composite": false
+      },
+      {
+        "name": "Metadados:Cadastrar",
+        "description": "Permissão: Metadados Cadastrar",
+        "composite": false
+      },
+      {
+        "name": "Metadados:Desabilitar",
+        "description": "Permissão: Metadados Desabilitar",
+        "composite": false
+      },
+      {
+        "name": "Metadados:Editar",
+        "description": "Permissão: Metadados Editar",
+        "composite": false
+      },
+      {
+        "name": "Metadados:Exibir",
+        "description": "Permissão: Metadados Exibir",
+        "composite": false
+      },
+      {
+        "name": "Permissoes:Alterar",
+        "description": "Permissão: Permissoes Alterar",
+        "composite": false
+      },
+      {
+        "name": "Permissoes:Exibir",
+        "description": "Permissão: Permissoes Exibir",
+        "composite": false
+      },
+      {
+        "name": "Processo:Cadastrar",
+        "description": "Permissão: Processo Cadastrar",
+        "composite": false
+      },
+      {
+        "name": "Processo:Desabilitar",
+        "description": "Permissão: Processo Desabilitar",
+        "composite": false
+      },
+      {
+        "name": "Processo:EditarGeral",
+        "description": "Permissão: Processo EditarGeral",
+        "composite": false
+      },
+      {
+        "name": "Processo:EditarProprio",
+        "description": "Permissão: Processo EditarProprio",
+        "composite": false
+      },
+      {
+        "name": "Processo:Exibir",
+        "description": "Permissão: Processo Exibir",
+        "composite": false
+      },
+      {
+        "name": "Processo:VerHistorico",
+        "description": "Permissão: Processo VerHistorico",
+        "composite": false
+      },
+      {
+        "name": "Relatorios:Criar",
+        "description": "Permissão: Relatorios Criar",
+        "composite": false
+      },
+      {
+        "name": "Relatorios:Desabilitar",
+        "description": "Permissão: Relatorios Desabilitar",
+        "composite": false
+      },
+      {
+        "name": "Relatorios:Editar",
+        "description": "Permissão: Relatorios Editar",
+        "composite": false
+      },
+      {
+        "name": "Relatorios:Exibir",
+        "description": "Permissão: Relatorios Exibir",
+        "composite": false
+      },
+      {
+        "name": "Responsavel:Cadastrar",
+        "description": "Permissão: Responsavel Cadastrar",
+        "composite": false
+      },
+      {
+        "name": "Responsavel:Desabilitar",
+        "description": "Permissão: Responsavel Desabilitar",
+        "composite": false
+      },
+      {
+        "name": "Responsavel:Editar",
+        "description": "Permissão: Responsavel Editar",
+        "composite": false
+      },
+      {
+        "name": "Responsavel:Exibir",
+        "description": "Permissão: Responsavel Exibir",
+        "composite": false
+      },
+      {
+        "name": "Usuario:Alterar",
+        "description": "Permissão: Usuario Alterar",
+        "composite": false
+      },
+      {
+        "name": "Usuario:Exibir",
+        "description": "Permissão: Usuario Exibir",
+        "composite": false
+      },
+      {
+        "name": "Leitor",
+        "description": "Perfil de Leitor",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "Metadados:Exibir",
+            "Processo:Exibir",
+            "Relatorios:Exibir",
+            "Usuario:Exibir"
+          ]
+        }
+      },
+      {
+        "name": "Atendente",
+        "description": "Perfil de Atendente",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "Leitor",
+            "Metadados:Exibir",
+            "Processo:EditarProprio",
+            "Processo:Exibir",
+            "Processo:VerHistorico",
+            "Relatorios:Exibir",
+            "Responsavel:Exibir",
+            "Usuario:Exibir"
+          ]
+        }
+      },
+      {
+        "name": "Supervisor",
+        "description": "Perfil de Supervisor",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "Atendente",
+            "Metadados:Cadastrar",
+            "Metadados:Desabilitar",
+            "Metadados:Editar",
+            "Metadados:Exibir",
+            "Processo:Cadastrar",
+            "Processo:Desabilitar",
+            "Processo:EditarGeral",
+            "Processo:EditarProprio",
+            "Processo:Exibir",
+            "Processo:VerHistorico",
+            "Relatorios:Criar",
+            "Relatorios:Desabilitar",
+            "Relatorios:Editar",
+            "Relatorios:Exibir",
+            "Responsavel:Cadastrar",
+            "Responsavel:Editar",
+            "Responsavel:Exibir",
+            "Usuario:Exibir"
+          ]
+        }
+      },
+      {
+        "name": "Administrador",
+        "description": "Perfil de Administrador",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "Admin:Acessar",
+            "Admin:Alterar",
+            "Admin:Cadastrar",
+            "Admin:Criar",
+            "Admin:Desabilitar",
+            "Admin:Editar",
+            "Admin:EditarGeral",
+            "Admin:EditarProprio",
+            "Admin:Exibir",
+            "Admin:Registrar",
+            "Admin:VerHistorico",
+            "Auditoria:Exibir",
+            "Auditoria:Registrar",
+            "Metadados:Cadastrar",
+            "Metadados:Desabilitar",
+            "Metadados:Editar",
+            "Metadados:Exibir",
+            "Permissoes:Alterar",
+            "Permissoes:Exibir",
+            "Processo:Cadastrar",
+            "Processo:Desabilitar",
+            "Processo:EditarGeral",
+            "Processo:EditarProprio",
+            "Processo:Exibir",
+            "Processo:VerHistorico",
+            "Relatorios:Criar",
+            "Relatorios:Desabilitar",
+            "Relatorios:Editar",
+            "Relatorios:Exibir",
+            "Responsavel:Cadastrar",
+            "Responsavel:Desabilitar",
+            "Responsavel:Editar",
+            "Responsavel:Exibir",
+            "Supervisor",
+            "Usuario:Alterar",
+            "Usuario:Exibir"
+          ]
+        }
+      },
+      {
+        "name": "SuperAdmin",
+        "description": "Perfil de Super Administrador",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "Admin:Acessar",
+            "Auditoria:Exibir",
+            "Auditoria:Registrar",
+            "Administrador",
+            "Permissoes:Alterar",
+            "Permissoes:Exibir",
+            "Usuario:Alterar",
+            "Usuario:Exibir"
+          ]
+        }
+      }
+    ]
+  },
+  "users": [],
+  "defaultRoles": ["offline_access", "uma_authorization"]
+}

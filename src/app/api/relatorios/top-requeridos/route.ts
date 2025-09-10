@@ -4,11 +4,28 @@ import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
 
 /**
- * Top requeridos por número de processos.
+ * GET - Retorna os "top requeridos" (controladores) ordenados pelo número de processos atribuídos.
  *
  * @remarks
- * Migrado para `withApi` (antes `withApiSlimNoParams`). Sem permissão explícita
- * adicional além de autenticação.
+ * Este endpoint agrega processos por `requeridoId` usando Prisma e, em seguida,
+ * consulta a API externa de controladores (CONTROLADORES_API_URL) para obter os
+ * dados do ControladorDto. O resultado é uma lista de objetos ControladorDto
+ * estendidos com a propriedade `totalProcessos`.
+ *
+ * Query parameters:
+ * - `limit` (opcional): número máximo de itens retornados. Padrão: 5. Máximo: 100.
+ *
+ * @param req - Objeto Request fornecido pelo wrapper `withApi`. A URL do request é
+ *               usada para extrair os parâmetros de query.
+ *
+ * @returns Promise<Response> - Resposta JSON contendo um array de ControladorDto
+ *                              com a propriedade adicional `totalProcessos`.
+ *
+ * @throws Retorna Response com status 500 quando a variável de ambiente
+ *         CONTROLADORES_API_URL não está definida ou em caso de erro interno.
+ *
+ * @example
+ * GET /api/relatorios/top-requeridos?limit=10
  */
 export const GET = withApi(async ({ req }) => {
   const { searchParams } = new URL(req.url)

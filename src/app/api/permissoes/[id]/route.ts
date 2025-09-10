@@ -7,12 +7,27 @@ import { readJson, validateOrBadRequest } from "@/lib/validation"
 import { permissaoPatchSchema } from "@/schemas/server/Permissao.zod"
 
 /**
- * Atualiza o campo `permitido` de uma permissão por `id`.
+ * Manipulador para atualização parcial (PATCH) de uma Permissão por ID.
  *
- * @see {@link withApiForId}
- * @returns JSON com a permissão atualizada.
- * @example PATCH /api/permissoes/10 { "permitido": false }
- * @remarks Auditoria ({@link AcaoAuditoria.UPDATE}) e permissão {acao: "Alterar", recurso: "Permissoes"}.
+ * Este handler é criado via `withApiForId` para executar validações de autorização
+ * e auditoria automaticamente. A função interna realiza:
+ * - leitura e validação do body usando `permissaoPatchSchema`,
+ * - verificação da existência e status (`active`) da permissão,
+ * - atualização do campo `permitido` na tabela `permissao`,
+ * - invalidação do cache de permissões e preparação de dados para auditoria.
+ *
+ * @template TParams - Tipo dos parâmetros de rota (ex.: { id: string }).
+ * @returns Promise que resolve para um objeto com:
+ *  - response: Response JSON contendo a permissão atualizada,
+ *  - audit: objeto com os estados `antes` e `depois` para registro em auditoria.
+ *
+ * @throws Retorna Responses com status apropriado em caso de:
+ *  - ID inválido (400),
+ *  - payload inválido (conforme validateOrBadRequest),
+ *  - permissão não encontrada ou desativada (404).
+ *
+ * @see withApiForId
+ * @see permissaoPatchSchema
  */
 const handlerPATCH = withApiForId<{ id: string }>(
   async ({ params, req }) => {
@@ -64,7 +79,19 @@ const handlerPATCH = withApiForId<{ id: string }>(
   }
 )
 
-// Export padrão com await em context.params
+/**
+ * Entrypoint exportado para o método HTTP PATCH da rota `/api/permissoes/[id]`.
+ *
+ * Aguarda `context.params` (compatível com App Router) e delega a execução ao
+ * `handlerPATCH`.
+ *
+ * @param req - Requisição HTTP recebida pelo Next.js.
+ * @param context.params - Promise que resolve para os parâmetros da rota ({ id: string }).
+ * @returns Response produzida por `handlerPATCH`.
+ *
+ * @remarks Mantido como wrapper assíncrono para suportar `context.params` como Promise
+ * no ambiente do App Router do Next.js.
+ */
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }

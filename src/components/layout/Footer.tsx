@@ -17,20 +17,21 @@ export default function Footer() {
         width: "100%",
         backgroundColor: theme.palette.grey[100],
         borderTop: `1px solid ${theme.palette.divider}`,
-        py: { xs: 2, sm: 3 },
       })}
     >
       <Container maxWidth={false}>
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
+            justifyContent: "space-between",
             textAlign: "center",
+            py: 1,
           }}
         >
           <Typography
-            variant="body2"
+            variant="caption"
             color="text.secondary"
             sx={{
               fontSize: { xs: "0.75rem", sm: "0.875rem" },
@@ -43,7 +44,6 @@ export default function Footer() {
             variant="caption"
             color="text.secondary"
             sx={{
-              mt: 0.5,
               fontSize: { xs: "0.7rem", sm: "0.8rem" },
             }}
           >

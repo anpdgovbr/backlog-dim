@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 
 import { withApi } from "@/lib/withApi"
 import { prisma } from "@/lib/prisma"
-import { getPerfisHerdadosNomes } from "@/helpers/permissoes-utils"
+import { getPerfisHerdadosNomes } from "@/helpers/permissoesUtils"
 
 /**
  * Retorna a cadeia de perfis herdados para o usuário autenticado.

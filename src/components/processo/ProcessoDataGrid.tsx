@@ -238,7 +238,12 @@ export default function ProcessoDataGrid({
               />
               <Box gap={2} display="flex" alignItems="center">
                 <Tooltip title="Limpar filtros">
-                  <GovBRButton inverted={true} onClick={handleClearFilters}>
+                  <GovBRButton
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={handleClearFilters}
+                  >
                     <RestartAltIcon sx={{ mr: 1 }} />
                     Limpar
                   </GovBRButton>
@@ -247,6 +252,7 @@ export default function ProcessoDataGrid({
                 <Tooltip title="Adicionar novo processo">
                   <GovBRButton
                     color="primary"
+                    size="small"
                     onClick={() => router.push("/dashboard/processos/novo")}
                   >
                     <AddIcon sx={{ mr: 1 }} />
@@ -259,7 +265,6 @@ export default function ProcessoDataGrid({
 
           <Box sx={dataGridStyles}>
             <DataGrid
-              //sx={{ minHeight: "45vh" }}
               disableColumnMenu
               disableColumnSorting
               rows={processos}
@@ -272,7 +277,7 @@ export default function ProcessoDataGrid({
               onPaginationModelChange={setPaginationModel}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
               disableRowSelectionOnClick
-              density="comfortable"
+              density="compact"
             />
           </Box>
         </Box>

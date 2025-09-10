@@ -5,6 +5,27 @@ import { withApi } from "@/lib/withApi"
 import { readJson, validateOrBadRequest } from "@/lib/validation"
 import { processoCreateSchema } from "@/schemas/server/Processo.zod"
 
+/**
+ * Gera um número único de processo baseado no ano e mês atuais.
+ *
+ * O formato retornado é: PYYYYMM-NNNN
+ * - P: prefixo fixo
+ * - YYYY: ano com 4 dígitos
+ * - MM: mês com 2 dígitos (01-12)
+ * - NNNN: sequência do mês, com padding de 4 dígitos (0001, 0002, ...)
+ *
+ * Fluxo:
+ * 1. Calcula o ano e mês atuais.
+ * 2. Conta quantos processos já existem no intervalo do mês atual (usando prisma.processo.count).
+ * 3. Retorna uma string composta pelo prefixo e a sequência incrementada.
+ *
+ * Observações e limitações:
+ * - A sequência é derivada da contagem de registros no mês atual e, portanto, não é totalmente à prova de condições de corrida
+ *   em cenários de alta concorrência. Para garantir unicidade em ambientes concorrentes, considere usar mecanismo de sequência
+ *   do banco de dados ou uma transação/lock apropriado.
+ *
+ * @returns Promise<string> número do processo no formato "PYYYYMM-NNNN" (ex.: "P202504-0001").
+ */
 async function gerarNumeroProcesso(): Promise<string> {
   const agora = new Date()
   const ano = agora.getFullYear()
