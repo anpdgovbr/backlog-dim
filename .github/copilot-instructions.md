@@ -9,6 +9,7 @@ Ajude a implementar features, correções e refatorações seguindo as convenç�
 ## Pontos Essenciais (Leia Antes de Editar)
 
 **Stack tecnológico:**
+
 - Projeto: Next.js 15 (App Router) + TypeScript + Prisma + MUI (Material-UI) + Turbopack em dev
 - Pasta principal: `src/` (páginas App Router em `src/app`, APIs em `src/app/api`)
 - Estado padrão: config ESLint moderna em `eslint.config.mjs` (flat config)
@@ -19,34 +20,39 @@ Ajude a implementar features, correções e refatorações seguindo as convenç�
 
 - **NUNCA use `any`** — Sempre tipado, prefira `unknown` com type narrowing
 - **Imports MUI e MUI Icons:** sempre importações individuais, SEM desestruturação:
+
   ```typescript
   // ✅ CORRETO
-  import Button from '@mui/material/Button'
-  import EditIcon from '@mui/icons-material/Edit'
-  
+  import Button from "@mui/material/Button"
+  import EditIcon from "@mui/icons-material/Edit"
+
   // ❌ EVITE
-  import { Button } from '@mui/material'
-  import { Edit } from '@mui/icons-material'
+  import { Button } from "@mui/material"
+  import { Edit } from "@mui/icons-material"
   ```
 
 **Priorização de componentes UI:**
+
 1. **PRIMEIRO:** Use componentes da lib `@anpdgovbr/shared-ui` (ex: Button, TextField, etc.)
 2. **SEGUNDO:** Se não existir na shared-ui, então use MUI com importação individual
 
 **Props de componentes React:**
+
 - Todas as props devem usar `Readonly<>` para evitar mutações acidentais:
+
   ```typescript
   type MyComponentProps = Readonly<{
     label: string
     onClick?: () => void
   }>
-  
+
   export default function MyComponent(props: MyComponentProps) {
     // ...
   }
   ```
 
 **Hooks e contextos:**
+
 - Use hooks definidos em `src/hooks` (ex: `useProcessos`, `useUsuarioIdLogado`) em vez de criar fetchers ad-hoc
 - Contextos/Providers: `src/context` contém provedores (Audit, Notification, Session). Prefira usá-los para estado compartilhado
 
@@ -59,8 +65,8 @@ import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
 // Import dinâmico
-const MyModal = dynamic(() => import('@/components/modals/MyModal'), { 
-  ssr: false 
+const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
+  ssr: false
 })
 
 // Render condicional + Suspense
@@ -90,13 +96,16 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
 ## Padrões de Código e Exemplos Práticos
 
 **Componentes:**
+
 - `src/components/*` seguem padrão export default de componentes React com props tipadas
 - Exemplos: CRUD manager em `src/components/CrudManager.tsx`, Avatar em `src/components/avatar`
 
 **Requests para backend:**
+
 - Use `lib/api.ts` e `lib/fetcher.ts` para consistência (SWR é usado para cache de dados)
 
 **Formulários:**
+
 - Use `react-hook-form` e validação com `zod` (v4) com resolver `@hookform/resolvers/zod`
 - Siga componentes existentes em `components/form/*`
 
@@ -118,20 +127,24 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
 ## Integrações e Configurações
 
 **NextAuth/Keycloak:**
+
 - Ver `src/config/next-auth.config.ts` e variáveis em `.env.example`
 - Variáveis obrigatórias: `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`
 
 **Banco:**
+
 - Usar `docker-infra-pg` com scripts `infra:*` para desenvolver localmente
 - Comandos úteis: `npm run infra:setup`, `npm run infra:up`, `npm run infra:db:init`
 
 ## Boas Práticas para Aprovação Automática
 
 **Sempre execute antes de propor mudanças:**
+
 - `npm run lint` — Corrige problemas de estilo automaticamente
 - `npm run type-check` — Verifica erros de TypeScript
 
 **Se modificar comportamento de API ou banco:**
+
 - Inclua alteração no `prisma/schema.prisma`
 - Sugira comandos de migração (`npx prisma migrate dev`)
 
