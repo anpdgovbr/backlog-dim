@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation"
 
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined"
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
-import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 /**
  * Interface para a extensão global carregada pelo script gov.br.
