@@ -22,7 +22,8 @@ function LoginPageInner() {
   const [providerMsg, setProviderMsg] = useState<string>("")
   const [redirecting, setRedirecting] = useState(false)
   const autoStarted = useRef(false)
-  const showLoading = redirecting || isLoading
+  const [verifying, setVerifying] = useState(true)
+  const showLoading = redirecting || isLoading || verifying
 
   // Exibe erros retornados pelo NextAuth (ex.: callback falhou)
   const search = useSearchParams()
@@ -42,6 +43,8 @@ function LoginPageInner() {
         map[err] ||
           "Falha ao iniciar a autenticação. Verifique o serviço de identidade e tente novamente."
       )
+      // Em caso de erro explícito, não manter estado de verificação ativo
+      setVerifying(false)
     }
   }, [search])
 
@@ -60,6 +63,7 @@ function LoginPageInner() {
 
   // Inicia automaticamente o fluxo de login quando não autenticado
   const checkProvider = useCallback(async () => {
+    setVerifying(true)
     try {
       setProviderReady(null)
       setProviderMsg("")
@@ -80,6 +84,8 @@ function LoginPageInner() {
       setProviderReady(false)
       setProviderMsg("Não foi possível verificar o provedor de autenticação.")
       return false
+    } finally {
+      setVerifying(false)
     }
   }, [])
 
@@ -92,6 +98,7 @@ function LoginPageInner() {
       // Se já veio com erro do NextAuth, apenas exibe e não tenta de novo
       if (hasErrorParam) {
         setProviderReady(false)
+        setVerifying(false)
         return
       }
 
@@ -161,7 +168,13 @@ function LoginPageInner() {
   if (showLoading) {
     return (
       <GovBrLoading
-        message={redirecting ? "Redirecionando..." : "Verificando sessão..."}
+        message={
+          redirecting
+            ? "Redirecionando..."
+            : verifying
+              ? "Verificando provedor de autenticação..."
+              : "Verificando sessão..."
+        }
       />
     )
   }
@@ -221,14 +234,14 @@ function LoginPageInner() {
               const ok = await checkProvider()
               if (ok) await handleLogin()
             }}
-            disabled={isLoading}
+            disabled={isLoading || verifying}
           >
             Entrar com Keycloak
           </Button>
           <Button
             variant="outlined"
             onClick={checkProvider}
-            disabled={isLoading}
+            disabled={isLoading || verifying}
             color="secondary"
           >
             Recarregar status
