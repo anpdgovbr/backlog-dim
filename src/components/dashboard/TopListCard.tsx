@@ -144,7 +144,6 @@ export function TopListCard<T = unknown>({
       <Button
         fullWidth
         variant="contained"
-        size="large"
         onClick={handleAction}
         sx={{
           bgcolor: "rgba(0, 0, 0, 0.12)",

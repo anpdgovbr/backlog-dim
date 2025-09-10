@@ -64,38 +64,54 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoFormData {
 
 /**
  * Representa uma contagem de ocorrências por tema.
+ *
+ * Cada instância indica quantas vezes um determinado tema foi registrado
+ * nos processos, usado em agregações e relatórios.
  */
 export interface TemaCount {
-  /** Nome do tema */
+  /** Nome do tema. Ex.: "Transporte", "Saúde" */
   tema: string
-  /** Quantidade total de ocorrências desse tema */
+  /** Quantidade total de ocorrências desse tema. Valor ≥ 0. */
   total: number
 }
 
 /**
- * Estrutura de indicadores agregados relacionados a processos.
+ * Indicadores agregados relacionados a processos.
  *
- * Campos:
- * @param {number} total - total de processos.
- * @param {number} atrasados - quantidade de processos que estão atrasados.
- * @param {number} noMes - quantidade de processos registrados no mês corrente.
- * @param {number} atribuidosAoUsuario - total de processos atribuídos ao usuário atual.
- * @param {Record<string, number>} porStatusInterno - mapa com contagem por status interno (chave: status, valor: quantidade).
- * @param {Record<string, number>} porTipoRequerimento - mapa com contagem por tipo de requerimento.
- * @param {TemaCount[]} topTemas - lista dos principais temas (TemaCount) ordenados por ocorrência.
+ * Uso: representação compacta de métricas para dashboards e sumários.
+ * Não pressupõe a origem (pode ser resultado de consulta ao banco ou cálculo em memória).
  */
 export interface IndicadoresProcesso {
+  /** Total de processos considerados no conjunto (inteiro não-negativo). */
   total: number
-  /**
-   * Quantidade de processos que estão atrasados.
-   */
+
+  /** Quantidade de processos que estão atrasados (inteiro não-negativo). */
   atrasados: number
-  /**
-   * Quantidade de processos registrados no mês corrente.
-   */
+
+  /** Quantidade de processos registrados no mês corrente (inteiro não-negativo). */
   noMes: number
+
+  /** Total de processos atribuídos ao usuário atual (inteiro não-negativo). */
   atribuidosAoUsuario: number
+
+  /**
+   * Mapa com contagem por status interno.
+   * - Chave: nome do status interno (string).
+   * - Valor: quantidade de processos naquele status (number, inteiro).
+   *
+   * Ex.: { "EmAndamento": 10, "Concluido": 5 }
+   */
   porStatusInterno: Record<string, number>
+
+  /**
+   * Mapa com contagem por tipo de requerimento.
+   * - Chave: tipo de requerimento (string).
+   * - Valor: quantidade de ocorrências (number, inteiro).
+   *
+   * Ex.: { "Recurso": 3, "Reclamação": 7 }
+   */
   porTipoRequerimento: Record<string, number>
+
+  /** Lista dos principais temas ordenados por ocorrência (do maior para o menor). */
   topTemas: TemaCount[]
 }

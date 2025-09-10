@@ -70,6 +70,7 @@ export default function LogoutPage() {
       }
       router.replace("/")
     } catch (err) {
+      console.error("Erro ao sair do sistema:", err)
       setError("Falha ao sair do sistema. Tente novamente.")
     } finally {
       setIsLoading(false)

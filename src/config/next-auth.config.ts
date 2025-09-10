@@ -6,6 +6,7 @@ import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 /**
  * Atualiza o access_token do Keycloak usando o refresh_token.
  *
+ * @remarks
  * Estratégia:
  * - Quando o `jwt` callback detectar um token prestes a expirar, chama este helper.
  * - Envia `grant_type=refresh_token` para o endpoint `/protocol/openid-connect/token`.
@@ -13,7 +14,10 @@ import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
  *
  * Observações:
  * - Requer `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` definidos.
- * - Se a renovação falhar, anexa `token.error = 'RefreshAccessTokenError'` para tratamento posterior.
+ * - Se a renovação falhar, o resultado conterá a propriedade `error === "RefreshAccessTokenError"`.
+ *
+ * @param token - JWT atual que pode conter refreshToken, accessToken, idToken e expiresAt.
+ * @returns Promise que resolve para o JWT atualizado contendo os tokens renovados e `expiresAt`.
  */
 async function refreshKeycloakAccessToken(
   token: JWT & {
@@ -76,6 +80,18 @@ async function refreshKeycloakAccessToken(
   }
 }
 
+/**
+ * Opções de configuração do NextAuth usadas pela aplicação.
+ *
+ * @remarks
+ * Contém:
+ * - providers: configuração do KeycloakProvider
+ * - callbacks: handlers para `jwt` e `session` (inclui lógica de refresh de token)
+ * - events: hooks para auditoria (signIn / signOut)
+ * - pages: caminhos personalizados para login/erro
+ *
+ * Use `authOptions` ao inicializar o NextAuth na aplicação.
+ */
 export const authOptions = {
   providers: [
     KeycloakProvider({
@@ -153,7 +169,7 @@ export const authOptions = {
         ...session,
         user: {
           ...session.user,
-          id: token.id as string,
+          id: token.id,
           accessToken: token.accessToken,
         },
       }
@@ -175,12 +191,18 @@ export const authOptions = {
     }) {
       try {
         const { registrarAuditoria } = await import("@/helpers/auditoria-server")
+        // extrai provider de forma segura sem usar `any`
+        let provider = "unknown"
+        if (typeof message.account === "object" && message.account !== null) {
+          const acct = message.account as Record<string, unknown>
+          if (typeof acct.provider === "string") provider = acct.provider
+        }
         await registrarAuditoria({
           tabela: "auth",
           acao: "GET" as unknown as AcaoAuditoria,
           userId: message.user?.id,
           email: typeof message.user?.email === "string" ? message.user.email : undefined,
-          contexto: `signIn:${(message as any)?.account?.provider ?? "unknown"}`,
+          contexto: `signIn:${provider}`,
           depois: { isNewUser: message.isNewUser ?? false },
         })
       } catch (e) {
@@ -194,13 +216,18 @@ export const authOptions = {
       try {
         const { registrarAuditoria } = await import("@/helpers/auditoria-server")
         const emailFromSession = message.session.user?.email
-        const email =
-          typeof emailFromSession === "string"
-            ? emailFromSession
-            : typeof (message.token as any)?.email === "string"
-              ? (message.token as any).email
-              : undefined
-        const userId = message.session.user?.id ?? (message.token as any)?.sub
+        // usa o tipo JWT e checagens seguras em vez de `any`
+        const token = message.token
+        const tokenEmail =
+          typeof (token as Record<string, unknown>).email === "string"
+            ? ((token as Record<string, unknown>).email as string)
+            : undefined
+        const email = typeof emailFromSession === "string" ? emailFromSession : tokenEmail
+        const userId =
+          message.session.user?.id ??
+          (typeof (token as Record<string, unknown>).sub === "string"
+            ? ((token as Record<string, unknown>).sub as string)
+            : undefined)
         await registrarAuditoria({
           tabela: "auth",
           acao: "DELETE" as unknown as AcaoAuditoria,
@@ -220,4 +247,9 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 }
 
+/**
+ * Export padrão apontando para as opções do NextAuth.
+ *
+ * @see authOptions
+ */
 export default authOptions

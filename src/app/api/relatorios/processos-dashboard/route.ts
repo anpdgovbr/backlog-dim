@@ -1,4 +1,3 @@
-import type { Session } from "next-auth"
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
 
@@ -20,7 +19,7 @@ function normalizarTexto(texto: string): string {
  * GET /api/relatorios/processos-dashboard
  */
 export async function GET() {
-  const session = (await getServerSession(authOptions)) as Session | null
+  const session = await getServerSession(authOptions)
   if (!session?.user?.email) {
     // Agora verificamos por email
     return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 })

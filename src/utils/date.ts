@@ -1,9 +1,13 @@
 /**
- * Adiciona dias úteis (segunda a sexta) a uma data.
+ * Adiciona uma quantidade de dias úteis (segunda a sexta) a uma data fornecida.
  *
- * @param data Data inicial
- * @param dias Número de dias úteis a adicionar
- * @returns Nova instância de Date com os dias úteis adicionados
+ * Observações:
+ * - Feriados não são considerados; apenas sábados e domingos são pulados.
+ * - A função não modifica a instância `data` passada — retorna uma nova Date.
+ *
+ * @param data - Data inicial utilizada como referência. Deve ser um objeto Date válido.
+ * @param dias - Número de dias úteis a adicionar (inteiro não-negativo).
+ * @returns Nova instância de Date com os dias úteis adicionados.
  *
  * @example
  * adicionarDiasUteis(new Date('2025-08-22'), 3) // pula fim de semana automaticamente
@@ -22,11 +26,18 @@ export function adicionarDiasUteis(data: Date, dias: number): Date {
 }
 
 /**
- * Converte uma data em formato BR (dd/mm/yyyy) para ISO string.
- * Retorna `undefined` caso a string seja inválida.
+ * Converte uma data no formato BR (dd/mm/yyyy) para uma ISO string.
+ *
+ * Comportamento:
+ * - Se `dateStr` for falsy (undefined, empty) retorna undefined.
+ * - Se a string não corresponder a um dia/mês/ano válidos, retorna undefined.
+ * - A ISO retornada representa o início do dia em UTC (ex.: 'YYYY-MM-DDT00:00:00.000Z').
+ *
+ * @param dateStr - String no formato 'dd/mm/yyyy' ou undefined.
+ * @returns ISO string ou undefined quando a entrada for inválida.
  *
  * @example
- * parseBRDateToISO('31/12/2024') // '2024-12-31T00:00:00.000Z' (ou similar)
+ * parseBRDateToISO('31/12/2024') // => '2024-12-31T00:00:00.000Z' (ou similar)
  */
 export function parseBRDateToISO(dateStr?: string): string | undefined {
   if (!dateStr) return undefined
@@ -39,8 +50,16 @@ export function parseBRDateToISO(dateStr?: string): string | undefined {
 }
 
 /**
- * Converte uma data (string no formato BR ou Date) para ISO string segura.
- * Retorna `undefined` quando a entrada for inválida ou nula.
+ * Normaliza diferentes representações de data para uma ISO string segura.
+ *
+ * Suporta:
+ * - instâncias Date válidas,
+ * - strings no formato BR tratadas por parseBRDateToISO.
+ *
+ * Retorna undefined quando a entrada for nula, inválida ou resultar em NaN.
+ *
+ * @param date - Date | string | null | undefined
+ * @returns ISO string representando a data ou undefined se inválido.
  */
 export function safeToISO(date: string | Date | null | undefined): string | undefined {
   if (!date) return undefined
@@ -54,12 +73,19 @@ export function safeToISO(date: string | Date | null | undefined): string | unde
 }
 
 /**
- * Formata uma data para o valor esperado por campos <input type="date">.
- * Ajusta o timezone local para que a string retornada represente corretamente
- * a data local no formato YYYY-MM-DD.
+ * Converte uma data para o formato usado por <input type="date">: 'YYYY-MM-DD'.
+ *
+ * Comportamento:
+ * - Aceita Date ou string (parseável pelo construtor Date).
+ * - Ajusta o timezone local subtraindo o offset para que a data local seja preservada
+ *   ao gerar a string no formato ISO local (sem hora).
+ * - Em caso de entrada inválida retorna string vazia.
+ *
+ * @param date - Date | string | null | undefined
+ * @returns string no formato 'YYYY-MM-DD' ou '' quando inválido
  *
  * @example
- * toInputDateValue('2025-08-26T12:00:00Z') // '2025-08-26'
+ * toInputDateValue('2025-08-26T12:00:00Z') // => '2025-08-26'
  */
 export function toInputDateValue(date: string | Date | null | undefined): string {
   if (!date) {

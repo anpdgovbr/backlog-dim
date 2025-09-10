@@ -7,6 +7,27 @@ import type { AcaoPermissao, RecursoPermissao } from "@prisma/client"
 import { readJson, validateOrBadRequest } from "@/lib/validation"
 import { permissaoCreateSchema } from "@/schemas/server/Permissao.zod"
 
+/**
+ * Handler GET para /api/permissoes
+ *
+ * Comportamento:
+ * - Se não for passado query param `perfil`, retorna as permissões do identity atual.
+ *   - Resolve identidade via getIdentity.resolve(req) e usa rbacProvider.getPermissionsByIdentity.
+ *   - Resposta: 200 com array de objetos { acao, recurso, permitido }.
+ * - Se for passado `perfil` (id numérico ou nome), resolve o nome do perfil e retorna
+ *   as permissões associadas a esse perfil via getPermissoesPorPerfil.
+ *   - Se o perfil não for encontrado, responde 404.
+ *
+ * Autorização:
+ * - Requer permissão RBAC { acao: "Exibir", recurso: "Permissoes" } (aplicada pelo withApi).
+ *
+ * Query parameters:
+ * - perfil?: string | number (opcional) — id do perfil ou nome do perfil.
+ *
+ * Retorno:
+ * - 200: lista de permissões ou permissões do identity atual.
+ * - 404: { error: "Perfil não encontrado" } quando aplicável.
+ */
 export const GET = withApi(
   async ({ req }: { req: Request }) => {
     const url = new URL(req.url)
@@ -48,7 +69,32 @@ export const GET = withApi(
   }
 )
 
-// Cria explicitamente uma permissão (além do toggle)
+/**
+ * Handler POST para /api/permissoes
+ *
+ * Cria ou atualiza explicitamente uma permissão (upsert).
+ *
+ * Corpo esperado (validação via permissaoCreateSchema):
+ * {
+ *   perfilId?: number,
+ *   perfilNome?: string,
+ *   acao: string,
+ *   recurso: string,
+ *   permitido: boolean
+ * }
+ *
+ * Comportamento:
+ * - Resolve perfil por `perfilId` ou `perfilNome`. Se não encontrar, retorna 404.
+ * - Realiza upsert em `permissao` (campo `permitido`).
+ * - Responde com o objeto salvo (id, permitido) e status 201.
+ *
+ * Autorização:
+ * - Requer permissão RBAC { acao: "Cadastrar", recurso: "Permissoes" } (aplicada pelo withApi).
+ *
+ * Retorno:
+ * - 201: objeto salvo { id, permitido }.
+ * - 400/404: respostas de erro conforme validação/resolução do perfil.
+ */
 export const POST = withApi(
   async ({ req }) => {
     const raw = await readJson(req)

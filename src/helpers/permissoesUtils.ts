@@ -1,4 +1,4 @@
-// lib/helpers/permissoes-utils.ts
+// lib/helpers/permissoesUtils.ts
 import { prisma } from "@/lib/prisma"
 
 /**

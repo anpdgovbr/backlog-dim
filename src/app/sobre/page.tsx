@@ -219,7 +219,6 @@ export default function SobrePage() {
           startIcon={<ArrowBackIcon />}
           component={Link}
           href="/"
-          size="large"
         >
           Voltar ao Início
         </Button>
@@ -229,7 +228,6 @@ export default function SobrePage() {
           startIcon={<DashboardIcon />}
           component={Link}
           href="/publico"
-          size="large"
         >
           Ver Dashboard Público
         </Button>

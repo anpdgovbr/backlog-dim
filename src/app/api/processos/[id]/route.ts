@@ -1,4 +1,5 @@
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import type { StatusInterno } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { verificarPermissao } from "@/lib/permissoes"
@@ -8,6 +9,231 @@ import {
   processoUpdateSchema,
   type ProcessoUpdateInput,
 } from "@/schemas/server/Processo.zod"
+
+// -- Helpers de comparação e autorização (nível de módulo) ------------------
+/**
+ * Converte um valor (string | Date | null | undefined) para timestamp em milissegundos.
+ * Retorna null quando o valor é nulo, indefinido ou não representa uma data válida.
+ *
+ * @param value - Valor a ser convertido em timestamp.
+ * @returns timestamp em ms ou null se inválido.
+ */
+function toTime(value: unknown): number | null {
+  if (value === null || value === undefined) return null
+  const d = new Date(value as string | Date)
+  const t = Number(d.getTime())
+  return Number.isNaN(t) ? null : t
+}
+
+/**
+ * Compara dois arrays ignorando a ordem dos elementos.
+ * A comparação é feita convertendo elementos para string e ordenando.
+ *
+ * @param a - Primeiro array.
+ * @param b - Segundo array.
+ * @returns true se os arrays tiverem os mesmos elementos (independentemente da ordem).
+ */
+function arraysEqual(a: unknown, b: unknown): boolean {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false
+  const sortedA = [...a].map(String).sort((x, y) => x.localeCompare(y))
+  const sortedB = [...b].map(String).sort((x, y) => x.localeCompare(y))
+  return JSON.stringify(sortedA) === JSON.stringify(sortedB)
+}
+
+/**
+ * Compara um campo específico entre o objeto enviado no body e o objeto do processo.
+ * Trata campos de data (dataConclusao, dataEnvioPedido) e arrays de forma apropriada.
+ *
+ * @param bodyObj - Objeto recebido no body da requisição.
+ * @param processoObj - Objeto do processo atual (do banco).
+ * @param campo - Nome do campo a ser comparado.
+ * @returns true se o campo for considerado diferente.
+ */
+function isFieldDifferent(
+  bodyObj: Readonly<Record<string, unknown>>,
+  processoObj: Readonly<Record<string, unknown>>,
+  campo: string
+): boolean {
+  const novo = bodyObj[campo]
+  const antigo = processoObj[campo]
+
+  if (campo === "dataConclusao" || campo === "dataEnvioPedido") {
+    return toTime(novo) !== toTime(antigo)
+  }
+
+  if (Array.isArray(novo) && Array.isArray(antigo)) {
+    return !arraysEqual(novo, antigo)
+  }
+
+  return novo !== antigo
+}
+
+/**
+ * Verifica se houve alteração em qualquer dos campos fornecidos comparando body com o processo.
+ *
+ * @param campos - Lista de nomes de campos a serem verificados.
+ * @param bodyObj - Objeto recebido no body.
+ * @param procObj - Objeto do processo atual.
+ * @returns true se houver pelo menos uma alteração detectada.
+ */
+function detectarAlteracao(
+  campos: readonly string[],
+  bodyObj: Readonly<Record<string, unknown>>,
+  procObj: Readonly<Record<string, unknown>>
+): boolean {
+  return campos.some((campo) => isFieldDifferent(bodyObj, procObj, campo))
+}
+
+/**
+ * Autorização híbrida para editar um processo (RBAC + ABAC).
+ * - Se o usuário possuir permissão "EditarGeral" retorna undefined (permitido).
+ * - Senão, verifica permissão "EditarProprio" e se o processo pertence ao usuário.
+ * - Caso contrário, retorna um Response com 403.
+ *
+ * @param emailArg - Email do usuário em sessão.
+ * @param userIdArg - ID do usuário em sessão.
+ * @param procAtual - Processo atual (contendo opcionalmente responsavel.userId).
+ * @returns Promise que resolve para undefined quando autorizado ou um Response quando negado.
+ */
+async function authorizeEdit(
+  emailArg: string,
+  userIdArg: string,
+  procAtual: { responsavel?: { userId?: string | null } | null }
+): Promise<Response | undefined> {
+  const podeEditarGeral = await verificarPermissao(emailArg, "EditarGeral", "Processo")
+  if (podeEditarGeral) return undefined
+
+  const podeEditarProprio = await verificarPermissao(
+    emailArg,
+    "EditarProprio",
+    "Processo"
+  )
+  const ehProprio =
+    procAtual.responsavel?.userId && userIdArg
+      ? procAtual.responsavel.userId === userIdArg
+      : false
+
+  if (!(podeEditarProprio && ehProprio)) {
+    return Response.json({ error: "Acesso negado" }, { status: 403 })
+  }
+
+  return undefined
+}
+
+/**
+ * Campos que participam da detecção de alteração entre body e entidade.
+ */
+const CAMPOS_COMPARAVEIS: string[] = [
+  "requerente",
+  "formaEntradaId",
+  "responsavelId",
+  "requeridoId",
+  "situacaoId",
+  "encaminhamentoId",
+  "pedidoManifestacaoId",
+  "contatoPrevioId",
+  "evidenciaId",
+  "anonimo",
+  "tipoReclamacaoId",
+  "observacoes",
+  "temaRequerimento",
+  "tipoRequerimento",
+  "resumo",
+  "dataConclusao",
+  "dataEnvioPedido",
+  "prazoPedido",
+  "requeridoFinalId",
+]
+
+/**
+ * Constrói o objeto de dados para o update no Prisma a partir do body validado.
+ * Campos com valor `undefined` serão omitidos pelo Prisma, já campos explicitamente
+ * enviados como null serão aplicados conforme intenção do cliente.
+ *
+ * @param body - Body validado como ProcessoUpdateInput.
+ * @param has - Função que indica se a chave foi enviada no body.
+ * @param prazoPedidoValue - Valor calculado para prazoPedido (number | null | undefined).
+ * @param dataCriacaoValue - Valor calculado para dataCriacao (Date | undefined).
+ * @param novoStatusInterno - Novo statusInterno calculado, quando aplicável.
+ * @returns Objeto pronto para ser utilizado no campo `data` do update do Prisma.
+ */
+function buildUpdateData(
+  body: Readonly<ProcessoUpdateInput>,
+  has: (k: string) => boolean,
+  prazoPedidoValue: number | null | undefined,
+  dataCriacaoValue: Date | undefined,
+  novoStatusInterno: StatusInterno | null | undefined
+) {
+  return {
+    numero: has("numero") ? body.numero : undefined,
+    dataCriacao: dataCriacaoValue,
+    requerente: body.requerente,
+    formaEntradaId: body.formaEntradaId ?? undefined,
+    responsavelId: body.responsavelId ?? undefined,
+    situacaoId: body.situacaoId ?? undefined,
+    requeridoId: has("requeridoId") ? (body.requeridoId ?? null) : undefined,
+    encaminhamentoId: has("encaminhamentoId")
+      ? (body.encaminhamentoId ?? null)
+      : undefined,
+    pedidoManifestacaoId: has("pedidoManifestacaoId")
+      ? (body.pedidoManifestacaoId ?? null)
+      : undefined,
+    contatoPrevioId: has("contatoPrevioId") ? (body.contatoPrevioId ?? null) : undefined,
+    evidenciaId: has("evidenciaId") ? (body.evidenciaId ?? null) : undefined,
+    anonimo: body.anonimo ?? false,
+    tipoReclamacaoId: has("tipoReclamacaoId")
+      ? (body.tipoReclamacaoId ?? null)
+      : undefined,
+    observacoes: body.observacoes,
+    processoStatusId: has("processoStatusId")
+      ? (body.processoStatusId ?? null)
+      : undefined,
+    resumo: body.resumo ?? null,
+    dataConclusao: has("dataConclusao") ? (body.dataConclusao ?? null) : undefined,
+    dataEnvioPedido: has("dataEnvioPedido") ? (body.dataEnvioPedido ?? null) : undefined,
+    prazoPedido: prazoPedidoValue,
+    temaRequerimento: Array.isArray(body.temaRequerimento) ? body.temaRequerimento : [],
+    tipoRequerimento: has("tipoRequerimento")
+      ? (body.tipoRequerimento ?? null)
+      : undefined,
+    requeridoFinalId: has("requeridoFinalId")
+      ? (body.requeridoFinalId ?? null)
+      : undefined,
+    dataVencimento: has("dataVencimento") ? (body.dataVencimento ?? null) : undefined,
+    statusInterno: novoStatusInterno,
+  }
+}
+
+/**
+ * Calcula valores derivados do body (ex.: prazoPedido como number|null e dataCriacao como Date|undefined)
+ * levando em conta se a propriedade foi enviada explicitamente.
+ *
+ * @param body - Body recebido da requisição.
+ * @param has - Função que indica se a chave foi enviada no body.
+ * @returns Objeto contendo prazoPedidoValue e dataCriacaoValue.
+ */
+function computeValues(
+  body: Readonly<Record<string, unknown>>,
+  has: (k: string) => boolean
+) {
+  let prazoPedidoValue: number | null | undefined
+  if (has("prazoPedido")) {
+    prazoPedidoValue = body.prazoPedido === null ? null : Number(body.prazoPedido)
+  } else {
+    prazoPedidoValue = undefined
+  }
+
+  let dataCriacaoValue: Date | undefined
+  if (has("dataCriacao")) {
+    dataCriacaoValue = body.dataCriacao
+      ? new Date(body.dataCriacao as unknown as string)
+      : undefined
+  } else {
+    dataCriacaoValue = undefined
+  }
+
+  return { prazoPedidoValue, dataCriacaoValue }
+}
 
 // === GET ===
 /**
@@ -90,6 +316,7 @@ export async function GET(
 const handlerPUT = withApiForId<{ id: string }>(
   async ({ params, req, email, userId }) => {
     const { id } = params
+    // valida e parseia body
     const raw = await readJson(req)
     const parsed = validateOrBadRequest<ProcessoUpdateInput>(
       processoUpdateSchema,
@@ -112,135 +339,41 @@ const handlerPUT = withApiForId<{ id: string }>(
       )
     }
 
-    // Autorização RBAC + ABAC
-    const podeEditarGeral = await verificarPermissao(email, "EditarGeral", "Processo")
-    if (!podeEditarGeral) {
-      const podeEditarProprio = await verificarPermissao(
-        email,
-        "EditarProprio",
-        "Processo"
-      )
-      const ehProprio =
-        processoAtual.responsavel?.userId && userId
-          ? processoAtual.responsavel.userId === userId
-          : false
+    // autorização (RBAC + ABAC)
+    const authEarly = await authorizeEdit(email ?? "", userId ?? "", processoAtual)
+    if (authEarly) return authEarly
 
-      if (!(podeEditarProprio && ehProprio)) {
-        return Response.json({ error: "Acesso negado" }, { status: 403 })
-      }
-    }
+    // detectar alteração
+    const houveAlteracao = detectarAlteracao(
+      CAMPOS_COMPARAVEIS,
+      body as Readonly<Record<string, unknown>>,
+      processoAtual as Readonly<Record<string, unknown>>
+    )
 
-    const camposComparaveis: (keyof typeof body)[] = [
-      "requerente",
-      "formaEntradaId",
-      "responsavelId",
-      "requeridoId",
-      "situacaoId",
-      "encaminhamentoId",
-      "pedidoManifestacaoId",
-      "contatoPrevioId",
-      "evidenciaId",
-      "anonimo",
-      "tipoReclamacaoId",
-      "observacoes",
-      "temaRequerimento",
-      "tipoRequerimento",
-      "resumo",
-      "dataConclusao",
-      "dataEnvioPedido",
-      "prazoPedido",
-      "requeridoFinalId",
-    ]
-
-    const houveAlteracao = camposComparaveis.some((campo) => {
-      const valorNovo = body[campo]
-      const valorAntigo = processoAtual[campo as keyof typeof processoAtual]
-
-      if (campo === "dataConclusao" || campo === "dataEnvioPedido") {
-        const dataNova = valorNovo ? new Date(valorNovo as Date).getTime() : null
-
-        const dataAntiga = valorAntigo ? new Date(valorAntigo as Date).getTime() : null
-
-        return dataNova !== dataAntiga
-      }
-
-      if (Array.isArray(valorNovo) && Array.isArray(valorAntigo)) {
-        const novoSorted = [...valorNovo].map(String).sort((a, b) => a.localeCompare(b))
-        const antigoSorted = [...valorAntigo]
-          .map(String)
-          .sort((a, b) => a.localeCompare(b))
-        return JSON.stringify(novoSorted) !== JSON.stringify(antigoSorted)
-      }
-
-      return valorNovo !== valorAntigo
-    })
-
-    const novoStatusInterno =
+    // calcula novo status interno
+    const novoStatusInterno: StatusInterno | null =
       (processoAtual.statusInterno === "IMPORTADO" ||
         processoAtual.statusInterno === "NOVO") &&
       houveAlteracao
-        ? "EM_PROCESSAMENTO"
-        : processoAtual.statusInterno
+        ? ("EM_PROCESSAMENTO" as StatusInterno)
+        : (processoAtual.statusInterno as StatusInterno | null)
 
-    // Observação importante sobre atualização de número e dataCriacao:
-    // - Mantemos a possibilidade de alteração destes campos para futura regra de negócio.
-    // - Futuro: considerar restringir quem pode atualizar via RBAC (e.g., perfis específicos).
-    const has = (k: string) => Object.prototype.hasOwnProperty.call(body as object, k)
+    const has = (k: string) => Object.hasOwn(body as object, k)
+    const { prazoPedidoValue, dataCriacaoValue } = computeValues(
+      body as Readonly<Record<string, unknown>>,
+      has
+    )
+    const updateData = buildUpdateData(
+      body as Readonly<Record<string, unknown>>,
+      has,
+      prazoPedidoValue,
+      dataCriacaoValue,
+      novoStatusInterno
+    )
 
     const processoAtualizado = await prisma.processo.update({
       where: { id: Number(id) },
-      data: {
-        numero: has("numero") ? body.numero : undefined,
-        dataCriacao: has("dataCriacao")
-          ? body.dataCriacao
-            ? new Date(body.dataCriacao as unknown as string)
-            : undefined
-          : undefined,
-        requerente: body.requerente,
-        formaEntradaId: body.formaEntradaId ?? undefined, // campo obrigatório no modelo (não permite null)
-        responsavelId: body.responsavelId ?? undefined, // campo obrigatório no modelo (não permite null)
-        situacaoId: body.situacaoId ?? undefined, // campo obrigatório no modelo (não permite null)
-        requeridoId: has("requeridoId") ? (body.requeridoId ?? null) : undefined,
-        encaminhamentoId: has("encaminhamentoId")
-          ? (body.encaminhamentoId ?? null)
-          : undefined,
-        pedidoManifestacaoId: has("pedidoManifestacaoId")
-          ? (body.pedidoManifestacaoId ?? null)
-          : undefined,
-        contatoPrevioId: has("contatoPrevioId")
-          ? (body.contatoPrevioId ?? null)
-          : undefined,
-        evidenciaId: has("evidenciaId") ? (body.evidenciaId ?? null) : undefined,
-        anonimo: body.anonimo ?? false,
-        tipoReclamacaoId: has("tipoReclamacaoId")
-          ? (body.tipoReclamacaoId ?? null)
-          : undefined,
-        observacoes: body.observacoes,
-        processoStatusId: has("processoStatusId")
-          ? (body.processoStatusId ?? null)
-          : undefined,
-        resumo: body.resumo ?? null,
-        dataConclusao: has("dataConclusao") ? (body.dataConclusao ?? null) : undefined,
-        dataEnvioPedido: has("dataEnvioPedido")
-          ? (body.dataEnvioPedido ?? null)
-          : undefined,
-        prazoPedido: has("prazoPedido")
-          ? body.prazoPedido === null
-            ? null
-            : Number(body.prazoPedido)
-          : undefined,
-        temaRequerimento: Array.isArray(body.temaRequerimento)
-          ? body.temaRequerimento
-          : [],
-        tipoRequerimento: has("tipoRequerimento")
-          ? (body.tipoRequerimento ?? null)
-          : undefined,
-        requeridoFinalId: has("requeridoFinalId")
-          ? (body.requeridoFinalId ?? null)
-          : undefined,
-        dataVencimento: has("dataVencimento") ? (body.dataVencimento ?? null) : undefined,
-        statusInterno: novoStatusInterno,
-      },
+      data: updateData,
     })
 
     return {

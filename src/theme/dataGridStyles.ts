@@ -1,10 +1,39 @@
 import type { SxProps, Theme } from "@mui/material/styles"
 import { alpha } from "@mui/material/styles"
 
+/**
+ * Estilos compartilhados para contêineres DataGrid usando a API Sx do MUI.
+ *
+ * Esta função recebe o tema e retorna um objeto SxProps<Theme> aplicado tipicamente
+ * ao wrapper/contêiner que envolve um componente DataGrid (Material UI).
+ *
+ * Detalhes:
+ * - Encapsula estilos do container externo e regras específicas para classes
+ *   internas do DataGrid (cabeçalho, linhas, células, rodapé e overlay).
+ * - Utiliza o objeto `theme` para garantir consistência com as cores, sombras
+ *   e espaçamentos definidos no tema da aplicação.
+ * - Projetado para ser reaplicado em diferentes páginas/visões que usam DataGrid.
+ *
+ * Parâmetros:
+ * @param theme - Instância do tema do MUI (Theme) usada para derivar valores.
+ *
+ * Retorno:
+ * @returns SxProps<Theme> — objeto compatível com a prop `sx` do MUI.
+ *
+ * Exemplo de uso:
+ * <Box sx={dataGridStyles}>
+ *   <DataGrid rows={rows} columns={cols} />
+ * </Box>
+ *
+ * Observação:
+ * - Não altera comportamento do DataGrid em si; apenas provê uma camada visual
+ *   consistente para o projeto.
+ * - Desde: 1.0.0
+ */
 export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
   // Estilos do container do DataGrid
   border: `1px solid ${theme.palette.divider}`,
-  borderRadius: 1,
+  borderRadius: "8px",
   boxShadow: theme.shadows[1],
   backgroundColor: "theme.palette.background.paper",
   height: "100%",
@@ -19,14 +48,14 @@ export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
     flexGrow: 1,
     // aplicar borda arredondada também no elemento raiz para que as células/cabeçalho
     // respeitem os cantos do container pai
-    borderRadius: 1,
+    borderRadius: "8px",
     overflow: "hidden",
   },
 
   // Alguns elementos internos também precisam ter borderRadius/overflow em versões
   // diferentes do DataGrid
   "& .MuiDataGrid-main": {
-    borderRadius: 1,
+    borderRadius: "8px",
     overflow: "hidden",
   },
 

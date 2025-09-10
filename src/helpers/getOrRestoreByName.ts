@@ -25,9 +25,7 @@ export async function getOrRestoreByName(
     })
   }
 
-  if (!entity) {
-    entity = await model.create({ data: { nome } })
-  }
+  entity ??= await model.create({ data: { nome } })
 
   return entity
 }

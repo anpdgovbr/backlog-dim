@@ -4,8 +4,20 @@ import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { getToken } from "next-auth/jwt"
 
 /**
- * Retorna a URL de logout do Keycloak (SLO) baseada nas variáveis de ambiente
- * e, quando disponível, inclui `id_token_hint` do JWT do NextAuth.
+ * Gera a URL de Single Logout (SLO) do Keycloak e retorna como JSON.
+ *
+ * - Lê as variáveis de ambiente KEYCLOAK_ISSUER, KEYCLOAK_CLIENT_ID e NEXTAUTH_URL.
+ * - Recupera o token do usuário via NextAuth para incluir `id_token_hint` quando disponível.
+ * - Monta a URL de logout do Keycloak com os parâmetros necessários e retorna { url }.
+ * - Registra uma entrada de auditoria (tabela "auth", contexto "slo-url") usando `registrarAuditoria`.
+ *
+ * @param req - Requisição NextRequest recebida pelo handler (usada também para capturar cabeçalhos para auditoria).
+ * @returns NextResponse com JSON { url: string } em sucesso, ou { error: string } com status apropriado em erro.
+ *
+ * @remarks
+ * - Retorna 500 quando as variáveis de ambiente obrigatórias não estão presentes.
+ * - A função não realiza redirecionamento; apenas fornece a URL de logout para o cliente.
+ * - Qualquer exceção é capturada e resulta em resposta JSON com status 500.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -55,6 +67,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ url })
   } catch (e) {
+    console.error("Erro ao montar URL de logout:", e)
     return NextResponse.json({ error: "Falha ao montar URL de logout" }, { status: 500 })
   }
 }

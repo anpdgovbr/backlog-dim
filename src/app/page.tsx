@@ -178,7 +178,6 @@ export default function HomePage() {
         </Typography>
         <Button
           variant="outlined"
-          size="large"
           startIcon={<InfoIcon />}
           component={Link}
           href="/sobre"

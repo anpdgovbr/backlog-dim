@@ -3,6 +3,28 @@ import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 
+/**
+ * Propriedades usadas para criar um registro de auditoria.
+ *
+ * @remarks
+ * Este tipo descreve os campos aceitos pelo helper `registrarAuditoria`.
+ * Alguns campos são opcionais (por exemplo `registroId`, `userId`, `email`)
+ * pois a origem do evento pode variar (ações em lote, sistemas externos, etc).
+ *
+ * Campos relacionados a `antes` e `depois` aceitam objetos livres que serão
+ * persistidos no campo JSON do modelo `auditLog`.
+ *
+ * @property tabela - Nome da tabela/entidade auditada (ex.: "processos").
+ * @property acao - Ação auditada, conforme enum `AcaoAuditoria`.
+ * @property registroId - Identificador numérico do registro afetado (quando aplicável).
+ * @property userId - Identificador interno do usuário que realizou a ação.
+ * @property email - Email do usuário (útil para rastreabilidade em auths externas).
+ * @property contexto - Texto livre descrevendo contexto adicional (por exemplo: motivo).
+ * @property antes - Estado do recurso antes da ação (objeto serializável).
+ * @property depois - Estado do recurso depois da ação (objeto serializável).
+ * @property req - Requisição HTTP opcional; quando presente, o helper tentará
+ *                 extrair IP e User-Agent dos headers.
+ */
 export type LogProps = {
   tabela: string
   acao: AcaoAuditoria
@@ -16,13 +38,27 @@ export type LogProps = {
 }
 
 /**
- * Registra um log de auditoria no banco, enriquecendo com IP e User-Agent
- * quando um `Request` estiver disponível.
+ * Registra um log de auditoria no banco de dados.
  *
- * - IP: lido de `x-forwarded-for` ou `x-real-ip` (caso o app esteja atrás de proxy/LB).
- * - User-Agent: lido do header `user-agent`.
+ * @remarks
+ * - Enriquecimentos: quando uma `Request` é fornecida, a função tenta extrair
+ *   o IP (a partir de `x-forwarded-for` ou `x-real-ip`) e o `user-agent`.
+ * - Resiliência: erros ao persistir o log são capturados e escritos em console,
+ *   para não interferir no fluxo da aplicação (função não lança).
+ * - Persistência: grava um registro na tabela `auditLog` via Prisma.
  *
- * Observação: Em ambiente local sem proxy, o IP pode não estar presente.
+ * @param props - Propriedades do log (veja {@link LogProps}).
+ *
+ * @example
+ * await registrarAuditoria({
+ *   tabela: "processos",
+ *   acao: "UPDATE",
+ *   registroId: 123,
+ *   userId: "user-1",
+ *   email: "user@example.com",
+ *   antes: { status: "Pendente" },
+ *   depois: { status: "Concluído" },
+ * })
  */
 export async function registrarAuditoria({
   tabela,
