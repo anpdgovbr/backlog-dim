@@ -1,14 +1,13 @@
-import { getServerSession } from "next-auth/next"
-import type { Session } from "next-auth"
-import { redirect } from "next/navigation"
 import { pode as podeCore } from "@anpdgovbr/rbac-core"
+import type { PrismaLike } from "@anpdgovbr/rbac-prisma"
+import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
 import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
 import { withTTLCache } from "@anpdgovbr/rbac-provider"
-import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
-import type { PrismaLike } from "@anpdgovbr/rbac-prisma"
+import { getServerSession } from "next-auth/next"
+import { redirect } from "next/navigation"
 
-import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/config/next-auth.config"
+import { prisma } from "@/lib/prisma"
 import type { AcaoAuditoria, Prisma } from "@prisma/client"
 
 /** Provider RBAC com cache TTL (60s) baseado em Prisma. */
@@ -23,7 +22,7 @@ export const rbacProvider = withTTLCache(
 /** IdentityResolver usando NextAuth (email como identidade). */
 export const getIdentity: IdentityResolver<Request> = {
   async resolve(_req: Request) {
-    const session = (await getServerSession(authOptions)) as Session | null
+    const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       throw new Error("Usuário não autenticado")
     }

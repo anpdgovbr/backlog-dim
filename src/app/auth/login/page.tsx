@@ -1,15 +1,15 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
+import { Suspense, useEffect, useState, useRef, useCallback } from "react"
 
 import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import CircularProgress from "@mui/material/CircularProgress"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import Alert from "@mui/material/Alert"
 
 import GovBrLoading from "@/components/ui/GovBrLoading"
 
@@ -18,14 +18,31 @@ function LoginPageInner() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [providerReady, setProviderReady] = useState<boolean | null>(null)
+  const [providerMsg, setProviderMsg] = useState<string>("")
   const [redirecting, setRedirecting] = useState(false)
+  const autoStarted = useRef(false)
   const showLoading = redirecting || isLoading
 
   // Exibe erros retornados pelo NextAuth (ex.: callback falhou)
   const search = useSearchParams()
+  const hasErrorParam = !!search.get("error")
   useEffect(() => {
     const err = search.get("error")
-    if (err) setError("Falha ao realizar o login. Tente novamente.")
+    if (err) {
+      // Evita loop: não inicia login automático quando houver erro na URL
+      const map: Record<string, string> = {
+        OAuthSignin:
+          "Falha ao iniciar a autenticação (OAuthSignin). O provedor pode estar indisponível ou mal configurado.",
+        OAuthCallback:
+          "Falha ao concluir a autenticação (OAuthCallback). Tente novamente.",
+        CallbackRouteError: "Erro ao processar retorno de autenticação. Tente novamente.",
+      }
+      setError(
+        map[err] ||
+          "Falha ao iniciar a autenticação. Verifique o serviço de identidade e tente novamente."
+      )
+    }
   }, [search])
 
   // Controle de redirecionamento
@@ -41,8 +58,52 @@ function LoginPageInner() {
     }
   }, [status, router])
 
+  // Inicia automaticamente o fluxo de login quando não autenticado
+  const checkProvider = useCallback(async () => {
+    try {
+      setProviderReady(null)
+      setProviderMsg("")
+      const res = await fetch("/api/auth/status", { cache: "no-store" })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setProviderReady(false)
+        setProviderMsg(
+          body?.message ||
+            "Serviço de autenticação indisponível no momento. Tente novamente mais tarde."
+        )
+        return false
+      }
+      setProviderReady(true)
+      setProviderMsg("")
+      return true
+    } catch {
+      setProviderReady(false)
+      setProviderMsg("Não foi possível verificar o provedor de autenticação.")
+      return false
+    }
+  }, [])
+
+  useEffect(() => {
+    const run = async () => {
+      if (status !== "unauthenticated" || autoStarted.current) return
+      // Evita reentrância
+      autoStarted.current = true
+
+      // Se já veio com erro do NextAuth, apenas exibe e não tenta de novo
+      if (hasErrorParam) {
+        setProviderReady(false)
+        return
+      }
+
+      const ok = await checkProvider()
+      if (!ok) return
+      await handleLogin()
+    }
+    run()
+  }, [status, hasErrorParam, checkProvider])
+
   /**
-   * Inicia o fluxo de login OAuth no Azure AD.
+   * Inicia o fluxo de login OAuth via Keycloak.
    *
    * Observação: para provedores OAuth, quando `redirect: false` é usado,
    * `signIn` retorna um objeto com a `url` para onde devemos navegar manualmente.
@@ -54,14 +115,17 @@ function LoginPageInner() {
       setIsLoading(true)
       setError(null)
       // Usar redirect: false para capturar a URL e navegar manualmente.
-      const result = await signIn("azure-ad", {
+      const providerId = process.env.NEXT_PUBLIC_AUTH_PROVIDER || "keycloak"
+      const result = await signIn(providerId, {
         redirect: false,
         callbackUrl: "/dashboard",
       })
 
       // Erro explícito reportado pelo NextAuth
       if (result && typeof result === "object" && "error" in result && result.error) {
-        setError("Falha ao realizar o login. Tente novamente.")
+        setError(
+          "Falha ao iniciar o login com o provedor. Verifique se o Keycloak está disponível."
+        )
         setIsLoading(false)
         return
       }
@@ -85,7 +149,10 @@ function LoginPageInner() {
       setIsLoading(false)
       setError("Não foi possível iniciar o login. Tente novamente.")
     } catch (err) {
-      setError("Falha ao realizar o login. Tente novamente.")
+      console.error("Erro ao iniciar login:", err)
+      setError(
+        "Falha ao iniciar a autenticação. Verifique o serviço de identidade e tente novamente."
+      )
       setIsLoading(false)
     }
   }
@@ -124,41 +191,53 @@ function LoginPageInner() {
           backgroundColor: "background.paper",
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-          Acesso ao Sistema de Processamento
+        <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+          Acesso ao sistema
         </Typography>
 
-        {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
-            {error}
-          </Typography>
+        {providerReady === false && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {providerMsg ||
+              "Serviço de autenticação indisponível. Tente novamente em instantes."}
+          </Alert>
         )}
 
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleLogin}
-          disabled={isLoading}
-          sx={{
-            mt: 2,
-            px: 4,
-            py: 2,
-            fontSize: "1.1rem",
-            backgroundColor: "primary.main",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Entrar com Login Institucional"
-          )}
-        </Button>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {providerReady === null && !error && (
+          <Typography sx={{ mb: 2 }}>Verificando provedor de autenticação…</Typography>
+        )}
+
+        <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 1 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={async () => {
+              // Antes de tentar, valide disponibilidade
+              const ok = await checkProvider()
+              if (ok) await handleLogin()
+            }}
+            disabled={isLoading}
+          >
+            Entrar com Keycloak
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={checkProvider}
+            disabled={isLoading}
+            color="secondary"
+          >
+            Recarregar status
+          </Button>
+        </Box>
 
         <Typography variant="body2" sx={{ mt: 3, color: "text.secondary" }}>
-          Acesso restrito a usuários autorizados
+          Em caso de indisponibilidade do Keycloak, tente novamente mais tarde ou contate
+          o suporte.
         </Typography>
       </Box>
     </Container>

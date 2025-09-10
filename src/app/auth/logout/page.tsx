@@ -38,35 +38,39 @@ export default function LogoutPage() {
   }, [])
 
   /**
-   * Executa o fluxo completo de logout:
-   * 1. Define estado de loading e limpa estado de erro.
-   * 2. Envia DELETE para /api/auth/session para forçar limpeza server-side.
-   * 3. Redireciona o usuário para "/" imediatamente.
-   * 4. Invoca `signOut` do NextAuth para limpar a sessão no provedor (redirect: false).
-   *
-   * Em caso de erro, atualiza `error` com mensagem apropriada e loga o erro no console.
-   *
-   * Nota: a função é assíncrona e atualiza estados locais (`isLoading`, `error`).
+   * Executa o fluxo de logout com SLO (Keycloak):
+   * 1) Obtém URL de logout do Keycloak via API (/api/auth/slo).
+   * 2) Limpa sessão local (NextAuth) com redirect: false.
+   * 3) Redireciona para o endpoint do Keycloak (encerra SSO) e retorna ao app.
+   * Fallback: se falhar, chama signOut com callback local.
    */
   const handleLogout = async () => {
     try {
       setIsLoading(true)
       setError(null)
+      // 1) Montar URL SLO
+      let sloUrl: string | undefined
+      try {
+        const res = await fetch("/api/auth/slo")
+        if (res.ok) {
+          const data = (await res.json()) as { url?: string }
+          sloUrl = data.url
+        }
+      } catch {
+        // ignora e segue para fallback
+      }
 
-      // Forçar limpeza completa da sessão
-      await fetch("/api/auth/session", {
-        method: "DELETE",
-      })
+      // 2) Limpar sessão local
+      await signOut({ redirect: false })
 
-      // Redirecionamento imediato
-      router.push("/")
-
-      // Efetuar logout após redirecionamento
-      await signOut({
-        redirect: false,
-        callbackUrl: "/",
-      })
+      // 3) Redirecionar para Keycloak (se disponível), senão voltar ao início
+      if (sloUrl) {
+        window.location.href = sloUrl
+        return
+      }
+      router.replace("/")
     } catch (err) {
+      console.error("Erro ao sair do sistema:", err)
       setError("Falha ao sair do sistema. Tente novamente.")
     } finally {
       setIsLoading(false)

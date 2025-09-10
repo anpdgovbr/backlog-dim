@@ -115,7 +115,7 @@ export const DELETE = withApi(
 
     const antes = await prisma.responsavel.findUnique({ where: { id } })
 
-    if (!antes || !antes.active) {
+    if (!antes?.active) {
       return Response.json(
         { error: "Responsável não encontrado ou já excluído" },
         { status: 404 }

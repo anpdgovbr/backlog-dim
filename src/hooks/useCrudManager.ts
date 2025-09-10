@@ -7,12 +7,31 @@ import type { GridPaginationModel } from "@mui/x-data-grid"
 import { useNotification } from "@/context/NotificationProvider"
 import { fetcher } from "@/lib/fetcher"
 
+/**
+ * Representa um item genérico usado pelo gerenciador de CRUD de metadados.
+ *
+ * - id: identificador único do registro.
+ * - nome: rótulo exibível do registro.
+ * - active: flag que indica se o registro está ativo (opcional).
+ *
+ * Exemplo:
+ * const item: Item = { id: 1, nome: "Setor A", active: true }
+ */
 export interface Item {
   id: number
   nome: string
   active?: boolean
 }
 
+/**
+ * Estado interno do hook useCrudManager.
+ *
+ * - selectedItem: item sendo editado/novo (parcial pois pode não ter id).
+ * - itemToDelete: item pendente de exclusão (null quando não há).
+ * - openModal: se o modal de edição/criação está aberto.
+ * - loadingDelete: flag de carregamento durante a ação de exclusão.
+ * - paginationModel: modelo de paginação compatível com DataGrid (page, pageSize).
+ */
 interface CrudState {
   selectedItem: Partial<Item>
   itemToDelete: Item | null
@@ -24,25 +43,20 @@ interface CrudState {
 /**
  * Hook que encapsula lógica comum de CRUD para páginas de metadados.
  *
- * Responsabilidades:
- * - buscar a lista com paginação via SWR
- * - fornecer state para modal de edição/adicionar
- * - ações para salvar, excluir, confirmar, cancelar
- *
- * @param tableName Nome da tabela/metadado (ex.: 'Setor', 'TipoReclamacao')
- * @returns Um conjunto de itens, estado e ações para uso nos componentes de UI
- *
- * @example
- * const manager = useCrudManager('Setor')
- * manager.openAddModal()
- */
-/**
- * Hook que encapsula lógica comum de CRUD para páginas de metadados.
- *
  * Retorna dados, estado e ações para uso em componentes de listagem/edição.
  *
  * @param tableName Nome da tabela/metadado (ex.: 'Setor', 'TipoReclamacao')
- * @returns Objeto com `items`, `totalRows`, `isLoading`, estado/modal e ações (openAddModal, handleSave, confirmDelete, etc.)
+ * @returns Objeto com:
+ *  - items: lista de itens filtrada (somente ativos)
+ *  - totalRows: total de itens do backend
+ *  - isLoading: flag de carregamento do SWR
+ *  - state: selectedItem, itemToDelete, openModal, loadingDelete, paginationModel
+ *  - actions: openEditModal, openAddModal, closeModal, updateSelectedItem,
+ *             requestDelete, cancelDelete, setPaginationModel, handleSave, confirmDelete
+ *
+ * Observações:
+ * - O hook usa SWR para busca com paginação e o fetcher definido em lib/fetcher.
+ * - Não altera o comportamento do backend; erros são notificados via NotificationProvider.
  *
  * @example
  * const manager = useCrudManager('Setor')

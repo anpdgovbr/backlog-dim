@@ -7,6 +7,7 @@ import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Divider from "@mui/material/Divider"
 import Typography from "@mui/material/Typography"
+import dayjs from "dayjs"
 
 import { prisma } from "@/lib/prisma"
 import { renderJsonColor } from "@/utils/renderJsonColor"
@@ -56,7 +57,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <strong>Dispositivo:</strong> {typedLog.userAgent ?? "-"}
       </Typography>
       <Typography>
-        <strong>Data/Hora:</strong> {new Date(typedLog.criadoEm).toLocaleString("pt-BR")}
+        <strong>Data/Hora:</strong>{" "}
+        {dayjs(typedLog.criadoEm).format("DD/MM/YYYY HH:mm:ss")}
       </Typography>
 
       {typedLog.contexto && (

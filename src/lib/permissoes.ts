@@ -10,7 +10,7 @@ import type { AcaoPermissao, RecursoPermissao } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
 import { pode, toPermissionsMap, type PermissionsMap } from "@anpdgovbr/rbac-core"
-import { getPermissoesPorPerfil } from "@/helpers/permissoes-utils"
+import { getPermissoesPorPerfil } from "@/helpers/permissoesUtils"
 
 /**
  * Cache em memória para permissões por usuário (chave: email).

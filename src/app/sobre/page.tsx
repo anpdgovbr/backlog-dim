@@ -31,7 +31,7 @@ const tecnologias = [
   "Material-UI v7",
   "Prisma 6",
   "PostgreSQL",
-  "Azure AD",
+  "Keycloak (ANPD)",
   "Docker",
 ]
 
@@ -54,7 +54,7 @@ const funcionalidades = [
   {
     icon: <SecurityIcon />,
     titulo: "Segurança Robusta",
-    descricao: "Autenticação Azure AD e controle granular de permissões",
+    descricao: "Autenticação Keycloak e controle granular de permissões",
   },
   {
     icon: <SpeedIcon />,
@@ -219,7 +219,6 @@ export default function SobrePage() {
           startIcon={<ArrowBackIcon />}
           component={Link}
           href="/"
-          size="large"
         >
           Voltar ao Início
         </Button>
@@ -229,7 +228,6 @@ export default function SobrePage() {
           startIcon={<DashboardIcon />}
           component={Link}
           href="/publico"
-          size="large"
         >
           Ver Dashboard Público
         </Button>
