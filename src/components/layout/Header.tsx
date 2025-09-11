@@ -60,12 +60,7 @@ export default function Header() {
             <GovBRAvatar
               title={session?.user?.name || "Usuário"}
 
-              //name={session?.user?.name || "Usuário"}
-              //imageUrl={session?.user?.image || null}
-              // items={[
-              //   { label: "Meu perfil", href: "/perfil" },
-              //   { label: "Sair", href: "/auth/logout" },
-              // ]}
+              {/* TODO: Add name, imageUrl, and items props to GovBRAvatar when user profile functionality is implemented */}
             />
           ) : (
             <GovBRSignIn
