@@ -35,7 +35,9 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        env:
+          NODE_ENV: development
+        run: npm ci --no-audit --no-fund --include=dev
 
       # Gerar cliente Prisma antes do build
       - run: npx prisma generate
