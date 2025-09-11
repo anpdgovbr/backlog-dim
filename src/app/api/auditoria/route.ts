@@ -3,7 +3,8 @@ import type { Prisma } from "@prisma/client"
 
 import { NextResponse } from "next/server"
 
-import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import { AcaoAuditoria, isAcaoAuditoria } from "@anpdgovbr/shared-types"
+import type { AcaoAuditoria as PrismaAcaoAuditoria } from "@prisma/client"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
@@ -96,16 +97,20 @@ export const GET = withApi(
 
     // 🔍 Filtros
     const acaoParam = searchParams.get("acao")
-    const acao =
-      acaoParam && Object.values(AcaoAuditoria).includes(acaoParam as AcaoAuditoria)
-        ? (acaoParam as AcaoAuditoria)
-        : undefined
+    const acaoUpper = acaoParam?.toUpperCase() ?? ""
+    const acao = isAcaoAuditoria(acaoUpper)
+      ? (acaoUpper as unknown as PrismaAcaoAuditoria)
+      : undefined
 
     const tabela = searchParams.get("tabela") || undefined
     const email = searchParams.get("email") || undefined
     const dataInicial = searchParams.get("dataInicial")
     const dataFinal = searchParams.get("dataFinal")
-    const search = searchParams.get("search")?.toLowerCase() || ""
+    const searchRaw = searchParams.get("search") || ""
+    const search = searchRaw.toLowerCase()
+    const acaoFromSearch = isAcaoAuditoria(searchRaw.toUpperCase())
+      ? (searchRaw.toUpperCase() as unknown as PrismaAcaoAuditoria)
+      : undefined
 
     const where: Prisma.AuditLogWhereInput = {
       ...(acao && { acao }),
@@ -123,7 +128,7 @@ export const GET = withApi(
         OR: [
           { tabela: { contains: search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
-          { acao: { equals: search as AcaoAuditoria } },
+          ...(acaoFromSearch ? [{ acao: { equals: acaoFromSearch } }] : []),
         ],
       }),
     }

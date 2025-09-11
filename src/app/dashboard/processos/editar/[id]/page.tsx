@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { TipoRequerimento } from "@prisma/client"
+import type { TipoRequerimento } from "@anpdgovbr/shared-types"
 import { isEqual } from "lodash"
 import { useForm } from "react-hook-form"
 
