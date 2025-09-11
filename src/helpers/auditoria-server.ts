@@ -1,5 +1,6 @@
 // lib/auditoria-server.ts
 import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import type { AcaoAuditoria as PrismaAcaoAuditoria } from "@prisma/client"
 
 import { prisma } from "@/lib/prisma"
 
@@ -86,7 +87,7 @@ export async function registrarAuditoria({
     await prisma.auditLog.create({
       data: {
         tabela,
-        acao,
+        acao: acao as unknown as PrismaAcaoAuditoria,
         registroId,
         userId,
         email,

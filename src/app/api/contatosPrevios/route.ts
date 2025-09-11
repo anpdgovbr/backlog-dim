@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista contatos prévios ativos (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de contatos prévios.
  * @example GET /api/contatosPrevios
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.

@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista tipos de reclamação ativos (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de tipos ativos.
  * @example GET /api/tiposReclamacao
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.

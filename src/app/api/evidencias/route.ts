@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista evidências ativas (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de evidências ativas.
  * @example GET /api/evidencias
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.

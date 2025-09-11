@@ -7,8 +7,9 @@
  * Quando `options.permissao` é informado, a rota só é executada se o par
  * `{ acao, recurso }` estiver permitido para o usuário autenticado.
  *
- * Futuro: unificação com `withApiSlim`. `withApi` deve suportar cenários "slim"
- * (sem sessão completa) por meio de opções, permitindo deprecar `withApiSlim`.
+ * Unificação: `withApi` passou a cobrir cenários "slim" (sem sessão completa)
+ * via opções internas de autorização/auditoria. O wrapper `withApiSlim` foi
+ * removido do projeto e suas referências migradas para `withApi`.
  */
 // lib/withApi.ts
 import { getServerSession } from "next-auth/next"

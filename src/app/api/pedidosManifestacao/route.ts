@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista pedidos de manifestação ativos (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de pedidos de manifestação.
  * @example GET /api/pedidosManifestacao
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.

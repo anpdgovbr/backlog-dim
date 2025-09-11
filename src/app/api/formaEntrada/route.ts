@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista formas de entrada ativas (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de formas de entrada ativas.
  * @example
  * GET /api/formaEntrada

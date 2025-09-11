@@ -10,6 +10,14 @@ on:
 env:
   # DATABASE_URL necessário para Prisma generate no build
   DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
+  # Desabilita hooks do Husky no ambiente de CI
+  HUSKY: "0"
+  # Força instalação de devDeps e reduz ruído do npm
+  NODE_ENV: development
+  npm_config_production: "false"
+  NPM_CONFIG_FUND: "false"
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_PROGRESS: "false"
 
 jobs:
   analyze:
@@ -32,18 +40,17 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      # Instalar dependências de forma robusta
-      - name: Install dependencies
+      - name: Install dependencies (ci with safe fallback)
         run: |
-          if npm ci --dry-run > /dev/null 2>&1; then
-            npm ci
+          echo "Instalando dependências com npm ci..."
+          if npm ci --no-audit --no-fund --include=dev; then
+            echo "npm ci concluído."
           else
-            echo "Lock file dessincronizado, atualizando..."
-            npm install
+            echo "npm ci falhou; tentando npm install (atualiza lock no runner)..."
+            npm install --no-audit --no-fund --legacy-peer-deps --include=dev
           fi
 
-      # Gerar cliente Prisma antes do build
-      - run: npx prisma generate
+      # Não gerar Prisma aqui; o script de build já cuida disso
 
       - run: npm run build --if-present
 

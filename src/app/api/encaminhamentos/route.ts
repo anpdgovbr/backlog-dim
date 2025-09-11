@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista encaminhamentos ativos (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de encaminhamentos ativos.
  * @example GET /api/encaminhamentos
  * @remarks Permissão {acao: "Exibir", recurso: "Metadados"}.

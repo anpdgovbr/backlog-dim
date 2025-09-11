@@ -1,5 +1,5 @@
-import type { AuditLog } from "@prisma/client"
 import type { JsonObject } from "@prisma/client/runtime/library"
+import type { AuditLogDto } from "@anpdgovbr/shared-types"
 
 import { notFound } from "next/navigation"
 
@@ -12,7 +12,7 @@ import dayjs from "dayjs"
 import { prisma } from "@/lib/prisma"
 import { renderJsonColor } from "@/utils/renderJsonColor"
 
-type AuditLogTyped = Omit<AuditLog, "antes" | "depois"> & {
+type AuditLogTyped = Omit<AuditLogDto, "antes" | "depois"> & {
   antes: JsonObject | null
   depois: JsonObject | null
 }
@@ -27,7 +27,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   if (!log) return notFound()
 
   const typedLog: AuditLogTyped = {
-    ...log,
+    id: log.id,
+    tabela: log.tabela,
+    acao: log.acao as unknown as AuditLogDto["acao"],
+    registroId: log.registroId ?? undefined,
+    userId: log.userId ?? undefined,
+    email: log.email ?? undefined,
+    contexto: log.contexto ?? undefined,
+    ip: log.ip ?? undefined,
+    userAgent: log.userAgent ?? undefined,
+    criadoEm: log.criadoEm,
     antes: log.antes as unknown as JsonObject,
     depois: log.depois as unknown as JsonObject,
   }

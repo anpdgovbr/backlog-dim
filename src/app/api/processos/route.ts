@@ -23,7 +23,10 @@ import { processoCreateSchema } from "@/schemas/server/Processo.zod"
  * - A sequência é derivada da contagem de registros no mês atual e, portanto, não é totalmente à prova de condições de corrida
  *   em cenários de alta concorrência. Para garantir unicidade em ambientes concorrentes, considere usar mecanismo de sequência
  *   do banco de dados ou uma transação/lock apropriado.
+ * - O padrão oficial de numeração da organização ainda será incorporado aqui assim que definido. Até lá, não altere este
+ *   comportamento sem alinhar com a equipe responsável e atualizar a documentação.
  *
+ * @todo Integrar política de numeração oficial (sequence/lock ou serviço dedicado), quando definida pela organização.
  * @returns Promise<string> número do processo no formato "PYYYYMM-NNNN" (ex.: "P202504-0001").
  */
 async function gerarNumeroProcesso(): Promise<string> {
@@ -147,10 +150,22 @@ export const GET = withApi(
    */
   async ({ req }) => {
     const { searchParams } = new URL(req.url)
-    const page = Number(searchParams.get("page")) || 1
-    const pageSize = Number(searchParams.get("pageSize")) || 10
-    const orderBy = searchParams.get("orderBy") || "dataCriacao"
+    // Normalização de paginação e ordenação
+    const rawPage = Number(searchParams.get("page"))
+    const rawPageSize = Number(searchParams.get("pageSize"))
+    const rawOrderBy = searchParams.get("orderBy") || "dataCriacao"
     const ascending = searchParams.get("ascending") === "true"
+
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1
+    const PAGE_SIZE_DEFAULT = 10
+    const PAGE_SIZE_MAX = 100
+    const pageSize = Number.isFinite(rawPageSize)
+      ? Math.min(Math.max(rawPageSize, 1), PAGE_SIZE_MAX)
+      : PAGE_SIZE_DEFAULT
+
+    // Whitelist de campos de ordenação válidos
+    const ORDERABLE_FIELDS = new Set(["dataCriacao", "numero", "requerente"])
+    const orderField = ORDERABLE_FIELDS.has(rawOrderBy) ? rawOrderBy : "dataCriacao"
     const search = searchParams.get("search")?.toLowerCase() || ""
     const responsavelUserId = searchParams.get("responsavelUserId")
 
@@ -186,7 +201,7 @@ export const GET = withApi(
         where: baseWhere,
         skip,
         take,
-        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+        orderBy: { [orderField]: ascending ? "asc" : "desc" },
         include: {
           formaEntrada: { select: { id: true, nome: true } },
           responsavel: { select: { id: true, nome: true, userId: true } },
