@@ -48,8 +48,7 @@ jobs:
             npm install --no-audit --no-fund --legacy-peer-deps
           fi
 
-      # Gerar cliente Prisma antes de qualquer checagem (sem auto-instalar via npx)
-      - run: node node_modules/prisma/build/index.js generate
+      # Não gerar Prisma aqui; o script de build já cuida disso
 
       # Checagens estáticas primeiro (mais rápidas)
       - run: npm run type-check

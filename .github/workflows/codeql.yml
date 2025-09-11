@@ -50,8 +50,7 @@ jobs:
             npm install --no-audit --no-fund --legacy-peer-deps
           fi
 
-      # Gerar cliente Prisma antes do build (sem auto-instalar via npx)
-      - run: node node_modules/prisma/build/index.js generate
+      # Não gerar Prisma aqui; o script de build já cuida disso
 
       - run: npm run build --if-present
 

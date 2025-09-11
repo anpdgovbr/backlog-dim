@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/backlog-dim",
-  "version": "0.4.15",
+  "version": "0.4.16",
   "private": true,
   "type": "module",
   "description": "Aplicação para gerenciar processos relacionados à peticionamento e denúncias sobre a LGPD",
@@ -31,7 +31,7 @@
     "url": "https://github.com/anpdgovbr/backlog-dim/issues"
   },
   "scripts": {
-    "build": "npx prisma generate && next build",
+    "build": "prisma generate && next build",
     "build-routes": "node scripts/generateDevRoutes.cjs",
     "build-routes:verbose": "node scripts/generateDevRoutes.cjs --verbose",
     "bump": "node scripts/bump-version.cjs",
