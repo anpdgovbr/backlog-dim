@@ -32,14 +32,16 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      # Instalar dependências de forma robusta
+      # Instalar dependências (fail-fast se lockfile estiver desincronizado)
       - name: Install dependencies
         run: |
-          if npm ci --dry-run > /dev/null 2>&1; then
-            npm ci
+          echo "Verificando lockfile com npm ci --dry-run..."
+          if npm ci --dry-run --no-audit --no-fund > /dev/null 2>&1; then
+            npm ci --no-audit --no-fund
           else
-            echo "Lock file dessincronizado, atualizando..."
-            npm install
+            echo "❌ package-lock.json desincronizado com package.json."
+            echo "   Atualize localmente com 'npm install' e faça commit do package-lock.json."
+            exit 1
           fi
 
       # Gerar cliente Prisma antes do build

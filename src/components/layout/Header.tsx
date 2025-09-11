@@ -57,11 +57,7 @@ export default function Header() {
           }}
         >
           {status === "authenticated" ? (
-            <GovBRAvatar
-              title={session?.user?.name || "Usuário"}
-
-              {/* TODO: Add name, imageUrl, and items props to GovBRAvatar when user profile functionality is implemented */}
-            />
+            <GovBRAvatar title={session?.user?.name || "Usuário"} />
           ) : (
             <GovBRSignIn
               variant="outlined"
