@@ -10,6 +10,9 @@ env:
   DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
   # Desabilita hooks do Husky no ambiente de CI
   HUSKY: "0"
+  # Garante instalação de devDependencies em qualquer ambiente
+  NODE_ENV: development
+  npm_config_production: "false"
 
 jobs:
   build:
@@ -33,9 +36,7 @@ jobs:
             ${{ runner.os }}-prisma-
 
       - name: Install dependencies
-        env:
-          NODE_ENV: development
-        run: npm ci --no-audit --no-fund --include=dev
+        run: npm ci --no-audit --no-fund --omit=dev=false
 
       # Gerar cliente Prisma antes de qualquer checagem
       - run: npx prisma generate
