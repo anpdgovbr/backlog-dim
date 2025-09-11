@@ -41,11 +41,11 @@ jobs:
       - name: Install dependencies (ci with safe fallback)
         run: |
           echo "Instalando dependências com npm ci..."
-          if npm ci --no-audit --no-fund; then
+          if npm ci --no-audit --no-fund --include=dev; then
             echo "npm ci concluído."
           else
             echo "npm ci falhou; tentando npm install (atualiza lock no runner)..."
-            npm install --no-audit --no-fund --legacy-peer-deps
+            npm install --no-audit --no-fund --legacy-peer-deps --include=dev
           fi
 
       # Não gerar Prisma aqui; o script de build já cuida disso
