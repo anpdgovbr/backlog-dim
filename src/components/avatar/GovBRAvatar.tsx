@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation"
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined"
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
 
+import { GovBRButton } from "@anpdgovbr/shared-ui"
+
 /**
  * Interface para a extensão global carregada pelo script gov.br.
  *
@@ -98,7 +100,7 @@ export default function GovBRAvatar({
 
   return (
     <div ref={menuRef} style={{ position: "relative" }}>
-      <button
+      <GovBRButton
         style={{ height: `${size + 8}px` }}
         className="br-sign-in"
         type="button"
@@ -138,7 +140,7 @@ export default function GovBRAvatar({
         )}
         {items.length > 0 &&
           (menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />)}
-      </button>
+      </GovBRButton>
 
       {items.length > 0 && (
         <div
@@ -154,7 +156,7 @@ export default function GovBRAvatar({
           }}
         >
           {items.map((item) => (
-            <button
+            <GovBRButton
               key={item.label}
               className="br-item"
               role="menuitem"
@@ -171,7 +173,7 @@ export default function GovBRAvatar({
               }}
             >
               {item.label}
-            </button>
+            </GovBRButton>
           ))}
         </div>
       )}
