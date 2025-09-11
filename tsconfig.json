@@ -21,6 +21,7 @@
         "name": "next"
       }
     ],
+    "types": ["node", "vitest/globals", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
       "@/config/*": ["./src/config/*"],
