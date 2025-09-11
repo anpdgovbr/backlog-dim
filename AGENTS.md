@@ -135,6 +135,25 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
 - **Foco:** Lógica de negócio, fluxos de autenticação e tratamento de erros
 - **Validação:** Certifique-se que `npm run test` e `npm run type-check` passem antes do PR
 
+### Mocks e Factories para Testes (Recomendado)
+
+- Use as factories em `src/test/factories.ts` para criar dados estáveis:
+  - `makePerfil`, `makePermissao`, `makeProcesso`, `makeUser`, `makeResponsavel`, `makeSituacao`, `makeFormaEntrada`.
+- Para Prisma, prefira o mock utilitário centralizado:
+  - `createPrismaMock()` e `mockTransactionOnce()` de `src/test/prisma-mock.ts`.
+  - Exemplo:
+    ```ts
+    const hoisted = vi.hoisted(() => ({ prisma: createPrismaMock() }))
+    vi.mock("@/lib/prisma", () => ({ prisma: hoisted.prisma }))
+    hoisted.prisma.processo.findMany.mockResolvedValueOnce([ makeProcesso() ])
+    ```
+- Para reduzir repetição ao mockar wrappers de rota (`withApi`, `withApiForId`), use o harness em `src/test/route-harness.ts`:
+  - `vi.mock("@/lib/withApi", () => withApiMockModule())`
+  - `vi.mock("@anpdgovbr/rbac-next", () => withApiRbacNextMockModule())`
+  - Esses mocks injetam identidade de teste (`email: tester@example.com`) e retornam sempre `Response`.
+
+Observação: Nunca use `any` nos testes. Utilize `unknown` com narrowing quando necessário.
+
 ## Diretrizes de Commit e Pull Request
 
 - **Conventional Commits:** `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`

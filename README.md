@@ -29,6 +29,7 @@ O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvol
   - [Passo a Passo](#passo-a-passo)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
 - [Scripts Disponíveis](#-scripts-disponíveis)
+- [Testes e Mocks](#-testes-e-mocks)
 - [Gestão do Banco de Dados com Prisma](#-gestão-do-banco-de-dados-com-prisma)
 - [Fluxo de CI/CD](#-fluxo-de-cicd)
 - [Padrões de Código](#-padrões-de-código)
@@ -308,6 +309,17 @@ Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH
 | `npm run prisma:migrate`       | Cria e aplica nova migração.                               |
 | `npm run prisma:push`          | Sincroniza schema com banco (desenvolvimento).             |
 | `npm run prisma:studio`        | Abre Prisma Studio diretamente.                            |
+
+## 🧪 Testes e Mocks
+
+- Framework: Vitest. Testes co-localizados em `src/**/*.test.ts`.
+- Alias: `@` → `src` (ver `vitest.config.ts`).
+- Utilize as utilidades padronizadas:
+  - `src/test/factories.ts` — `makeProcesso`, `makePerfil`, `makeUser`, `makeResponsavel`, `makeSituacao`, `makeFormaEntrada`.
+  - `src/test/prisma-mock.ts` — `createPrismaMock()`, `mockTransactionOnce()`.
+  - `src/test/route-harness.ts` — `withApiMockModule()`, `withApiRbacNextMockModule()`.
+
+Mais detalhes: `doc/testing.md`.
 
 ## 🗄️ Gestão do Banco de Dados
 
