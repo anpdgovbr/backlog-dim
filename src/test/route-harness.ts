@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server"
  * vi.mock("@/lib/withApi", () => withApiMockModule())
  */
 export function withApiMockModule() {
-  function withApi<TParams extends object = object, TExtra = object>(
+  function withApi<TParams extends object = object, _TExtra = object>(
     handler: (ctx: {
       req: Request | NextRequest
       params: TParams
@@ -27,7 +27,7 @@ export function withApiMockModule() {
     }
   }
 
-  function withApiForId<TParams extends object = object, TExtra = object>(
+  function withApiForId<TParams extends object = object, _TExtra = object>(
     handler: (ctx: {
       req: Request | NextRequest
       params: TParams
@@ -61,7 +61,7 @@ export function withApiMockModule() {
  * vi.mock("@anpdgovbr/rbac-next", () => withApiRbacNextMockModule())
  */
 export function withApiRbacNextMockModule() {
-  function withApi<TParams extends object = object, TExtra = object>(
+  function withApi<TParams extends object = object, _TExtra = object>(
     handler: (ctx: {
       req: Request
       params: TParams

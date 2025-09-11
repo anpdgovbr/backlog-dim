@@ -1,5 +1,5 @@
+import type { StatusInterno as SharedStatusInterno } from "@anpdgovbr/shared-types"
 import {
-  StatusInterno as SharedStatusInterno,
   STATUS_INTERNO_VALUES,
   isStatusInterno as isSharedStatusInterno,
 } from "@anpdgovbr/shared-types"

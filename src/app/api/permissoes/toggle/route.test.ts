@@ -30,7 +30,7 @@ vi.mock("@/rbac/server", () => ({
 // prisma já mockado acima
 
 import { POST } from "./route"
-const rbac = await import("@/rbac/server")
+await import("@/rbac/server")
 
 describe("/api/permissoes/toggle POST", () => {
   beforeEach(() => {
