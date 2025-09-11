@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista responsáveis ativos.
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de responsáveis (inclui relação `user`).
  * @example GET /api/responsaveis
  * @remarks Requer permissão {acao: "Exibir", recurso: "Responsavel"}.

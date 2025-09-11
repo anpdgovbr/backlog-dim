@@ -154,6 +154,48 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
 
 Observação: Nunca use `any` nos testes. Utilize `unknown` com narrowing quando necessário.
 
+## Paginação e Ordenação (Padrão)
+
+Ao adicionar endpoints com paginação/ordenação, seguir clamp/whitelist abaixo:
+
+```ts
+// Normalização de query params
+const rawPage = Number(searchParams.get("page"))
+const rawPageSize = Number(searchParams.get("pageSize"))
+const rawOrderBy = searchParams.get("orderBy") || "criadoEm" // ajuste o default
+const ascending = searchParams.get("ascending") === "true"
+
+const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1
+const PAGE_SIZE_DEFAULT = 10
+const PAGE_SIZE_MAX = 100
+const pageSize = Number.isFinite(rawPageSize)
+  ? Math.min(Math.max(rawPageSize, 1), PAGE_SIZE_MAX)
+  : PAGE_SIZE_DEFAULT
+
+// Campos permitidos para ordenação (ajuste conforme o modelo)
+const ORDERABLE_FIELDS = new Set(["criadoEm", "tabela", "email"]) // exemplo
+const orderField = ORDERABLE_FIELDS.has(rawOrderBy) ? rawOrderBy : "criadoEm"
+
+// Uso no Prisma
+const rows = await prisma.entidade.findMany({
+  where,
+  orderBy: { [orderField]: ascending ? "asc" : "desc" },
+  skip: (page - 1) * pageSize,
+  take: pageSize,
+})
+```
+
+Motivação: impedir erros por `orderBy` inválido, garantir limites razoáveis de paginação e manter comportamento previsível.
+
+## Adapters de Enums (shared-types → Prisma)
+
+- O shared-types é a fonte de verdade dos enums de domínio.
+- No backend, converta apenas na borda do Prisma usando adapters em `src/lib/adapters`.
+- Disponível:
+  - `statusInterno`: `toPrismaStatus`, `fromPrismaStatus` (usa helpers do `@anpdgovbr/shared-types`).
+  - `tipoRequerimento`: `toPrismaTipoRequerimento`, `fromPrismaTipoRequerimento` (provisório até helpers no shared-types).
+- Preferir sempre trabalhar com os tipos do shared-types nas regras de negócio e mapear para o Prisma apenas ao persistir/carregar.
+
 ## Diretrizes de Commit e Pull Request
 
 - **Conventional Commits:** `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`

@@ -14,6 +14,7 @@ export function createPrismaMock() {
       "findFirst",
       "findUnique",
       "update",
+      "groupBy",
     ]),
     user: createModelMock(["findUnique", "update"]),
     perfil: createModelMock(["findUnique"]),

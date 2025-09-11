@@ -85,6 +85,9 @@ describe("/api/importar-processos POST", () => {
     const json = (await res.json()) as { sucesso: number; falhas: string[] }
     expect(json.sucesso).toBe(1)
     expect(json.falhas.length).toBe(0)
+    const createCall = (tx.processo.create as unknown as ReturnType<typeof vi.fn>).mock
+      .calls[0]?.[0] as { data: Record<string, unknown> }
+    expect(createCall.data.statusInterno).toBeDefined()
   })
 
   it("400 quando processo já existe (duplicado)", async () => {
@@ -121,5 +124,42 @@ describe("/api/importar-processos POST", () => {
     const json = (await res.json()) as { sucesso: number; falhas: string[] }
     expect(json.sucesso).toBe(0)
     expect(json.falhas.length).toBe(1)
+  })
+
+  it("usa statusInterno do payload quando fornecido", async () => {
+    const tx = {
+      processo: {
+        findFirst: vi.fn().mockResolvedValue(null),
+        create: vi.fn().mockResolvedValue(makeProcesso({ id: 11 })),
+      },
+    }
+    mockTransactionOnce(
+      hoisted.prisma as unknown as { $transaction: ReturnType<typeof vi.fn> },
+      tx
+    )
+
+    const req = new Request("http://local/api/importar-processos", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        processos: [
+          {
+            responsavelNome: "R1",
+            numeroProcesso: "P202401-0002",
+            dataCriacao: "01/01/2024",
+            situacaoNome: "S1",
+            formaEntradaNome: "FE1",
+            anonimoStr: "não",
+            requerenteNome: "ACME",
+            statusInterno: "NOVO",
+          },
+        ],
+      }),
+    })
+    const res = await POST(req as unknown as never)
+    expect(res.status).toBe(200)
+    const createCall = (tx.processo.create as unknown as ReturnType<typeof vi.fn>).mock
+      .calls[0]?.[0] as { data: Record<string, unknown> }
+    expect(createCall.data.statusInterno).toBeDefined()
   })
 })

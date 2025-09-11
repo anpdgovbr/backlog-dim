@@ -11,7 +11,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Registra uma entrada de auditoria no banco.
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON `{ success: true }` em caso de sucesso.
  * @example
  * POST /api/auditoria
@@ -69,7 +69,7 @@ export const POST = withApi(
 /**
  * Lista logs de auditoria com paginação e filtros.
  *
- * @see {@link withApiSlim}
+ * @see {@link withApi}
  * @returns JSON com `{ total, dados }`.
  * @example GET /api/auditoria?page=1&pageSize=20&acao=CREATE
  * @remarks Protegido por RBAC: {acao: "Exibir", recurso: "Auditoria"}.
