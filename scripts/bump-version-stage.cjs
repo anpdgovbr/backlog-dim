@@ -2,6 +2,53 @@ const fs = require("fs")
 const path = require("path")
 const { execSync } = require("child_process")
 
+// Verificações de segurança antes de fazer bump
+function shouldSkipBump() {
+  try {
+    // 1. Verificar se é um commit que afeta funcionalidade
+    const lastCommitMsg = execSync("git log -1 --pretty=%B", { encoding: "utf-8" }).trim()
+    const skipPatterns = /^(docs?|chore|style|refactor|test|ci)(\(.*\))?:/i
+
+    if (skipPatterns.test(lastCommitMsg)) {
+      console.log(
+        "⏭️ Pulando bump - commit não afeta funcionalidade:",
+        lastCommitMsg.split("\n")[0]
+      )
+      return true
+    }
+
+    // 2. Verificar se é uma branch de feature/hotfix (opcional)
+    const branch = execSync("git rev-parse --abbrev-ref HEAD", {
+      encoding: "utf-8",
+    }).trim()
+    const skipBranches = /^(feature|feat|fix|hotfix|bugfix)\//i
+
+    if (skipBranches.test(branch)) {
+      console.log(`⏭️ Pulando bump - branch de desenvolvimento: ${branch}`)
+      return true
+    }
+
+    // 3. Verificar se já existe alteração pendente no package.json
+    const status = execSync("git status --porcelain package.json", {
+      encoding: "utf-8",
+    }).trim()
+    if (status.includes("M  package.json") || status.includes(" M package.json")) {
+      console.log("⏭️ Pulando bump - package.json já foi modificado neste commit")
+      return true
+    }
+
+    return false
+  } catch (error) {
+    console.log("⚠️ Erro nas verificações, prosseguindo com bump:", error.message)
+    return false
+  }
+}
+
+// Sair se devemos pular o bump
+if (shouldSkipBump()) {
+  process.exit(0)
+}
+
 // Caminho absoluto do package.json
 const packagePath = path.resolve(__dirname, "../package.json")
 const pkgRaw = fs.readFileSync(packagePath, "utf-8")
