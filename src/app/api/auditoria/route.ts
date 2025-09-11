@@ -78,11 +78,21 @@ export const GET = withApi(
   async ({ req }) => {
     const { searchParams } = new URL(req.url)
 
-    // 🧾 Paginação e ordenação
-    const page = parseInt(searchParams.get("page") || "1")
-    const pageSize = parseInt(searchParams.get("pageSize") || "10")
-    const orderBy = searchParams.get("orderBy") || "criadoEm"
+    // 🧾 Paginação e ordenação (normalização + whitelist)
+    const rawPage = Number(searchParams.get("page"))
+    const rawPageSize = Number(searchParams.get("pageSize"))
+    const rawOrderBy = searchParams.get("orderBy") || "criadoEm"
     const ascending = searchParams.get("ascending") === "true"
+
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1
+    const PAGE_SIZE_DEFAULT = 10
+    const PAGE_SIZE_MAX = 100
+    const pageSize = Number.isFinite(rawPageSize)
+      ? Math.min(Math.max(rawPageSize, 1), PAGE_SIZE_MAX)
+      : PAGE_SIZE_DEFAULT
+
+    const ORDERABLE_FIELDS = new Set(["criadoEm", "tabela", "email"]) // campos mais úteis
+    const orderField = ORDERABLE_FIELDS.has(rawOrderBy) ? rawOrderBy : "criadoEm"
 
     // 🔍 Filtros
     const acaoParam = searchParams.get("acao")
@@ -122,7 +132,7 @@ export const GET = withApi(
       prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         where,
-        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+        orderBy: { [orderField]: ascending ? "asc" : "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),

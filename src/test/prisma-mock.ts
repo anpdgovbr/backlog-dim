@@ -7,11 +7,57 @@ import { createModelMock } from "./factories"
  */
 export function createPrismaMock() {
   const prisma = {
-    processo: createModelMock(["count", "create", "findMany", "findFirst", "update"]),
+    processo: createModelMock([
+      "count",
+      "create",
+      "findMany",
+      "findFirst",
+      "findUnique",
+      "update",
+    ]),
     user: createModelMock(["findUnique", "update"]),
     perfil: createModelMock(["findUnique"]),
     permissao: createModelMock(["findUnique", "upsert"]),
-    auditLog: createModelMock(["create"]),
+    auditLog: createModelMock(["create", "findMany", "count"]),
+    // Meta delegates comuns
+    situacao: createModelMock(["findMany", "create", "update", "findUnique", "count"]),
+    encaminhamento: createModelMock([
+      "findMany",
+      "create",
+      "update",
+      "findUnique",
+      "count",
+    ]),
+    pedidoManifestacao: createModelMock([
+      "findMany",
+      "create",
+      "update",
+      "findUnique",
+      "count",
+    ]),
+    contatoPrevio: createModelMock([
+      "findMany",
+      "create",
+      "update",
+      "findUnique",
+      "count",
+    ]),
+    evidencia: createModelMock(["findMany", "create", "update", "findUnique", "count"]),
+    formaEntrada: createModelMock([
+      "findMany",
+      "create",
+      "update",
+      "findUnique",
+      "count",
+    ]),
+    responsavel: createModelMock(["findMany", "create", "update", "findUnique", "count"]),
+    tipoReclamacao: createModelMock([
+      "findMany",
+      "create",
+      "update",
+      "findUnique",
+      "count",
+    ]),
     $transaction: vi.fn(),
   }
   return prisma

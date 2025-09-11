@@ -1,5 +1,6 @@
+import type { StatusInterno as SharedStatusInterno } from "@anpdgovbr/shared-types"
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
-import type { StatusInterno } from "@anpdgovbr/shared-types"
+import { toPrismaStatus } from "@/lib/adapters/statusInterno"
 
 import { prisma } from "@/lib/prisma"
 import { verificarPermissao } from "@/lib/permissoes"
@@ -162,7 +163,7 @@ function buildUpdateData(
   has: (k: string) => boolean,
   prazoPedidoValue: number | null | undefined,
   dataCriacaoValue: Date | undefined,
-  novoStatusInterno: StatusInterno | null | undefined
+  novoStatusInterno: SharedStatusInterno | null | undefined
 ) {
   return {
     numero: has("numero") ? body.numero : undefined,
@@ -200,7 +201,7 @@ function buildUpdateData(
       ? (body.requeridoFinalId ?? null)
       : undefined,
     dataVencimento: has("dataVencimento") ? (body.dataVencimento ?? null) : undefined,
-    statusInterno: novoStatusInterno,
+    statusInterno: toPrismaStatus(novoStatusInterno ?? undefined),
   }
 }
 
@@ -248,8 +249,8 @@ const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
 
-    const processo = await prisma.processo.findFirst({
-      where: { id: Number(id), active: true },
+    const processo = await prisma.processo.findUnique({
+      where: { id: Number(id) },
       include: {
         formaEntrada: true,
         responsavel: true,
@@ -263,7 +264,7 @@ const handlerGET = withApiForId<{ id: string }>(
       },
     })
 
-    if (!processo) {
+    if (!processo || !processo.active) {
       return Response.json({ error: "Processo não encontrado" }, { status: 404 })
     }
 
@@ -351,12 +352,12 @@ const handlerPUT = withApiForId<{ id: string }>(
     )
 
     // calcula novo status interno
-    const novoStatusInterno: StatusInterno | null =
-      (processoAtual.statusInterno === "IMPORTADO" ||
-        processoAtual.statusInterno === "NOVO") &&
+    const novoStatusInterno: SharedStatusInterno | null =
+      (processoAtual.statusInterno === ("IMPORTADO" as SharedStatusInterno) ||
+        processoAtual.statusInterno === ("NOVO" as SharedStatusInterno)) &&
       houveAlteracao
-        ? ("EM_PROCESSAMENTO" as StatusInterno)
-        : (processoAtual.statusInterno as StatusInterno | null)
+        ? ("EM_PROCESSAMENTO" as SharedStatusInterno)
+        : (processoAtual.statusInterno as SharedStatusInterno | null)
 
     const has = (k: string) => Object.hasOwn(body as object, k)
     const { prazoPedidoValue, dataCriacaoValue } = computeValues(

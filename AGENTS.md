@@ -201,3 +201,6 @@ Observação: Nunca use `any` nos testes. Utilize `unknown` com narrowing quando
 - Prefira não alterar comportamento global sem testes/CI
 - Quando o requisito for ambíguo, proponha 1–2 alternativas pequenas
 - Sempre inclua comandos de validação que você executou
+
+Nota sobre numeração de processos:
+- A geração do número de processo (`PYYYYMM-NNNN`) está implementada em `src/app/api/processos/route.ts` como solução provisória. O padrão oficial da organização ainda será incorporado. Não altere o algoritmo sem alinhamento com a equipe e atualização de docs. Veja `doc/processo-numero.md`.

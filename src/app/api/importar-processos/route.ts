@@ -68,7 +68,9 @@ export const POST = withApi(
 
             if (!numeroProcesso) throw new Error("Número do processo ausente")
 
-            const anonimo = anonimoStr.toLowerCase() === "sim"
+            // Trata ausência de anonimoStr como "não" por padrão
+            const anonimo =
+              typeof anonimoStr === "string" ? anonimoStr.toLowerCase() === "sim" : false
 
             const [responsavel, situacao, formaEntrada] = await Promise.all([
               getOrRestoreByName(tx, "responsavel", responsavelNome),

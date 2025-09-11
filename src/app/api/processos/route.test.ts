@@ -116,4 +116,42 @@ describe("/api/processos", () => {
     expect(Array.isArray(json.data)).toBe(true)
     expect(json.total).toBe(1)
   })
+
+  it("GET com orderBy inválido aplica fallback para dataCriacao", async () => {
+    ;(prisma.processo.count as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      0
+    )
+    ;(
+      prisma.processo.findMany as unknown as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce([])
+    const req = new Request(
+      "http://local/api/processos?page=1&pageSize=10&orderBy=foo&ascending=true",
+      { method: "GET" }
+    )
+    const res = await GET(req as unknown as never)
+    expect(res.status).toBe(200)
+    const call = (prisma.processo.findMany as unknown as ReturnType<typeof vi.fn>).mock
+      .calls[0]?.[0] as { orderBy: Record<string, string> }
+    expect(call).toBeTruthy()
+    expect(Object.prototype.hasOwnProperty.call(call.orderBy, "dataCriacao")).toBe(true)
+    expect(call.orderBy["dataCriacao"]).toBe("asc")
+  })
+
+  it("GET aplica clamp em page/pageSize (page>=1 e pageSize<=100)", async () => {
+    ;(prisma.processo.count as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      0
+    )
+    ;(
+      prisma.processo.findMany as unknown as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce([])
+    const req = new Request("http://local/api/processos?page=0&pageSize=9999", {
+      method: "GET",
+    })
+    const res = await GET(req as unknown as never)
+    expect(res.status).toBe(200)
+    const call = (prisma.processo.findMany as unknown as ReturnType<typeof vi.fn>).mock
+      .calls[0]?.[0] as { skip: number; take: number }
+    expect(call.skip).toBe(0)
+    expect(call.take).toBe(100)
+  })
 })
