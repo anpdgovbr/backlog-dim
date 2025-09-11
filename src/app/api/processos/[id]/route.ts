@@ -249,8 +249,14 @@ const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
 
+    // Validate that id is a valid integer
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || isNaN(numericId)) {
+      return Response.json({ error: "ID inválido" }, { status: 400 });
+    }
+
     const processo = await prisma.processo.findUnique({
-      where: { id: Number(id) },
+      where: { id: numericId },
       include: {
         formaEntrada: true,
         responsavel: true,
