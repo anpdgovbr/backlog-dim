@@ -8,6 +8,8 @@ on:
 env:
   # DATABASE_URL necessário para Prisma generate (mesmo sem conectar ao banco nos testes)
   DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
+  # Desabilita hooks do Husky no ambiente de CI
+  HUSKY: "0"
 
 jobs:
   build:
@@ -30,17 +32,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-prisma-
 
-      # Instalar dependências (fail-fast se lockfile estiver desincronizado)
       - name: Install dependencies
-        run: |
-          echo "Verificando lockfile com npm ci --dry-run..."
-          if npm ci --dry-run --no-audit --no-fund > /dev/null 2>&1; then
-            npm ci --no-audit --no-fund
-          else
-            echo "❌ package-lock.json desincronizado com package.json."
-            echo "   Atualize localmente com 'npm install' e faça commit do package-lock.json."
-            exit 1
-          fi
+        run: npm ci --no-audit --no-fund
 
       # Gerar cliente Prisma antes de qualquer checagem
       - run: npx prisma generate
