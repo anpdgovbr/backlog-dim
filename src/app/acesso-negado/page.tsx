@@ -3,7 +3,7 @@
 import Link from "next/link"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Container from "@mui/material/Container"
 import Divider from "@mui/material/Divider"
 import Typography from "@mui/material/Typography"
@@ -27,13 +27,23 @@ export default function AcessoNegadoPage() {
       </Typography>
 
       <Box display="flex" justifyContent="center" gap={2}>
-        <Button variant="contained" color="primary" component={Link} href="/dashboard">
+        <GovBRButton
+          variant="contained"
+          color="primary"
+          component={Link}
+          href="/dashboard"
+        >
           Voltar ao Início
-        </Button>
+        </GovBRButton>
 
-        <Button variant="outlined" color="primary" component={Link} href="/auth/logout">
+        <GovBRButton
+          variant="outlined"
+          color="primary"
+          component={Link}
+          href="/auth/logout"
+        >
           Trocar Usuário
-        </Button>
+        </GovBRButton>
       </Box>
     </Container>
   )

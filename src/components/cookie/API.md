@@ -4,20 +4,20 @@ Este documento é a referência técnica oficial para a API da biblioteca `react
 
 ## Exports Principais
 
-| Nome                             | Tipo        | Descrição                                                                              |
-| -------------------------------- | ----------- | -------------------------------------------------------------------------------------- |
-| `ConsentProvider`                | Componente  | O provedor de contexto principal que gerencia todo o estado e a UI.                    |
-| `useConsent`                     | Hook        | Hook principal para interagir com o estado de consentimento.                           |
-| `useCategories`                  | Hook        | Retorna a lista de categorias ativas no projeto.                                       |
-| `useCategoryStatus`              | Hook        | Verifica o status de uma categoria específica.                                         |
-| `useOpenPreferencesModal`        | Hook        | Retorna uma função para abrir o modal de preferências de forma programática.           |
-| `openPreferencesModal`           | Função      | Versão da função acima para ser usada fora do contexto React.                          |
-| `ConsentGate`                    | Componente  | Renderiza componentes filhos apenas se uma categoria de cookie for consentida.         |
-| `ConsentScriptLoader`            | Componente  | Carrega scripts de terceiros (como Google Analytics) com base no consentimento.        |
-| `createGoogleAnalyticsIntegration` | Função      | Factory para criar uma integração nativa com o Google Analytics.                       |
-| `createGoogleTagManagerIntegration` | Função      | Factory para criar uma integração nativa com o Google Tag Manager.                     |
-| `createUserWayIntegration`       | Função      | Factory para criar uma integração nativa com o UserWay.                                |
-| `setDebugLogging`                | Função      | Habilita/desabilita o logging de debug da biblioteca.                                  |
+| Nome                                | Tipo       | Descrição                                                                       |
+| ----------------------------------- | ---------- | ------------------------------------------------------------------------------- |
+| `ConsentProvider`                   | Componente | O provedor de contexto principal que gerencia todo o estado e a UI.             |
+| `useConsent`                        | Hook       | Hook principal para interagir com o estado de consentimento.                    |
+| `useCategories`                     | Hook       | Retorna a lista de categorias ativas no projeto.                                |
+| `useCategoryStatus`                 | Hook       | Verifica o status de uma categoria específica.                                  |
+| `useOpenPreferencesModal`           | Hook       | Retorna uma função para abrir o modal de preferências de forma programática.    |
+| `openPreferencesModal`              | Função     | Versão da função acima para ser usada fora do contexto React.                   |
+| `ConsentGate`                       | Componente | Renderiza componentes filhos apenas se uma categoria de cookie for consentida.  |
+| `ConsentScriptLoader`               | Componente | Carrega scripts de terceiros (como Google Analytics) com base no consentimento. |
+| `createGoogleAnalyticsIntegration`  | Função     | Factory para criar uma integração nativa com o Google Analytics.                |
+| `createGoogleTagManagerIntegration` | Função     | Factory para criar uma integração nativa com o Google Tag Manager.              |
+| `createUserWayIntegration`          | Função     | Factory para criar uma integração nativa com o UserWay.                         |
+| `setDebugLogging`                   | Função     | Habilita/desabilita o logging de debug da biblioteca.                           |
 
 ---
 
@@ -30,39 +30,39 @@ O componente principal que deve envolver sua aplicação. Ele gerencia o estado,
 **Props Mínimas:**
 
 ```tsx
-import { ConsentProvider } from 'react-lgpd-consent';
+import { ConsentProvider } from "react-lgpd-consent"
 
 function App() {
   return (
     <ConsentProvider
       categories={{
         // Especifique apenas as categorias que seu site utiliza
-        enabledCategories: ['analytics', 'marketing'],
+        enabledCategories: ["analytics", "marketing"],
       }}
     >
       {/* Seu aplicativo aqui */}
     </ConsentProvider>
-  );
+  )
 }
 ```
 
 **Todas as Props:**
 
-| Prop                             | Tipo                                        | Descrição                                                                                                                                 |
-| -------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `categories`                     | `ProjectCategoriesConfig`                   | **Obrigatório**. Define as categorias de cookies ativas no seu projeto.                                                                   |
-| `texts`                          | `Partial<ConsentTexts>`                     | Objeto com textos customizados para a UI (banner, modal, etc.).                                                                           |
-| `onConsentGiven`                 | `(state: ConsentState) => void`             | Callback executado na primeira vez que o usuário dá o consentimento.                                                                      |
-| `onPreferencesSaved`             | `(prefs: ConsentPreferences) => void`       | Callback executado sempre que o usuário salva novas preferências no modal.                                                                |
-| `blocking`                       | `boolean`                                   | Se `true`, exibe um overlay que impede a interação com o site até que o usuário tome uma decisão. Padrão: `false`.                       |
-| `disableDeveloperGuidance`       | `boolean`                                   | Se `true`, desativa as mensagens de orientação no console, mesmo em ambiente de desenvolvimento.                                          |
-| `disableFloatingPreferencesButton` | `boolean`                                   | Se `true`, desabilita o botão flutuante que permite ao usuário reabrir o modal de preferências. Padrão: `false`.                     |
-| `hideBranding`                   | `boolean`                                   | Se `true`, oculta a marca "fornecido por LÉdipO.eti.br" dos componentes.                                                                  |
-| `cookie`                         | `Partial<ConsentCookieOptions>`             | Permite customizar as opções do cookie (nome, tempo de expiração, etc.).                                                                  |
-| `CookieBannerComponent`          | `React.ComponentType<CustomCookieBannerProps>` | Permite substituir o banner padrão por um componente React customizado.                                                                   |
-| `PreferencesModalComponent`      | `React.ComponentType<CustomPreferencesModalProps>` | Permite substituir o modal de preferências padrão por um componente React customizado.                                                    |
-| `theme`                          | `any` (Tema MUI)                            | Permite passar um tema customizado do Material-UI para os componentes da biblioteca.                                                      |
-| `initialState`                   | `ConsentState`                              | Estado inicial para hidratação em cenários de Server-Side Rendering (SSR) para evitar o "flash" do banner.                               |
+| Prop                               | Tipo                                               | Descrição                                                                                                          |
+| ---------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `categories`                       | `ProjectCategoriesConfig`                          | **Obrigatório**. Define as categorias de cookies ativas no seu projeto.                                            |
+| `texts`                            | `Partial<ConsentTexts>`                            | Objeto com textos customizados para a UI (banner, modal, etc.).                                                    |
+| `onConsentGiven`                   | `(state: ConsentState) => void`                    | Callback executado na primeira vez que o usuário dá o consentimento.                                               |
+| `onPreferencesSaved`               | `(prefs: ConsentPreferences) => void`              | Callback executado sempre que o usuário salva novas preferências no modal.                                         |
+| `blocking`                         | `boolean`                                          | Se `true`, exibe um overlay que impede a interação com o site até que o usuário tome uma decisão. Padrão: `false`. |
+| `disableDeveloperGuidance`         | `boolean`                                          | Se `true`, desativa as mensagens de orientação no console, mesmo em ambiente de desenvolvimento.                   |
+| `disableFloatingPreferencesButton` | `boolean`                                          | Se `true`, desabilita o botão flutuante que permite ao usuário reabrir o modal de preferências. Padrão: `false`.   |
+| `hideBranding`                     | `boolean`                                          | Se `true`, oculta a marca "fornecido por LÉdipO.eti.br" dos componentes.                                           |
+| `cookie`                           | `Partial<ConsentCookieOptions>`                    | Permite customizar as opções do cookie (nome, tempo de expiração, etc.).                                           |
+| `CookieBannerComponent`            | `React.ComponentType<CustomCookieBannerProps>`     | Permite substituir o banner padrão por um componente React customizado.                                            |
+| `PreferencesModalComponent`        | `React.ComponentType<CustomPreferencesModalProps>` | Permite substituir o modal de preferências padrão por um componente React customizado.                             |
+| `theme`                            | `any` (Tema MUI)                                   | Permite passar um tema customizado do Material-UI para os componentes da biblioteca.                               |
+| `initialState`                     | `ConsentState`                                     | Estado inicial para hidratação em cenários de Server-Side Rendering (SSR) para evitar o "flash" do banner.         |
 
 ---
 
@@ -71,7 +71,7 @@ function App() {
 Renderiza componentes filhos apenas se o usuário deu consentimento para uma categoria específica.
 
 ```tsx
-import { ConsentGate } from 'react-lgpd-consent';
+import { ConsentGate } from "react-lgpd-consent"
 
 function MyComponent() {
   return (
@@ -79,7 +79,7 @@ function MyComponent() {
       {/* Este componente só será renderizado se o usuário consentiu com cookies de marketing */}
       <FacebookPixelScript />
     </ConsentGate>
-  );
+  )
 }
 ```
 
@@ -88,13 +88,11 @@ function MyComponent() {
 Gerencia o carregamento de scripts de terceiros (ex: Google Analytics) com base no consentimento do usuário. Veja o guia `INTEGRACOES.md` para mais detalhes.
 
 ```tsx
-import { ConsentScriptLoader, createGoogleAnalyticsIntegration } from 'react-lgpd-consent';
+import { ConsentScriptLoader, createGoogleAnalyticsIntegration } from "react-lgpd-consent"
 
-const integrations = [
-  createGoogleAnalyticsIntegration({ measurementId: 'G-XXXXXXXXXX' })
-];
+const integrations = [createGoogleAnalyticsIntegration({ measurementId: "G-XXXXXXXXXX" })]
 
-<ConsentScriptLoader integrations={integrations} />
+;<ConsentScriptLoader integrations={integrations} />
 ```
 
 ---
@@ -107,16 +105,16 @@ O hook principal para interagir com o estado de consentimento.
 
 **Retorno:**
 
-| Chave             | Tipo                               | Descrição                                                                    |
-| ----------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
-| `consented`       | `boolean`                          | `true` se o usuário já interagiu com o banner/modal.                         |
-| `preferences`     | `ConsentPreferences`               | Um objeto com o estado de consentimento para cada categoria (ex: `{ analytics: true }`). |
-| `isModalOpen`     | `boolean`                          | `true` se o modal de preferências estiver aberto.                            |
-| `acceptAll`       | `() => void`                       | Aceita todas as categorias de cookies.                                       |
-| `rejectAll`       | `() => void`                       | Rejeita todas as categorias não essenciais.                                 |
-| `setPreferences`  | `(prefs: ConsentPreferences) => void` | Salva um novo conjunto de preferências.                                       |
-| `openPreferences` | `() => void`                       | Abre o modal de preferências.                                                |
-| `resetConsent`    | `() => void`                       | Reseta o consentimento, fazendo o banner aparecer novamente.                 |
+| Chave             | Tipo                                  | Descrição                                                                                |
+| ----------------- | ------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `consented`       | `boolean`                             | `true` se o usuário já interagiu com o banner/modal.                                     |
+| `preferences`     | `ConsentPreferences`                  | Um objeto com o estado de consentimento para cada categoria (ex: `{ analytics: true }`). |
+| `isModalOpen`     | `boolean`                             | `true` se o modal de preferências estiver aberto.                                        |
+| `acceptAll`       | `() => void`                          | Aceita todas as categorias de cookies.                                                   |
+| `rejectAll`       | `() => void`                          | Rejeita todas as categorias não essenciais.                                              |
+| `setPreferences`  | `(prefs: ConsentPreferences) => void` | Salva um novo conjunto de preferências.                                                  |
+| `openPreferences` | `() => void`                          | Abre o modal de preferências.                                                            |
+| `resetConsent`    | `() => void`                          | Reseta o consentimento, fazendo o banner aparecer novamente.                             |
 
 ### `useCategories()`
 
@@ -127,7 +125,7 @@ Retorna um array com as definições de todas as categorias ativas no projeto. �
 Verifica se uma categoria específica está ativa e consentida.
 
 ```tsx
-const analyticsStatus = useCategoryStatus('analytics');
+const analyticsStatus = useCategoryStatus("analytics")
 // Retorna um objeto: { isActive: boolean, isEssential: boolean, ... }
 
 if (analyticsStatus.isActive && preferences.analytics) {
@@ -141,11 +139,11 @@ Permitem abrir o modal de preferências de forma programática, seja de dentro d
 
 ```tsx
 // Em um componente React
-const openModal = useOpenPreferencesModal();
-return <button onClick={openModal}>Abrir Preferências</button>;
+const openModal = useOpenPreferencesModal()
+return <GovBRButton onClick={openModal}>Abrir Preferências</GovBRButton>
 
 // Em JavaScript puro
-document.getElementById('meu-botao').addEventListener('click', openPreferencesModal);
+document.getElementById("meu-botao").addEventListener("click", openPreferencesModal)
 ```
 
 ---
@@ -202,48 +200,54 @@ Use as props `CookieBannerComponent` e `PreferencesModalComponent` para passar s
 **Exemplo: Criando um Banner Totalmente Customizado**
 
 ```tsx
-import {
-  ConsentProvider,
-  type CustomCookieBannerProps
-} from 'react-lgpd-consent';
+import { ConsentProvider, type CustomCookieBannerProps } from "react-lgpd-consent"
 
 // 1. Crie seu componente de banner. Ele receberá as props definidas em CustomCookieBannerProps.
-function MeuBannerCustomizado({ acceptAll, rejectAll, openPreferences, texts }: CustomCookieBannerProps) {
+function MeuBannerCustomizado({
+  acceptAll,
+  rejectAll,
+  openPreferences,
+  texts,
+}: CustomCookieBannerProps) {
   // Estilos CSS-in-JS ou classes CSS normais
   const style = {
-    position: 'fixed',
-    bottom: '20px',
-    left: '20px',
-    backgroundColor: '#222',
-    color: 'white',
-    padding: '15px',
-    borderRadius: '8px',
+    position: "fixed",
+    bottom: "20px",
+    left: "20px",
+    backgroundColor: "#222",
+    color: "white",
+    padding: "15px",
+    borderRadius: "8px",
     zIndex: 1000,
-  };
+  }
 
   return (
     <div style={style}>
       <h4>{texts.modalTitle}</h4>
       <p>{texts.bannerMessage}</p>
       <div>
-        <button onClick={acceptAll}>✅ {texts.acceptAll}</button>
-        <button onClick={rejectAll} style={{ marginLeft: '10px' }}>❌ {texts.declineAll}</button>
-        <button onClick={openPreferences} style={{ marginLeft: '10px' }}>⚙️ {texts.preferences}</button>
+        <GovBRButton onClick={acceptAll}>✅ {texts.acceptAll}</GovBRButton>
+        <GovBRButton onClick={rejectAll} style={{ marginLeft: "10px" }}>
+          ❌ {texts.declineAll}
+        </GovBRButton>
+        <GovBRButton onClick={openPreferences} style={{ marginLeft: "10px" }}>
+          ⚙️ {texts.preferences}
+        </GovBRButton>
       </div>
     </div>
-  );
+  )
 }
 
 function App() {
   return (
     <ConsentProvider
-      categories={{ enabledCategories: ['analytics'] }}
+      categories={{ enabledCategories: ["analytics"] }}
       // 2. Passe seu componente para a prop correspondente
       CookieBannerComponent={MeuBannerCustomizado}
     >
       <SuaAplicacao />
     </ConsentProvider>
-  );
+  )
 }
 ```
 

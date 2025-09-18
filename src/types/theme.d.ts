@@ -39,7 +39,7 @@ declare module "@mui/material/styles" {
 /**
  * Extende as props do Button do MUI para aceitar a opção de cor "accent".
  *
- * Com isso, components Button podem usar <Button color="accent"> sem erro de tipos.
+ * Com isso, components Button podem usar <GovBRButton color="accent"> sem erro de tipos.
  */
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {

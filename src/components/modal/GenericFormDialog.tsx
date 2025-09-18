@@ -11,6 +11,7 @@ import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 export interface GenericFormDialogProps extends Omit<DialogProps, "children" | "title"> {
   open: boolean
@@ -105,13 +106,13 @@ export default function GenericFormDialog({
           {actions}
           {showDefaultActions && (
             <>
-              <button className="br-button secondary mr-2" onClick={onClose}>
+              <GovBRButton className="br-button secondary mr-2" onClick={onClose}>
                 Fechar
-              </button>
+              </GovBRButton>
               {onSubmit && (
-                <button className="br-button primary" onClick={onSubmit}>
+                <GovBRButton className="br-button primary" onClick={onSubmit}>
                   Salvar
-                </button>
+                </GovBRButton>
               )}
             </>
           )}

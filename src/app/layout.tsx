@@ -9,6 +9,7 @@
 import "@govbr-ds/core/dist/core.min.css"
 import "@govbr-ds/core/dist/core-tokens.min.css"
 import "@anpdgovbr/shared-ui/styles"
+import "@/styles/input-overrides.css"
 
 import ClientRootLayout from "@/app/layout.client"
 import { globalMetadata } from "@/app/metadata"

@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
@@ -7,7 +8,7 @@ import GroupIcon from "@mui/icons-material/Group"
 import SecurityIcon from "@mui/icons-material/Security"
 import SpeedIcon from "@mui/icons-material/Speed"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Chip from "@mui/material/Chip"
@@ -214,23 +215,23 @@ export default function SobrePage() {
       <Box
         sx={{ textAlign: "center", display: "flex", gap: 2, justifyContent: "center" }}
       >
-        <Button
+        <GovBRButton
           variant="outlined"
           startIcon={<ArrowBackIcon />}
           component={Link}
           href="/"
         >
           Voltar ao Início
-        </Button>
+        </GovBRButton>
 
-        <Button
+        <GovBRButton
           variant="contained"
           startIcon={<DashboardIcon />}
           component={Link}
           href="/publico"
         >
           Ver Dashboard Público
-        </Button>
+        </GovBRButton>
       </Box>
     </Container>
   )

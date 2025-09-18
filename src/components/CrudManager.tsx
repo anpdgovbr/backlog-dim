@@ -126,6 +126,10 @@ export default function CrudManager(props: Readonly<CrudManagerProps>) {
         item={selectedItem}
         onItemChange={updateSelectedItem}
         title={selectedItem.id ? `Editar ${entityName}` : `Adicionar ${entityName}`}
+        sxDialog={{
+          open: openModal,
+          hideBackdrop: true,
+        }}
       />
 
       <DialogAlert

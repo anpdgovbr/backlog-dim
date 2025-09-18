@@ -9,7 +9,7 @@ import Accordion from "@mui/material/Accordion"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
@@ -135,9 +135,9 @@ const SuperAdminPage = () => {
               onChange={(e) => setNovoPerfil(e.target.value)}
               required
             />
-            <Button type="submit" variant="contained">
+            <GovBRButton type="submit" variant="contained">
               Criar
-            </Button>
+            </GovBRButton>
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -269,9 +269,9 @@ const SuperAdminPage = () => {
               }
             />
 
-            <Button type="submit" variant="contained">
+            <GovBRButton type="submit" variant="contained">
               Criar Permissão
-            </Button>
+            </GovBRButton>
           </Box>
         </AccordionDetails>
       </Accordion>

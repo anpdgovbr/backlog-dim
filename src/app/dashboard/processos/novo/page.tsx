@@ -9,7 +9,7 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft"
 import SaveOutlined from "@mui/icons-material/SaveOutlined"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Container from "@mui/material/Container"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
@@ -109,21 +109,21 @@ export default function NovoProcessoPage() {
       <ProcessoForm methods={methods} />
 
       <Stack direction="row" justifyContent="space-between" mt={3}>
-        <Button
+        <GovBRButton
           startIcon={<ChevronLeft />}
           variant="outlined"
           onClick={() => router.push("/dashboard/processos")}
         >
           Cancelar
-        </Button>
-        <Button
+        </GovBRButton>
+        <GovBRButton
           startIcon={<SaveOutlined />}
           variant="contained"
           color="primary"
           onClick={onSubmit}
         >
           Salvar Processo
-        </Button>
+        </GovBRButton>
       </Stack>
     </Container>
   )

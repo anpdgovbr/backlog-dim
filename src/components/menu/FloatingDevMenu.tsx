@@ -19,6 +19,7 @@ import ListItemText from "@mui/material/ListItemText"
 import Paper from "@mui/material/Paper"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 interface DevRoutes {
   pages: string[]
@@ -231,7 +232,7 @@ const FloatingDevMenu = () => {
                 🍪 Teste LGPD
               </Typography>
               <Stack spacing={1}>
-                <button
+                <GovBRButton
                   onClick={() => {
                     if (typeof window !== "undefined") {
                       // Limpar cookie da lib react-lgpd-consent
@@ -251,8 +252,8 @@ const FloatingDevMenu = () => {
                   }}
                 >
                   Resetar & Mostrar Banner
-                </button>
-                <button
+                </GovBRButton>
+                <GovBRButton
                   onClick={() => {
                     // Usar função global da lib
                     if (typeof window !== "undefined") {
@@ -275,7 +276,7 @@ const FloatingDevMenu = () => {
                   }}
                 >
                   Abrir Modal Preferências
-                </button>
+                </GovBRButton>
               </Stack>
             </Box>
           </Box>
