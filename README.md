@@ -14,7 +14,7 @@
 [![Versão](https://img.shields.io/badge/versão-0.4.x-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
+O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Agência Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
 
 ## 📑 Sumário
 
