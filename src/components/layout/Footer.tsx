@@ -47,7 +47,7 @@ export default function Footer() {
               fontSize: { xs: "0.7rem", sm: "0.8rem" },
             }}
           >
-            Autoridade Nacional de Proteção de Dados
+            Agência Nacional de Proteção de Dados
           </Typography>
         </Box>
       </Container>

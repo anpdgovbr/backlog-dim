@@ -27,7 +27,8 @@
       "@/config/*": ["./src/config/*"],
       "@/*": ["./src/*"],
       "@scripts/*": ["scripts/*"]
-    }
+    },
+    "types": ["node", "react", "react-dom", "vitest/globals"]
   },
   "include": [
     "**/*.ts",
