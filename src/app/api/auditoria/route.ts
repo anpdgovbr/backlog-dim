@@ -3,7 +3,8 @@ import type { Prisma } from "@prisma/client"
 
 import { NextResponse } from "next/server"
 
-import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import { AcaoAuditoria, isAcaoAuditoria } from "@anpdgovbr/shared-types"
+import type { AcaoAuditoria as PrismaAcaoAuditoria } from "@prisma/client"
 
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
@@ -11,7 +12,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Registra uma entrada de auditoria no banco.
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON `{ success: true }` em caso de sucesso.
  * @example
  * POST /api/auditoria
@@ -69,7 +70,7 @@ export const POST = withApi(
 /**
  * Lista logs de auditoria com paginação e filtros.
  *
- * @see {@link withApiSlim}
+ * @see {@link withApi}
  * @returns JSON com `{ total, dados }`.
  * @example GET /api/auditoria?page=1&pageSize=20&acao=CREATE
  * @remarks Protegido por RBAC: {acao: "Exibir", recurso: "Auditoria"}.
@@ -78,24 +79,38 @@ export const GET = withApi(
   async ({ req }) => {
     const { searchParams } = new URL(req.url)
 
-    // 🧾 Paginação e ordenação
-    const page = parseInt(searchParams.get("page") || "1")
-    const pageSize = parseInt(searchParams.get("pageSize") || "10")
-    const orderBy = searchParams.get("orderBy") || "criadoEm"
+    // 🧾 Paginação e ordenação (normalização + whitelist)
+    const rawPage = Number(searchParams.get("page"))
+    const rawPageSize = Number(searchParams.get("pageSize"))
+    const rawOrderBy = searchParams.get("orderBy") || "criadoEm"
     const ascending = searchParams.get("ascending") === "true"
+
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1
+    const PAGE_SIZE_DEFAULT = 10
+    const PAGE_SIZE_MAX = 100
+    const pageSize = Number.isFinite(rawPageSize)
+      ? Math.min(Math.max(rawPageSize, 1), PAGE_SIZE_MAX)
+      : PAGE_SIZE_DEFAULT
+
+    const ORDERABLE_FIELDS = new Set(["criadoEm", "tabela", "email"]) // campos mais úteis
+    const orderField = ORDERABLE_FIELDS.has(rawOrderBy) ? rawOrderBy : "criadoEm"
 
     // 🔍 Filtros
     const acaoParam = searchParams.get("acao")
-    const acao =
-      acaoParam && Object.values(AcaoAuditoria).includes(acaoParam as AcaoAuditoria)
-        ? (acaoParam as AcaoAuditoria)
-        : undefined
+    const acaoUpper = acaoParam?.toUpperCase() ?? ""
+    const acao = isAcaoAuditoria(acaoUpper)
+      ? (acaoUpper as unknown as PrismaAcaoAuditoria)
+      : undefined
 
     const tabela = searchParams.get("tabela") || undefined
     const email = searchParams.get("email") || undefined
     const dataInicial = searchParams.get("dataInicial")
     const dataFinal = searchParams.get("dataFinal")
-    const search = searchParams.get("search")?.toLowerCase() || ""
+    const searchRaw = searchParams.get("search") || ""
+    const search = searchRaw.toLowerCase()
+    const acaoFromSearch = isAcaoAuditoria(searchRaw.toUpperCase())
+      ? (searchRaw.toUpperCase() as unknown as PrismaAcaoAuditoria)
+      : undefined
 
     const where: Prisma.AuditLogWhereInput = {
       ...(acao && { acao }),
@@ -113,7 +128,7 @@ export const GET = withApi(
         OR: [
           { tabela: { contains: search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
-          { acao: { equals: search as AcaoAuditoria } },
+          ...(acaoFromSearch ? [{ acao: { equals: acaoFromSearch } }] : []),
         ],
       }),
     }
@@ -122,7 +137,7 @@ export const GET = withApi(
       prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         where,
-        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+        orderBy: { [orderField]: ascending ? "asc" : "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),

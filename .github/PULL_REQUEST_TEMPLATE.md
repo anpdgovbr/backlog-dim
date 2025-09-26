@@ -47,6 +47,11 @@ _Passos objetivos para validar manualmente._
   - [ ] `npm run type-check` ok
   - [ ] `npm run lint` ok
   - [ ] `npm run build` ok
+- Domínio/Enums & Adapters:
+  - [ ] Usei enums/tipos do `@anpdgovbr/shared-types` (fonte de verdade)
+  - [ ] Fiz conversão para enums do Prisma somente na borda (adapters em `src/lib/adapters`)
+- APIs (paginação/ordenação):
+  - [ ] Para endpoints com `page/pageSize/orderBy`, apliquei clamp/whitelist conforme padrão (ver AGENTS.md)
 - Banco de dados:
   - [ ] Não houve mudanças de schema **OU**
   - [ ] Incluí **migration Prisma** e atualizei seeds quando necessário

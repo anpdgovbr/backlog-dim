@@ -14,7 +14,7 @@
 [![Versão](https://img.shields.io/badge/versão-0.4.x-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
+O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Agência Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
 
 ## 📑 Sumário
 
@@ -29,6 +29,8 @@ O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvol
   - [Passo a Passo](#passo-a-passo)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
 - [Scripts Disponíveis](#-scripts-disponíveis)
+- [Testes e Mocks](#-testes-e-mocks)
+- [Enums de Domínio](#-enums-de-domínio)
 - [Gestão do Banco de Dados com Prisma](#-gestão-do-banco-de-dados-com-prisma)
 - [Fluxo de CI/CD](#-fluxo-de-cicd)
 - [Padrões de Código](#-padrões-de-código)
@@ -308,6 +310,25 @@ Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH
 | `npm run prisma:migrate`       | Cria e aplica nova migração.                               |
 | `npm run prisma:push`          | Sincroniza schema com banco (desenvolvimento).             |
 | `npm run prisma:studio`        | Abre Prisma Studio diretamente.                            |
+
+## 🧪 Testes e Mocks
+
+- Framework: Vitest. Testes co-localizados em `src/**/*.test.ts`.
+- Alias: `@` → `src` (ver `vitest.config.ts`).
+- Utilize as utilidades padronizadas:
+  - `src/test/factories.ts` — `makeProcesso`, `makePerfil`, `makeUser`, `makeResponsavel`, `makeSituacao`, `makeFormaEntrada`.
+  - `src/test/prisma-mock.ts` — `createPrismaMock()`, `mockTransactionOnce()`.
+  - `src/test/route-harness.ts` — `withApiMockModule()`, `withApiRbacNextMockModule()`.
+
+Mais detalhes: `doc/testing.md`.
+
+## 🧭 Enums de Domínio
+
+- Fonte de verdade: `@anpdgovbr/shared-types` exporta enums e utilitários (lista de valores, type guards, asserts, coerções) para:
+  - `StatusInterno`, `AcaoAuditoria`, `TipoControlador`, `TipoParticipacaoSocietaria`, permissões (`AcaoPermissao`, `RecursoPermissao`), `TipoRequerimento`.
+- Adapters de borda (Prisma): use `src/lib/adapters` para converter shared-types → Prisma apenas no acesso ao banco:
+  - `toPrismaStatus`, `fromPrismaStatus`; `toPrismaTipoRequerimento`, `fromPrismaTipoRequerimento`.
+- Recomendação: no frontend e nas regras de domínio do backend, sempre trabalhar com os tipos do shared-types; ao persistir/filtrar com Prisma, converter via adapters.
 
 ## 🗄️ Gestão do Banco de Dados
 

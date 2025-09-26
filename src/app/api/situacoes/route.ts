@@ -6,7 +6,7 @@ import { withApi } from "@/lib/withApi"
 /**
  * Lista situações ativas (metadados).
  *
- * @see {@link withApiSlimNoParams}
+ * @see {@link withApi}
  * @returns JSON com array de situações ativas.
  * @example
  * GET /api/situacoes

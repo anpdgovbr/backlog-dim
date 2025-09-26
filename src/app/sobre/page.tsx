@@ -103,8 +103,8 @@ export default function SobrePage() {
         <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
           O <strong>Backlog DIM</strong> é uma aplicação CRUD moderna e segura,
           desenvolvida especificamente para apoiar a{" "}
-          <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong> no
-          gerenciamento eficiente dos processos administrativos da DIM.
+          <strong>Agência Nacional de Proteção de Dados (ANPD)</strong> no gerenciamento
+          eficiente dos processos administrativos da DIM.
         </Typography>
 
         <Typography variant="body1" paragraph sx={{ fontSize: "1.1rem" }}>
@@ -205,8 +205,8 @@ export default function SobrePage() {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Sistema desenvolvido pela equipe da{" "}
-          <strong>DDSS/CGTI da Autoridade Nacional de Proteção de Dados</strong>, seguindo
-          as melhores práticas de desenvolvimento de software e os padrões de segurança
+          <strong>DDSS/CGTI da Agência Nacional de Proteção de Dados</strong>, seguindo as
+          melhores práticas de desenvolvimento de software e os padrões de segurança
           governamentais.
         </Typography>
       </Paper>

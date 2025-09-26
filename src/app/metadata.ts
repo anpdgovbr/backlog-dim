@@ -32,7 +32,7 @@ export const globalMetadata: Metadata = {
   ],
   authors: [
     {
-      name: "ANPD - Autoridade Nacional de Proteção de Dados",
+      name: "ANPD - Agência Nacional de Proteção de Dados",
       url: "https://www.gov.br/anpd",
     },
   ],

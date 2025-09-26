@@ -1,11 +1,12 @@
 import type { Prisma } from "@prisma/client"
 
 import type { ProcessoImportacao } from "@anpdgovbr/shared-types"
-import { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import { AcaoAuditoria, StatusInterno } from "@anpdgovbr/shared-types"
 
 import { getOrRestoreByName } from "@/helpers/getOrRestoreByName"
 import { prisma } from "@/lib/prisma"
 import { withApi } from "@/lib/withApi"
+import { toPrismaStatus } from "@/lib/adapters/statusInterno"
 
 const formatarData = (data: string): string => {
   const [dia, mes, ano] = data.split("/")
@@ -68,7 +69,9 @@ export const POST = withApi(
 
             if (!numeroProcesso) throw new Error("Número do processo ausente")
 
-            const anonimo = anonimoStr.toLowerCase() === "sim"
+            // Trata ausência de anonimoStr como "não" por padrão
+            const anonimo =
+              typeof anonimoStr === "string" ? anonimoStr.toLowerCase() === "sim" : false
 
             const [responsavel, situacao, formaEntrada] = await Promise.all([
               getOrRestoreByName(tx, "responsavel", responsavelNome),
@@ -94,7 +97,11 @@ export const POST = withApi(
                 responsavelId: responsavel.id,
                 situacaoId: situacao.id,
                 formaEntradaId: formaEntrada.id,
-                statusInterno: processo.statusInterno ?? "IMPORTADO",
+                // statusInterno segue shared-types como fonte da verdade
+                statusInterno: toPrismaStatus(
+                  (processo.statusInterno as unknown as StatusInterno) ??
+                    StatusInterno.IMPORTADO
+                ),
               },
             })
 

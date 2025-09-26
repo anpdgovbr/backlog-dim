@@ -27,10 +27,20 @@ const handlerGET = withApiForId<{ entidade: string }>(
     const { model } = validacao
     const { searchParams } = new URL(req.url)
 
-    const page = Number(searchParams.get("page")) || 1
-    const pageSize = Number(searchParams.get("pageSize")) || 10
-    const orderBy = searchParams.get("orderBy") || "nome"
+    const rawPage = Number(searchParams.get("page"))
+    const rawPageSize = Number(searchParams.get("pageSize"))
+    const rawOrderBy = searchParams.get("orderBy") || "nome"
     const ascending = searchParams.get("ascending") === "true"
+
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1
+    const PAGE_SIZE_DEFAULT = 10
+    const PAGE_SIZE_MAX = 100
+    const pageSize = Number.isFinite(rawPageSize)
+      ? Math.min(Math.max(rawPageSize, 1), PAGE_SIZE_MAX)
+      : PAGE_SIZE_DEFAULT
+
+    const ORDERABLE_FIELDS = new Set(["nome", "id"]) // ordenação segura nas entidades meta
+    const orderField = ORDERABLE_FIELDS.has(rawOrderBy) ? rawOrderBy : "nome"
 
     const [total, data] = await Promise.all([
       model.count({ where: { active: true } }),
@@ -38,7 +48,7 @@ const handlerGET = withApiForId<{ entidade: string }>(
         where: { active: true },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        orderBy: { [orderBy]: ascending ? "asc" : "desc" },
+        orderBy: { [orderField]: ascending ? "asc" : "desc" },
       }),
     ])
 
