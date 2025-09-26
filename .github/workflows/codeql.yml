@@ -46,6 +46,12 @@ jobs:
           corepack prepare pnpm@10.17.1 --activate
           pnpm install --frozen-lockfile
 
+      - name: Show Node/npm/pnpm versions
+        run: |
+          node -v
+          npm -v
+          pnpm -v || true
+
       # Não gerar Prisma aqui; o script de build já cuida disso
       - run: pnpm run build --if-present
 
