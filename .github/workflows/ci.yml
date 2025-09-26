@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: "20"
-          cache: "pnpm"
+          cache: "npm"
 
       # Cache dos artefatos do Prisma para acelerar builds
       - uses: actions/cache@v4
