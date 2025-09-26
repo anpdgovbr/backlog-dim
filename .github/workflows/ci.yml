@@ -11,7 +11,7 @@ env:
   # Desabilita hooks do Husky no ambiente de CI
   HUSKY: "0"
   # Força instalação de devDeps e reduz ruído do npm
-  NODE_ENV: development
+  NODE_ENV: production
   npm_config_production: "false"
   NPM_CONFIG_FUND: "false"
   NPM_CONFIG_AUDIT: "false"
@@ -49,9 +49,6 @@ jobs:
           node -v
           npm -v
           pnpm -v || true
-
-      # Não gerar Prisma aqui; o script de build já cuida disso
-
       # Checagens estáticas primeiro (mais rápidas)
       - run: pnpm run type-check
       - run: pnpm run lint
