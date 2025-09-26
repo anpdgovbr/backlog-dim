@@ -14,6 +14,21 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 import { DashboardLayout } from "@/components/layouts"
 import { Menu25Base } from "@/components/menu/Menu25Base"
 
+/**
+ * Representa uma seção exibida na barra lateral do SidebarLayout.
+ *
+ * Cada seção contém metadados usados para renderizar o item na lista lateral
+ * e o componente que será mostrado na área principal quando a seção estiver ativa.
+ *
+ * Propriedades:
+ * - id: identificador único e imutável da seção.
+ * - title: título exibido no item da barra lateral.
+ * - description: texto auxiliar opcional exibido abaixo do título.
+ * - icon: nó React opcional (ex.: um ícone MUI) exibido ao lado do título.
+ * - baseColor: cor base (por exemplo, um hex ou token de tema) usada para acentuação visual.
+ * - component: componente React que será renderizado na área principal quando a seção for selecionada.
+ * - extraContent: conteúdo extra opcional (ex.: ações, badges) exibido dentro do item da seção.
+ */
 export interface SidebarSection {
   readonly id: string
   readonly title: string
