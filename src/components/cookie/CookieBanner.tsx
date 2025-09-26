@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import Backdrop from "@mui/material/Backdrop"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Collapse from "@mui/material/Collapse"
@@ -285,7 +285,7 @@ export default function CookiePreferencesModal({
                     mb: 1,
                   }}
                 >
-                  <Button
+                  <GovBRButton
                     variant="text"
                     startIcon={
                       expandedCategories.includes(category.id) ? (
@@ -300,7 +300,7 @@ export default function CookiePreferencesModal({
                     <Typography variant="h6" component="span">
                       {category.name}
                     </Typography>
-                  </Button>
+                  </GovBRButton>
 
                   <FormControlLabel
                     control={
@@ -438,27 +438,27 @@ export default function CookiePreferencesModal({
             borderColor: "divider",
           }}
         >
-          <Button variant="outlined" size="small" onClick={closePreferences}>
+          <GovBRButton variant="outlined" size="small" onClick={closePreferences}>
             {texts.close || "Fechar"}
-          </Button>
+          </GovBRButton>
 
           <Stack direction="row" spacing={1}>
-            <Button
+            <GovBRButton
               variant="outlined"
               size="small"
               onClick={handleRejectAll}
               color="error"
             >
               {texts.declineAll || "Rejeitar cookies"}
-            </Button>
-            <Button
+            </GovBRButton>
+            <GovBRButton
               variant="contained"
               size="small"
               onClick={handleAcceptAll}
               color="primary"
             >
               {texts.acceptAll || "Aceitar todos"}
-            </Button>
+            </GovBRButton>
           </Stack>
         </DialogActions>
       </Dialog>

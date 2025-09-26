@@ -1,7 +1,7 @@
 "use client"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 import Link from "@mui/material/Link"
@@ -82,16 +82,16 @@ export default function SimpleCookieBanner({
               useFlexGap
               justifyContent="flex-end"
             >
-              <Button
+              <GovBRButton
                 variant="outlined"
                 size="small"
                 onClick={openPreferences}
                 sx={{ whiteSpace: "nowrap" }}
               >
                 {texts.preferences || "Gerenciar cookies"}
-              </Button>
+              </GovBRButton>
 
-              <Button
+              <GovBRButton
                 variant="outlined"
                 size="small"
                 onClick={rejectAll}
@@ -99,9 +99,9 @@ export default function SimpleCookieBanner({
                 sx={{ whiteSpace: "nowrap" }}
               >
                 {texts.declineAll}
-              </Button>
+              </GovBRButton>
 
-              <Button
+              <GovBRButton
                 variant="contained"
                 size="small"
                 onClick={acceptAll}
@@ -109,7 +109,7 @@ export default function SimpleCookieBanner({
                 sx={{ whiteSpace: "nowrap" }}
               >
                 {texts.acceptAll}
-              </Button>
+              </GovBRButton>
             </Stack>
           </Stack>
         </Box>

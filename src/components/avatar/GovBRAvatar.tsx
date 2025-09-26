@@ -1,5 +1,17 @@
 "use client"
 
+/**
+ * Componente e utilitários relacionados ao avatar de autenticação Gov.br.
+ *
+ * Este arquivo contém o componente GovBRAvatar utilizado na barra de navegação
+ * para exibir o avatar do usuário (imagem ou iniciais), abrir um menu de ações
+ * (ex.: Meu perfil, Sair) e interagir com o script de login gov.br quando disponível.
+ *
+ * Notas:
+ * - Mantém a diretiva "use client" para execução no cliente.
+ * - Usa next-auth para sessão e logout, e next/navigation para navegação.
+ */
+
 import { useEffect, useRef, useState } from "react"
 
 import Image from "next/image"
@@ -8,6 +20,20 @@ import { useRouter } from "next/navigation"
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined"
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined"
 
+import { GovBRButton } from "@anpdgovbr/shared-ui"
+
+/**
+ * Interface para a extensão global carregada pelo script gov.br.
+ *
+ * A propriedade BRSignIn pode ser injetada externamente e expor um método
+ * `activate` utilizado para inicializar comportamentos de autenticação
+ * da biblioteca gov.br no escopo da página.
+ *
+ * Exemplo de uso:
+ *   if (window.BRSignIn?.activate) {
+ *     window.BRSignIn.activate()
+ *   }
+ */
 declare global {
   interface Window {
     BRSignIn?: { activate?: () => void }
@@ -74,7 +100,7 @@ export default function GovBRAvatar({
 
   return (
     <div ref={menuRef} style={{ position: "relative" }}>
-      <button
+      <GovBRButton
         style={{ height: `${size + 8}px` }}
         className="br-sign-in"
         type="button"
@@ -114,7 +140,7 @@ export default function GovBRAvatar({
         )}
         {items.length > 0 &&
           (menuOpen ? <KeyboardArrowUpOutlined /> : <KeyboardArrowDownOutlined />)}
-      </button>
+      </GovBRButton>
 
       {items.length > 0 && (
         <div
@@ -130,7 +156,7 @@ export default function GovBRAvatar({
           }}
         >
           {items.map((item) => (
-            <button
+            <GovBRButton
               key={item.label}
               className="br-item"
               role="menuitem"
@@ -147,7 +173,7 @@ export default function GovBRAvatar({
               }}
             >
               {item.label}
-            </button>
+            </GovBRButton>
           ))}
         </div>
       )}
