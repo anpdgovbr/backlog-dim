@@ -22,8 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
           cache: "pnpm"
@@ -41,7 +40,7 @@ jobs:
       - name: Install dependencies with pnpm
         run: |
           corepack enable
-          corepack prepare pnpm@8.10.1 --activate
+          corepack prepare pnpm@10.17.1 --activate
           pnpm install --frozen-lockfile
 
       # Não gerar Prisma aqui; o script de build já cuida disso

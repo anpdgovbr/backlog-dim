@@ -65,11 +65,19 @@ export default function SimpleCookieBanner({
                   clicar em "Rejeitar Cookies", os cookies que não forem estritamente
                   necessários serão desativados.
                 </strong>{" "}
-                Para escolher quais quer autorizar, clique em "Gerenciar cookies". Saiba
-                mais em nossa{" "}
-                <Link href="/termos-de-uso" target="_blank" rel="noopener">
-                  Declaração de Cookies
-                </Link>
+                Para escolher quais quer autorizar, clique em "Gerenciar cookies".{" "}
+                {texts.policyLink && (
+                  <span>
+                    Saiba mais em nossa{" "}
+                    <Link
+                      href={texts.policyLink ?? undefined}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Declaração de Cookies
+                    </Link>
+                  </span>
+                )}
                 .
               </Typography>
             </Alert>

@@ -49,7 +49,7 @@ export default function CookiePreferencesModal({
   closePreferences,
   isModalOpen,
   texts,
-}: CustomPreferencesModalProps) {
+}: Readonly<CustomPreferencesModalProps>) {
   const [categories, setCategories] = useState<CookieCategory[]>([])
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
 
@@ -252,7 +252,7 @@ export default function CookiePreferencesModal({
 
         {/* Content */}
         <DialogContent sx={{ px: 3, py: 2 }}>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1">
             {texts.preferencesDescription ||
               texts.modalIntro ||
               "Para melhorar a sua experiência na plataforma e prover serviços personalizados, utilizamos cookies."}{" "}
@@ -319,12 +319,7 @@ export default function CookiePreferencesModal({
                 </Box>
 
                 {/* Descrição da Categoria */}
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  paragraph
-                  sx={{ ml: 2 }}
-                >
+                <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
                   {category.description}
                 </Typography>
 
@@ -395,7 +390,7 @@ export default function CookiePreferencesModal({
               <Typography variant="h6" gutterBottom>
                 Configuração de cookies no navegador
               </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
+              <Typography variant="body2" color="text.secondary">
                 Você pode desabilitá-los alterando as configurações do seu navegador.
               </Typography>
               <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -416,12 +411,6 @@ export default function CookiePreferencesModal({
                   target="_blank"
                 >
                   Microsoft Edge
-                </Link>
-                <Link
-                  href="https://support.microsoft.com/pt-br/help/17442/windows-internet-explorer-delete-manage-cookies"
-                  target="_blank"
-                >
-                  Internet Explorer
                 </Link>
               </Stack>
             </Box>
