@@ -31,7 +31,7 @@ importers:
         version: 0.2.1-beta-0(typescript@5.9.2)
       '@anpdgovbr/shared-ui':
         specifier: 0.3.5-beta.1
-        version: 0.3.5-beta.1(ed77ec6bfddebc3b4cf0eacd7e8e7a07)
+        version: 0.3.5-beta.1(6c4a148b252b5a95f5f876d336ad1839)
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.1.14)(react@19.1.1)
@@ -43,7 +43,7 @@ importers:
         version: 3.6.2
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.63.0(react@19.1.1))
+        version: 5.2.2(react-hook-form@7.64.0(react@19.1.1))
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.14)(react@19.1.1)
@@ -81,8 +81,8 @@ importers:
         specifier: ^19.1.1
         version: 19.1.1(react@19.1.1)
       react-hook-form:
-        specifier: ^7.63.0
-        version: 7.63.0(react@19.1.1)
+        specifier: ^7.64.0
+        version: 7.64.0(react@19.1.1)
       react-lgpd-consent:
         specifier: ^0.4.1
         version: 0.4.1(@mui/icons-material@7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.14)(react@19.1.1))(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2826,8 +2826,8 @@ packages:
     peerDependencies:
       react: ^19.1.1
 
-  react-hook-form@7.63.0:
-    resolution: {integrity: sha512-ZwueDMvUeucovM2VjkCf7zIHcs1aAlDimZu2Hvel5C5907gUzMpm4xCrQXtRzCvsBqFjonB4m3x4LzCFI1ZKWA==}
+  react-hook-form@7.64.0:
+    resolution: {integrity: sha512-fnN+vvTiMLnRqKNTVhDysdrUay0kUUAymQnFIznmgDvapjveUWOOPqMNzPg+A+0yf9DuE2h6xzBjN1s+Qx8wcg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -3419,7 +3419,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  '@anpdgovbr/shared-ui@0.3.5-beta.1(ed77ec6bfddebc3b4cf0eacd7e8e7a07)':
+  '@anpdgovbr/shared-ui@0.3.5-beta.1(6c4a148b252b5a95f5f876d336ad1839)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.14)(react@19.1.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.14)(react@19.1.1))(@types/react@19.1.14)(react@19.1.1)
@@ -3431,7 +3431,7 @@ snapshots:
       dayjs: 1.11.18
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
-      react-hook-form: 7.63.0(react@19.1.1)
+      react-hook-form: 7.64.0(react@19.1.1)
     transitivePeerDependencies:
       - '@mui/system'
       - '@types/react'
@@ -3736,10 +3736,10 @@ snapshots:
       '@popperjs/core': 2.11.8
       flatpickr: 4.6.13
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.63.0(react@19.1.1))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.64.0(react@19.1.1))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.63.0(react@19.1.1)
+      react-hook-form: 7.64.0(react@19.1.1)
 
   '@humanfs/core@0.19.1': {}
 
@@ -6042,7 +6042,7 @@ snapshots:
       react: 19.1.1
       scheduler: 0.26.0
 
-  react-hook-form@7.63.0(react@19.1.1):
+  react-hook-form@7.64.0(react@19.1.1):
     dependencies:
       react: 19.1.1
 

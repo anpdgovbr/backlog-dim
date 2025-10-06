@@ -125,7 +125,7 @@
     "papaparse": "^5.5.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-hook-form": "^7.63.0",
+    "react-hook-form": "^7.64.0",
     "react-lgpd-consent": "^0.4.1",
     "recharts": "^3.2.1",
     "remask": "^1.2.2",
