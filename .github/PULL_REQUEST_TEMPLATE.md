@@ -1,74 +1,37 @@
-# 📦 Pull Request – Backlog DIM
+## 📦 Pull Request – Backlog DIM
 
-> Preencha todas as seções relevantes. PRs incompletas podem ser marcadas como _draft_ pelos revisores.
+Breve e direto: preencha as seções relevantes. PRs incompletas podem virar draft pelos revisores.
 
-## 📌 Contexto
+### 1) Resumo
 
-- **Tipo de mudança** (marque todos que se aplicam):
-  - [ ] feat (nova funcionalidade)
-  - [ ] fix (correção de bug)
-  - [ ] refactor (refatoração sem alteração de comportamento)
-  - [ ] perf (melhoria de performance)
-  - [ ] docs (documentação)
-  - [ ] chore (infra/ajustes gerais)
-  - [ ] test (testes)
-  - [ ] build (configurações de build/CI)
-  - [ ] style (formatação/estilo, sem impacto funcional)
-  - [ ] breaking change (quebra compatibilidade)
+- O que foi feito (1-2 linhas):
 
-- **Área afetada**:
-  - [ ] Frontend (Next.js/React/MUI)
-  - [ ] API (App Router /api)
-  - [ ] Banco/Prisma (schema/migrations/seeds)
-  - [ ] Infra (scripts Docker/CI/CD)
-  - [ ] Documentação (/docs, README)
+### 2) Como testar (resumo rápido)
 
-## 🧾 Descrição
+- Principais passos para reproduzir / validar (ex.: instalar deps, rodar dev, endpoint a testar).
 
-_Explique o que foi feito e por quê._
+### 3) Tipo de mudança (marque uma)
 
-## 🧪 Como testar
+- [ ] feat
+- [ ] fix
+- [ ] refactor
+- [ ] docs
+- [ ] chore
 
-_Passos objetivos para validar manualmente._
+### 4) Checklist mínimo (obrigatório)
 
-1. `npm ci`
-2. Configurar `.env.local` conforme `.env.local.example`
-3. (Opcional) `npm run infra:up && npm run infra:db:init`
-4. `npm run dev`
-5. Validar:
-   - [ ] Fluxo X
-   - [ ] Importação CSV
-   - [ ] Regras de permissão
-   - [ ] Integração com microsserviços (ex.: /api/cnaes)
+- [ ] `pnpm run type-check` passou
+- [ ] `pnpm run lint` passou
+- [ ] `pnpm run build` passou
+- [ ] Não incluí segredos/credenciais em commits
 
-## ✅ Checklist do Autor
+### 5) Banco / migrações
 
-- Qualidade:
-  - [ ] `npm run type-check` ok
-  - [ ] `npm run lint` ok
-  - [ ] `npm run build` ok
-- Domínio/Enums & Adapters:
-  - [ ] Usei enums/tipos do `@anpdgovbr/shared-types` (fonte de verdade)
-  - [ ] Fiz conversão para enums do Prisma somente na borda (adapters em `src/lib/adapters`)
-- APIs (paginação/ordenação):
-  - [ ] Para endpoints com `page/pageSize/orderBy`, apliquei clamp/whitelist conforme padrão (ver AGENTS.md)
-- Banco de dados:
-  - [ ] Não houve mudanças de schema **OU**
-  - [ ] Incluí **migration Prisma** e atualizei seeds quando necessário
-- Segurança & LGPD:
-  - [ ] Sem segredos/credenciais em commits
-  - [ ] Dados pessoais (se usados em exemplos) estão **mascarados**
-  - [ ] Sem logs sensíveis adicionados
-- Acessibilidade & i18n:
-  - [ ] Semântica básica, labels/aria aplicados quando necessário
-  - [ ] Textos passíveis de tradução (quando aplicável)
-- UI/UX (MUI/GovBR):
-  - [ ] Componentes seguem MUI 7 e DS GovBR
-  - [ ] Uso de **props** e HOCs conforme padrão do projeto
-- Documentação:
-  - [ ] Atualizei README/docs quando necessário
-  - [ ] Prints/GIFs incluídos (se UI mudou)
+- [ ] Sem mudança de schema
+- [ ] Inclui migration Prisma (se aplicável)
 
-## 🔍 Evidências (screenshots/GIFs)
+### 6) Evidências (opcional)
 
-_Anexe imagens curtas, comparativos antes/depois se for UI._
+- Anexe prints/GIFs se a UI mudou
+
+Obrigatório: mantenha o PR curto, com passos de teste claros e checklist preenchido.
