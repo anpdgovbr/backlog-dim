@@ -1,9 +1,9 @@
 name: Gitleaks (official action)
 on:
   push:
-    branches: [main, stable, develop]
+    branches: [main, develop]
   pull_request:
-    branches: [main, stable, develop]
+    branches: [main, develop]
   schedule:
     - cron: "0 2 * * 1"
 
