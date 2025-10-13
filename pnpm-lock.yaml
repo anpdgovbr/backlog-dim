@@ -21,8 +21,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@anpdgovbr/rbac-provider':
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.1.3
+        version: 0.1.3
       '@anpdgovbr/rbac-react':
         specifier: ^0.2.3
         version: 0.2.3(react@19.2.0)(swr@2.3.6(react@19.2.0))
@@ -243,14 +243,17 @@ packages:
   '@anpdgovbr/rbac-core@0.1.3':
     resolution: {integrity: sha512-f+oeCSMne/qZ2r2uf+EcBExGovdS4LPvXHRYQ4xdstNPP/0pids0W8nWOAaSUnLTdzLpjXcB+qfPjFAKsRtrYQ==}
 
+  '@anpdgovbr/rbac-core@0.1.4':
+    resolution: {integrity: sha512-945+ytLcraSveTzjABYlXCkIbNCJC3bLNeNEVK8lEA7nDIEr49HvZQksCbuNW1H84FcqKl9iJs4l9AavsGxiOA==}
+
   '@anpdgovbr/rbac-next@0.1.2':
     resolution: {integrity: sha512-N51pBa3bpgnNYP+AOb6AEkgr5prcaAfnx88QeLAKJ4umDJBCnBt2z+svgVhGaUX4xgQkWThKETQ56wDe5Onxwg==}
 
   '@anpdgovbr/rbac-prisma@0.1.2':
     resolution: {integrity: sha512-xkQEJPpwrayHnpBBfBz2DzAk+LFx4/SOojeQx9tJU/GehcRJXS/GaNrIXp0PkzxhB/CCD9eOevfLJgfwNE8AEA==}
 
-  '@anpdgovbr/rbac-provider@0.1.2':
-    resolution: {integrity: sha512-TP1WbwnO/ZZGQAVVzGTxNStQu9fLxFRq+jfAtS4CqRaS1SKYOfzromiHtUyXNNbrZJ7r0BbdMgqg3PP8Z0DhiA==}
+  '@anpdgovbr/rbac-provider@0.1.3':
+    resolution: {integrity: sha512-UOv32dEcN2OZiQ3eJ1ZZrmn/hCYYkMIMT4lIuB2BIQp69Bj0AwpSxuU5BTPzWOwTx7hyxY0JKJ2i7py+PHIBoQ==}
 
   '@anpdgovbr/rbac-react@0.2.3':
     resolution: {integrity: sha512-xUG5/Zckhea2RacdrdL9KgYsGw4t2ymbC2cABWn9y2zEK5xK92axSg3Perd7RO4E0drJRAzBZ1qRnVQdvpFMNQ==}
@@ -3424,19 +3427,21 @@ snapshots:
 
   '@anpdgovbr/rbac-core@0.1.3': {}
 
+  '@anpdgovbr/rbac-core@0.1.4': {}
+
   '@anpdgovbr/rbac-next@0.1.2':
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.3
-      '@anpdgovbr/rbac-provider': 0.1.2
+      '@anpdgovbr/rbac-provider': 0.1.3
 
   '@anpdgovbr/rbac-prisma@0.1.2':
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.3
-      '@anpdgovbr/rbac-provider': 0.1.2
+      '@anpdgovbr/rbac-provider': 0.1.3
 
-  '@anpdgovbr/rbac-provider@0.1.2':
+  '@anpdgovbr/rbac-provider@0.1.3':
     dependencies:
-      '@anpdgovbr/rbac-core': 0.1.3
+      '@anpdgovbr/rbac-core': 0.1.4
 
   '@anpdgovbr/rbac-react@0.2.3(react@19.2.0)(swr@2.3.6(react@19.2.0))':
     dependencies:
