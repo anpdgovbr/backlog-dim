@@ -3,7 +3,7 @@
 import React from "react"
 
 import CloseIcon from "@mui/icons-material/Close"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -124,7 +124,7 @@ export default function DialogAlert({
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: "center", pb: 2, gap: 2 }}>
-        <Button
+        <GovBRButton
           variant="outlined"
           onClick={onClose}
           disabled={loading}
@@ -138,8 +138,8 @@ export default function DialogAlert({
           }}
         >
           {cancelText}
-        </Button>
-        <Button
+        </GovBRButton>
+        <GovBRButton
           variant="contained"
           onClick={onConfirm}
           disabled={loading}
@@ -152,7 +152,7 @@ export default function DialogAlert({
           }}
         >
           {loading ? "Aguarde..." : confirmText}
-        </Button>
+        </GovBRButton>
       </DialogActions>
     </Dialog>
   )

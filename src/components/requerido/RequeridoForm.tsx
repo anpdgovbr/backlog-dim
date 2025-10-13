@@ -72,6 +72,7 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
       formState: { errors },
     } = methods
 
+    // eslint-disable-next-line react-hooks/incompatible-library -- watch() do React Hook Form é necessário para reatividade
     const tipo = watch("tipo")
     const cnpj = watch("cnpj")
     const { notify } = useNotification()

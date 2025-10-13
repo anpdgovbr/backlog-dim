@@ -16,8 +16,6 @@ import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import Tooltip from "@mui/material/Tooltip"
 import Typography from "@mui/material/Typography"
-import { useTheme } from "@mui/material/styles"
-import useMediaQuery from "@mui/material/useMediaQuery"
 
 export type LinkItem = {
   href: string
@@ -38,28 +36,18 @@ export default function SideMenu({
   storageKey = "drawerOpen",
   title = "Menu",
 }: Readonly<SideMenuProps>) {
-  const [drawerOpen, setDrawerOpen] = useState(true)
-  const [loaded, setLoaded] = useState(false)
-  const theme = useTheme()
-  const isXs = useMediaQuery(theme.breakpoints.down("md"))
-
-  useEffect(() => {
+  const [drawerOpen, setDrawerOpen] = useState(() => {
+    if (typeof window === "undefined") return true
+    // Em telas pequenas, inicia fechado
+    if (window.matchMedia("(max-width: 960px)").matches) return false
     const saved = localStorage.getItem(storageKey)
-    setDrawerOpen(saved === null ? true : saved === "true")
-    setLoaded(true)
-  }, [storageKey])
+    return saved === null ? true : saved === "true"
+  })
 
+  // Persiste estado no localStorage
   useEffect(() => {
-    if (loaded) {
-      localStorage.setItem(storageKey, String(drawerOpen))
-    }
-  }, [drawerOpen, loaded, storageKey])
-
-  useEffect(() => {
-    if (loaded && isXs) {
-      setDrawerOpen(false)
-    }
-  }, [isXs, loaded])
+    localStorage.setItem(storageKey, String(drawerOpen))
+  }, [drawerOpen, storageKey])
 
   return (
     <Drawer

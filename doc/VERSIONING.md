@@ -6,10 +6,17 @@ Este projeto implementa um sistema automatizado para controle de versão e gera�
 
 ### Automático (Recomendado)
 
-- **A cada commit**: O hook `pre-commit` do Husky automaticamente:
-  1. Incrementa a versão patch no `package.json`
-  2. Gera/atualiza o `public/version.json`
-  3. Adiciona ambos os arquivos ao commit
+- **A cada commit relevante**: O hook `pre-commit` do Husky automaticamente:
+  1. **Verifica se deve fazer bump** (pula commits de docs, chore, style, etc.)
+  2. **Incrementa a versão patch** no `package.json` (apenas para commits funcionais)
+  3. **Gera/atualiza** o `public/version.json`
+  4. **Adiciona ambos os arquivos** ao commit
+
+#### Commits que **NÃO** fazem bump automático:
+
+- `docs:`, `chore:`, `style:`, `refactor:`, `test:`, `ci:`
+- Branches de desenvolvimento (`feature/`, `fix/`, `hotfix/`, `bugfix/`)
+- Quando `package.json` já foi modificado no commit
 
 ### Manual
 

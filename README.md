@@ -1,4 +1,5 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
+
 [![CI](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml/badge.svg)](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -14,7 +15,7 @@
 [![Versão](https://img.shields.io/badge/versão-0.4.x-brightgreen?style=for-the-badge)](package.json)
 [![Licença](https://img.shields.io/badge/licença-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Autoridade Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
+O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvolvido para a ANPD (Agência Nacional de Proteção de Dados). A aplicação permite o controle, acompanhamento e gestão de processos, requerimentos, e entidades relacionadas, como requeridos e responsáveis.
 
 ## 📑 Sumário
 
@@ -29,6 +30,8 @@ O **Backlog DIM** é um sistema de gerenciamento de processos internos, desenvol
   - [Passo a Passo](#passo-a-passo)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
 - [Scripts Disponíveis](#-scripts-disponíveis)
+- [Testes e Mocks](#-testes-e-mocks)
+- [Enums de Domínio](#-enums-de-domínio)
 - [Gestão do Banco de Dados com Prisma](#-gestão-do-banco-de-dados-com-prisma)
 - [Fluxo de CI/CD](#-fluxo-de-cicd)
 - [Padrões de Código](#-padrões-de-código)
@@ -153,7 +156,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/en/) (v20 ou superior)
-- [NPM](https://www.npmjs.com/) (v10 ou superior)
+- [NPM](https://www.npmjs.com/) (v10 ou superior) ou [pnpm](https://pnpm.io/) (v10 ou superior) **← Recomendado**
 - [Git](https://git-scm.com/)
 - [Docker](https://www.docker.com/products/docker-desktop/) (**Obrigatório** para infraestrutura padrão ANPD)
 
@@ -169,6 +172,10 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 2.  **Instale as dependências:**
 
     ```bash
+    # Com pnpm (recomendado)
+    pnpm install
+
+    # Ou com npm
     npm install
     ```
 
@@ -226,16 +233,16 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
 Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH_KEYCLOAK.md`.
 
-| Variável                       | Descrição                                      | Exemplo (Local)                                           |
-| ------------------------------ | ---------------------------------------------- | --------------------------------------------------------- |
-| `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+| Variável                       | Descrição                                      | Exemplo (Local)                                                     |
+| ------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------- |
+| `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres`           |
 | `NEXTAUTH_URL`                 | URL base da aplicação para o NextAuth.         | `http://localhost:3000` (DEV) / `https://dim.dev.anpd.gov.br` (HML) |
-| `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                     |
-| `NEXT_PUBLIC_AUTH_PROVIDER`    | Id do provider de login do NextAuth.           | `keycloak`                                                |
-| `KEYCLOAK_ISSUER`              | URL do emissor OIDC do realm.                  | `http://localhost:8080/realms/ANPD`                       |
-| `KEYCLOAK_CLIENT_ID`           | Client ID do cliente do app no KC.             | `backlog-dim`                                             |
-| `KEYCLOAK_CLIENT_SECRET`       | Client Secret do cliente no KC.                | (Obtido no Keycloak)                                      |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (dev com self-signed) / `1` (prod)                    |
+| `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                               |
+| `NEXT_PUBLIC_AUTH_PROVIDER`    | Id do provider de login do NextAuth.           | `keycloak`                                                          |
+| `KEYCLOAK_ISSUER`              | URL do emissor OIDC do realm.                  | `http://localhost:8080/realms/ANPD`                                 |
+| `KEYCLOAK_CLIENT_ID`           | Client ID do cliente do app no KC.             | `backlog-dim`                                                       |
+| `KEYCLOAK_CLIENT_SECRET`       | Client Secret do cliente no KC.                | (Obtido no Keycloak)                                                |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (dev com self-signed) / `1` (prod)                              |
 
 ### 📋 Configuração Rápida
 
@@ -308,6 +315,25 @@ Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH
 | `npm run prisma:migrate`       | Cria e aplica nova migração.                               |
 | `npm run prisma:push`          | Sincroniza schema com banco (desenvolvimento).             |
 | `npm run prisma:studio`        | Abre Prisma Studio diretamente.                            |
+
+## 🧪 Testes e Mocks
+
+- Framework: Vitest. Testes co-localizados em `src/**/*.test.ts`.
+- Alias: `@` → `src` (ver `vitest.config.ts`).
+- Utilize as utilidades padronizadas:
+  - `src/test/factories.ts` — `makeProcesso`, `makePerfil`, `makeUser`, `makeResponsavel`, `makeSituacao`, `makeFormaEntrada`.
+  - `src/test/prisma-mock.ts` — `createPrismaMock()`, `mockTransactionOnce()`.
+  - `src/test/route-harness.ts` — `withApiMockModule()`, `withApiRbacNextMockModule()`.
+
+Mais detalhes: `doc/testing.md`.
+
+## 🧭 Enums de Domínio
+
+- Fonte de verdade: `@anpdgovbr/shared-types` exporta enums e utilitários (lista de valores, type guards, asserts, coerções) para:
+  - `StatusInterno`, `AcaoAuditoria`, `TipoControlador`, `TipoParticipacaoSocietaria`, permissões (`AcaoPermissao`, `RecursoPermissao`), `TipoRequerimento`.
+- Adapters de borda (Prisma): use `src/lib/adapters` para converter shared-types → Prisma apenas no acesso ao banco:
+  - `toPrismaStatus`, `fromPrismaStatus`; `toPrismaTipoRequerimento`, `fromPrismaTipoRequerimento`.
+- Recomendação: no frontend e nas regras de domínio do backend, sempre trabalhar com os tipos do shared-types; ao persistir/filtrar com Prisma, converter via adapters.
 
 ## 🗄️ Gestão do Banco de Dados
 

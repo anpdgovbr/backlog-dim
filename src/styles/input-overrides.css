@@ -1,0 +1,54 @@
+/* 
+ * Override de estilos para inputs MUI
+ * Resolve problema de bordas duplas nos OutlinedInput
+ * Aplica cor de foco padrão do GOV.BR Design System
+ */
+
+/* Remove bordas duplas do MuiOutlinedInput-root */
+.MuiOutlinedInput-root {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove borda padrão do fieldset interno */
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border: 1px solid var(--gray-40, #999999) !important;
+  border-radius: var(--surface-rounder-sm, 4px) !important;
+}
+
+/* Estado hover */
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--gray-60, #777777) !important;
+}
+
+/* Estado focused - usa cor amarela do GOV.BR */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--focus, #ffd200) !important;
+  border-width: 1px !important;
+  box-shadow: transparent !important;
+}
+
+/* Estado error */
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: var(--feedback-error-vivid, #d04f4f) !important;
+  border-width: 2px !important;
+}
+
+.MuiOutlinedInput-root.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline {
+  box-shadow: 0 0 0 1px var(--feedback-error-light, #f8a8a8) !important;
+}
+
+/* Estado disabled */
+.MuiOutlinedInput-root.Mui-disabled {
+  background-color: var(--gray-10, #eeeeee) !important;
+  opacity: 1 !important;
+}
+
+.MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
+  border-color: var(--gray-20, #cccccc) !important;
+}
+
+.MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-input {
+  color: var(--gray-60, #777777) !important;
+  cursor: not-allowed !important;
+}

@@ -1,112 +1,176 @@
-# Instruções para agentes de código (Copilot / AI) — Backlog DIM
+# Instruções para GitHub Copilot — Backlog DIM
 
-Objetivo curto: ajude a implementar features, correções e refatorações seguindo as convenções deste repositório. Forneça mudanças pequenas e verificáveis; prefira não alterar comportamento global sem testes/CI.
+**IMPORTANTE: Responda sempre em português brasileiro.**
 
-Pontos essenciais (leia antes de editar):
+## Objetivo Curto
 
-- Projeto: Next.js 15 (App Router) + TypeScript + Prisma + MUI (Material-UI) + Turbopack em dev.
-- Pasta principal: `src/` (páginas App Router em `src/app`, APIs em `src/app/api`).
-- Estado padrão: config ESLint moderna em `eslint.config.mjs` (flat config). Há arquivos legados (`.eslintrc.*`) usados para compatibilidade com ferramentas externas.
+Ajude a implementar features, correções e refatorações seguindo as convenções deste repositório. Forneça mudanças pequenas e verificáveis; prefira não alterar comportamento global sem testes/CI.
 
-Regras de estilo e padrões específicos:
+## Pontos Essenciais (Leia Antes de Editar)
 
-- Imports MUI e MUI Icons: sempre importações individuais, sem desestruturação. Exemplo correto:
-  - `import Button from '@mui/material/Button'`
-  - `import EditIcon from '@mui/icons-material/Edit'`
-    Evite: `import { Button } from '@mui/material'` ou `import { Edit } from '@mui/icons-material'`.
-- Tipos e hooks: use os hooks definidos em `src/hooks` (ex: `useProcessos`, `useUsuarioIdLogado`) em vez de criar fetchers ad-hoc quando possível.
-- Contextos/Providers: `src/context` contém provedores (Audit, Notification, Session). Prefira usá-los para estado compartilhado.
+**Stack tecnológico:**
 
-- Props dos componentes: todas as props de componentes React devem usar `Readonly<>` no tipo (ex: `type Props = Readonly<{ id: string; onClose?: () => void }>`). Isso evita mutações acidentais e segue o padrão do código existente.
-  - Exemplo curto:
-    - `type MyComponentProps = Readonly<{ label: string; onClick?: () => void }>`
-    - `export default function MyComponent(props: MyComponentProps) { /* ... */ }`
+- Projeto: Next.js 15 (App Router) + TypeScript + Prisma + MUI (Material-UI) + Turbopack em dev
+- Pasta principal: `src/` (páginas App Router em `src/app`, APIs em `src/app/api`)
+- Estado padrão: config ESLint moderna em `eslint.config.mjs` (flat config)
 
-Performance e carregamento de componentes não críticos:
+## Regras de Estilo e Padrões Específicos
 
-- Componentes que não precisam ser renderizados imediatamente no carregamento da página (por exemplo: modais, dialogs, visualizadores pesados, editores WYSIWYG) devem ser carregados dinamicamente com `next/dynamic` e renderizados condicionalmente quando a variável que controla sua abertura for verdadeira. Sempre envolva o import dinâmico em `React.Suspense` com um fallback leve.
+**CRÍTICO - Imports e Types:**
 
-- Exemplo recomendado (padrão do repositório):
-  - Import dinâmico: `const MyModal = dynamic(() => import('@/components/modals/MyModal'), { ssr: false })`
-  - Render condicional + Suspense:
-    - `<Suspense fallback={<div />}>{isOpen && <MyModal onClose={close} />}</Suspense>`
+- **NUNCA use `any`** — Sempre tipado, prefira `unknown` com type narrowing
+- **Imports MUI e MUI Icons:** sempre importações individuais, SEM desestruturação:
 
-- Motivo: evita aumentar o bundle inicial, melhora TTI e reduz uso de memória em builds/execução. Siga esse padrão para componentes que não são necessários no primeiro paint.
+  ```typescript
+  // ✅ CORRETO
+  import Button from "@mui/material/Button"
+  import EditIcon from "@mui/icons-material/Edit"
 
-Arquitetura e fluxos importantes:
+  // ❌ EVITE
+  import { Button } from "@mui/material"
+  import { Edit } from "@mui/icons-material"
+  ```
 
-- Rotas: `src/app` usa App Router; layouts e segmentação de pastas importam para roteamento.
-- API: endpoints em `src/app/api/*` são functions serverless — seguir o padrão existente (retornar Response/NextResponse conforme exemplos em `src/app/api`).
-- Prisma: `prisma/schema.prisma` + `prisma/seed.ts`. Use `npx prisma migrate dev` ou os scripts `npm run infra:db:init` quando rodar com docker-infra-pg.
+**Priorização de componentes UI:**
 
-Workflows de desenvolvedor (rápidos):
+1. **PRIMEIRO:** Use componentes da lib `@anpdgovbr/shared-ui` (ex: Button, TextField, etc.)
+2. **SEGUNDO:** Se não existir na shared-ui, então use MUI com importação individual
 
-- Instalar dependências: `npm install`
-- Rodar dev (Turbopack): `npm run dev` ou `npm run dev:turbo`
-- Dev HTTPS (certificados locais): `npm run dev:turbo:https` (usa `scripts/dev-server.mjs`, que já passa `turbo: true` quando `NODE_ENV !== 'production'`).
-- Build: `npm run build` (nota: o projeto atualmente pode pular lint durante build via `next.config.ts`)
-- Lint: `npm run lint` (executa eslint com --fix)
+**Props de componentes React:**
 
-Contribuições e PRs:
+- Todas as props devem usar `Readonly<>` para evitar mutações acidentais:
 
-- Mantenha mudanças pequenas e fáceis de revisar. Quando adicionar ou alterar regras de ESLint/Prettier, atualize `docs/ESLINT.md` também.
-- Ao criar novas páginas no App Router, gere rotas de desenvolvimento com `npm run build-routes` (muito usado pelo projeto).
+  ```typescript
+  type MyComponentProps = Readonly<{
+    label: string
+    onClick?: () => void
+  }>
 
-Padrões de código e exemplos práticos:
+  export default function MyComponent(props: MyComponentProps) {
+    // ...
+  }
+  ```
 
-- Componentes: `src/components/*` seguem padrão export default de componentes React com props tipadas. Exemplos:
-  - CRUD manager em `src/components/CrudManager.tsx`
-  - Avatar em `src/components/avatar`
-- Requests para backend: use `lib/api.ts` e `lib/fetcher.ts` para consistência (SWR é usado para cache de dados).
-- Formulários: use `react-hook-form` e validação com `zod` (v4) com o resolver `@hookform/resolvers/zod`, seguindo os componentes existentes (`components/form/*`).
+**Hooks e contextos:**
 
-Recomendações de convenções de nomenclatura (padrão recomendado):
+- Use hooks definidos em `src/hooks` (ex: `useProcessos`, `useUsuarioIdLogado`) em vez de criar fetchers ad-hoc
+- Contextos/Providers: `src/context` contém provedores (Audit, Notification, Session). Prefira usá-los para estado compartilhado
 
-- Componentes / Classes / Types / Enums: PascalCase
+## Performance e Carregamento de Componentes Não Críticos
+
+Componentes que não precisam ser renderizados imediatamente no carregamento da página (modais, dialogs, visualizadores pesados, editores WYSIWYG) devem ser carregados dinamicamente com `next/dynamic` e renderizados condicionalmente:
+
+```typescript
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
+
+// Import dinâmico
+const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
+  ssr: false
+})
+
+// Render condicional + Suspense
+<Suspense fallback={<div />}>
+  {isOpen && <MyModal onClose={close} />}
+</Suspense>
+```
+
+**Motivo:** Evita aumentar o bundle inicial, melhora TTI e reduz uso de memória em builds/execução.
+
+## Arquitetura e Fluxos Importantes
+
+**Rotas:** `src/app` usa App Router; layouts e segmentação de pastas importam para roteamento.
+
+**API:** Endpoints em `src/app/api/*` são functions serverless — seguir padrão existente (retornar Response/NextResponse conforme exemplos).
+
+**Prisma:** `prisma/schema.prisma` + `prisma/seed.ts`. Use `npx prisma migrate dev` ou scripts `npm run infra:db:init` quando rodar com docker-infra-pg.
+
+## Workflows de Desenvolvedor (Comandos Rápidos)
+
+- **Instalar dependências:** `npm install`
+- **Rodar dev (Turbopack):** `npm run dev` ou `npm run dev:turbo`
+- **Build:** `npm run build` (nota: o projeto pode pular lint durante build via `next.config.ts`)
+- **Lint:** `npm run lint` (executa eslint com --fix)
+- **Type check:** `npm run type-check`
+
+## Padrões de Código e Exemplos Práticos
+
+**Componentes:**
+
+- `src/components/*` seguem padrão export default de componentes React com props tipadas
+- Exemplos: CRUD manager em `src/components/CrudManager.tsx`, Avatar em `src/components/avatar`
+
+**Requests para backend:**
+
+- Use `lib/api.ts` e `lib/fetcher.ts` para consistência (SWR é usado para cache de dados)
+
+**Formulários:**
+
+- Use `react-hook-form` e validação com `zod` (v4) com resolver `@hookform/resolvers/zod`
+- Siga componentes existentes em `components/form/*`
+
+## Convenções de Nomenclatura (Padrão Recomendado)
+
+- **Componentes/Classes/Types/Enums:** PascalCase
   - Ex.: `UserCard.tsx`, `ProcessManager`, `type UserDto`, `enum Status { Active, Inactive }`
-- Arquivos de componente `.tsx`: PascalCase (um componente por arquivo, nome do arquivo igual ao componente)
+- **Arquivos de componente .tsx:** PascalCase (um componente por arquivo, nome igual ao componente)
   - Ex.: `RequeridoForm.tsx`, `SidebarLayout.tsx`
-- Diretórios / segmentos de rota: kebab-case (recomendado para clareza em URLs e compatibilidade de sistemas de arquivos)
+- **Diretórios/segmentos de rota:** kebab-case (clareza em URLs e compatibilidade)
   - Ex.: `importar-processos`, `relatorios/top-requeridos`
-- Funções, variáveis e métodos: lowerCamelCase
+- **Funções/variáveis/métodos:** camelCase
   - Ex.: `fetchUser`, `getServerSideProps`
-- Hooks: prefixar com `use` e usar camelCase (`useProcessos`, `useUsuarioIdLogado`). O arquivo pode seguir o padrão do time (ex.: `useProcessos.ts`).
-- Constantes imutáveis: UPPER_SNAKE
+- **Hooks:** prefixar com `use` + camelCase (`useProcessos`, `useUsuarioIdLogado`)
+- **Constantes imutáveis:** UPPER_SNAKE_CASE
   - Ex.: `MAX_RETRIES`, `API_BASE_URL`
-- Enums TypeScript: enum name em PascalCase; members preferencialmente PascalCase (ou UPPER_CASE para flags/constants)
+- **Enums TypeScript:** enum name PascalCase; members PascalCase (ou UPPER_CASE para flags/constants)
 
-Enforcement sugerido (opcional)
+## Integrações e Configurações
 
-- Regras ESLint recomendadas para impor convenções:
-  - `@typescript-eslint/naming-convention` para tipos/classe/variáveis/funções/enums
-  - `eslint-plugin-filenames` para forçar PascalCase em arquivos de componente `.tsx`
-- Processo recomendado: adicionar as regras no `.eslintrc` e rodar `npm run lint` + `npm run type-check`, depois aplicar autofix e revisar renomeações de arquivos/paths.
+**NextAuth/Keycloak:**
 
-Integrações e segredos:
+- Ver `src/config/next-auth.config.ts` e variáveis em `.env.example`
+- Variáveis obrigatórias: `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`
 
-- Azure AD / NextAuth: ver `src/config/next-auth.config.ts` e variáveis em `.env.example`.
-- Banco: usar `docker-infra-pg` com os scripts `infra:*` para desenvolver localmente.
+**Banco:**
 
-Como aprovar alterações automaticamente (boas práticas para agentes):
+- Usar `docker-infra-pg` com scripts `infra:*` para desenvolver localmente
+- Comandos úteis: `npm run infra:setup`, `npm run infra:up`, `npm run infra:db:init`
 
-- Sempre rode `npm run lint` e `npm run type-check` localmente antes de propor mudanças.
-- Se modificar comportamento de API ou banco, inclua alteração no `prisma/schema.prisma` e sugira comandos de migração (`npx prisma migrate dev`).
+## Boas Práticas para Aprovação Automática
 
-Onde olhar primeiro (arquivos-chave):
+**Sempre execute antes de propor mudanças:**
 
-- `src/app/*` (rotas + layouts)
-- `src/components/*` (UI e padrões)
-- `src/lib/api.ts`, `src/lib/fetcher.ts` (chamada p/ backend)
-- `next.config.ts`, `package.json`, `eslint.config.mjs` (build, scripts, lint)
-- `prisma/schema.prisma` e `prisma/seed.ts` (modelo de dados)
+- `npm run lint` — Corrige problemas de estilo automaticamente
+- `npm run type-check` — Verifica erros de TypeScript
 
-Notas finais:
+**Se modificar comportamento de API ou banco:**
 
-- Evite mudanças em infra e scripts cross-project sem sinal claro no PR; esse repositório segue convenções corporativas (docker-infra-pg, scripts de versionamento).
-- Pergunte quando o requisito for ambíguo e proponha 1–2 alternativas pequenas. Sempre inclua os comandos de validação que você executou.
+- Inclua alteração no `prisma/schema.prisma`
+- Sugira comandos de migração (`npx prisma migrate dev`)
 
-Feedback: me diga se quer que eu inclua exemplos de código adicionais, regras de commit, ou padrão de mensagens de PR.
+## Arquivos-Chave (Onde Olhar Primeiro)
+
+- `src/app/*` — Rotas + layouts
+- `src/components/*` — UI e padrões
+- `src/lib/api.ts`, `src/lib/fetcher.ts` — Chamadas para backend
+- `next.config.ts`, `package.json`, `eslint.config.mjs` — Build, scripts, lint
+- `prisma/schema.prisma` e `prisma/seed.ts` — Modelo de dados
+
+## Diretrizes de Contribuição e PRs
+
+- **Mantenha mudanças pequenas e fáceis de revisar**
+- Quando adicionar ou alterar regras ESLint/Prettier, atualize `doc/ESLINT.md`
+- Ao criar novas páginas App Router, gere rotas de desenvolvimento com `npm run build-routes`
+- **Evite mudanças em infra e scripts cross-project** sem sinal claro no PR
+
+## Notas Finais
+
+- **Evite mudanças em infra** sem necessidade clara — repositório segue convenções corporativas
+- **Quando requisito for ambíguo:** pergunte e proponha 1–2 alternativas pequenas
+- **Sempre inclua comandos de validação** que você executou (lint, type-check)
+- **Prefira não alterar comportamento global** sem testes/CI adequados
+- **NUNCA use comandos complexos com echo/pipes no terminal para gerar resumos** — Escreva resumos diretos na interface de chat. O usuário prefere ler texto formatado na conversa em vez de comandos shell complexos para gerar resumos.
 
 ---
 
-Muito importante: responder sempre em pt-BR. Imports MUI e MUIIcons devem ser sempre individuais e sem desestruturaçãoe sem usar any.
+**Lembrete crítico:** Responda sempre em pt-BR. Imports MUI e MUI Icons sempre individuais e sem desestruturação. NUNCA use `any`.

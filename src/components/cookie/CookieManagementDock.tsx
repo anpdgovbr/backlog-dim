@@ -1,8 +1,9 @@
 "use client"
 
-import { Box, Button, Typography, Stack } from "@mui/material"
+import { Box, Typography, Stack } from "@mui/material"
 import SettingsIcon from "@mui/icons-material/Settings"
 import { useConsent, useOpenPreferencesModal } from "react-lgpd-consent"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 
 export default function CookieManagementDock() {
   const openModal = useOpenPreferencesModal()
@@ -29,7 +30,7 @@ export default function CookieManagementDock() {
       </Typography>
 
       <Stack spacing={1}>
-        <Button
+        <GovBRButton
           onClick={openModal}
           variant="outlined"
           size="small"
@@ -37,7 +38,7 @@ export default function CookieManagementDock() {
           fullWidth
         >
           Configurar Cookies
-        </Button>
+        </GovBRButton>
 
         <Typography variant="caption" color="text.secondary">
           Status: {consented ? "✅ Configurado" : "⚠️ Pendente"}

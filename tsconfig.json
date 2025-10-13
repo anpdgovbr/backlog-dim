@@ -16,6 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
+    "skipDefaultLibCheck": true,
     "plugins": [
       {
         "name": "next"
@@ -26,7 +27,8 @@
       "@/config/*": ["./src/config/*"],
       "@/*": ["./src/*"],
       "@scripts/*": ["scripts/*"]
-    }
+    },
+    "types": ["node", "react", "react-dom", "vitest/globals"]
   },
   "include": [
     "**/*.ts",

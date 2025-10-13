@@ -11,7 +11,7 @@ import NavigateNext from "@mui/icons-material/NavigateNext"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import Alert from "@mui/material/Alert"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import Chip from "@mui/material/Chip"
 import Grid from "@mui/material/Grid"
@@ -212,7 +212,7 @@ function ImportarProcessosContent() {
 
   const actions = (
     <Stack direction="row" spacing={2}>
-      <Button
+      <GovBRButton
         variant="outlined"
         component="label"
         disabled={loading}
@@ -220,16 +220,16 @@ function ImportarProcessosContent() {
       >
         Selecionar CSV
         <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
-      </Button>
+      </GovBRButton>
 
-      <Button
+      <GovBRButton
         variant="contained"
         onClick={handleImport}
         disabled={loading || !dados.length || importado}
         startIcon={loading ? undefined : <PlayArrowIcon />}
       >
         {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
-      </Button>
+      </GovBRButton>
     </Stack>
   )
 

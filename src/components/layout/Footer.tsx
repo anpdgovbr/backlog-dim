@@ -5,6 +5,7 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 
 import { useCurrentYear } from "@/hooks/useCurrentYear"
+import BuildInfo from "@/components/ui/BuildInfo"
 
 export default function Footer() {
   const currentYear = useCurrentYear()
@@ -28,6 +29,7 @@ export default function Footer() {
             justifyContent: "space-between",
             textAlign: "center",
             py: 1,
+            gap: 1,
           }}
         >
           <Typography
@@ -40,6 +42,20 @@ export default function Footer() {
           >
             © {currentYear} Desenvolvido pela DDSS/CGTI
           </Typography>
+
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: "0.65rem", sm: "0.75rem" },
+              fontFamily: "monospace",
+              opacity: 0.8,
+            }}
+            suppressHydrationWarning
+          >
+            <BuildInfo />
+          </Typography>
+
           <Typography
             variant="caption"
             color="text.secondary"
@@ -47,7 +63,7 @@ export default function Footer() {
               fontSize: { xs: "0.7rem", sm: "0.8rem" },
             }}
           >
-            Autoridade Nacional de Proteção de Dados
+            Agência Nacional de Proteção de Dados
           </Typography>
         </Box>
       </Container>

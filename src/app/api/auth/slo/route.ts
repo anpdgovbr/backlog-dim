@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { registrarAuditoria } from "@/helpers/auditoria-server"
-import type { AcaoAuditoria } from "@anpdgovbr/shared-types"
+import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { getToken } from "next-auth/jwt"
 
 /**
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
     await registrarAuditoria({
       tabela: "auth",
-      acao: "GET" as unknown as AcaoAuditoria,
+      acao: AcaoAuditoria.GET,
       email,
       contexto: "slo-url",
       req,

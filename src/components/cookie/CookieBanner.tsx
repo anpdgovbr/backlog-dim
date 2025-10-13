@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 
 import CloseIcon from "@mui/icons-material/Close"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import Backdrop from "@mui/material/Backdrop"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import Collapse from "@mui/material/Collapse"
@@ -49,16 +49,15 @@ export default function CookiePreferencesModal({
   closePreferences,
   isModalOpen,
   texts,
-}: CustomPreferencesModalProps) {
-  const [categories, setCategories] = useState<CookieCategory[]>([])
+}: Readonly<CustomPreferencesModalProps>) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
 
-  // Inicializar categorias no client-side
-  useEffect(() => {
+  // Derivar categorias com useMemo em vez de useEffect+setState
+  const categories: CookieCategory[] = useMemo(() => {
     const hostname =
       typeof window !== "undefined" ? window.location.hostname : "localhost"
 
-    const initialCategories = [
+    return [
       {
         id: "necessary",
         name: "Cookies estritamente necessários",
@@ -131,17 +130,9 @@ export default function CookiePreferencesModal({
         ],
       },
     ]
-
-    setCategories(initialCategories)
   }, [preferences])
 
   const handleCategoryToggle = (categoryId: string, enabled: boolean) => {
-    setCategories((prev) =>
-      prev.map((cat) =>
-        cat.id === categoryId && !cat.required ? { ...cat, enabled } : cat
-      )
-    )
-
     // Atualizar preferências na lib
     if (setPreferences) {
       const newPrefs = {
@@ -167,7 +158,6 @@ export default function CookiePreferencesModal({
     categories.forEach((category) => {
       allPreferences[category.id] = true
     })
-    setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: true })))
     if (setPreferences) {
       const prefs = {
         ...allPreferences,
@@ -184,7 +174,6 @@ export default function CookiePreferencesModal({
     categories.forEach((category) => {
       minimalPreferences[category.id] = category.required
     })
-    setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: cat.required })))
     if (setPreferences) {
       const prefs = {
         ...minimalPreferences,
@@ -252,7 +241,7 @@ export default function CookiePreferencesModal({
 
         {/* Content */}
         <DialogContent sx={{ px: 3, py: 2 }}>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1">
             {texts.preferencesDescription ||
               texts.modalIntro ||
               "Para melhorar a sua experiência na plataforma e prover serviços personalizados, utilizamos cookies."}{" "}
@@ -285,7 +274,7 @@ export default function CookiePreferencesModal({
                     mb: 1,
                   }}
                 >
-                  <Button
+                  <GovBRButton
                     variant="text"
                     startIcon={
                       expandedCategories.includes(category.id) ? (
@@ -300,7 +289,7 @@ export default function CookiePreferencesModal({
                     <Typography variant="h6" component="span">
                       {category.name}
                     </Typography>
-                  </Button>
+                  </GovBRButton>
 
                   <FormControlLabel
                     control={
@@ -319,12 +308,7 @@ export default function CookiePreferencesModal({
                 </Box>
 
                 {/* Descrição da Categoria */}
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  paragraph
-                  sx={{ ml: 2 }}
-                >
+                <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
                   {category.description}
                 </Typography>
 
@@ -395,7 +379,7 @@ export default function CookiePreferencesModal({
               <Typography variant="h6" gutterBottom>
                 Configuração de cookies no navegador
               </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
+              <Typography variant="body2" color="text.secondary">
                 Você pode desabilitá-los alterando as configurações do seu navegador.
               </Typography>
               <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -417,12 +401,6 @@ export default function CookiePreferencesModal({
                 >
                   Microsoft Edge
                 </Link>
-                <Link
-                  href="https://support.microsoft.com/pt-br/help/17442/windows-internet-explorer-delete-manage-cookies"
-                  target="_blank"
-                >
-                  Internet Explorer
-                </Link>
               </Stack>
             </Box>
           </Box>
@@ -438,27 +416,27 @@ export default function CookiePreferencesModal({
             borderColor: "divider",
           }}
         >
-          <Button variant="outlined" size="small" onClick={closePreferences}>
+          <GovBRButton variant="outlined" size="small" onClick={closePreferences}>
             {texts.close || "Fechar"}
-          </Button>
+          </GovBRButton>
 
           <Stack direction="row" spacing={1}>
-            <Button
+            <GovBRButton
               variant="outlined"
               size="small"
               onClick={handleRejectAll}
               color="error"
             >
               {texts.declineAll || "Rejeitar cookies"}
-            </Button>
-            <Button
+            </GovBRButton>
+            <GovBRButton
               variant="contained"
               size="small"
               onClick={handleAcceptAll}
               color="primary"
             >
               {texts.acceptAll || "Aceitar todos"}
-            </Button>
+            </GovBRButton>
           </Stack>
         </DialogActions>
       </Dialog>

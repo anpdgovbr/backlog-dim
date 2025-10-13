@@ -157,12 +157,12 @@ export function GovBRConfirmModal({
       sx={sx}
       footer={
         <>
-          <button className="br-button secondary mr-2" onClick={onClose}>
+          <GovBRButton className="br-button secondary mr-2" onClick={onClose}>
             {cancelText}
-          </button>
-          <button className="br-button primary" onClick={onConfirm}>
+          </GovBRButton>
+          <GovBRButton className="br-button primary" onClick={onConfirm}>
             {confirmText}
-          </button>
+          </GovBRButton>
         </>
       }
     >
@@ -245,12 +245,16 @@ export function GovBROptionModal({
       sx={sx}
       footer={
         <>
-          <button className="br-button secondary mr-2" onClick={onClose}>
+          <GovBRButton className="br-button secondary mr-2" onClick={onClose}>
             {cancelText}
-          </button>
-          <button className="br-button primary" onClick={onConfirm} disabled={disabled}>
+          </GovBRButton>
+          <GovBRButton
+            className="br-button primary"
+            onClick={onConfirm}
+            disabled={disabled}
+          >
             {confirmText}
-          </button>
+          </GovBRButton>
         </>
       }
     >

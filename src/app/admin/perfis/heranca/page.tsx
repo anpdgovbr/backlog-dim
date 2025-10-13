@@ -4,7 +4,7 @@ import useSWR from "swr"
 import { useState } from "react"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import FormControl from "@mui/material/FormControl"
@@ -100,14 +100,14 @@ function HerancaPerfisContent() {
             <Box
               sx={{ width: { xs: "100%", md: 140 }, display: "flex", alignItems: "end" }}
             >
-              <Button
+              <GovBRButton
                 fullWidth
                 variant="contained"
                 onClick={adicionar}
                 sx={{ height: 40 }}
               >
                 Adicionar
-              </Button>
+              </GovBRButton>
             </Box>
           </Box>
         </CardContent>
@@ -136,13 +136,13 @@ function HerancaPerfisContent() {
               <Typography>
                 {e.parentNome} → {e.childNome}
               </Typography>
-              <Button
+              <GovBRButton
                 color="error"
                 variant="outlined"
                 onClick={() => remover(e.parentId, e.childId)}
               >
                 Remover
-              </Button>
+              </GovBRButton>
             </Box>
           ))
         ) : (

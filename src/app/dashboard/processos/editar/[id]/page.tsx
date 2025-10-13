@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { TipoRequerimento } from "@prisma/client"
+import type { TipoRequerimento } from "@anpdgovbr/shared-types"
 import { isEqual } from "lodash"
 import { useForm } from "react-hook-form"
 
@@ -13,7 +13,7 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft"
 import SaveOutlined from "@mui/icons-material/SaveOutlined"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
-import Button from "@mui/material/Button"
+import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Container from "@mui/material/Container"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
@@ -178,21 +178,21 @@ export default function EditarProcessoPage() {
       <ProcessoForm processo={processo} methods={methods} />
 
       <Stack direction="row" justifyContent="space-between" mt={3}>
-        <Button
+        <GovBRButton
           startIcon={<ChevronLeft />}
           variant="outlined"
           onClick={() => router.push("/dashboard/processos")}
         >
           Voltar aos processos
-        </Button>
-        <Button
+        </GovBRButton>
+        <GovBRButton
           startIcon={<SaveOutlined />}
           variant="contained"
           color="primary"
           onClick={onSubmit}
         >
           Salvar Alterações
-        </Button>
+        </GovBRButton>
       </Stack>
     </Container>
   )

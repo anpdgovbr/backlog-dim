@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
+import { GovBRLoading } from "@anpdgovbr/shared-ui"
 
 export interface DashboardLayoutProps {
   readonly children: React.ReactNode
@@ -30,7 +30,7 @@ export default function DashboardLayout({
   hasSidebar = false,
 }: DashboardLayoutProps) {
   if (loading) {
-    return <GovBrLoading message={loadingMessage} />
+    return <GovBRLoading text={loadingMessage} />
   }
 
   return (
