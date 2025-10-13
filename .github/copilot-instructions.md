@@ -169,6 +169,7 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
 - **Quando requisito for ambíguo:** pergunte e proponha 1–2 alternativas pequenas
 - **Sempre inclua comandos de validação** que você executou (lint, type-check)
 - **Prefira não alterar comportamento global** sem testes/CI adequados
+- **NUNCA use comandos complexos com echo/pipes no terminal para gerar resumos** — Escreva resumos diretos na interface de chat. O usuário prefere ler texto formatado na conversa em vez de comandos shell complexos para gerar resumos.
 
 ---
 

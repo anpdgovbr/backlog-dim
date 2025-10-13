@@ -4,8 +4,6 @@ import { useTheme } from "@mui/material/styles"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 
-import Version from "./Version"
-
 export default function SystemTitle() {
   const theme = useTheme()
 
@@ -13,6 +11,7 @@ export default function SystemTitle() {
     <Typography
       variant="h4" // maior para dar mais presença no header
       component="div"
+      suppressHydrationWarning
       sx={(t) => ({
         color: t.palette.primary.contrastText,
         // garantir que todos os descendentes herdem a mesma cor (evita <a> azul por padrão)
@@ -34,6 +33,7 @@ export default function SystemTitle() {
       <Link
         href="/"
         underline="none"
+        suppressHydrationWarning
         sx={(t) => ({
           textDecoration: "none !important",
           color: t.palette.primary.contrastText, // garantir cor legível sobre AppBar
@@ -56,13 +56,14 @@ export default function SystemTitle() {
         <Typography
           variant="caption"
           component="sup"
+          suppressHydrationWarning
           sx={{
             fontWeight: theme.typography.fontWeightMedium,
             opacity: 0.85,
             ml: theme.spacing(0.5),
           }}
         >
-          Alfa <Version />
+          Alfa
         </Typography>
       </Link>
     </Typography>

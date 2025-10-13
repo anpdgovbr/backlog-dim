@@ -7,7 +7,7 @@ import Paper from "@mui/material/Paper"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
+import { GovBRLoading } from "@anpdgovbr/shared-ui"
 
 export interface PageHeaderProps {
   title: string
@@ -149,7 +149,7 @@ export default function PageLayout({
   spacing = 4,
 }: Readonly<PageLayoutProps>) {
   if (loading) {
-    return <GovBrLoading message={loadingMessage} fullScreen />
+    return <GovBRLoading text={loadingMessage} fullScreen />
   }
 
   return (

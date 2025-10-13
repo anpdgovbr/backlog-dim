@@ -1,10 +1,12 @@
 "use client"
 
+import { useMemo } from "react"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
+import { useTheme } from "@mui/material/styles"
 
 import ImportarDashboardCard from "@/app/dashboard/_components/ImportarDashboardCard"
 import MetadadosDashboardCard from "@/app/dashboard/_components/MetadadosDashboardCard"
@@ -24,29 +26,70 @@ import StatsDashboardCard from "@/app/dashboard/_components/StatsDashboardCard"
  *
  * Observações:
  * - Este arquivo é um client component (usa "use client").
- * - Não recebe props; compõe a UI a partir de componentes de dashboard internos.
+ * - Estilos otimizados com useMemo para evitar re-renderizações.
+ * - Usa contrastText do theme para cores de texto em backgrounds coloridos.
  *
  * @returns {JSX.Element} Marcação da página pública com caixas, grids e cards.
  */
 export default function PublicoPage() {
+  const theme = useTheme()
+
+  // Estilos memoizados para evitar recriação em cada render
+  const headerStyles = useMemo(
+    () => ({
+      p: 4,
+      mb: 4,
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      textAlign: "center" as const,
+      borderRadius: 2,
+    }),
+    [theme.palette.primary.main, theme.palette.primary.contrastText]
+  )
+
+  const subtitleStyles = useMemo(
+    () => ({
+      opacity: 0.95,
+      maxWidth: 800,
+      mx: "auto",
+      color: theme.palette.primary.contrastText,
+    }),
+    [theme.palette.primary.contrastText]
+  )
+
+  const sectionTitleStyles = useMemo(
+    () => ({
+      mb: 3,
+      color: theme.palette.text.primary,
+    }),
+    [theme.palette.text.primary]
+  )
+
+  const footerStyles = useMemo(
+    () => ({
+      p: 3,
+      mt: 4,
+      backgroundColor: theme.palette.grey[100],
+      borderLeft: `4px solid ${theme.palette.primary.main}`,
+      textAlign: "center" as const,
+    }),
+    [theme.palette.grey, theme.palette.primary.main]
+  )
+
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
       {/* Header da página pública */}
-      <Paper
-        elevation={0}
-        sx={(theme) => ({
-          p: 4,
-          mb: 4,
-          backgroundColor: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText,
-          textAlign: "center",
-          borderRadius: 2,
-        })}
-      >
-        <Typography variant="h3" component="h1" gutterBottom fontWeight={700}>
+      <Paper elevation={0} sx={headerStyles}>
+        <Typography
+          variant="h3"
+          component="h1"
+          gutterBottom
+          fontWeight={theme.typography.fontWeightBold}
+          color="inherit"
+        >
           Dashboard Público - ANPD
         </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 800, mx: "auto" }}>
+        <Typography variant="h6" sx={subtitleStyles}>
           Transparência e acompanhamento dos processos administrativos da Divisão de
           Monitoramento
         </Typography>
@@ -59,8 +102,8 @@ export default function PublicoPage() {
           component="h2"
           gutterBottom
           textAlign="center"
-          fontWeight={600}
-          sx={{ mb: 3 }}
+          fontWeight={theme.typography.fontWeightMedium}
+          sx={sectionTitleStyles}
         >
           Indicadores Principais
         </Typography>
@@ -82,8 +125,8 @@ export default function PublicoPage() {
           component="h2"
           gutterBottom
           textAlign="center"
-          fontWeight={600}
-          sx={{ mb: 3 }}
+          fontWeight={theme.typography.fontWeightMedium}
+          sx={sectionTitleStyles}
         >
           Dados Detalhados
         </Typography>
@@ -109,20 +152,14 @@ export default function PublicoPage() {
       </Box>
 
       {/* Footer informativo */}
-      <Paper
-        elevation={0}
-        sx={(theme) => ({
-          p: 3,
-          mt: 4,
-          backgroundColor: theme.palette.grey[50],
-          borderLeft: `4px solid ${theme.palette.primary.main}`,
-          textAlign: "center",
-        })}
-      >
+      <Paper elevation={0} sx={footerStyles}>
         <Typography variant="body1" color="text.secondary">
-          <strong>Acesso Público:</strong> Esta página apresenta dados agregados e
-          estatísticas gerais dos processos administrativos da ANPD, garantindo
-          transparência institucional sem expor informações sensíveis.
+          <Typography component="strong" fontWeight={theme.typography.fontWeightMedium}>
+            Acesso Público:
+          </Typography>{" "}
+          Esta página apresenta dados agregados e estatísticas gerais dos processos
+          administrativos da ANPD, garantindo transparência institucional sem expor
+          informações sensíveis.
         </Typography>
       </Paper>
     </Container>

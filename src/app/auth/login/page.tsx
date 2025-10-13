@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import Alert from "@mui/material/Alert"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
+import { GovBRLoading } from "@anpdgovbr/shared-ui"
 
 function LoginPageInner() {
   const { status } = useSession()
@@ -166,17 +166,14 @@ function LoginPageInner() {
 
   // Exibir loading apenas durante transições críticas iniciadas pelo usuário
   if (showLoading) {
-    return (
-      <GovBrLoading
-        message={
-          redirecting
-            ? "Redirecionando..."
-            : verifying
-              ? "Verificando provedor de autenticação..."
-              : "Verificando sessão..."
-        }
-      />
-    )
+    let loadingText = "Verificando sessão..."
+    if (redirecting) {
+      loadingText = "Redirecionando..."
+    } else if (verifying) {
+      loadingText = "Verificando provedor de autenticação..."
+    }
+
+    return <GovBRLoading text={loadingText} />
   }
 
   // Não renderizar nada se já estiver autenticado (redundância de segurança)
@@ -259,7 +256,7 @@ function LoginPageInner() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<GovBrLoading message="Carregando..." />}>
+    <Suspense fallback={<GovBRLoading text="Carregando..." />}>
       <LoginPageInner />
     </Suspense>
   )

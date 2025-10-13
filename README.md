@@ -1,4 +1,5 @@
 # 🏛️ Backlog DIM - Sistema de Gestão de Processos
+
 [![CI](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml/badge.svg)](https://github.com/anpdgovbr/backlog-dim/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -155,7 +156,7 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/en/) (v20 ou superior)
-- [NPM](https://www.npmjs.com/) (v10 ou superior)
+- [NPM](https://www.npmjs.com/) (v10 ou superior) ou [pnpm](https://pnpm.io/) (v10 ou superior) **← Recomendado**
 - [Git](https://git-scm.com/)
 - [Docker](https://www.docker.com/products/docker-desktop/) (**Obrigatório** para infraestrutura padrão ANPD)
 
@@ -171,6 +172,10 @@ As rotas da API estão localizadas em `src/app/api` e seguem o padrão de roteam
 2.  **Instale as dependências:**
 
     ```bash
+    # Com pnpm (recomendado)
+    pnpm install
+
+    # Ou com npm
     npm install
     ```
 
@@ -228,16 +233,16 @@ O arquivo `.env` é crucial para a configuração da aplicação. Use o `.env.ex
 
 Para detalhes de autenticação e configuração do Keycloak, consulte `doc/AUTH_KEYCLOAK.md`.
 
-| Variável                       | Descrição                                      | Exemplo (Local)                                           |
-| ------------------------------ | ---------------------------------------------- | --------------------------------------------------------- |
-| `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+| Variável                       | Descrição                                      | Exemplo (Local)                                                     |
+| ------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------- |
+| `DATABASE_URL`                 | String de conexão do PostgreSQL para o Prisma. | `postgresql://postgres:postgres@127.0.0.1:54322/postgres`           |
 | `NEXTAUTH_URL`                 | URL base da aplicação para o NextAuth.         | `http://localhost:3000` (DEV) / `https://dim.dev.anpd.gov.br` (HML) |
-| `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                     |
-| `NEXT_PUBLIC_AUTH_PROVIDER`    | Id do provider de login do NextAuth.           | `keycloak`                                                |
-| `KEYCLOAK_ISSUER`              | URL do emissor OIDC do realm.                  | `http://localhost:8080/realms/ANPD`                       |
-| `KEYCLOAK_CLIENT_ID`           | Client ID do cliente do app no KC.             | `backlog-dim`                                             |
-| `KEYCLOAK_CLIENT_SECRET`       | Client Secret do cliente no KC.                | (Obtido no Keycloak)                                      |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (dev com self-signed) / `1` (prod)                    |
+| `NEXTAUTH_SECRET`              | Chave para assinar os tokens JWT.              | (Gerar com `openssl rand -base64 32`)                               |
+| `NEXT_PUBLIC_AUTH_PROVIDER`    | Id do provider de login do NextAuth.           | `keycloak`                                                          |
+| `KEYCLOAK_ISSUER`              | URL do emissor OIDC do realm.                  | `http://localhost:8080/realms/ANPD`                                 |
+| `KEYCLOAK_CLIENT_ID`           | Client ID do cliente do app no KC.             | `backlog-dim`                                                       |
+| `KEYCLOAK_CLIENT_SECRET`       | Client Secret do cliente no KC.                | (Obtido no Keycloak)                                                |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | Controle de verificação de certificados TLS.   | `0` (dev com self-signed) / `1` (prod)                              |
 
 ### 📋 Configuração Rápida
 

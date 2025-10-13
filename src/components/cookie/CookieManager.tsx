@@ -4,7 +4,6 @@ import { ConsentProvider, LogLevel, setDebugLogging } from "react-lgpd-consent"
 import CookiePreferencesModal from "./CookieBanner"
 import SimpleCookieBanner from "./SimpleCookieBanner"
 
-// Habilitar debug em desenvolvimento
 if (process.env.NODE_ENV === "development") {
   setDebugLogging(true, LogLevel.DEBUG)
 }
@@ -33,23 +32,13 @@ export default function CookieManager({ children }: Readonly<CookieManagerProps>
         contactInfo: "Contato: encarregado@anpd.gov.br",
       }}
       disableDeveloperGuidance={true}
-      onConsentGiven={(state) => {
-        // eslint-disable-next-line no-console
-        console.info("🎉 Consentimento dado:", state)
-      }}
-      onPreferencesSaved={(prefs) => {
-        // eslint-disable-next-line no-console
-        console.info("💾 Preferências salvas:", prefs)
-      }}
-      // Desabilitar botão flutuante padrão para usar o nosso customizado
       disableFloatingPreferencesButton={true}
-      // Componentes customizados
       CookieBannerComponent={SimpleCookieBanner}
       PreferencesModalComponent={CookiePreferencesModal}
+      disableDiscoveryLog={true}
     >
       {children}
 
-      {/* Dock de gerenciamento customizado */}
       {/* TODO: Ativar junto do MenuDev futuramente 
       <CookieManagementDock />*/}
     </ConsentProvider>

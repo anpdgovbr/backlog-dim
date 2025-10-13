@@ -6,10 +6,9 @@ import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import Box from "@mui/material/Box"
-import { GovBRButton } from "@anpdgovbr/shared-ui"
 import Typography from "@mui/material/Typography"
 
-import GovBrLoading from "@/components/ui/GovBrLoading"
+import { GovBRButton, GovBRLoading } from "@anpdgovbr/shared-ui"
 
 /**
  * Página/Componente responsável por realizar o logout do usuário.
@@ -78,7 +77,7 @@ export default function LogoutPage() {
   }
 
   if (isLoading) {
-    return <GovBrLoading message="Saindo do sistema..." />
+    return <GovBRLoading text="Saindo do sistema..." />
   }
 
   if (error) {

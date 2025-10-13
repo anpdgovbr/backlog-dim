@@ -10,7 +10,7 @@ import FloatingDevMenu from "@/components/menu/FloatingDevMenu"
 import { AuditProvider } from "@/context/AuditProvider"
 import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
-import { GovBRThemeProvider } from "@anpdgovbr/shared-ui"
+import { ANPDThemeProvider } from "@anpdgovbr/shared-ui"
 import { StyledEngineProvider } from "@mui/material/styles"
 
 /**
@@ -38,7 +38,7 @@ export default function ClientRootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <StyledEngineProvider injectFirst>
-      <GovBRThemeProvider>
+      <ANPDThemeProvider>
         <AuthProvider>
           <AuditProvider>
             <CssBaseline />
@@ -84,7 +84,7 @@ export default function ClientRootLayout({
             </NotificationProvider>
           </AuditProvider>
         </AuthProvider>
-      </GovBRThemeProvider>
+      </ANPDThemeProvider>
     </StyledEngineProvider>
   )
 }

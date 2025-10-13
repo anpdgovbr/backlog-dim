@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
+  - '@anpdgovbr/shared-ui'
   - '@prisma/client'
   - '@prisma/engines'
   - esbuild
