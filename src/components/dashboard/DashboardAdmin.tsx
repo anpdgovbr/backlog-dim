@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 import Business from "@mui/icons-material/Business"
 import EngineeringOutlined from "@mui/icons-material/EngineeringOutlined"
@@ -132,30 +132,16 @@ const allSections: ISectionConfig[] = [
 
 export default function DashboardAdmin() {
   const { permissoes, loading } = usePermissoes()
-  const [sections, setSections] = useState<ISectionConfig[]>([])
 
-  useEffect(() => {
-    if (!loading) {
-      const filteredSections = allSections.filter((section) =>
-        section.requiredPermissions?.some((perm) => {
-          const [acao, recurso] = perm.split("_") as [AcaoPermissao, RecursoPermissao]
-          return pode(permissoes, acao, recurso)
-        })
-      )
+  const sections = useMemo(() => {
+    if (loading) return []
 
-      // Só atualiza o state se mudou
-      setSections((prev) => {
-        const prevIds = prev
-          .map((s) => s.id)
-          .sort((a, b) => String(a).localeCompare(String(b)))
-          .join(",")
-        const nextIds = filteredSections
-          .map((s) => s.id)
-          .sort((a, b) => String(a).localeCompare(String(b)))
-          .join(",")
-        return prevIds !== nextIds ? filteredSections : prev
+    return allSections.filter((section) =>
+      section.requiredPermissions?.some((perm) => {
+        const [acao, recurso] = perm.split("_") as [AcaoPermissao, RecursoPermissao]
+        return pode(permissoes, acao, recurso)
       })
-    }
+    )
   }, [permissoes, loading])
 
   if (loading) {

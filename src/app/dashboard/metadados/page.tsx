@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 import AssignmentTurnedIn from "@mui/icons-material/AssignmentTurnedIn"
 import Forum from "@mui/icons-material/Forum"
@@ -85,12 +85,12 @@ const allSections: SidebarSection[] = [
 
 export default function GerenciarMetadados() {
   const { permissoes, loading } = usePermissoes()
-  const [sections, setSections] = useState<SidebarSection[]>([])
 
-  useEffect(() => {
+  const sections = useMemo(() => {
     if (!loading && pode(permissoes, "Exibir", "Metadados")) {
-      setSections(allSections)
+      return allSections
     }
+    return []
   }, [loading, permissoes])
 
   if (loading) {

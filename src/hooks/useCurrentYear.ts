@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 /**
  * Hook: useCurrentYear
@@ -25,11 +25,7 @@ import { useEffect, useState } from "react"
  * - Este é um hook do lado do cliente (arquivo com "use client").
  */
 export function useCurrentYear(): number {
-  const [year, setYear] = useState<number>(2025) // Ano padrão para SSR
-
-  useEffect(() => {
-    setYear(new Date().getFullYear())
-  }, [])
+  const [year] = useState<number>(() => new Date().getFullYear())
 
   return year
 }

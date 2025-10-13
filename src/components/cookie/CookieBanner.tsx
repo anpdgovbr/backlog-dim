@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 
 import CloseIcon from "@mui/icons-material/Close"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
@@ -50,15 +50,14 @@ export default function CookiePreferencesModal({
   isModalOpen,
   texts,
 }: Readonly<CustomPreferencesModalProps>) {
-  const [categories, setCategories] = useState<CookieCategory[]>([])
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
 
-  // Inicializar categorias no client-side
-  useEffect(() => {
+  // Derivar categorias com useMemo em vez de useEffect+setState
+  const categories: CookieCategory[] = useMemo(() => {
     const hostname =
       typeof window !== "undefined" ? window.location.hostname : "localhost"
 
-    const initialCategories = [
+    return [
       {
         id: "necessary",
         name: "Cookies estritamente necessários",
@@ -131,17 +130,9 @@ export default function CookiePreferencesModal({
         ],
       },
     ]
-
-    setCategories(initialCategories)
   }, [preferences])
 
   const handleCategoryToggle = (categoryId: string, enabled: boolean) => {
-    setCategories((prev) =>
-      prev.map((cat) =>
-        cat.id === categoryId && !cat.required ? { ...cat, enabled } : cat
-      )
-    )
-
     // Atualizar preferências na lib
     if (setPreferences) {
       const newPrefs = {
@@ -167,7 +158,6 @@ export default function CookiePreferencesModal({
     categories.forEach((category) => {
       allPreferences[category.id] = true
     })
-    setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: true })))
     if (setPreferences) {
       const prefs = {
         ...allPreferences,
@@ -184,7 +174,6 @@ export default function CookiePreferencesModal({
     categories.forEach((category) => {
       minimalPreferences[category.id] = category.required
     })
-    setCategories((prev) => prev.map((cat) => ({ ...cat, enabled: cat.required })))
     if (setPreferences) {
       const prefs = {
         ...minimalPreferences,

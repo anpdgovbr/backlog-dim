@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
-
 import Box from "@mui/material/Box"
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
@@ -67,18 +65,11 @@ export default function SidebarLayout({
   fallback,
 }: SidebarLayoutProps) {
   const isUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"))
-  const [selectedSection, setSelectedSection] = useState<string>(
-    // inicializar com selectedSectionId -> defaultSectionId -> primeira seção disponível
-    selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? ""
-  )
 
-  useEffect(() => {
-    // sincronizar quando props mudarem (selectedSectionId, defaultSectionId ou sections)
-    setSelectedSection(selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? "")
-  }, [selectedSectionId, defaultSectionId, sections])
+  // Derivar selectedSection diretamente das props
+  const selectedSection = selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? ""
 
   function handleSectionChange(newSectionId: string) {
-    setSelectedSection(newSectionId)
     // chamar callback somente se fornecido
     if (onSectionChange) onSectionChange(newSectionId)
   }

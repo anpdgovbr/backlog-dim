@@ -92,7 +92,9 @@ export function StatsDashboardCard() {
   }
 
   useEffect(() => {
-    carregarDados()
+    ;(async () => {
+      await carregarDados()
+    })()
   }, [])
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
