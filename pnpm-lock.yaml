@@ -30,8 +30,8 @@ importers:
         specifier: 0.2.2-beta.0
         version: 0.2.2-beta.0(typescript@5.9.3)
       '@anpdgovbr/shared-ui':
-        specifier: 0.3.7-beta.1
-        version: 0.3.7-beta.1(86feba054114390b23840a83e0a83131)
+        specifier: 0.3.8-beta.1
+        version: 0.3.8-beta.1(86feba054114390b23840a83e0a83131)
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
@@ -279,8 +279,8 @@ packages:
       typescript:
         optional: true
 
-  '@anpdgovbr/shared-ui@0.3.7-beta.1':
-    resolution: {integrity: sha512-nqHc5rCpVMtkFursWTZG66fawmiu2bFutM75jXazkpaSXN7jWO6iKarMViZe8HHju1DVz97rRWdmVdiiNdoFrg==}
+  '@anpdgovbr/shared-ui@0.3.8-beta.1':
+    resolution: {integrity: sha512-UW0AMW50HP6cl8v6pRWFAtGNzXWuo8CQwRXCLutHDGuITQIm7fUx7Plqaq8D1On9ce39aVDolBP5Sqt4AC6Yrg==}
     engines: {node: '>=20.0.0', pnpm: '>=9.0.0'}
     peerDependencies:
       '@emotion/react': ^11.0.0
@@ -3556,7 +3556,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@anpdgovbr/shared-ui@0.3.7-beta.1(86feba054114390b23840a83e0a83131)':
+  '@anpdgovbr/shared-ui@0.3.8-beta.1(86feba054114390b23840a83e0a83131)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.2)(react@19.2.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
