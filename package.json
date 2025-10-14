@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/backlog-dim",
-  "version": "0.4.31",
+  "version": "0.4.32",
   "private": true,
   "type": "module",
   "description": "Aplicação para gerenciar processos relacionados à peticionamento e denúncias sobre a LGPD",
