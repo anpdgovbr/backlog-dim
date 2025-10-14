@@ -39,16 +39,17 @@ export default function BuildInfo() {
   const [buildInfo, setBuildInfo] = useState<string>("")
 
   useEffect(() => {
-    // Busca version.json no cliente
-    fetch("/version.json")
+    // Busca version.json no cliente com cache busting
+    fetch(`/version.json?t=${Date.now()}`)
       .then((res) => res.json() as Promise<BuildData>)
       .then((data) => {
         const formattedDate = formatBuildDate(data.buildTime)
         const info = `v${data.version} (${data.commitShort}) - ${formattedDate}`
         setBuildInfo(info)
       })
-      .catch(() => {
-        // Fallback silencioso: apenas não mostra nada
+      .catch((error) => {
+        // Log do erro para debug
+        console.warn("BuildInfo: Falha ao carregar version.json", error)
         setBuildInfo("")
       })
   }, [])
