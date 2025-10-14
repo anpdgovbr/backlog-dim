@@ -2,9 +2,14 @@
 
 ## Problema
 
-Quando configuramos `output: "standalone"` no `next.config.ts`, o Next.js gera uma pasta `.next/standalone` otimizada para deploy, mas **não copia automaticamente** os arquivos da pasta `public/`.
+Quando configuramos `output: "standalone"` no `next.config.ts`, o Next.js gera uma pasta `.next/standalone` otimizada para deploy, mas **não copia automaticamente**:
 
-Isso causava o problema onde o `version.json` (gerado no prebuild) não estava disponível em runtime, resultando no componente `BuildInfo` não exibir informações de versão.
+1. Os arquivos da pasta `public/` (como `version.json`, `favicon.ico`, etc.)
+2. Os arquivos estáticos da pasta `.next/static/` (JavaScript, CSS, etc.)
+
+Isso causava dois problemas críticos:
+- O `version.json` não estava disponível, impedindo o `BuildInfo` de exibir informações de versão
+- **Todos os arquivos JavaScript retornavam 404**, quebrando completamente a aplicação
 
 ## Solução Implementada
 
@@ -13,6 +18,7 @@ Isso causava o problema onde o `version.json` (gerado no prebuild) não estava d
 Criamos o script `scripts/copy-public-to-standalone.cjs` que:
 
 - Copia recursivamente todo conteúdo de `public/` para `.next/standalone/public/`
+- **Copia recursivamente todo conteúdo de `.next/static/` para `.next/standalone/.next/static/`** ← **CRÍTICO!**
 - É executado automaticamente após o `next build` via script `postbuild`
 - Valida que o build standalone existe antes de copiar
 
@@ -34,7 +40,7 @@ Fluxo de build completo:
 1. `prebuild` → Gera `version.json`, env vars e rotas de dev
 2. `prisma generate` → Gera cliente Prisma
 3. `next build` → Cria build otimizado com pasta standalone
-4. `postbuild` → **Copia arquivos públicos para standalone**
+4. `postbuild` → **Copia arquivos públicos E estáticos para standalone**
 
 ## Estrutura de Deploy Standalone
 
@@ -47,7 +53,11 @@ Após o build, a estrutura fica:
     ├── package.json           # Deps mínimas
     ├── node_modules/          # Apenas deps necessárias
     ├── .next/                 # Build interno do Next
-    └── public/                # ← Copiado pelo nosso script
+    │   └── static/            # ← JavaScript, CSS, etc. (COPIADO!)
+    │       ├── chunks/
+    │       ├── css/
+    │       └── ...
+    └── public/                # ← Assets públicos (COPIADO!)
         ├── version.json       # ← Agora disponível!
         ├── dev-routes.json
         └── ... outros assets
@@ -127,6 +137,37 @@ Deve listar `version.json` e outros arquivos da pasta `public/`.
 ## Troubleshooting
 
 ### BuildInfo não mostra informações
+## Troubleshooting
+
+### Arquivos JavaScript retornam 404
+
+**Causa**: Pasta `.next/static` não foi copiada para standalone
+
+**Sintomas**:
+```
+webpack-xxx.js     404
+main-app-xxx.js    404
+layout-xxx.js      404
+page-xxx.js        404
+```
+
+**Solução**:
+
+```bash
+# Re-execute o postbuild manualmente
+npm run postbuild
+
+# Ou faça build completo novamente
+npm run build
+```
+
+**Verificação**:
+```bash
+# Deve existir e conter arquivos
+ls .next/standalone/.next/static/
+```
+
+### BuildInfo não aparece no rodapé
 
 **Causa**: `version.json` não foi copiado para standalone
 
@@ -134,10 +175,16 @@ Deve listar `version.json` e outros arquivos da pasta `public/`.
 
 ```bash
 # Re-execute o postbuild manualmente
-pnpm run postbuild
+npm run postbuild
 
 # Ou faça build completo novamente
-pnpm run build
+npm run build
+```
+
+**Verificação**:
+```bash
+# Deve existir
+cat .next/standalone/public/version.json
 ```
 
 ### Erro "Pasta .next/standalone não encontrada"
@@ -147,7 +194,7 @@ pnpm run build
 **Solução**:
 
 1. Verifique se `output: "standalone"` está em `next.config.ts`
-2. Execute `pnpm run build` (sem executar apenas `next build`)
+2. Execute `npm run build` (sem executar apenas `next build`)
 3. Confirme que pasta `.next/standalone/` existe
 
 ### Assets estáticos não carregam
