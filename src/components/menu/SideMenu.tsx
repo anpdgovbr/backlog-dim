@@ -1,6 +1,7 @@
 "use client"
 
-import { SideMenu as SharedSideMenu, type SideMenuItem } from "@anpdgovbr/shared-ui"
+import type { SideMenuItem } from "@anpdgovbr/shared-ui"
+import { SideMenu as SharedSideMenu } from "@anpdgovbr/shared-ui"
 import Link from "next/link"
 import type { ReactNode } from "react"
 
