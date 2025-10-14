@@ -1,9 +1,12 @@
 /**
- * Script para copiar arquivos públicos para o build standalone do Next.js
+ * Script para copiar arquivos públicos e estáticos para o build standalone do Next.js
  *
  * Quando usamos `output: "standalone"` no next.config.ts, o Next.js cria
- * uma pasta .next/standalone otimizada, mas NÃO copia automaticamente
- * os arquivos da pasta public/. Este script faz essa cópia.
+ * uma pasta .next/standalone otimizada, mas NÃO copia automaticamente:
+ * 1. Os arquivos da pasta public/
+ * 2. Os assets estáticos da pasta .next/static/
+ *
+ * Este script faz essas cópias.
  *
  * Deve ser executado após `next build`.
  */
@@ -14,6 +17,8 @@ const path = require("path")
 // Caminhos
 const publicDir = path.resolve(__dirname, "../public")
 const standalonePublicDir = path.resolve(__dirname, "../.next/standalone/public")
+const staticDir = path.resolve(__dirname, "../.next/static")
+const standaloneStaticDir = path.resolve(__dirname, "../.next/standalone/.next/static")
 
 /**
  * Copia recursivamente um diretório
@@ -37,14 +42,11 @@ function copyRecursive(src, dest) {
     } else {
       // Copia arquivo
       fs.copyFileSync(srcPath, destPath)
-      console.log(`  ✓ ${entry.name}`)
     }
   }
 }
 
-console.log("📦 Copiando arquivos públicos para build standalone...")
-console.log(`   Origem: ${publicDir}`)
-console.log(`   Destino: ${standalonePublicDir}`)
+console.log("📦 Copiando arquivos para build standalone...")
 console.log()
 
 try {
@@ -55,17 +57,29 @@ try {
     process.exit(1)
   }
 
-  // Verifica se public existe
-  if (!fs.existsSync(publicDir)) {
-    console.warn("⚠️  Pasta public/ não encontrada, nada a copiar.")
-    process.exit(0)
+  // 1. Copia public/
+  if (fs.existsSync(publicDir)) {
+    console.log("📂 Copiando public/ → .next/standalone/public/")
+    copyRecursive(publicDir, standalonePublicDir)
+    console.log("   ✅ Public copiado")
+  } else {
+    console.warn("   ⚠️  Pasta public/ não encontrada")
   }
 
-  // Copia os arquivos
-  copyRecursive(publicDir, standalonePublicDir)
+  console.log()
+
+  // 2. Copia .next/static/
+  if (fs.existsSync(staticDir)) {
+    console.log("📂 Copiando .next/static/ → .next/standalone/.next/static/")
+    copyRecursive(staticDir, standaloneStaticDir)
+    console.log("   ✅ Static copiado")
+  } else {
+    console.error("   ❌ Pasta .next/static não encontrada!")
+    process.exit(1)
+  }
 
   console.log()
-  console.log("✅ Arquivos públicos copiados com sucesso!")
+  console.log("✅ Todos os arquivos copiados com sucesso!")
 } catch (error) {
   console.error("❌ Erro ao copiar arquivos:", error.message)
   process.exit(1)
