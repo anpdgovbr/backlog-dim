@@ -463,6 +463,59 @@ Os hooks do git executam automaticamente:
 - **Pre-push:** Validação completa do build
 - **Bump de versão:** Atualização automática da versão no commit
 
+## 🚀 Deploy e Produção
+
+### 📦 Build Standalone
+
+O projeto está configurado para gerar builds standalone otimizados para deploy:
+
+```bash
+# Gera build otimizado
+npm run build
+
+# Estrutura gerada em .next/standalone/
+.next/
+└── standalone/
+    ├── server.js          # Servidor Node otimizado
+    ├── package.json       # Dependências mínimas
+    ├── node_modules/      # Apenas deps necessárias
+    ├── .next/             # Build interno do Next
+    └── public/            # Assets estáticos (copiado automaticamente)
+```
+
+### 🔄 Deploy com PM2
+
+O projeto inclui configuração para deploy com PM2. Para configurar:
+
+1. **Copie o arquivo de exemplo:**
+   ```bash
+   cp ecosystem.config.example.cjs ecosystem.config.cjs
+   ```
+
+2. **Ajuste as variáveis de ambiente** em `ecosystem.config.cjs`:
+   - `NEXTAUTH_URL` - URL pública da aplicação
+   - `CONTROLADORES_API_URL` - URL da API interna
+   - `NODE_EXTRA_CA_CERTS` - Certificados customizados (se necessário)
+
+3. **Certifique-se que `.env.production` existe** com todas as variáveis necessárias
+
+4. **Inicie a aplicação:**
+   ```bash
+   pm2 start ecosystem.config.cjs --env production
+   pm2 save
+   pm2 startup
+   ```
+
+**Comandos úteis do PM2:**
+```bash
+pm2 status              # Ver status
+pm2 logs backlog-dim    # Ver logs
+pm2 restart backlog-dim # Reiniciar após deploy
+pm2 stop backlog-dim    # Parar aplicação
+```
+
+📖 **Mais detalhes:** Veja `doc/STANDALONE_DEPLOY.md` para documentação completa sobre build standalone, cópia de assets públicos e troubleshooting de deploy.
+
 ## 🤝 Como Contribuir
 
 1.  **Faça um Fork** do repositório.
