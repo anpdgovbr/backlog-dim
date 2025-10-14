@@ -162,10 +162,69 @@ cp -r .next/static .next/standalone/.next/
 cp -r public .next/standalone/
 ```
 
+## Deploy com PM2
+
+### Configuração do PM2
+
+O projeto inclui um arquivo de exemplo `ecosystem.config.example.cjs` para deploy com PM2.
+
+**Passos para configurar:**
+
+1. Copie o arquivo de exemplo:
+   ```bash
+   cp ecosystem.config.example.cjs ecosystem.config.cjs
+   ```
+
+2. Edite `ecosystem.config.cjs` conforme seu ambiente:
+   - Ajuste `NEXTAUTH_URL` para a URL pública da aplicação
+   - Configure `CONTROLADORES_API_URL` para a API interna
+   - Ajuste `NODE_EXTRA_CA_CERTS` se usar certificados customizados
+   - Verifique as configurações de memória e logs
+
+3. Certifique-se que o `.env.production` existe com todas as variáveis necessárias
+
+4. Inicie o processo:
+   ```bash
+   pm2 start ecosystem.config.cjs --env production
+   ```
+
+5. Salve a configuração para reiniciar automaticamente após reboot:
+   ```bash
+   pm2 save
+   pm2 startup
+   ```
+
+**Observações importantes:**
+
+- O arquivo `ecosystem.config.cjs` **não está versionado** (está no `.gitignore`) por conter configurações específicas do ambiente
+- Use sempre o arquivo de exemplo como base
+- A versão da aplicação (do `package.json`) é exibida automaticamente no PM2
+- Os logs são salvos em `logs/backlog-error.log` e `logs/backlog-out.log`
+
+### Comandos úteis do PM2
+
+```bash
+# Ver status
+pm2 status
+
+# Ver logs
+pm2 logs backlog-dim
+
+# Reiniciar após deploy
+pm2 restart backlog-dim
+
+# Parar aplicação
+pm2 stop backlog-dim
+
+# Remover do PM2
+pm2 delete backlog-dim
+```
+
 ## Referências
 
 - [Next.js Standalone Output](https://nextjs.org/docs/app/api-reference/next-config-js/output)
 - [Next.js Deployment](https://nextjs.org/docs/app/building-your-application/deploying)
+- [PM2 Documentation](https://pm2.keymetrics.io/docs/usage/application-declaration/)
 - Issue relacionada: [Next.js #51921](https://github.com/vercel/next.js/discussions/51921)
 
 ---
