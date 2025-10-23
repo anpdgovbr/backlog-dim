@@ -39,9 +39,14 @@ export default function NovoProcessoPage() {
 
   const podeCadastrar = pode("Cadastrar", "Processo")
 
+  type ProcessoInputPayload = Omit<ProcessoInput, "requeridoId" | "requeridoFinalId"> & {
+    requeridoId?: string
+    requeridoFinalId?: string
+  }
+
   const onSubmit = methods.handleSubmit(async (data) => {
     // Monta o payload do processo com os dados do formulário
-    const payload: ProcessoInput = {
+    const payload: ProcessoInputPayload = {
       numero: data.numero,
       tipoRequerimento:
         data.tipoRequerimento === "" || data.tipoRequerimento === null

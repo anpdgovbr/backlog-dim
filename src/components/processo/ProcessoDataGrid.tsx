@@ -89,7 +89,7 @@ export default function ProcessoDataGrid({
     (pode("EditarGeral", "Processo") ||
       (pode("EditarProprio", "Processo") && responsavelUserId === userId))
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
         const response = await fetch(`/api/processos/${id}`, {
@@ -176,7 +176,9 @@ export default function ProcessoDataGrid({
             size="small"
             color="primary"
             disabled={!podeEditar(params.row.responsavel?.userId)}
-            onClick={() => router.push(`/dashboard/processos/editar/${params.row.id}`)}
+            onClick={() =>
+              router.push(`/dashboard/processos/editar/${Number(params.row.id)}`)
+            }
           >
             <SettingsIcon />
           </IconButton>
@@ -184,7 +186,7 @@ export default function ProcessoDataGrid({
             size="small"
             color="error"
             disabled={!pode("Desabilitar", "Processo")}
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDelete(Number(params.row.id))}
           >
             <GridDeleteIcon />
           </IconButton>

@@ -50,10 +50,10 @@ export default function ModalEditarProcesso({
       contatoPrevioId: parseId(dataFromForm.contatoPrevioId),
       evidenciaId: parseId(dataFromForm.evidenciaId),
       tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
-      requeridoId: parseId(dataFromForm.requeridoId),
+      requeridoId: dataFromForm.requeridoId ?? undefined,
+      requeridoFinalId: dataFromForm.requeridoFinalId ?? undefined,
       observacoes: dataFromForm.observacoes,
     }
-    console.warn("payload", payload)
     fetch(`/api/processos/${processo.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

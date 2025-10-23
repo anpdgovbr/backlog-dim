@@ -12,7 +12,8 @@ import dayjs from "dayjs"
 import { prisma } from "@/lib/prisma"
 import { renderJsonColor } from "@/utils/renderJsonColor"
 
-type AuditLogTyped = Omit<AuditLogDto, "antes" | "depois"> & {
+type AuditLogTyped = Omit<AuditLogDto, "antes" | "depois" | "registroId"> & {
+  registroId?: string
   antes: JsonObject | null
   depois: JsonObject | null
 }

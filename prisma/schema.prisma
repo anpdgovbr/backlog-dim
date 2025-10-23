@@ -16,8 +16,8 @@ model Processo {
   requerente             String?
   formaEntradaId         Int
   responsavelId          Int
-  requeridoId            Int?
-  requeridoFinalId       Int?            
+  requeridoId            String?
+  requeridoFinalId       String?
   situacaoId             Int
   encaminhamentoId       Int?
   pedidoManifestacaoId   Int?
@@ -32,11 +32,11 @@ model Processo {
   processoStatusId       Int?
   tipoReclamacaoId       Int?
   statusInterno          StatusInterno?
-  tipoRequerimento       TipoRequerimento? 
-  resumo                 String?            
-  dataConclusao          DateTime?          
-  dataEnvioPedido        DateTime?          
-  prazoPedido            Int?               
+  tipoRequerimento       TipoRequerimento?
+  resumo                 String?
+  dataConclusao          DateTime?
+  dataEnvioPedido        DateTime?
+  prazoPedido            Int?
   active                 Boolean         @default(true)
   exclusionDate          DateTime?
   contatoPrevio          ContatoPrevio?      @relation(fields: [contatoPrevioId], references: [id])
@@ -268,7 +268,7 @@ model AuditLog {
   id          Int            @id @default(autoincrement())
   tabela      String
   acao        AcaoAuditoria  
-  registroId  Int?
+  registroId  String?
   userId      String?
   email       String?
   antes       Json?
