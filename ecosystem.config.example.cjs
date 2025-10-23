@@ -64,9 +64,9 @@ module.exports = {
         NEXTAUTH_TRUST_HOST: "true",
 
         // API: comunicação interna (loopback) e externa
-        CONTROLADORES_API_URL: "http://127.0.0.1:4000",
+        CONTROLADORES_API_URL: "http://127.0.0.1:8082",
         NEXT_PUBLIC_CONTROLADORES_API_URL:
-          "https://controlador-api.dev.anpd.gov.br",
+          "https://controladores.dev.anpd.gov.br",
 
         // Confiar na CA interna e do sistema operacional
         NODE_OPTIONS: "--use-openssl-ca",

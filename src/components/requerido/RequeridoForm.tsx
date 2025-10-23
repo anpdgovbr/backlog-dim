@@ -235,7 +235,7 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
             nomeFantasia: data.nomeFantasia.trim() || undefined,
             tipo: data.tipo,
             cpf:
-              data.tipo === TipoControlador.PESSOA_NATURAL ? data.cpf : data.cpf.trim(),
+              data.tipo === TipoControlador.PESSOA_NATURAL ? data.cpf.trim() : undefined,
             cnpj:
               data.tipo === TipoControlador.PESSOA_JURIDICA && data.cnpj
                 ? data.cnpj

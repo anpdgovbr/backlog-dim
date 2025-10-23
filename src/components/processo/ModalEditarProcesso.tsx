@@ -50,8 +50,8 @@ export default function ModalEditarProcesso({
       contatoPrevioId: parseId(dataFromForm.contatoPrevioId),
       evidenciaId: parseId(dataFromForm.evidenciaId),
       tipoReclamacaoId: parseId(dataFromForm.tipoReclamacaoId),
-      requeridoId: dataFromForm.requeridoId ?? undefined,
-      requeridoFinalId: dataFromForm.requeridoFinalId ?? undefined,
+      requeridoId: dataFromForm.requeridoId,
+      requeridoFinalId: dataFromForm.requeridoFinalId,
       observacoes: dataFromForm.observacoes,
     }
     fetch(`/api/processos/${processo.id}`, {

@@ -23,7 +23,7 @@ export function SetorDropdownSection({
 }: Readonly<SetorDropdownSectionProps>) {
   const { data, isLoading } = useSetor({
     page: 1,
-    pageSize: 1000,
+    pageSize: 50,
     orderBy: "nome",
     ascending: true,
   })
