@@ -3,68 +3,80 @@ import { NextResponse } from "next/server"
 
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
+import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
 import { withApi } from "@/lib/withApi"
 
-const baseUrl = process.env.CONTROLADORES_API_URL || "https://dim.dev.anpd.gov.br"
-const endpoint = `${baseUrl}/controladores`
-
 /**
- * Proxy para listar controladores na API externa.
+ * Proxy para listar controladores na API Quarkus.
  *
- * @param req - Requisição HTTP (query string é repassada).
- * @returns JSON retornado pela API externa.
- * @example GET /api/controladores?nome=Empresa
+ * Repassa o querystring e devolve o payload no formato `PageResponseDTO`.
  */
 export async function GET(req: Request) {
-  /**
-   * Proxy para a API externa de controladores.
-   *
-   * Encaminha a query string recebida para o endpoint externo definido em
-   * `CONTROLADORES_API_URL` e retorna o JSON recebido.
-   *
-   * Exemplo:
-   * GET /api/controladores?nome=Empresa
-   */
-  const { searchParams } = new URL(req.url)
-  const url = `${endpoint}?${searchParams.toString()}`
+  const currentUrl = new URL(req.url)
+  const targetUrl = new URL(getControladoresApiUrl("/controlador"))
 
-  const resposta = await fetch(url)
-  const dados = await resposta.json()
+  currentUrl.searchParams.forEach((value, key) => {
+    targetUrl.searchParams.append(key, value)
+  })
 
-  return NextResponse.json(dados)
+  const response = await fetch(targetUrl.toString())
+
+  if (response.status === 204) {
+    const fallbackPage = Number(currentUrl.searchParams.get("page") ?? "1")
+    const fallbackPageSize = Number(currentUrl.searchParams.get("pageSize") ?? "10")
+    return NextResponse.json({
+      data: [],
+      page: fallbackPage,
+      pageSize: fallbackPageSize,
+      totalElements: 0,
+      totalPages: 0,
+    })
+  }
+
+  const payload = await parseControladoresJson<unknown>(response)
+
+  if (!response.ok) {
+    return NextResponse.json(payload ?? { error: "Erro ao buscar controladores" }, {
+      status: response.status,
+    })
+  }
+
+  return NextResponse.json(payload, { status: response.status })
 }
 
 /**
- * Cria um controlador via API externa.
+ * Cria um controlador via API Quarkus.
  *
  * @see {@link withApi}
- * @returns JSON com a resposta da API externa e auditoria de criação.
- * @example POST /api/controladores { "nome": "Empresa X" }
  * @remarks Auditoria ({@link AcaoAuditoria.CREATE}) e permissão {acao: "Cadastrar", recurso: "Responsavel"}.
  */
 export const POST = withApi(
-  /**
-   * Cria um controlador via API externa.
-   *
-   * Recebe o corpo (JSON) e repassa para o endpoint externo.
-   * Auditoria é preenchida com a resposta retornada.
-   */
   async ({ req }) => {
     const body = await req.json()
 
-    const resposta = await fetch(endpoint, {
+    const response = await fetch(getControladoresApiUrl("/controlador"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     })
 
-    const dados = await resposta.json()
+    const payload = await parseControladoresJson<unknown>(response)
+
+    if (!response.ok) {
+      return {
+        response: Response.json(payload ?? { error: "Erro ao criar controlador" }, {
+          status: response.status,
+        }),
+      }
+    }
+
+    const auditBody = (payload ?? undefined) as object | undefined
 
     return {
-      response: Response.json(dados, { status: resposta.status }),
-      audit: {
-        depois: dados,
-      },
+      response: payload
+        ? Response.json(payload, { status: response.status })
+        : new Response(null, { status: response.status }),
+      ...(auditBody ? { audit: { depois: auditBody } } : {}),
     }
   },
   {

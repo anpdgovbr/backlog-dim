@@ -2,88 +2,67 @@ import { NextResponse } from "next/server"
 
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
+import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
 import { withApi } from "@/lib/withApi"
 
-/**
- * URL base do serviço de controladores usado para solicitações de metadados.
- *
- * O valor é lido da variável de ambiente CONTROLLADORES_API_URL. Quando não
- * fornecido, utiliza o ambiente de homologação fornecido como fallback.
- *
- * @constant
- * @type {string}
- */
-const baseUrl = process.env.CONTROLADORES_API_URL || "https://dim.dev.anpd.gov.br"
-
-/**
- * Endpoint completo para o recurso de setores.
- *
- * Construído a partir de baseUrl adicionando o caminho `/setores`. Usado para
- * operações GET/POST contra o serviço externo de setores.
- *
- * @constant
- * @type {string}
- */
-const endpoint = `${baseUrl}/setores`
-
-/**
- * Manipulador GET para setores.
- *
- * Busca os setores da API externa, repassando os parâmetros de busca recebidos na requisição.
- *
- * @param req - Request HTTP contendo os parâmetros de busca.
- * @returns NextResponse JSON com a lista de setores.
- */
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const url = `${endpoint}?${searchParams.toString()}`
+  const currentUrl = new URL(req.url)
+  const targetUrl = new URL(getControladoresApiUrl("/setor"))
 
-  const resposta = await fetch(url)
-  const dados = await resposta.json()
+  currentUrl.searchParams.forEach((value, key) => {
+    targetUrl.searchParams.append(key, value)
+  })
 
-  return NextResponse.json(dados)
+  const response = await fetch(targetUrl.toString())
+
+  if (response.status === 204) {
+    const fallbackPage = Number(currentUrl.searchParams.get("page") ?? "1")
+    const fallbackPageSize = Number(currentUrl.searchParams.get("pageSize") ?? "10")
+    return NextResponse.json({
+      data: [],
+      page: fallbackPage,
+      pageSize: fallbackPageSize,
+      totalElements: 0,
+      totalPages: 0,
+    })
+  }
+
+  const payload = await parseControladoresJson<unknown>(response)
+
+  if (!response.ok) {
+    return NextResponse.json(payload ?? { error: "Erro ao buscar setores" }, {
+      status: response.status,
+    })
+  }
+
+  return NextResponse.json(payload, { status: response.status })
 }
 
-/**
- * Manipulador POST para criação de setor.
- *
- * Envia os dados recebidos para a API externa de setores, criando um novo setor.
- * Retorna o setor criado e dados para auditoria.
- *
- * @param req - Request HTTP contendo os dados do setor.
- * @returns Response JSON com o setor criado e dados para auditoria.
- */
 export const POST = withApi(
   async ({ req }) => {
-    try {
-      const data = await req.json()
+    const body = await req.json()
 
-      const resposta = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+    const response = await fetch(getControladoresApiUrl("/setor"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+
+    const payload = await parseControladoresJson<unknown>(response)
+
+    if (!response.ok) {
+      return Response.json(payload ?? { error: "Erro ao criar setor" }, {
+        status: response.status,
       })
+    }
 
-      if (!resposta.ok) {
-        const errorData = await resposta.json()
-        console.error("Erro ao criar Setor na API externa:", errorData)
-        return Response.json(
-          { error: "Erro ao criar Setor", detalhes: errorData },
-          { status: resposta.status }
-        )
-      }
+    const auditBody = (payload ?? undefined) as object | undefined
 
-      const novoDado = await resposta.json()
-
-      return {
-        response: Response.json(novoDado, { status: 201 }),
-        audit: {
-          depois: novoDado,
-        },
-      }
-    } catch (error) {
-      console.error("Erro interno ao criar Setor:", error)
-      return Response.json({ error: "Erro interno do servidor" }, { status: 500 })
+    return {
+      response: payload
+        ? Response.json(payload, { status: response.status })
+        : new Response(null, { status: response.status }),
+      ...(auditBody ? { audit: { depois: auditBody } } : {}),
     }
   },
   {

@@ -1,40 +1,25 @@
-/**
- * Rota de API para consulta de CNAE por ID.
- *
- * Esta rota implementa o endpoint GET para buscar informações de um CNAE específico,
- * utilizando o serviço externo definido em CONTROLADORES_API_URL.
- * Inclui auditoria da ação realizada.
- */
-
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
+import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
 import { withApiForId } from "@/lib/withApi"
 
-const baseUrl = process.env.CONTROLADORES_API_URL || "https://dim.dev.anpd.gov.br"
-const endpoint = `${baseUrl}/cnaes`
-
-// === GET ===
-/**
- * Recupera um CNAE por `id` via API externa.
- *
- * @see {@link withApiForId}
- * @returns JSON do CNAE.
- * @example GET /api/cnaes/5
- * @remarks Auditoria ({@link AcaoAuditoria.GET}) e permissão {acao: "Exibir", recurso: "Metadados"}.
- */
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
-    const res = await fetch(`${endpoint}/${id}`)
+    const response = await fetch(getControladoresApiUrl(`/cnae/${id}`))
+    const payload = await parseControladoresJson<unknown>(response)
 
-    if (!res.ok) {
-      return Response.json({ error: "CNAE não encontrado" }, { status: res.status })
+    if (!response.ok) {
+      return Response.json(payload ?? { error: "CNAE não encontrado" }, {
+        status: response.status,
+      })
     }
 
-    const data = await res.json()
     return {
-      response: Response.json(data),
-      audit: { depois: { id: data?.id } },
+      response: payload
+        ? Response.json(payload, { status: response.status })
+        : new Response(null, { status: response.status }),
+      audit: { depois: { id: (payload as { id?: string } | null)?.id ?? id } },
     }
   },
   {
@@ -44,13 +29,6 @@ const handlerGET = withApiForId<{ id: string }>(
   }
 )
 
-/**
- * Handler para requisições GET na rota de CNAE por ID.
- *
- * @param req - Objeto Request da requisição HTTP.
- * @param context - Contexto da rota, contendo os parâmetros, incluindo o ID do CNAE.
- * @returns Promise<Response> com os dados do CNAE ou erro.
- */
 export async function GET(
   req: Request,
   context: { params: Promise<{ id: string }> }

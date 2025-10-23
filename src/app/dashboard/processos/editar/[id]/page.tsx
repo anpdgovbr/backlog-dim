@@ -55,6 +55,11 @@ export default function EditarProcessoPage() {
       userId != null &&
       processo?.responsavel?.userId === userId)
 
+  type ProcessoInputPayload = Omit<ProcessoInput, "requeridoId" | "requeridoFinalId"> & {
+    requeridoId?: string
+    requeridoFinalId?: string
+  }
+
   const onSubmit = handleSubmit(async (dataFromForm) => {
     if (!processo) return
 
@@ -63,7 +68,7 @@ export default function EditarProcessoPage() {
       isAlterado &&
       (processo.statusInterno === "IMPORTADO" || processo.statusInterno === "NOVO")
 
-    const payload: ProcessoInput = {
+    const payload: ProcessoInputPayload = {
       ...dataFromForm,
       numero: processo.numero,
       dataCriacao: new Date(processo.dataCriacao).toISOString(),
@@ -117,6 +122,11 @@ export default function EditarProcessoPage() {
       const toNumberOrNull = (value: unknown): number | null =>
         value == null || value === "" ? null : Number(value)
 
+      const toUuidOrNull = (value: unknown): string | null => {
+        if (value == null || value === "") return null
+        return String(value)
+      }
+
       // Popula o formulário com os dados do processo carregado
       const formData: ProcessoFormData = {
         numero: processo.numero,
@@ -130,8 +140,8 @@ export default function EditarProcessoPage() {
         formaEntradaId: toNumberOrNull(processo.formaEntrada?.id),
         responsavelId: toNumberOrNull(processo.responsavel?.id),
         situacaoId: toNumberOrNull(processo.situacao?.id),
-        requeridoId: toNumberOrNull(processo.requerido?.id),
-        requeridoFinalId: toNumberOrNull(processo.requeridoFinal?.id),
+        requeridoId: toUuidOrNull(processo.requerido?.id),
+        requeridoFinalId: toUuidOrNull(processo.requeridoFinal?.id),
         encaminhamentoId: toNumberOrNull(processo.encaminhamento?.id),
         pedidoManifestacaoId: toNumberOrNull(processo.pedidoManifestacao?.id),
         contatoPrevioId: toNumberOrNull(processo.contatoPrevio?.id),

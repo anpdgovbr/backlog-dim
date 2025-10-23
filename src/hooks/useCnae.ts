@@ -1,6 +1,6 @@
 "use client"
 
-import type { BaseQueryParams, CnaeDto } from "@anpdgovbr/shared-types"
+import type { BaseQueryParams, CnaeDto, PageResponseDto } from "@anpdgovbr/shared-types"
 
 import { useApi } from "@/lib/api"
 
@@ -11,12 +11,14 @@ export interface UseCnaeParams extends BaseQueryParams {
 
 export interface UseCnaeResult {
   data: CnaeDto[]
-  total: number
+  totalElements: number
+  page: number
+  pageSize: number
+  totalPages: number
   isLoading: boolean
   error: unknown
-  // mutate vem do useApi e pode retornar void, os dados ou undefined — refletimos isso no tipo
-  mutate: () => Promise<void | { data: CnaeDto[]; total: number } | undefined>
-  getById: (id: number) => Promise<CnaeDto | null>
+  mutate: () => Promise<void | PageResponseDto<CnaeDto> | undefined>
+  getById: (id: string) => Promise<CnaeDto | null>
 }
 
 export function useCnae(params: UseCnaeParams): UseCnaeResult {
@@ -24,7 +26,7 @@ export function useCnae(params: UseCnaeParams): UseCnaeResult {
     page = 1,
     pageSize = 10,
     search = "",
-    orderBy = "code",
+    orderBy = "codigo",
     ascending = true,
   } = params
 
@@ -38,13 +40,10 @@ export function useCnae(params: UseCnaeParams): UseCnaeResult {
 
   const key = `/api/cnaes?${query.toString()}`
 
-  const { data, error, isLoading, mutate } = useApi<{
-    data: CnaeDto[]
-    total: number
-  }>(key)
+  const { data, error, isLoading, mutate } = useApi<PageResponseDto<CnaeDto>>(key)
 
   // 🔥 Nova função para buscar um CNAE específico por ID
-  async function getById(id: number): Promise<CnaeDto | null> {
+  async function getById(id: string): Promise<CnaeDto | null> {
     try {
       const resposta = await fetch(`/api/cnaes/${id}`)
       if (!resposta.ok) {
@@ -61,7 +60,10 @@ export function useCnae(params: UseCnaeParams): UseCnaeResult {
 
   return {
     data: data?.data ?? [],
-    total: data?.total ?? 0,
+    totalElements: data?.totalElements ?? 0,
+    page: data?.page ?? 1,
+    pageSize: data?.pageSize ?? pageSize,
+    totalPages: data?.totalPages ?? 0,
     isLoading,
     error,
     mutate,

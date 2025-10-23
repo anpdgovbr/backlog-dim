@@ -40,11 +40,18 @@ export const POST = withApi(
         req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || null
       const userAgent = req.headers.get("user-agent") || null
 
+      const registroIdNormalizado =
+        typeof registroId === "string"
+          ? registroId || undefined
+          : typeof registroId === "number"
+            ? String(registroId)
+            : undefined
+
       await prisma.auditLog.create({
         data: {
           tabela,
           acao,
-          registroId,
+          registroId: registroIdNormalizado,
           userId,
           email,
           contexto,

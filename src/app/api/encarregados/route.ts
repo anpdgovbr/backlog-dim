@@ -1,4 +1,3 @@
-// src/app/api/cnaes/route.ts
 import { NextResponse } from "next/server"
 
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
@@ -6,35 +5,17 @@ import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
 import { withApi } from "@/lib/withApi"
 
-/**
- * Lista CNAEs utilizando a API Quarkus, preservando a estrutura `PageResponseDTO`.
- */
-export async function GET(req: Request) {
-  const currentUrl = new URL(req.url)
-  const targetUrl = new URL(getControladoresApiUrl("/cnae"))
-
-  currentUrl.searchParams.forEach((value, key) => {
-    targetUrl.searchParams.append(key, value)
-  })
-
-  const response = await fetch(targetUrl.toString())
+export async function GET() {
+  const response = await fetch(getControladoresApiUrl("/encarregado"))
 
   if (response.status === 204) {
-    const fallbackPage = Number(currentUrl.searchParams.get("page") ?? "1")
-    const fallbackPageSize = Number(currentUrl.searchParams.get("pageSize") ?? "10")
-    return NextResponse.json({
-      data: [],
-      page: fallbackPage,
-      pageSize: fallbackPageSize,
-      totalElements: 0,
-      totalPages: 0,
-    })
+    return NextResponse.json([])
   }
 
   const payload = await parseControladoresJson<unknown>(response)
 
   if (!response.ok) {
-    return NextResponse.json(payload ?? { error: "Erro ao buscar CNAEs" }, {
+    return NextResponse.json(payload ?? { error: "Erro ao buscar encarregados" }, {
       status: response.status,
     })
   }
@@ -42,14 +23,11 @@ export async function GET(req: Request) {
   return NextResponse.json(payload, { status: response.status })
 }
 
-/**
- * Cria um CNAE via API Quarkus.
- */
 export const POST = withApi(
   async ({ req }) => {
     const body = await req.json()
 
-    const response = await fetch(getControladoresApiUrl("/cnae"), {
+    const response = await fetch(getControladoresApiUrl("/encarregado"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -58,7 +36,7 @@ export const POST = withApi(
     const payload = await parseControladoresJson<unknown>(response)
 
     if (!response.ok) {
-      return Response.json(payload ?? { error: "Erro ao criar CNAE" }, {
+      return Response.json(payload ?? { error: "Erro ao criar encarregado" }, {
         status: response.status,
       })
     }
@@ -73,8 +51,8 @@ export const POST = withApi(
     }
   },
   {
-    tabela: "CNAE",
+    tabela: "encarregado",
     acao: AcaoAuditoria.CREATE,
-    permissao: { acao: "Cadastrar", recurso: "Metadados" },
+    permissao: { acao: "Cadastrar", recurso: "Responsavel" },
   }
 )

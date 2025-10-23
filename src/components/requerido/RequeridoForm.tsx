@@ -11,7 +11,7 @@ import Paper from "@mui/material/Paper"
 import TextField from "@mui/material/TextField"
 
 import type { ControladorDto } from "@anpdgovbr/shared-types"
-import { TipoControlador } from "@anpdgovbr/shared-types"
+import { Esfera, Poder, SetorEmpresarial, TipoControlador } from "@anpdgovbr/shared-types"
 
 import { useNotification } from "@/context/NotificationProvider"
 import { useBuscarCnpj } from "@/hooks/useBuscarCnpj"
@@ -25,38 +25,58 @@ export interface RequeridoFormHandle {
 }
 
 export interface RequeridoFormProps {
-  requeridoId: number | null
+  requeridoId: string | null
   onSave?: () => void
-  mutate?: () => void
+  mutate?: () => Promise<unknown>
 }
 
-/**
- * Formulário para criação/edição de um Requerido (Controlador).
- *
- * @remarks
- * O componente usa `react-hook-form` e expõe um handle (`submit`) via
- * `forwardRef` para submissão programática. Faz validações locais e utiliza
- * `useBuscarCnpj` para preencher campos quando aplicável.
- *
- * @example
- * ```tsx
- * const ref = useRef<RequeridoFormHandle>(null)
- * <RequeridoForm ref={ref} requeridoId={null} onSave={() => {}} />
- * // para submeter programaticamente: ref.current?.submit()
- * ```
- */
+type RequeridoFormValues = {
+  nomeEmpresarial: string
+  nomeFantasia: string
+  tipo: TipoControlador
+  cnpj: string
+  cpf: string
+  email: string
+  telefone: string
+  site: string
+  politicaPrivacidadeUrl: string
+  setorEmpresarial: SetorEmpresarial
+  esfera?: Esfera
+  poder?: Poder
+  setorId?: string | null
+  cnaeId?: string | null
+}
+
+const TELEFONE_MASCARAS = ["(99) 9999-9999", "(99) 9 9999-9999"]
+const DEFAULT_COUNTRY_CODE = "55"
+
+async function parseJsonSafe<T>(response: Response): Promise<T | null> {
+  try {
+    const text = await response.text()
+    if (!text) return null
+    return JSON.parse(text) as T
+  } catch (error) {
+    console.error("Falha ao interpretar resposta da API de Requeridos:", error)
+    return null
+  }
+}
+
 const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
   ({ requeridoId, onSave, mutate }, ref) => {
-    const methods = useForm<ControladorDto>({
+    const methods = useForm<RequeridoFormValues>({
       defaultValues: {
-        nome: "",
+        nomeEmpresarial: "",
+        nomeFantasia: "",
+        tipo: TipoControlador.PESSOA_JURIDICA,
         cnpj: "",
         cpf: "",
-        tipo: TipoControlador.PESSOA_JURIDICA,
         email: "",
-        site: "",
         telefone: "",
+        site: "",
         politicaPrivacidadeUrl: "",
+        setorEmpresarial: SetorEmpresarial.PRIVADO,
+        esfera: undefined,
+        poder: undefined,
         setorId: undefined,
         cnaeId: undefined,
       },
@@ -72,63 +92,137 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
       formState: { errors },
     } = methods
 
-    // eslint-disable-next-line react-hooks/incompatible-library -- watch() do React Hook Form é necessário para reatividade
+    // eslint-disable-next-line react-hooks/incompatible-library -- watch() é necessário para reatividade do formulário
     const tipo = watch("tipo")
     const cnpj = watch("cnpj")
+    const setorEmpresarial = watch("setorEmpresarial")
     const { notify } = useNotification()
 
     useImperativeHandle(ref, () => ({
       submit: () => {
-        handleSubmit((data) => {
+        handleSubmit(async (data) => {
           let hasErrors = false
 
-          const emailVal = data.email ? validateEmail(data.email) : null
-          const siteVal = data.site ? validateSite(data.site) : null
-          const telefoneVal = data.telefone ? validateTelefone(data.telefone) : null
-          const politicaUrlVal = data.politicaPrivacidadeUrl
-            ? validateSite(data.politicaPrivacidadeUrl)
-            : null
+          const trimmedNomeEmpresarial = data.nomeEmpresarial.trim()
+          const trimmedEmail = data.email.trim()
+          const trimmedSite = data.site.trim()
+          const trimmedPolitica = data.politicaPrivacidadeUrl.trim()
+          const trimmedTelefone = data.telefone.trim()
 
-          if (!data.nome) {
-            setError("nome", { message: "Nome é obrigatório" })
-            hasErrors = true
-          }
-
-          if (emailVal) {
-            setError("email", { message: emailVal })
+          if (!trimmedNomeEmpresarial) {
+            setError("nomeEmpresarial", { message: "Nome empresarial é obrigatório" })
             hasErrors = true
           } else {
-            clearErrors("email")
+            clearErrors("nomeEmpresarial")
           }
 
-          if (siteVal) {
-            setError("site", { message: siteVal })
+          if (!trimmedEmail) {
+            setError("email", { message: "E-mail é obrigatório" })
             hasErrors = true
           } else {
-            clearErrors("site")
+            const emailVal = validateEmail(trimmedEmail)
+            if (emailVal) {
+              setError("email", { message: emailVal })
+              hasErrors = true
+            } else {
+              clearErrors("email")
+            }
           }
 
-          if (telefoneVal) {
-            setError("telefone", { message: telefoneVal })
+          if (!trimmedSite) {
+            setError("site", { message: "Site é obrigatório" })
             hasErrors = true
           } else {
-            clearErrors("telefone")
+            const siteVal = validateSite(trimmedSite)
+            if (siteVal) {
+              setError("site", { message: siteVal })
+              hasErrors = true
+            } else {
+              clearErrors("site")
+            }
           }
 
-          if (politicaUrlVal) {
-            setError("politicaPrivacidadeUrl", { message: politicaUrlVal })
+          if (!trimmedPolitica) {
+            setError("politicaPrivacidadeUrl", {
+              message: "Política de privacidade é obrigatória",
+            })
             hasErrors = true
           } else {
-            clearErrors("politicaPrivacidadeUrl")
+            const politicaUrlVal = validateSite(trimmedPolitica)
+            if (politicaUrlVal) {
+              setError("politicaPrivacidadeUrl", { message: politicaUrlVal })
+              hasErrors = true
+            } else {
+              clearErrors("politicaPrivacidadeUrl")
+            }
           }
 
-          if (data.tipo === TipoControlador.PESSOA_JURIDICA && !data.cnpj) {
-            setError("cnpj", { message: "CNPJ é obrigatório para Pessoa Jurídica" })
+          if (!trimmedTelefone) {
+            setError("telefone", { message: "Telefone é obrigatório" })
             hasErrors = true
+          } else {
+            const telefoneVal = validateTelefone(trimmedTelefone)
+            if (telefoneVal) {
+              setError("telefone", { message: telefoneVal })
+              hasErrors = true
+            } else {
+              clearErrors("telefone")
+            }
           }
-          if (data.tipo === TipoControlador.PESSOA_NATURAL && !data.cpf) {
-            setError("cpf", { message: "CPF é obrigatório para Pessoa Física" })
+
+          if (data.tipo === TipoControlador.PESSOA_JURIDICA) {
+            if (!data.cnpj) {
+              setError("cnpj", {
+                message: "CNPJ é obrigatório para Pessoa Jurídica",
+              })
+              hasErrors = true
+            } else {
+              clearErrors("cnpj")
+            }
+          }
+
+          if (data.tipo === TipoControlador.PESSOA_NATURAL) {
+            if (!data.cpf) {
+              setError("cpf", {
+                message: "CPF é obrigatório para Pessoa Física",
+              })
+              hasErrors = true
+            } else {
+              clearErrors("cpf")
+            }
+          }
+
+          if (!data.setorId) {
+            setError("setorId", { message: "Selecione um setor" })
             hasErrors = true
+          } else {
+            clearErrors("setorId")
+          }
+
+          if (!data.cnaeId) {
+            setError("cnaeId", { message: "Selecione um CNAE" })
+            hasErrors = true
+          } else {
+            clearErrors("cnaeId")
+          }
+
+          if (data.setorEmpresarial === SetorEmpresarial.PUBLICO) {
+            if (!data.esfera) {
+              setError("esfera", { message: "Informe a esfera" })
+              hasErrors = true
+            } else {
+              clearErrors("esfera")
+            }
+
+            if (!data.poder) {
+              setError("poder", { message: "Informe o poder" })
+              hasErrors = true
+            } else {
+              clearErrors("poder")
+            }
+          } else {
+            clearErrors("esfera")
+            clearErrors("poder")
           }
 
           if (hasErrors) {
@@ -136,13 +230,37 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
             return
           }
 
-          const payload = Object.fromEntries(
-            Object.entries(data).filter(
-              ([_, value]) => value !== "" && value !== null && value !== undefined
-            )
-          )
+          const payload: ControladorDto = {
+            nomeEmpresarial: trimmedNomeEmpresarial,
+            nomeFantasia: data.nomeFantasia.trim() || undefined,
+            tipo: data.tipo,
+            cpf:
+              data.tipo === TipoControlador.PESSOA_NATURAL ? data.cpf.trim() : undefined,
+            cnpj:
+              data.tipo === TipoControlador.PESSOA_JURIDICA && data.cnpj
+                ? data.cnpj
+                : undefined,
+            site: trimmedSite,
+            emails: [{ email: trimmedEmail }],
+            telefones: [
+              {
+                codigoPais: DEFAULT_COUNTRY_CODE,
+                telefone: unmask(trimmedTelefone),
+              },
+            ],
+            politicaPrivacidadeUrl: trimmedPolitica,
+            setorEmpresarial: data.setorEmpresarial,
+            esfera:
+              data.setorEmpresarial === SetorEmpresarial.PUBLICO
+                ? data.esfera
+                : undefined,
+            poder:
+              data.setorEmpresarial === SetorEmpresarial.PUBLICO ? data.poder : undefined,
+            setorId: data.setorId as string,
+            cnaeId: data.cnaeId as string,
+          }
 
-          onSubmit(payload as ControladorDto)
+          await onSubmit(payload)
         })()
       },
     }))
@@ -153,23 +271,33 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
       fetch(`/api/controladores/${requeridoId}`)
         .then(async (res) => {
           if (!res.ok) {
-            const errorData = await res.json()
-            const errorMessage = Array.isArray(errorData.message)
-              ? errorData.message.join(", ")
-              : errorData.message || "Erro desconhecido"
-            throw new Error(errorMessage)
+            const errorData = await parseJsonSafe<{ message?: string; error?: string }>(
+              res
+            )
+            const message = errorData?.message || errorData?.error || "Erro desconhecido"
+            throw new Error(message)
           }
-          return res.json()
+          return parseJsonSafe<ControladorDto>(res)
         })
-        .then((data: ControladorDto) => {
-          setValue("nome", data.nome ?? "")
-          setValue("tipo", data.tipo)
+        .then((data) => {
+          if (!data) return
+
+          setValue("nomeEmpresarial", data.nomeEmpresarial ?? "")
+          setValue("nomeFantasia", data.nomeFantasia ?? "")
+          setValue("tipo", data.tipo ?? TipoControlador.PESSOA_JURIDICA)
           setValue("cnpj", data.cnpj ?? "")
           setValue("cpf", data.cpf ?? "")
-          setValue("email", data.email ?? "")
+          setValue("email", data.emails?.[0]?.email ?? "")
+          const telefonePrimeiro = data.telefones?.[0]?.telefone ?? ""
+          setValue(
+            "telefone",
+            telefonePrimeiro ? mask(telefonePrimeiro, TELEFONE_MASCARAS) : ""
+          )
           setValue("site", data.site ?? "")
-          setValue("telefone", data.telefone ?? "")
           setValue("politicaPrivacidadeUrl", data.politicaPrivacidadeUrl ?? "")
+          setValue("setorEmpresarial", data.setorEmpresarial ?? SetorEmpresarial.PRIVADO)
+          setValue("esfera", data.esfera ?? undefined)
+          setValue("poder", data.poder ?? undefined)
           setValue("cnaeId", data.cnaeId ?? undefined)
           setValue("setorId", data.setorId ?? undefined)
         })
@@ -186,18 +314,26 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
       setValue("cpf", "")
     }, [tipo, setValue])
 
+    useEffect(() => {
+      if (setorEmpresarial !== SetorEmpresarial.PUBLICO) {
+        setValue("esfera", undefined)
+        setValue("poder", undefined)
+      }
+    }, [setorEmpresarial, setValue])
+
     const { buscarCnpj } = useBuscarCnpj()
 
     useEffect(() => {
       if (tipo !== TipoControlador.PESSOA_JURIDICA || !cnpj || cnpj.length !== 14) return
 
       async function preencherCampos() {
-        if (!cnpj) return
         const dados = await buscarCnpj(cnpj)
         if (dados) {
-          if (dados.razao_social) setValue("nome", dados.razao_social)
+          if (dados.razao_social) setValue("nomeEmpresarial", dados.razao_social)
+          if (dados.nome_fantasia) setValue("nomeFantasia", dados.nome_fantasia)
           if (dados.email) setValue("email", dados.email)
-          if (dados.telefone) setValue("telefone", dados.telefone)
+          if (dados.telefone)
+            setValue("telefone", mask(dados.telefone, TELEFONE_MASCARAS))
           if (dados.site) setValue("site", dados.site)
         }
       }
@@ -210,7 +346,7 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
         const response = await fetch(
           `/api/controladores${requeridoId ? `/${requeridoId}` : ""}`,
           {
-            method: requeridoId ? "PATCH" : "POST",
+            method: requeridoId ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
           }
@@ -218,18 +354,20 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
 
         if (response.ok) {
           notify({ type: "success", message: "Requerido salvo com sucesso!" })
-          mutate?.()
+          await mutate?.()
           onSave?.()
-        } else {
-          const errorData = await response.json()
-          const errorMessage = Array.isArray(errorData.message)
-            ? errorData.message.join(", ")
-            : errorData.message || "Erro desconhecido"
-          notify({
-            type: "error",
-            message: `Erro ao salvar o Requerido: ${errorMessage}`,
-          })
+          return
         }
+
+        const errorData = await parseJsonSafe<{ message?: string; error?: string }>(
+          response
+        )
+        const errorMessage = errorData?.message || errorData?.error || "Erro desconhecido"
+
+        notify({
+          type: "error",
+          message: `Erro ao salvar o Requerido: ${errorMessage}`,
+        })
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "Erro inesperado"
 
@@ -293,6 +431,7 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
                   />
                 </Grid>
               )}
+
               {tipo === TipoControlador.PESSOA_NATURAL && (
                 <Grid
                   size={{
@@ -327,17 +466,32 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
                 }}
               >
                 <Controller
-                  name="nome"
+                  name="nomeEmpresarial"
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      label="Nome"
+                      label="Nome Empresarial"
                       fullWidth
                       size="small"
-                      error={!!errors.nome}
-                      helperText={errors.nome?.message}
+                      error={!!errors.nomeEmpresarial}
+                      helperText={errors.nomeEmpresarial?.message}
                     />
+                  )}
+                />
+              </Grid>
+
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 6,
+                }}
+              >
+                <Controller
+                  name="nomeFantasia"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField {...field} label="Nome Fantasia" fullWidth size="small" />
                   )}
                 />
               </Grid>
@@ -376,14 +530,13 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      value={mask(unmask(field.value || ""), [
-                        "(99) 9999-9999",
-                        "(99) 9 9999-9999",
-                      ])}
+                      value={mask(unmask(field.value || ""), TELEFONE_MASCARAS)}
                       onChange={(e) => field.onChange(unmask(e.target.value))}
                       label="Telefone"
                       fullWidth
                       size="small"
+                      error={!!errors.telefone}
+                      helperText={errors.telefone?.message}
                       slotProps={{ input: { inputMode: "numeric" } }}
                     />
                   )}
@@ -433,6 +586,88 @@ const RequeridoForm = forwardRef<RequeridoFormHandle, RequeridoFormProps>(
                   )}
                 />
               </Grid>
+
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 6,
+                }}
+              >
+                <Controller
+                  name="setorEmpresarial"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Setor Empresarial"
+                      fullWidth
+                      select
+                      size="small"
+                    >
+                      <MenuItem value={SetorEmpresarial.PRIVADO}>Privado</MenuItem>
+                      <MenuItem value={SetorEmpresarial.PUBLICO}>Público</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+
+              {setorEmpresarial === SetorEmpresarial.PUBLICO && (
+                <>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 6,
+                    }}
+                  >
+                    <Controller
+                      name="esfera"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Esfera"
+                          fullWidth
+                          select
+                          size="small"
+                          error={!!errors.esfera}
+                          helperText={errors.esfera?.message}
+                        >
+                          <MenuItem value={Esfera.MUNICIPAL}>Municipal</MenuItem>
+                          <MenuItem value={Esfera.ESTADUAL}>Estadual</MenuItem>
+                          <MenuItem value={Esfera.FEDERAL}>Federal</MenuItem>
+                        </TextField>
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 6,
+                    }}
+                  >
+                    <Controller
+                      name="poder"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Poder"
+                          fullWidth
+                          select
+                          size="small"
+                          error={!!errors.poder}
+                          helperText={errors.poder?.message}
+                        >
+                          <MenuItem value={Poder.EXECUTIVO}>Executivo</MenuItem>
+                          <MenuItem value={Poder.LEGISLATIVO}>Legislativo</MenuItem>
+                          <MenuItem value={Poder.JUDICIARIO}>Judiciário</MenuItem>
+                        </TextField>
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
 
               <Grid
                 size={{
