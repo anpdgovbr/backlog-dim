@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import dynamic from "next/dynamic"
 
@@ -25,6 +25,7 @@ import { formatCpfCnpj } from "@/utils/formUtils"
 import { pode } from "@anpdgovbr/rbac-core"
 import { GovBRButton } from "@anpdgovbr/shared-ui"
 import { Stack } from "@mui/material"
+import { SetorEmpresarial } from "@anpdgovbr/shared-types"
 
 const RequeridoModalForm = dynamic(() => import("./RequeridoModalForm"), {
   ssr: false,
@@ -38,21 +39,21 @@ export default function RequeridoDataGrid() {
   })
   const [openModal, setOpenModal] = useState(false)
   const [searchInput, setSearchInput] = useState("")
-  const [selectedRequeridoId, setSelectedRequeridoId] = useState<number | null>(null)
+  const [selectedRequeridoId, setSelectedRequeridoId] = useState<string | null>(null)
 
   const { permissoes, loading: loadingPermissoes } = usePermissoes()
   const { notify } = useNotification()
 
   const {
-    data: requeridos,
-    total: totalRows,
+    data: controladores,
+    totalElements,
     isLoading: loading,
     error,
     mutate: mutateRequeridos,
   } = useControladores({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    orderBy: "nome",
+    orderBy: "nomeEmpresarial",
     ascending: true,
     search,
   })
@@ -67,18 +68,17 @@ export default function RequeridoDataGrid() {
     }
   }, [error, notify])
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir este requerido?")) {
       try {
         const response = await fetch(`/api/controladores/${id}`, {
           method: "DELETE",
         })
-        const data = await response.json()
-
         if (response.ok) {
-          mutateRequeridos()
+          await mutateRequeridos()
           notify({ type: "success", message: "Requerido excluído com sucesso" })
         } else {
+          const data = await response.json().catch(() => ({ error: "Erro desconhecido" }))
           notify({ type: "error", message: `Erro ao excluir requerido: ${data.error}` })
         }
       } catch (error) {
@@ -87,20 +87,26 @@ export default function RequeridoDataGrid() {
     }
   }
 
-  const columns: GridColDef<RequeridoOutput>[] = [
-    { field: "nome", headerName: "Nome/Razão Social", flex: 2 },
-    {
-      field: "cnpj",
-      headerName: "CNPJ/CPF",
-      flex: 1,
-      renderCell: (params) => formatCpfCnpj(params.value || ""),
-    },
+  const rows = useMemo(() => controladores, [controladores])
 
+  const columns: GridColDef<RequeridoOutput>[] = [
+    { field: "nomeEmpresarial", headerName: "Nome Empresarial", flex: 2 },
     {
-      field: "setor",
+      field: "documento",
+      headerName: "CPF/CNPJ",
+      flex: 1,
+      renderCell: ({ row }) => formatCpfCnpj(row.cnpj ?? row.cpf ?? ""),
+    },
+    {
+      field: "setorEmpresarial",
       headerName: "Setor",
       flex: 1,
-      renderCell: (params) => params.row.setor?.nome || "Não definido",
+      renderCell: ({ row }) => {
+        if (row.setorNome) return row.setorNome
+        if (row.setorEmpresarial === SetorEmpresarial.PUBLICO) return "Público"
+        if (row.setorEmpresarial === SetorEmpresarial.PRIVADO) return "Privado"
+        return ""
+      },
     },
     {
       field: "acoes",
@@ -110,8 +116,9 @@ export default function RequeridoDataGrid() {
         <Box display="flex" gap={1}>
           <IconButton
             color="primary"
-            disabled={!pode(permissoes, "Editar", "Responsavel")}
+            disabled={!pode(permissoes, "Editar", "Responsavel") || !params.row.id}
             onClick={() => {
+              if (!params.row.id) return
               setSelectedRequeridoId(params.row.id)
               setOpenModal(true)
             }}
@@ -120,8 +127,10 @@ export default function RequeridoDataGrid() {
           </IconButton>
           <IconButton
             color="error"
-            disabled={!pode(permissoes, "Desabilitar", "Responsavel")}
-            onClick={() => handleDelete(params.row.id)}
+            disabled={!pode(permissoes, "Desabilitar", "Responsavel") || !params.row.id}
+            onClick={() => {
+              if (params.row.id) handleDelete(params.row.id)
+            }}
           >
             <GridDeleteIcon />
           </IconButton>
@@ -198,15 +207,16 @@ export default function RequeridoDataGrid() {
           <Box sx={dataGridStyles}>
             <DataGrid
               sx={{ minHeight: "45vh" }}
-              rows={requeridos}
+              rows={rows}
               columns={columns}
               pageSizeOptions={[5, 10, 20]}
               loading={loading}
               paginationMode="server"
-              rowCount={totalRows}
+              rowCount={totalElements}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+              getRowId={(row) => row.id ?? ""}
             />
           </Box>
 

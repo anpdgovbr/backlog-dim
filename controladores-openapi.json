@@ -1,0 +1,1177 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "contact": {
+      "email": "ddss@anpd.gov.br",
+      "name": "Divisão de Desenvolvimento e Sustentação de Sistema, CGTI/ANPD",
+      "url": "https://www.anpd.gov.br"
+    },
+    "description": "API RESTful para cadastro e gerenciamento de Controladores e Encarregados de Dados Pessoais.\n\n## Sobre a API\n\nEsta API permite o gerenciamento completo de:\n- **Controladores**: Entidades responsáveis pelas decisões sobre o tratamento de dados pessoais\n- **Encarregados**: Responsáveis pela comunicação entre controlador, titulares e ANPD\n- **Setores**: Classificação de setores econômicos\n- **CNAEs**: Classificação Nacional de Atividades Econômicas\n\n## Conformidade LGPD\n\nDesenvolvida em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).\n\n## Características\n\n- Arquitetura Reativa (Hibernate Reactive, Mutiny)\n- Paginação e filtros avançados\n- Validação de dados conforme Bean Validation\n- Soft delete (exclusão lógica)\n- Documentação OpenAPI 3.0\n\n## Suporte\n\nPara questões técnicas ou suporte, entre em contato com ddss@anpd.gov.br\n",
+    "license": {
+      "name": "Licença Pública do Governo Federal",
+      "url": "https://www.anpd.gov.br/licenca"
+    },
+    "title": "API de Gerenciamento de Controladores - ANPD",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Controlador",
+      "description": "Gerenciamento de controladores de dados pessoais em conformidade com a LGPD"
+    },
+    {
+      "name": "Encarregado",
+      "description": "Gerenciamento de encarregados de dados pessoais (DPO) em conformidade com a LGPD"
+    },
+    {
+      "name": "Setor",
+      "description": "Gerenciamento de setores econômicos"
+    },
+    {
+      "name": "CNAE",
+      "description": "Gerenciamento da Classificação Nacional de Atividades Econômicas"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:8082"
+    }
+  ],
+  "externalDocs": {
+    "description": "Lei Geral de Proteção de Dados (LGPD)",
+    "url": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "Autenticação via JWT Bearer Token",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "CNAEDTO": {
+        "type": "object",
+        "required": ["codigo", "nome"],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "codigo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nome": {
+            "type": "string",
+            "minLength": 1
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "exclusionDate": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "ControladorDTO": {
+        "type": "object",
+        "required": [
+          "nomeEmpresarial",
+          "tipo",
+          "cpf",
+          "site",
+          "emails",
+          "telefones",
+          "politicaPrivacidadeUrl",
+          "setorEmpresarial",
+          "setorId",
+          "cnaeId"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "nomeEmpresarial": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "\\S"
+          },
+          "nomeFantasia": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoPessoaEnum"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "minLength": 1
+          },
+          "site": {
+            "type": "string",
+            "pattern": ""
+          },
+          "emails": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/EmailDTO"
+            }
+          },
+          "telefones": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/TelefoneDTO"
+            }
+          },
+          "politicaPrivacidadeUrl": {
+            "type": "string",
+            "pattern": ""
+          },
+          "setorEmpresarial": {
+            "$ref": "#/components/schemas/SetorEmpresarial"
+          },
+          "esfera": {
+            "$ref": "#/components/schemas/Esfera"
+          },
+          "poder": {
+            "$ref": "#/components/schemas/Poder"
+          },
+          "setorId": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "setorNome": {
+            "type": "string"
+          },
+          "cnaeId": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "cnaeNome": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "exclusionDate": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "EmailDTO": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "pattern": "\\S"
+          }
+        }
+      },
+      "EncarregadoDTO": {
+        "type": "object",
+        "required": ["nome", "tipo", "cpf", "externo", "emails", "telefones"],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoPessoaEnum"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "minLength": 1
+          },
+          "externo": {
+            "type": "boolean"
+          },
+          "emails": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/EmailDTO"
+            }
+          },
+          "telefones": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/TelefoneDTO"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "exclusionDate": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "Esfera": {
+        "type": "string",
+        "enum": ["MUNICIPAL", "ESTADUAL", "FEDERAL"]
+      },
+      "LocalDateTime": {
+        "type": "string",
+        "format": "date-time",
+        "examples": ["2022-03-10T12:15:50"]
+      },
+      "PageResponseDTO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {}
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Poder": {
+        "type": "string",
+        "enum": ["EXECUTIVO", "LEGISLATIVO", "JUDICIARIO"]
+      },
+      "SetorDTO": {
+        "type": "object",
+        "required": ["nome"],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "nome": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "exclusionDate": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "SetorEmpresarial": {
+        "type": "string",
+        "enum": ["PUBLICO", "PRIVADO"]
+      },
+      "TelefoneDTO": {
+        "type": "object",
+        "required": ["codigoPais", "telefone"],
+        "properties": {
+          "codigoPais": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "telefone": {
+            "type": "string",
+            "pattern": "\\S"
+          }
+        }
+      },
+      "TipoPessoaEnum": {
+        "type": "string",
+        "enum": ["PESSOA_JURIDICA", "PESSOA_NATURAL"]
+      },
+      "UUID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+      }
+    }
+  },
+  "paths": {
+    "/api/cnae": {
+      "get": {
+        "summary": "Lista CNAEs com paginação e filtros",
+        "description": "Retorna uma lista paginada de Classificações Nacionais de Atividades Econômicas com suporte a filtros de busca e ordenação.",
+        "tags": ["CNAE"],
+        "parameters": [
+          {
+            "description": "Ordenação ascendente (true) ou descendente (false)",
+            "example": true,
+            "name": "ascending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "description": "Campo para ordenação",
+            "example": "codigo",
+            "name": "orderBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "description": "Número da página (1-based)",
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "description": "Quantidade de itens por página",
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "description": "Termo para busca por código ou nome",
+            "example": "Desenvolvimento de software",
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada de CNAEs retornada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova CNAE",
+        "description": "Cadastra uma nova Classificação Nacional de Atividade Econômica no sistema.",
+        "tags": ["CNAE"],
+        "requestBody": {
+          "description": "Dados da CNAE a ser criada",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CNAEDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CNAE criada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CNAEDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados de entrada inválidos."
+          },
+          "422": {
+            "description": "Erro de validação dos dados."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/api/cnae/{id}": {
+      "put": {
+        "summary": "Atualiza uma CNAE existente",
+        "description": "Atualiza todos os dados de uma CNAE específica.",
+        "tags": ["CNAE"],
+        "parameters": [
+          {
+            "description": "UUID da CNAE",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novos dados da CNAE",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CNAEDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CNAE atualizada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CNAEDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNAE não encontrada."
+          },
+          "400": {
+            "description": "Dados de entrada inválidos."
+          },
+          "422": {
+            "description": "Erro de validação dos dados."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca uma CNAE por ID",
+        "description": "Retorna os dados de uma Classificação Nacional de Atividade Econômica específica identificada pelo UUID.",
+        "tags": ["CNAE"],
+        "parameters": [
+          {
+            "description": "UUID da CNAE",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CNAE encontrada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CNAEDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNAE não encontrada."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Desativa uma CNAE",
+        "description": "Remove logicamente uma CNAE do sistema (soft delete). A CNAE é marcada como inativa mas não é removida do banco de dados.",
+        "tags": ["CNAE"],
+        "parameters": [
+          {
+            "description": "UUID da CNAE a ser desativada",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "CNAE desativada com sucesso."
+          },
+          "404": {
+            "description": "CNAE não encontrada."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/api/controlador": {
+      "get": {
+        "summary": "Lista controladores com paginação e filtros avançados",
+        "description": "Retorna uma lista paginada de controladores de dados pessoais.\n\nPermite filtrar por nome, CPF, CNPJ e ordenar por qualquer campo.\nIdeal para interfaces de listagem e busca.\n",
+        "tags": ["Controlador"],
+        "parameters": [
+          {
+            "description": "Ordenação ascendente (A-Z) ou descendente (Z-A)",
+            "example": true,
+            "name": "ascending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "description": "Campo para ordenação",
+            "example": "nomeEmpresarial",
+            "schema": {
+              "enum": ["nomeEmpresarial", "nomeFantasia", "cnpj", "cpf"],
+              "default": ""
+            },
+            "name": "orderBy",
+            "in": "query"
+          },
+          {
+            "description": "Número da página (1-based). Primeira página = 1",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "minimum": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "description": "Itens por página. Recomenda-se entre 10 e 100",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "maximum": 100,
+              "minimum": 1
+            },
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "description": "Termo de busca. Pesquisa em: nome empresarial, nome fantasia, CPF e CNPJ",
+            "example": "banco",
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos (ex: pageSize negativo, page < 1)"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo controlador",
+        "description": "Cadastra um novo controlador de dados pessoais no sistema.\n\nRealiza validações de CPF/CNPJ, e-mails, telefones e URLs automaticamente.\nRetorna HTTP 201 com a URI do recurso criado no header Location.\n",
+        "tags": ["Controlador"],
+        "requestBody": {
+          "description": "Dados do controlador. Todos os campos obrigatórios devem ser preenchidos",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControladorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Controlador criado com sucesso. URI no header Location",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ControladorDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos. Verifique os campos obrigatórios e formatos"
+          },
+          "422": {
+            "description": "Erro de validação de negócio (ex: CPF/CNPJ já cadastrado, setor/CNAE inexistente)"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/controlador/{id}": {
+      "put": {
+        "summary": "Atualiza um controlador (substituição completa)",
+        "description": "Atualiza TODOS os dados de um controlador existente.\n\nAtenção: Esta é uma atualização completa (PUT). Campos não informados serão limpos.\nO ID do path sobrescreve o ID do body.\n",
+        "tags": ["Controlador"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novos dados do controlador (substituição completa)",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControladorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Controlador atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ControladorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Controlador não encontrado com o ID especificado"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "422": {
+            "description": "Erro de validação de negócio"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca um controlador por ID",
+        "description": "Retorna os dados completos de um controlador específico.\n\nInclui: dados cadastrais, contatos, classificações, encarregados e grupo econômico.\n",
+        "tags": ["Controlador"],
+        "parameters": [
+          {
+            "description": "UUID do controlador",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Controlador encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ControladorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Controlador não encontrado com o ID especificado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Desativa um controlador (soft delete)",
+        "description": "Remove logicamente um controlador do sistema.\n\nO registro é mantido no banco para auditoria, apenas marcado como inativo.\nRetorna HTTP 204 sem corpo de resposta.\n",
+        "tags": ["Controlador"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Controlador desativado com sucesso. Sem corpo de resposta"
+          },
+          "404": {
+            "description": "Controlador não encontrado com o ID especificado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/encarregado": {
+      "get": {
+        "summary": "Lista todos os encarregados ativos",
+        "description": "Retorna uma lista completa de todos os encarregados de dados pessoais cadastrados.\n\nAtenção: Retorna TODOS os registros ativos sem paginação.\n",
+        "tags": ["Encarregado"],
+        "responses": {
+          "200": {
+            "description": "Lista de encarregados retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EncarregadoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo encarregado",
+        "description": "Cadastra um novo encarregado (DPO) de dados pessoais no sistema.\n\nRealiza validações de CPF/CNPJ, e-mails e telefones automaticamente.\nRetorna HTTP 201 com a URI do recurso criado no header Location.\n",
+        "tags": ["Encarregado"],
+        "requestBody": {
+          "description": "Dados do encarregado. Todos os campos obrigatórios devem ser preenchidos",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EncarregadoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Encarregado criado com sucesso. URI no header Location",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncarregadoDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos. Verifique os campos obrigatórios e formatos"
+          },
+          "422": {
+            "description": "Erro de validação de negócio (ex: CPF/CNPJ já cadastrado)"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/encarregado/{id}": {
+      "put": {
+        "summary": "Atualiza um encarregado (substituição completa)",
+        "description": "Atualiza TODOS os dados de um encarregado existente.\n\nAtenção: Esta é uma atualização completa (PUT). Campos não informados serão limpos.\nO ID do path sobrescreve o ID do body.\n",
+        "tags": ["Encarregado"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novos dados do encarregado (substituição completa)",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EncarregadoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Encarregado atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncarregadoDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Encarregado não encontrado com o ID especificado"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "422": {
+            "description": "Erro de validação de negócio"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca um encarregado por ID",
+        "description": "Retorna os dados completos de um encarregado específico.\n\nInclui: dados cadastrais, indicação se é interno/externo, e contatos.\n",
+        "tags": ["Encarregado"],
+        "parameters": [
+          {
+            "description": "UUID do encarregado",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encarregado encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncarregadoDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Encarregado não encontrado com o ID especificado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Desativa um encarregado (soft delete)",
+        "description": "Remove logicamente um encarregado do sistema.\n\nO registro é mantido no banco para auditoria, apenas marcado como inativo.\nRetorna HTTP 204 sem corpo de resposta.\n",
+        "tags": ["Encarregado"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Encarregado desativado com sucesso. Sem corpo de resposta"
+          },
+          "404": {
+            "description": "Encarregado não encontrado com o ID especificado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/setor": {
+      "get": {
+        "summary": "Lista setores com paginação e filtros",
+        "description": "Retorna uma lista paginada de setores econômicos com suporte a filtros de busca e ordenação personalizada.",
+        "tags": ["Setor"],
+        "parameters": [
+          {
+            "description": "Ordenação ascendente (true) ou descendente (false)",
+            "example": true,
+            "name": "ascending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "description": "Campo para ordenação",
+            "example": "nome",
+            "name": "orderBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "description": "Número da página (1-based)",
+            "example": 1,
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "description": "Quantidade de itens por página",
+            "example": 10,
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "description": "Termo para busca por nome",
+            "example": "Tecnologia",
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada de setores retornada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo setor",
+        "description": "Cadastra um novo setor econômico no sistema.",
+        "tags": ["Setor"],
+        "requestBody": {
+          "description": "Dados do setor a ser criado",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Setor criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetorDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados de entrada inválidos."
+          },
+          "422": {
+            "description": "Erro de validação dos dados."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/api/setor/{id}": {
+      "put": {
+        "summary": "Atualiza um setor existente",
+        "description": "Atualiza todos os dados de um setor específico.",
+        "tags": ["Setor"],
+        "parameters": [
+          {
+            "description": "UUID do setor",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novos dados do setor",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Setor atualizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Setor não encontrado."
+          },
+          "400": {
+            "description": "Dados de entrada inválidos."
+          },
+          "422": {
+            "description": "Erro de validação dos dados."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca um setor por ID",
+        "description": "Retorna os dados de um setor específico identificado pelo UUID.",
+        "tags": ["Setor"],
+        "parameters": [
+          {
+            "description": "UUID do setor",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Setor encontrado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Setor não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Desativa um setor",
+        "description": "Remove logicamente um setor do sistema (soft delete). O setor é marcado como inativo mas não é removido do banco de dados.",
+        "tags": ["Setor"],
+        "parameters": [
+          {
+            "description": "UUID do setor a ser desativado",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Setor desativado com sucesso."
+          },
+          "404": {
+            "description": "Setor não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    }
+  }
+}

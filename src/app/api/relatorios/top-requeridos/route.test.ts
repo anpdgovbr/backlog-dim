@@ -20,28 +20,31 @@ describe("/api/relatorios/top-requeridos GET", () => {
   beforeEach(() => {
     vi.resetAllMocks()
     ;(globalThis as unknown as { fetch: unknown }).fetch = vi.fn()
-    process.env.CONTROLADORES_API_URL = "https://api.example"
   })
 
   it("clampa limit e agrega dados do serviço externo", async () => {
     ;(
       prisma.processo.groupBy as unknown as ReturnType<typeof vi.fn>
     ).mockResolvedValueOnce([
-      { requeridoId: 10, _count: { requeridoId: 7 } },
-      { requeridoId: 20, _count: { requeridoId: 5 } },
+      { requeridoId: "uuid-10", _count: { requeridoId: 7 } },
+      { requeridoId: "uuid-20", _count: { requeridoId: 5 } },
     ])
     ;(fetch as unknown as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ id: 10, nome: "Ctrl 10" }), { status: 200 })
+        new Response(JSON.stringify({ id: "uuid-10", nomeEmpresarial: "Ctrl 10" }), {
+          status: 200,
+        })
       )
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ id: 20, nome: "Ctrl 20" }), { status: 200 })
+        new Response(JSON.stringify({ id: "uuid-20", nomeEmpresarial: "Ctrl 20" }), {
+          status: 200,
+        })
       )
 
     const req = new Request("http://local/api/relatorios/top-requeridos?limit=9999")
     const res = await GET(req as unknown as never)
     expect(res.status).toBe(200)
-    const json = (await res.json()) as Array<{ id: number; totalProcessos: number }>
+    const json = (await res.json()) as Array<{ id: string; totalProcessos: number }>
     expect(json.length).toBe(2)
     const groupArg = (prisma.processo.groupBy as unknown as ReturnType<typeof vi.fn>).mock
       .calls[0]?.[0]

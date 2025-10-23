@@ -8,9 +8,10 @@ import { fetcher } from "@/lib/fetcher"
 /**
  * Parâmetros aceitos pelo hook `useProcessos`.
  */
-export interface UseProcessosParams extends BaseQueryParams {
+export interface UseProcessosParams extends Omit<BaseQueryParams, "orderBy"> {
   /** Filtra por responsável (user id) */
   responsavelUserId?: string
+  orderBy?: string
 }
 
 /**

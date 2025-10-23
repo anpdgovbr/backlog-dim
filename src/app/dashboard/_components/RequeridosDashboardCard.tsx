@@ -69,7 +69,11 @@ function RequeridosDashboardCard({
       fetchUrl={`/api/relatorios/top-requeridos?limit=${limit}`}
       selectItems={(data) =>
         Array.isArray(data)
-          ? data.map((d) => ({ id: d.id, label: d.nome, value: d.totalProcessos }))
+          ? data.map((d) => ({
+              id: d.id,
+              label: d.nomeEmpresarial ?? d.nomeFantasia ?? "--",
+              value: d.totalProcessos,
+            }))
           : []
       }
       limit={limit}

@@ -89,7 +89,7 @@ export default function ProcessoDataGrid({
     (pode("EditarGeral", "Processo") ||
       (pode("EditarProprio", "Processo") && responsavelUserId === userId))
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir este processo?")) {
       try {
         const response = await fetch(`/api/processos/${id}`, {

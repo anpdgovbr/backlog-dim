@@ -1,4 +1,3 @@
-// src/app/api/controladores/[id]/route.ts
 import { AcaoAuditoria } from "@anpdgovbr/shared-types"
 
 import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
@@ -8,15 +7,14 @@ function toAuditObject(value: unknown): object | undefined {
   return value && typeof value === "object" ? (value as object) : undefined
 }
 
-// === GET ===
 const handlerGET = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
-    const response = await fetch(getControladoresApiUrl(`/controlador/${id}`))
+    const response = await fetch(getControladoresApiUrl(`/encarregado/${id}`))
     const payload = await parseControladoresJson<unknown>(response)
 
     if (!response.ok) {
-      return Response.json(payload ?? { error: "Requerido não encontrado" }, {
+      return Response.json(payload ?? { error: "Encarregado não encontrado" }, {
         status: response.status,
       })
     }
@@ -31,9 +29,9 @@ const handlerGET = withApiForId<{ id: string }>(
     }
   },
   {
-    tabela: "requerido",
+    tabela: "encarregado",
     acao: AcaoAuditoria.GET,
-    permissao: { acao: "Exibir", recurso: "Processo" },
+    permissao: { acao: "Exibir", recurso: "Responsavel" },
   }
 )
 
@@ -44,18 +42,17 @@ export async function GET(
   return handlerGET(req, { params: await context.params })
 }
 
-// === PUT ===
 const handlerPUT = withApiForId<{ id: string }>(
   async ({ params, req }) => {
     const { id } = params
     const body = await req.json()
 
-    const existenteResponse = await fetch(getControladoresApiUrl(`/controlador/${id}`))
+    const existenteResponse = await fetch(getControladoresApiUrl(`/encarregado/${id}`))
     const existente = existenteResponse.ok
       ? await parseControladoresJson<unknown>(existenteResponse)
       : null
 
-    const response = await fetch(getControladoresApiUrl(`/controlador/${id}`), {
+    const response = await fetch(getControladoresApiUrl(`/encarregado/${id}`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -64,7 +61,7 @@ const handlerPUT = withApiForId<{ id: string }>(
     const payload = await parseControladoresJson<unknown>(response)
 
     if (!response.ok) {
-      return Response.json(payload ?? { error: "Erro ao atualizar requerido" }, {
+      return Response.json(payload ?? { error: "Erro ao atualizar encarregado" }, {
         status: response.status,
       })
     }
@@ -83,7 +80,7 @@ const handlerPUT = withApiForId<{ id: string }>(
     }
   },
   {
-    tabela: "requerido",
+    tabela: "encarregado",
     acao: AcaoAuditoria.UPDATE,
     permissao: { acao: "Editar", recurso: "Responsavel" },
   }
@@ -96,12 +93,11 @@ export async function PUT(
   return handlerPUT(req, { params: await context.params })
 }
 
-// === DELETE ===
 const handlerDELETE = withApiForId<{ id: string }>(
   async ({ params }) => {
     const { id } = params
 
-    const response = await fetch(getControladoresApiUrl(`/controlador/${id}`), {
+    const response = await fetch(getControladoresApiUrl(`/encarregado/${id}`), {
       method: "DELETE",
     })
 
@@ -115,7 +111,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
     const payload = await parseControladoresJson<unknown>(response)
 
     if (!response.ok) {
-      return Response.json(payload ?? { error: "Erro ao excluir requerido" }, {
+      return Response.json(payload ?? { error: "Erro ao excluir encarregado" }, {
         status: response.status,
       })
     }
@@ -130,7 +126,7 @@ const handlerDELETE = withApiForId<{ id: string }>(
     }
   },
   {
-    tabela: "requerido",
+    tabela: "encarregado",
     acao: AcaoAuditoria.DELETE,
     permissao: { acao: "Desabilitar", recurso: "Responsavel" },
   }

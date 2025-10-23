@@ -1,4 +1,4 @@
-import type { BaseQueryParams, SetorDto } from "@anpdgovbr/shared-types"
+import type { BaseQueryParams, PageResponseDto, SetorDto } from "@anpdgovbr/shared-types"
 
 import { useApi } from "@/lib/api"
 
@@ -30,7 +30,10 @@ export interface UseSetorParams extends BaseQueryParams {
  */
 export interface UseSetorResult {
   data: SetorDto[]
-  total: number
+  totalElements: number
+  page: number
+  pageSize: number
+  totalPages: number
   isLoading: boolean
   error: unknown
   mutate: () => void
@@ -64,14 +67,14 @@ export function useSetor(params: UseSetorParams): UseSetorResult {
 
   const key = `/api/setor?${query.toString()}`
 
-  const { data, error, isLoading, mutate } = useApi<{
-    data: SetorDto[]
-    total: number
-  }>(key)
+  const { data, error, isLoading, mutate } = useApi<PageResponseDto<SetorDto>>(key)
 
   return {
     data: data?.data ?? [],
-    total: data?.total ?? 0,
+    totalElements: data?.totalElements ?? 0,
+    page: data?.page ?? 1,
+    pageSize: data?.pageSize ?? pageSize,
+    totalPages: data?.totalPages ?? 0,
     isLoading,
     error,
     mutate,

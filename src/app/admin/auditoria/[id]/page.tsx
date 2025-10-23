@@ -27,11 +27,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   if (!log) return notFound()
 
   const typedLog: AuditLogTyped = {
-    id: log.id,
+    id: String(log.id),
     tabela: log.tabela,
     acao: log.acao as unknown as AuditLogDto["acao"],
     registroId: log.registroId ?? undefined,
-    userId: log.userId ?? undefined,
+    userId: log.userId != null ? String(log.userId) : undefined,
     email: log.email ?? undefined,
     contexto: log.contexto ?? undefined,
     ip: log.ip ?? undefined,
