@@ -13,11 +13,11 @@ export function getControladoresApiUrl(path: string): string {
   const full = `${baseUrl}/${sanitizedPath}`
 
   // 🔍 log temporário — sempre exibe o endereço usado
-  console.log(
+  console.warn(
     "🔍 [getControladoresApiUrl] CONTROLADORES_API_URL =",
     process.env.CONTROLADORES_API_URL
   )
-  console.log("🔍 [getControladoresApiUrl] URL final:", full)
+  console.warn("🔍 [getControladoresApiUrl] URL final:", full)
 
   return full
 }

@@ -35,7 +35,8 @@ const nextConfig: NextConfig = {
 
 export default nextConfig
 
+// ...existing code...
 // --- Adicionado automaticamente pelo deploy.sh (ANPD) ---
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
   module.exports.outputFileTracingRoot = __dirname
 }
