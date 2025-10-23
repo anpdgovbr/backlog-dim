@@ -9,7 +9,14 @@ export async function GET(req: Request) {
   const currentUrl = new URL(req.url)
   const targetUrl = new URL(getControladoresApiUrl("/setor"))
 
+  // WORKAROUND: API Quarkus tem bug com alguns query params
+  // Removendo temporariamente orderBy e ascending até o backend ser corrigido
   currentUrl.searchParams.forEach((value, key) => {
+    // Pula orderBy e ascending que causam data: [] vazio na API Quarkus
+    if (key === "orderBy" || key === "ascending") {
+      console.warn(`⚠️ [GET /api/setor] Ignorando param ${key}=${value} devido a bug na API Quarkus`)
+      return
+    }
     targetUrl.searchParams.append(key, value)
   })
 
