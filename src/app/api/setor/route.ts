@@ -13,7 +13,11 @@ export async function GET(req: Request) {
     targetUrl.searchParams.append(key, value)
   })
 
+  console.warn("🔍 [GET /api/setor] Fazendo requisição para:", targetUrl.toString())
+
   const response = await fetch(targetUrl.toString())
+
+  console.warn("🔍 [GET /api/setor] Status da resposta:", response.status)
 
   if (response.status === 204) {
     const fallbackPage = Number(currentUrl.searchParams.get("page") ?? "1")
@@ -28,6 +32,8 @@ export async function GET(req: Request) {
   }
 
   const payload = await parseControladoresJson<unknown>(response)
+
+  console.warn("🔍 [GET /api/setor] Payload recebido:", JSON.stringify(payload).slice(0, 500))
 
   if (!response.ok) {
     return NextResponse.json(payload ?? { error: "Erro ao buscar setores" }, {
