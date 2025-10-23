@@ -50,7 +50,7 @@ export const GET = withApi(async ({ req }) => {
   const resultados = await Promise.all(
     agregados.map(async ({ requeridoId, _count }) => {
       try {
-        if (requeridoId == null) return null
+        if (requeridoId == null || requeridoId === '') return null
         const res = await fetch(
           getControladoresApiUrl(`/controlador/${String(requeridoId)}`)
         )
