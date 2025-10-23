@@ -82,7 +82,7 @@ export function CnaeDropdownSection({
           onChange={(_, newValue) => onChange(newValue?.id ?? null)}
           onInputChange={(_, inputValue) => setSearchTerm(inputValue)}
           getOptionLabel={(option) =>
-            `${option.codigo ?? option.code ?? ""} - ${option.nome}`
+            `${option.codigo ?? ""} - ${option.nome}`
           }
           isOptionEqualToValue={(option, val) => option.id === val?.id}
           noOptionsText="Nenhum resultado"
