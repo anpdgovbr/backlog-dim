@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 
   const payload = await parseControladoresJson<unknown>(response)
 
-  console.warn("🔍 [GET /api/setor] Payload recebido:", JSON.stringify(payload).slice(0, 500))
+  console.warn("🔍 [GET /api/setor] Payload parseado:", JSON.stringify(payload))
 
   if (!response.ok) {
     return NextResponse.json(payload ?? { error: "Erro ao buscar setores" }, {
