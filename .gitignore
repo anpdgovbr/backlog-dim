@@ -19,6 +19,7 @@ ecosystem.config.cjs
 # next.js
 /.next/
 /out/
+.npmrc
 
 # production
 /build
@@ -62,3 +63,4 @@ docs/
 .typedocs/
 public/dev-routes.json
 issues/
+.npmrc
