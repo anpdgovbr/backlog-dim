@@ -17,7 +17,7 @@ import { prisma } from "@/lib/prisma"
  *
  * @property tabela - Nome da tabela/entidade auditada (ex.: "processos").
  * @property acao - Ação auditada, conforme enum `AcaoAuditoria`.
- * @property registroId - Identificador numérico do registro afetado (quando aplicável).
+ * @property registroId - Identificador do registro afetado (quando aplicável). Aceita número ou string.
  * @property userId - Identificador interno do usuário que realizou a ação.
  * @property email - Email do usuário (útil para rastreabilidade em auths externas).
  * @property contexto - Texto livre descrevendo contexto adicional (por exemplo: motivo).
@@ -29,7 +29,7 @@ import { prisma } from "@/lib/prisma"
 export type LogProps = {
   tabela: string
   acao: AcaoAuditoria
-  registroId?: number
+  registroId?: number | string
   userId?: string
   email?: string
   contexto?: string
@@ -88,7 +88,7 @@ export async function registrarAuditoria({
       data: {
         tabela,
         acao: acao as unknown as PrismaAcaoAuditoria,
-        registroId,
+        registroId: registroId != null ? String(registroId) : undefined,
         userId,
         email,
         contexto,

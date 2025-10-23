@@ -36,7 +36,7 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoFormData {
     evidenciaId: processo.evidencia?.id != null ? Number(processo.evidencia.id) : null,
     tipoReclamacaoId:
       processo.tipoReclamacao?.id != null ? Number(processo.tipoReclamacao.id) : null,
-    requeridoId: processo.requerido?.id != null ? Number(processo.requerido.id) : null,
+    requeridoId: processo.requerido?.id ?? null,
 
     anonimo: processo.anonimo ?? false,
     observacoes: processo.observacoes ?? "",
@@ -55,8 +55,7 @@ export function toProcessoInput(processo: ProcessoOutput): ProcessoFormData {
         : null,
 
     prazoPedido: processo.prazoPedido ?? null,
-    requeridoFinalId:
-      processo.requeridoFinal?.id != null ? Number(processo.requeridoFinal.id) : null,
+    requeridoFinalId: processo.requeridoFinal?.id ?? null,
 
     statusInterno: processo.statusInterno ?? null,
   }

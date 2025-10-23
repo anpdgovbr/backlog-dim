@@ -53,7 +53,7 @@ export function RequeridoDropdownSection({
   const selectedId = useWatch({ control, name })
   const [searchTerm, setSearchTerm] = useState("")
   const [extraRequerido, setExtraRequerido] = useState<{
-    id: number | string
+    id: string
     nome: string
   } | null>(null)
 
@@ -67,7 +67,7 @@ export function RequeridoDropdownSection({
     search: shouldFetchList ? searchTerm : "",
     page: 1,
     pageSize: 50,
-    orderBy: "nome",
+    orderBy: "nomeEmpresarial",
     ascending: true,
   })
 
@@ -84,26 +84,40 @@ export function RequeridoDropdownSection({
         return
       }
 
-      const result = await getById(Number(selectedId))
+      const result = await getById(String(selectedId))
       if (result) {
-        setExtraRequerido({ id: result.id, nome: result.nome })
+        if (!result.id) return
+        setExtraRequerido({ id: result.id, nome: result.nomeEmpresarial })
       }
     }
 
     carregarExtra()
   }, [selectedId, controladores, getById])
 
-  const options = shouldFetchList
-    ? hasAllOption
-      ? [{ id: "ALL", nome: "Todos" }, ...controladores]
-      : [...controladores]
-    : extraRequerido
-      ? hasAllOption
+  type RequeridoOption = { id: string; nome: string }
+
+  const mappedControladores: RequeridoOption[] = controladores
+    .filter((controlador) => typeof controlador.id === "string")
+    .map((controlador) => ({
+      id: controlador.id as string,
+      nome: controlador.nomeEmpresarial,
+    }))
+
+  const baseOptions: RequeridoOption[] = shouldFetchList ? mappedControladores : []
+
+  const options: RequeridoOption[] = (() => {
+    if (shouldFetchList) {
+      return hasAllOption ? [{ id: "ALL", nome: "Todos" }, ...baseOptions] : baseOptions
+    }
+
+    if (extraRequerido) {
+      return hasAllOption
         ? [{ id: "ALL", nome: "Todos" }, extraRequerido]
         : [extraRequerido]
-      : hasAllOption
-        ? [{ id: "ALL", nome: "Todos" }]
-        : []
+    }
+
+    return hasAllOption ? [{ id: "ALL", nome: "Todos" }] : []
+  })()
 
   return (
     <Controller

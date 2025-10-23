@@ -1,6 +1,10 @@
 "use client"
 
-import type { BaseQueryParams, ControladorDto } from "@anpdgovbr/shared-types"
+import type {
+  BaseQueryParams,
+  ControladorDto,
+  PageResponseDto,
+} from "@anpdgovbr/shared-types"
 
 import { useApi } from "@/lib/api"
 import { replaceNumbers } from "@/utils/stringUtils"
@@ -32,11 +36,14 @@ export interface UseControladoresParams extends BaseQueryParams {
  */
 export interface UseControladoresResult {
   data: ControladorDto[]
-  total: number
+  totalElements: number
+  page: number
+  pageSize: number
+  totalPages: number
   isLoading: boolean
   error: unknown
-  mutate: () => void
-  getById: (id: number) => Promise<ControladorDto | null>
+  mutate: () => Promise<PageResponseDto<ControladorDto> | undefined>
+  getById: (id: string) => Promise<ControladorDto | null>
 }
 
 /**
@@ -57,7 +64,7 @@ export function useControladores(params: UseControladoresParams): UseControlador
     page = 1,
     pageSize = 10,
     search = "",
-    orderBy = "nome",
+    orderBy = "nomeEmpresarial",
     ascending = true,
     cnpj,
     nome,
@@ -76,10 +83,7 @@ export function useControladores(params: UseControladoresParams): UseControlador
 
   const key = `/api/controladores?${query.toString()}`
 
-  const { data, error, isLoading, mutate } = useApi<{
-    data: ControladorDto[]
-    total: number
-  }>(key)
+  const { data, error, isLoading, mutate } = useApi<PageResponseDto<ControladorDto>>(key)
 
   // 🛠 Função nova para buscar um único Controlador por ID
   /**
@@ -88,7 +92,7 @@ export function useControladores(params: UseControladoresParams): UseControlador
    * Retorna o ControladorDto quando encontrado ou null em caso de erro/404.
    * Erros são logados no console para auxiliar debugging no cliente.
    */
-  async function getById(id: number): Promise<ControladorDto | null> {
+  async function getById(id: string): Promise<ControladorDto | null> {
     try {
       const resposta = await fetch(`/api/controladores/${id}`)
       if (!resposta.ok) {
@@ -105,7 +109,10 @@ export function useControladores(params: UseControladoresParams): UseControlador
 
   return {
     data: data?.data ?? [],
-    total: data?.total ?? 0,
+    totalElements: data?.totalElements ?? 0,
+    page: data?.page ?? 1,
+    pageSize: data?.pageSize ?? pageSize,
+    totalPages: data?.totalPages ?? 0,
     isLoading,
     error,
     mutate,

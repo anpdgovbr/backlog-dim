@@ -38,12 +38,13 @@ function GerenciarPerfisContent() {
   const { perfis } = usePerfis()
   const { responsaveis, mutate: mutateResponsaveis } = useResponsaveis()
 
-  const handlePerfilChange = async (userId: string, perfilId: number) => {
+  const handlePerfilChange = async (userId: string, perfilId: string | number) => {
     try {
+      const perfilIdToPersist = typeof perfilId === "string" ? Number(perfilId) : perfilId
       const res = await fetch(`/api/usuarios/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ perfilId }),
+        body: JSON.stringify({ perfilId: perfilIdToPersist }),
       })
 
       if (!res.ok) throw new Error("Erro ao atualizar perfil")
@@ -58,13 +59,15 @@ function GerenciarPerfisContent() {
 
   const handleResponsavelChange = async (
     userId: string | null,
-    responsavelId: number
+    responsavelId: string | number
   ) => {
     try {
+      const responsavelIdToPersist =
+        typeof responsavelId === "string" ? Number(responsavelId) : responsavelId
       const res = await fetch("/api/responsaveis", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, responsavelId }),
+        body: JSON.stringify({ userId, responsavelId: responsavelIdToPersist }),
       })
 
       if (!res.ok) throw new Error("Erro ao atualizar responsável")
@@ -90,8 +93,8 @@ function GerenciarPerfisContent() {
           <InputLabel>Perfil</InputLabel>
           <Select
             label="Perfil"
-            value={params.row.perfilId || ""}
-            onChange={(e) => handlePerfilChange(params.row.id, Number(e.target.value))}
+            value={params.row.perfilId != null ? String(params.row.perfilId) : ""}
+            onChange={(e) => handlePerfilChange(params.row.id, e.target.value)}
           >
             <MenuItem value="">Selecione</MenuItem>
             {perfis.map((perfil) => (
@@ -112,10 +115,12 @@ function GerenciarPerfisContent() {
           <InputLabel>Responsável</InputLabel>
           <Select
             label="Responsável"
-            value={params.row.responsavelId ?? ""}
-            onChange={(e) =>
-              handleResponsavelChange(params.row.id, Number(e.target.value))
+            value={
+              params.row.responsavelId !== null && params.row.responsavelId !== undefined
+                ? String(params.row.responsavelId)
+                : ""
             }
+            onChange={(e) => handleResponsavelChange(params.row.id, e.target.value)}
           >
             {responsaveis.map((r) => (
               <MenuItem key={r.id} value={r.id}>

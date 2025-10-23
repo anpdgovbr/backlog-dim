@@ -1,6 +1,7 @@
 import type { ControladorDto } from "@anpdgovbr/shared-types"
 
 import { prisma } from "@/lib/prisma"
+import { getControladoresApiUrl, parseControladoresJson } from "@/lib/controladoresApi"
 import { withApi } from "@/lib/withApi"
 
 /**
@@ -31,12 +32,6 @@ export const GET = withApi(async ({ req }) => {
   const { searchParams } = new URL(req.url)
   const limit = Math.min(Number(searchParams.get("limit")) || 5, 100)
 
-  const baseUrl = process.env.CONTROLADORES_API_URL
-  if (!baseUrl) {
-    console.error("❌ Variável de ambiente CONTROLADORES_API_URL não definida.")
-    return Response.json({ error: "Configuração interna ausente" }, { status: 500 })
-  }
-
   const agregados = await prisma.processo.groupBy({
     by: ["requeridoId"],
     where: {
@@ -55,10 +50,14 @@ export const GET = withApi(async ({ req }) => {
   const resultados = await Promise.all(
     agregados.map(async ({ requeridoId, _count }) => {
       try {
-        const res = await fetch(`${baseUrl}/controladores/${requeridoId}`)
+        if (requeridoId == null || requeridoId === '') return null
+        const res = await fetch(
+          getControladoresApiUrl(`/controlador/${String(requeridoId)}`)
+        )
 
         if (!res.ok) throw new Error(`Erro ao buscar requerido ${requeridoId}`)
-        const data = (await res.json()) as ControladorDto
+        const data = await parseControladoresJson<ControladorDto>(res)
+        if (!data) throw new Error("Resposta vazia da API de Controladores")
 
         return {
           ...data,

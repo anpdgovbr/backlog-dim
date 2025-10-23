@@ -18,8 +18,8 @@ export interface RequeridoModalFormProps
   extends Readonly<{
     open: boolean
     onClose: () => void
-    requeridoId: number | null
-    mutate?: () => void
+    requeridoId: string | null
+    mutate?: () => Promise<unknown>
   }> {}
 
 export default function RequeridoModalForm({

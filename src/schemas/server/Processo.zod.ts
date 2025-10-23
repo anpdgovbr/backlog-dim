@@ -20,6 +20,8 @@ const isoDateToDateNullable = z
  */
 const intIdNullable = z.union([z.coerce.number().int().positive(), z.null()]).optional()
 
+const uuidNullable = z.union([z.string().uuid(), z.null()]).optional()
+
 /**
  * Schema base de campos aceitos para Processo (comuns a POST/PUT).
  */
@@ -30,8 +32,8 @@ export const processoBase = z.object({
     .int()
     .positive({ message: "formaEntradaId inválido" }),
   responsavelId: z.coerce.number().int().positive({ message: "responsavelId inválido" }),
-  requeridoId: intIdNullable,
-  requeridoFinalId: intIdNullable,
+  requeridoId: uuidNullable,
+  requeridoFinalId: uuidNullable,
   situacaoId: z.coerce.number().int().positive({ message: "situacaoId inválido" }),
   encaminhamentoId: intIdNullable,
   pedidoManifestacaoId: intIdNullable,

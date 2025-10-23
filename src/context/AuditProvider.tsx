@@ -16,7 +16,7 @@ type AuditContextData = {
 export type LogAuditoriaInput = {
   tabela: string
   acao: AcaoAuditoria
-  registroId?: number
+  registroId?: number | string
   antes?: object
   depois?: object
 }

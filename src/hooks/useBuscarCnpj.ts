@@ -14,6 +14,7 @@ import { useCallback } from "react"
  */
 export interface DadosCnpj {
   razao_social?: string
+  nome_fantasia?: string
   email?: string
   telefone?: string
   site?: string
@@ -52,6 +53,7 @@ export function useBuscarCnpj() {
       const data = await res.json()
       return {
         razao_social: data.razao_social,
+        nome_fantasia: data.nome_fantasia,
         email: data.email,
         telefone: data.telefone,
         site: data.site,

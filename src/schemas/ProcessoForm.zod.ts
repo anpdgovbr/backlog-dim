@@ -10,6 +10,8 @@ import { z } from "zod"
  */
 const dateOrNull = z.union([z.date(), z.null()])
 
+const uuidOrNull = z.union([z.string().uuid(), z.null()])
+
 /**
  * Schema Zod para o formulário de criação/edição de Processo.
  *
@@ -51,8 +53,8 @@ export const processoFormSchema = z.object({
   // opcionais
   anonimo: z.boolean().default(false),
   requerente: z.string().default(""),
-  requeridoId: z.number().int().positive().nullable().default(null),
-  requeridoFinalId: z.number().int().positive().nullable().default(null),
+  requeridoId: uuidOrNull.default(null),
+  requeridoFinalId: uuidOrNull.default(null),
   pedidoManifestacaoId: z.number().int().positive().nullable().default(null),
   contatoPrevioId: z.number().int().positive().nullable().default(null),
   evidenciaId: z.number().int().positive().nullable().default(null),
