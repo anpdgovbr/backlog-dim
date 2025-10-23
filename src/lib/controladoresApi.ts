@@ -10,7 +10,16 @@ const baseUrl = RAW_BASE_URL.endsWith("/") ? RAW_BASE_URL.slice(0, -1) : RAW_BAS
  */
 export function getControladoresApiUrl(path: string): string {
   const sanitizedPath = path.startsWith("/") ? path.slice(1) : path
-  return `${baseUrl}/${sanitizedPath}`
+  const full = `${baseUrl}/${sanitizedPath}`
+
+  // 🔍 log temporário — sempre exibe o endereço usado
+  console.log(
+    "🔍 [getControladoresApiUrl] CONTROLADORES_API_URL =",
+    process.env.CONTROLADORES_API_URL
+  )
+  console.log("🔍 [getControladoresApiUrl] URL final:", full)
+
+  return full
 }
 
 /**
@@ -23,7 +32,10 @@ export async function parseControladoresJson<T>(response: Response): Promise<T |
   try {
     return JSON.parse(raw) as T
   } catch (error) {
-    console.error("Falha ao interpretar JSON da API de Controladores:", error)
+    // 🔍 também loga a origem da falha e preview da resposta
+    console.error("❌ Falha ao interpretar JSON da API de Controladores:", error)
+    console.error("📄 Corpo recebido (início):", raw.slice(0, 200))
+    console.error("📡 URL da requisição:", response.url)
     return null
   }
 }
