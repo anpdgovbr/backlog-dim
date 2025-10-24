@@ -1,3 +1,5 @@
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import eslint from "@eslint/js"
 import nextPlugin from "@next/eslint-plugin-next"
 import typescriptPlugin from "@typescript-eslint/eslint-plugin"
@@ -5,6 +7,8 @@ import typescriptParser from "@typescript-eslint/parser"
 import reactHooksPlugin from "eslint-plugin-react-hooks"
 
 const eslintConfig = [
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   // Node.js globals para arquivos JS na raiz (ex: server.js)
   {
     files: ["*.js"],
@@ -22,7 +26,6 @@ const eslintConfig = [
     },
   },
   eslint.configs.recommended,
-
   // Configuração principal para todos os arquivos
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
@@ -41,12 +44,10 @@ const eslintConfig = [
       ...reactHooksPlugin.configs.recommended.rules,
     },
   },
-
   {
     // Ignorar arquivos e pastas que não fazem parte do linting do app
     ignores: ["node_modules/", ".next/", "public/", "prisma/", "scripts/*.cjs", "docs/"],
   },
-
   {
     files: ["scripts/**/*.{js,mjs}"],
     languageOptions: {
@@ -62,7 +63,6 @@ const eslintConfig = [
       },
     },
   },
-
   {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
@@ -121,7 +121,7 @@ const eslintConfig = [
       "no-undef": "warn",
       "no-useless-escape": "warn",
     },
-  },
+  }
 ]
 
 export default eslintConfig
