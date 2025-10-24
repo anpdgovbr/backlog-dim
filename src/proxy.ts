@@ -36,7 +36,7 @@ import type { NextRequest } from "next/server"
  * - Para rotas protegidas, redireciona para "/auth/login" se não houver token.
  * - Para API de processos, retorna explicitamente 401 quando não autenticado.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = await getToken({ req: request })
   const { pathname } = request.nextUrl
 
