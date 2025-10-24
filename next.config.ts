@@ -37,8 +37,7 @@ export default nextConfig
 
 // ...existing code...
 // --- Adicionado automaticamente pelo deploy.sh (ANPD) ---
-/* eslint-disable no-undef */
+
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
   module.exports.outputFileTracingRoot = __dirname
 }
-/* eslint-enable no-undef */
