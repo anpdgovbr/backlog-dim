@@ -19,6 +19,7 @@ ecosystem.config.cjs
 # next.js
 /.next/
 /out/
+.npmrc
 
 # production
 /build
@@ -40,6 +41,7 @@ yarn-error.log*
 package-lock.json
 
 # env files (can opt-in for committing if needed)
+.env.production
 .env.local
 .env
 

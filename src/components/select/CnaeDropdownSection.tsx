@@ -81,9 +81,7 @@ export function CnaeDropdownSection({
           value={options.length > 0 ? options.find((c) => c.id === value) || null : null}
           onChange={(_, newValue) => onChange(newValue?.id ?? null)}
           onInputChange={(_, inputValue) => setSearchTerm(inputValue)}
-          getOptionLabel={(option) =>
-            `${option.codigo ?? ""} - ${option.nome}`
-          }
+          getOptionLabel={(option) => `${option.codigo ?? ""} - ${option.nome}`}
           isOptionEqualToValue={(option, val) => option.id === val?.id}
           noOptionsText="Nenhum resultado"
           loadingText="Buscando CNAEs..."
