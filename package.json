@@ -123,7 +123,7 @@
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "^16.0.0",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.12",
     "papaparse": "^5.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
