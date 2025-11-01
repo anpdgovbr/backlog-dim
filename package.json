@@ -102,7 +102,7 @@
     ]
   },
   "dependencies": {
-    "@anpdgovbr/rbac-admin": "0.4.1",
+    "@anpdgovbr/rbac-admin": "0.4.3",
     "@anpdgovbr/rbac-core": "^0.2.0",
     "@anpdgovbr/rbac-next": "^0.2.0",
     "@anpdgovbr/rbac-prisma": "^0.2.0",
