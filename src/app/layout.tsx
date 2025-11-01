@@ -13,6 +13,12 @@ import "@/styles/input-overrides.css"
 
 import ClientRootLayout from "@/app/layout.client"
 import { globalMetadata } from "@/app/metadata"
+// MUI + Next App Router (Next 16):
+// Usamos o AppRouterCacheProvider no layout server para evitar erros de hidratação
+// e garantir a injeção de CSS no <head> durante streaming.
+// Observação: o pacote ainda expõe o caminho 'v15-appRouter', que funciona no Next 16.
+// Quando a MUI publicar um path 'v16-appRouter', atualizar este import.
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter"
 
 /**
  * Metadados da aplicação reutilizando `globalMetadata`.
@@ -46,7 +52,15 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body style={{ marginBottom: 0 }}>
-        <ClientRootLayout>{children}</ClientRootLayout>
+        {/*
+          Importante:
+          - Envolver todo o conteúdo do <body> com AppRouterCacheProvider é o padrão
+            recomendado pela MUI no App Router para coletar/streamar CSS corretamente.
+          - O restante dos providers (tema, sessão etc.) permanecem no layout client.
+        */}
+        <AppRouterCacheProvider>
+          <ClientRootLayout>{children}</ClientRootLayout>
+        </AppRouterCacheProvider>
       </body>
     </html>
   )

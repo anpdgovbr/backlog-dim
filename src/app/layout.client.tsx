@@ -11,6 +11,8 @@ import { AuditProvider } from "@/context/AuditProvider"
 import { NotificationProvider } from "@/context/NotificationProvider"
 import AuthProvider from "@/context/SessionProvider"
 import { ANPDThemeProvider } from "@anpdgovbr/shared-ui"
+// Mantemos StyledEngineProvider injectFirst para priorizar MUI sobre CSS global
+// (GovBR DS Core), enquanto o AppRouterCacheProvider está no layout server.
 import { StyledEngineProvider } from "@mui/material/styles"
 
 /**
@@ -37,6 +39,9 @@ export default function ClientRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+    // Observação:
+    // - AppRouterCacheProvider está no layout server (layout.tsx), conforme recomendado pela MUI.
+    // - Aqui ficam os providers client-side (tema compartilhado, sessão, auditoria etc.).
     <StyledEngineProvider injectFirst>
       <ANPDThemeProvider>
         <AuthProvider>
