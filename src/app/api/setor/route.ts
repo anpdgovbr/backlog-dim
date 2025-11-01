@@ -14,7 +14,9 @@ export async function GET(req: Request) {
   currentUrl.searchParams.forEach((value, key) => {
     // Pula orderBy e ascending que causam data: [] vazio na API Quarkus
     if (key === "orderBy" || key === "ascending") {
-      console.warn(`⚠️ [GET /api/setor] Ignorando param ${key}=${value} devido a bug na API Quarkus`)
+      console.warn(
+        `⚠️ [GET /api/setor] Ignorando param ${key}=${value} devido a bug na API Quarkus`
+      )
       return
     }
     targetUrl.searchParams.append(key, value)
