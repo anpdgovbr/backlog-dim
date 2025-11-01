@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/backlog-dim",
-  "version": "0.5.44",
+  "version": "0.5.45",
   "private": true,
   "type": "module",
   "description": "Aplicação para gerenciar processos relacionados à peticionamento e denúncias sobre a LGPD",
@@ -102,7 +102,7 @@
     ]
   },
   "dependencies": {
-    "@anpdgovbr/rbac-admin": "0.4.1",
+    "@anpdgovbr/rbac-admin": "0.4.3",
     "@anpdgovbr/rbac-core": "^0.2.0",
     "@anpdgovbr/rbac-next": "^0.2.0",
     "@anpdgovbr/rbac-prisma": "^0.2.0",
@@ -116,6 +116,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
+    "@mui/material-nextjs": "^7.3.3",
     "@mui/x-data-grid": "^8.16.0",
     "@prisma/client": "6.18.0",
     "critters": "^0.0.25",

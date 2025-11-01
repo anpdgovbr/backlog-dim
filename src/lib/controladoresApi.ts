@@ -11,14 +11,6 @@ const baseUrl = RAW_BASE_URL.endsWith("/") ? RAW_BASE_URL.slice(0, -1) : RAW_BAS
 export function getControladoresApiUrl(path: string): string {
   const sanitizedPath = path.startsWith("/") ? path.slice(1) : path
   const full = `${baseUrl}/${sanitizedPath}`
-
-  // 🔍 log temporário — sempre exibe o endereço usado
-  console.warn(
-    "🔍 [getControladoresApiUrl] CONTROLADORES_API_URL =",
-    process.env.CONTROLADORES_API_URL
-  )
-  console.warn("🔍 [getControladoresApiUrl] URL final:", full)
-
   return full
 }
 
