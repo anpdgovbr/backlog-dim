@@ -27,10 +27,31 @@ export function getControladoresApiUrl(path: string): string {
  * ou inválido.
  */
 export async function parseControladoresJson<T>(response: Response): Promise<T | null> {
+  console.warn("🔍 [parseControladoresJson] URL:", response.url)
+  console.warn("🔍 [parseControladoresJson] bodyUsed ANTES:", response.bodyUsed)
+
   const raw = await response.text()
-  if (!raw) return null
+
+  console.warn("🔍 [parseControladoresJson] bodyUsed DEPOIS:", response.bodyUsed)
+  console.warn("🔍 [parseControladoresJson] Tamanho da resposta:", raw.length, "bytes")
+  console.warn("🔍 [parseControladoresJson] Conteúdo completo:", raw)
+
+  if (!raw) {
+    console.warn("⚠️ [parseControladoresJson] Resposta vazia!")
+    return null
+  }
+
   try {
-    return JSON.parse(raw) as T
+    const parsed = JSON.parse(raw) as T
+    console.warn("✅ [parseControladoresJson] JSON parseado com sucesso")
+    if (parsed && typeof parsed === "object" && "data" in parsed) {
+      console.warn(
+        "🔍 [parseControladoresJson] Array data tem",
+        (parsed as { data: unknown[] }).data?.length ?? 0,
+        "itens"
+      )
+    }
+    return parsed
   } catch (error) {
     // 🔍 também loga a origem da falha e preview da resposta
     console.error("❌ Falha ao interpretar JSON da API de Controladores:", error)

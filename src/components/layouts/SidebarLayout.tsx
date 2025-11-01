@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 import Box from "@mui/material/Box"
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
@@ -44,13 +46,9 @@ export type SidebarLayoutProps = Readonly<{
   title: string
   subtitle?: string
   sections: SidebarSection[]
-  // tornar selecionamento externo opcional
-  selectedSectionId?: string
-  // novo: id default caso não seja informado selectedSectionId
+  // id default da seção inicial
   defaultSectionId?: string
-  // tornar callback opcional
-  onSectionChange?: (sectionId: string) => void
-  // novo: conteúdo de fallback para a área principal
+  // conteúdo de fallback para a área principal
   fallback?: React.ReactNode
 }>
 
@@ -59,19 +57,15 @@ export default function SidebarLayout({
   title,
   subtitle,
   sections,
-  selectedSectionId,
   defaultSectionId,
-  onSectionChange,
   fallback,
 }: SidebarLayoutProps) {
   const isUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"))
-
-  // Derivar selectedSection diretamente das props
-  const selectedSection = selectedSectionId ?? defaultSectionId ?? sections[0]?.id ?? ""
+  const initialSection = defaultSectionId ?? sections[0]?.id ?? ""
+  const [selectedSection, setSelectedSection] = useState<string>(initialSection)
 
   function handleSectionChange(newSectionId: string) {
-    // chamar callback somente se fornecido
-    if (onSectionChange) onSectionChange(newSectionId)
+    setSelectedSection(newSectionId)
   }
 
   function handleSelectChange(event: SelectChangeEvent<string>) {

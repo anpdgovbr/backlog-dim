@@ -62,10 +62,11 @@ export default function SimpleCookieBanner({
                 {texts.bannerMessage}{" "}
                 <strong>
                   Ao aceitar, você terá acesso a todas as funcionalidades do site. Se
-                  clicar em "Rejeitar Cookies", os cookies que não forem estritamente
-                  necessários serão desativados.
+                  clicar em &ldquo;Rejeitar Cookies&rdquo;, os cookies que não forem
+                  estritamente necessários serão desativados.
                 </strong>{" "}
-                Para escolher quais quer autorizar, clique em "Gerenciar cookies".{" "}
+                Para escolher quais quer autorizar, clique em &ldquo;Gerenciar
+                cookies&rdquo;.{" "}
                 {texts.policyLink && (
                   <span>
                     Saiba mais em nossa{" "}

@@ -247,11 +247,11 @@ export default function CookiePreferencesModal({
               "Para melhorar a sua experiência na plataforma e prover serviços personalizados, utilizamos cookies."}{" "}
             <strong>
               Ao aceitar, você terá acesso a todas as funcionalidades do site. Se clicar
-              em "Rejeitar Cookies", os cookies que não forem estritamente necessários
-              serão desativados.
+              em &ldquo;Rejeitar Cookies&rdquo;, os cookies que não forem estritamente
+              necessários serão desativados.
             </strong>{" "}
-            Para escolher quais quer autorizar, clique em "Gerenciar cookies". Saiba mais
-            em nossa{" "}
+            Para escolher quais quer autorizar, clique em &ldquo;Gerenciar cookies&rdquo;.
+            Saiba mais em nossa{" "}
             <Link href="/termos-de-uso" target="_blank" rel="noopener">
               Declaração de Cookies
             </Link>
