@@ -9,29 +9,29 @@ importers:
   .:
     dependencies:
       '@anpdgovbr/rbac-admin':
-        specifier: 0.3.0-beta.0
-        version: 0.3.0-beta.0(react@19.2.0)(typescript@5.9.3)
+        specifier: 0.4.0
+        version: 0.4.0(@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@anpdgovbr/rbac-core':
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.0
+        version: 0.2.0
       '@anpdgovbr/rbac-next':
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: ^0.2.0
+        version: 0.2.0(react@19.2.0)
       '@anpdgovbr/rbac-prisma':
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: ^0.2.0
+        version: 0.2.0
       '@anpdgovbr/rbac-provider':
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: ^0.2.0
+        version: 0.2.0
       '@anpdgovbr/rbac-react':
-        specifier: ^0.2.4
-        version: 0.2.4(react@19.2.0)(swr@2.3.6(react@19.2.0))
+        specifier: ^0.3.0
+        version: 0.3.0(react@19.2.0)(swr@2.3.6(react@19.2.0))
       '@anpdgovbr/shared-types':
         specifier: 0.3.1-beta.0
         version: 0.3.1-beta.0(typescript@5.9.3)
       '@anpdgovbr/shared-ui':
-        specifier: 0.3.10-beta.0
-        version: 0.3.10-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
+        specifier: 0.3.11-beta.0
+        version: 0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
@@ -237,37 +237,38 @@ importers:
 
 packages:
 
-  '@anpdgovbr/rbac-admin@0.3.0-beta.0':
-    resolution: {integrity: sha512-TzgJL9UxuoHEBHd+RFmg/CLYxoUW582jmdxa8oektpjMEVame2cI3+isxLPMXOlCy2aPF4V835LiN3LthgviMw==}
+  '@anpdgovbr/rbac-admin@0.4.0':
+    resolution: {integrity: sha512-ad3hw4rMfIrKJt9vK38zlnCmuMzq8NR7Dlrz/CoEj9Y/GLOzGdZp24w7BDycEBDvJIm+pWGJpkuO2uEMMMSJyw==}
     peerDependencies:
+      '@anpdgovbr/shared-ui': '>=0.3.11-beta.0'
+      '@mui/material': '>=7.0.0'
       react: '>=19'
 
   '@anpdgovbr/rbac-core@0.1.4':
     resolution: {integrity: sha512-945+ytLcraSveTzjABYlXCkIbNCJC3bLNeNEVK8lEA7nDIEr49HvZQksCbuNW1H84FcqKl9iJs4l9AavsGxiOA==}
 
-  '@anpdgovbr/rbac-next@0.1.3':
-    resolution: {integrity: sha512-3RKGZuDWdeMTFJskCDpIxkmGs1QxlTfWvoPn/JZ1c4OwoRiTt5kdk5NG8GLUtq/wORUueUqHHROFXncjQpAnrg==}
+  '@anpdgovbr/rbac-core@0.2.0':
+    resolution: {integrity: sha512-9wSy2kjXq6t8OgsRHYMOEEecUmzoPdD04Ao4wV0ejq0YHE1eG5MuUEaMYoJS1W3hS+8k3NdTxugksGaSePgBPA==}
 
-  '@anpdgovbr/rbac-prisma@0.1.3':
-    resolution: {integrity: sha512-PRPBkTGddAYcVWj2sTbxWBiwkExJbOA473oPGoXQfR4RTesMyTWdjaz6ox0qiIlLYVJH/qBaYwBdE4dH0bHfTw==}
+  '@anpdgovbr/rbac-next@0.2.0':
+    resolution: {integrity: sha512-JJSC8/vt91PQ3Q8d2GUSobaS98oHSxkZcVXd1f7/+LkBpQgyKQklQjiBAOa+eo7oa/GCgNC1V5L8yByWZQN5eA==}
+    peerDependencies:
+      react: '>=19'
+
+  '@anpdgovbr/rbac-prisma@0.2.0':
+    resolution: {integrity: sha512-d6RR7MwJYm/XNhymegQvAlqtsVNaMoflqTKQ4QPkhFqVkEZ6eBJAkVg7VfOP0KHUxnGrUZNY52J4PMGLPkGm+A==}
 
   '@anpdgovbr/rbac-provider@0.1.3':
     resolution: {integrity: sha512-UOv32dEcN2OZiQ3eJ1ZZrmn/hCYYkMIMT4lIuB2BIQp69Bj0AwpSxuU5BTPzWOwTx7hyxY0JKJ2i7py+PHIBoQ==}
 
-  '@anpdgovbr/rbac-react@0.2.4':
-    resolution: {integrity: sha512-1nF/Gke/vsY0SEAe9hiYcF+C7qmrg6HFcNGRQRoxqqLeZOLJueCVyW90iJjzzPN4EXrqiWXn39fvfp1aXa2+3A==}
+  '@anpdgovbr/rbac-provider@0.2.0':
+    resolution: {integrity: sha512-E4RFWPlRHtGLU33Mj6N7VWbFRETA+iwu6jJ7aQgalgeAQ1RXexOyDyZ7Y8p+JiYDRVhFZ5l5dGCez+OweoNTEg==}
+
+  '@anpdgovbr/rbac-react@0.3.0':
+    resolution: {integrity: sha512-C+oM70uTuxL4S2SIxIGbqUCB46q9phjbt7kaqteyEOcu/glGAF3p0bRMppZFub3EKY2fhsfVumF8GnSid2BAnA==}
     peerDependencies:
       react: '>=19'
       swr: '>=2'
-
-  '@anpdgovbr/shared-types@0.2.2-beta.0':
-    resolution: {integrity: sha512-Glg8KppR0Y9gtLwwrsAQBJsq5La0qLq27m/bu1M1LpSHDHEJsGWzhJnYbckD6FRB4AV03Ejb7Ww9dEfb9ZZnWA==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: '>=4.5.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@anpdgovbr/shared-types@0.3.1-beta.0':
     resolution: {integrity: sha512-VqW6tXBTRWBMc/N1ahL5LMxCT2Z/CwN8DJT1pg8TqrgDiBe/9qKMlEw86pr7fztoz06UwnHBaR7CWYL6/KqfJg==}
@@ -278,8 +279,8 @@ packages:
       typescript:
         optional: true
 
-  '@anpdgovbr/shared-ui@0.3.10-beta.0':
-    resolution: {integrity: sha512-dmVSG9mnuCkhi0YL9CDbRsr2OHFSXsW/qr1fAjQatF69hIHI4wLrHOMvuS3q2uKoaRJlkS2RzgxkhjdR02b+8g==}
+  '@anpdgovbr/shared-ui@0.3.11-beta.0':
+    resolution: {integrity: sha512-XSQSgtGJqK3TSsRUkGFdfODiJVW40HOaVbAgZ7D/SxwOThk7PkychTmcL6BZBXSKfqXJAe7YakJLzflkeXkcHw==}
     engines: {node: '>=20.0.0', pnpm: '>=9.0.0'}
     peerDependencies:
       '@emotion/react': ^11.0.0
@@ -1013,8 +1014,8 @@ packages:
       '@emotion/styled':
         optional: true
 
-  '@mui/x-date-pickers@8.15.0':
-    resolution: {integrity: sha512-I5cNUwaaGJASwlhlSZHE1ddidRvDFei9Sh7ikpAgoznfyxJoLX2nxk6e2csafJ9/1cV4Js7Odo63n8zsYgFn1A==}
+  '@mui/x-date-pickers@8.16.0':
+    resolution: {integrity: sha512-zvUoO9ImWiKRaOWvQVbB1vCa6aUQIX5GM0tJ+nAyNNIVV0VqpXz3CvkRR6ovBBFzIcChc7FXlqrMKcJ//EhePQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.9.0
@@ -1049,12 +1050,6 @@ packages:
         optional: true
       moment-jalaali:
         optional: true
-
-  '@mui/x-internals@8.14.0':
-    resolution: {integrity: sha512-esYyl61nuuFXiN631TWuPh2tqdoyTdBI/4UXgwH3rytF8jiWvy6prPBPRHEH1nvW3fgw9FoBI48FlOO+yEI8xg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@mui/x-internals@8.16.0':
     resolution: {integrity: sha512-JR53WOFqmQYQzurOpB0H91K7/9uMcte1ooxHxTLGB+97PgB+rKY6siRWvUALGS56XyPV+1a2ALI33hd2E7+Rgg==}
@@ -3910,9 +3905,11 @@ packages:
 
 snapshots:
 
-  '@anpdgovbr/rbac-admin@0.3.0-beta.0(react@19.2.0)(typescript@5.9.3)':
+  '@anpdgovbr/rbac-admin@0.4.0(@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)':
     dependencies:
-      '@anpdgovbr/shared-types': 0.2.2-beta.0(typescript@5.9.3)
+      '@anpdgovbr/shared-types': 0.3.1-beta.0(typescript@5.9.3)
+      '@anpdgovbr/shared-ui': 0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
+      '@mui/material': 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
       zod: 3.25.76
     transitivePeerDependencies:
@@ -3920,12 +3917,15 @@ snapshots:
 
   '@anpdgovbr/rbac-core@0.1.4': {}
 
-  '@anpdgovbr/rbac-next@0.1.3':
+  '@anpdgovbr/rbac-core@0.2.0': {}
+
+  '@anpdgovbr/rbac-next@0.2.0(react@19.2.0)':
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.4
       '@anpdgovbr/rbac-provider': 0.1.3
+      react: 19.2.0
 
-  '@anpdgovbr/rbac-prisma@0.1.3':
+  '@anpdgovbr/rbac-prisma@0.2.0':
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.4
       '@anpdgovbr/rbac-provider': 0.1.3
@@ -3934,21 +3934,21 @@ snapshots:
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.4
 
-  '@anpdgovbr/rbac-react@0.2.4(react@19.2.0)(swr@2.3.6(react@19.2.0))':
+  '@anpdgovbr/rbac-provider@0.2.0':
+    dependencies:
+      '@anpdgovbr/rbac-core': 0.1.4
+
+  '@anpdgovbr/rbac-react@0.3.0(react@19.2.0)(swr@2.3.6(react@19.2.0))':
     dependencies:
       '@anpdgovbr/rbac-core': 0.1.4
       react: 19.2.0
       swr: 2.3.6(react@19.2.0)
 
-  '@anpdgovbr/shared-types@0.2.2-beta.0(typescript@5.9.3)':
-    optionalDependencies:
-      typescript: 5.9.3
-
   '@anpdgovbr/shared-types@0.3.1-beta.0(typescript@5.9.3)':
     optionalDependencies:
       typescript: 5.9.3
 
-  '@anpdgovbr/shared-ui@0.3.10-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)':
+  '@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.2)(react@19.2.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
@@ -3956,7 +3956,7 @@ snapshots:
       '@mui/icons-material': 7.3.4(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@mui/material': 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/utils': 7.3.3(@types/react@19.2.2)(react@19.2.0)
-      '@mui/x-date-pickers': 8.15.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mui/system@7.3.3(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(dayjs@1.11.19)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@mui/x-date-pickers': 8.16.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mui/system@7.3.3(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(dayjs@1.11.19)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       classnames: 2.5.1
       dayjs: 1.11.19
       react: 19.2.0
@@ -4686,13 +4686,13 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-date-pickers@8.15.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mui/system@7.3.3(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(dayjs@1.11.19)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@mui/x-date-pickers@8.16.0(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mui/system@7.3.3(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(dayjs@1.11.19)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@mui/material': 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/system': 7.3.3(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@mui/utils': 7.3.3(@types/react@19.2.2)(react@19.2.0)
-      '@mui/x-internals': 8.14.0(@types/react@19.2.2)(react@19.2.0)
+      '@mui/x-internals': 8.16.0(@types/react@19.2.2)(react@19.2.0)
       '@types/react-transition-group': 4.4.12(@types/react@19.2.2)
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -4703,16 +4703,6 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.2)(react@19.2.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       dayjs: 1.11.19
-    transitivePeerDependencies:
-      - '@types/react'
-
-  '@mui/x-internals@8.14.0(@types/react@19.2.2)(react@19.2.0)':
-    dependencies:
-      '@babel/runtime': 7.28.4
-      '@mui/utils': 7.3.3(@types/react@19.2.2)(react@19.2.0)
-      react: 19.2.0
-      reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.0)
     transitivePeerDependencies:
       - '@types/react'
 
