@@ -104,6 +104,23 @@ export const dataGridStyles: SxProps<Theme> = (theme: Theme) => ({
   "& .MuiDataGrid-footerContainer": {
     borderTop: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.grey[50],
+    // Estilos para o select de paginação
+    "& .MuiInputBase-root": {
+      // Estado normal: com borda para destaque
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: "4px",
+      // Estado focado: remove borda
+      "&.Mui-focused": {
+        border: "none",
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "none",
+        },
+      },
+      // Remove a borda padrão do outline
+      "& .MuiOutlinedInput-notchedOutline": {
+        border: "none",
+      },
+    },
   },
 
   // Estilo para quando não há linhas
