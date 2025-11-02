@@ -4,12 +4,12 @@ import {
   GovBRCookieBanner,
   GovBRCookiePreferencesModal,
   type CookieCategoryMetadata,
-  type GovBRCookieBannerProps,
-  type GovBRCookiePreferencesModalProps,
 } from "@anpdgovbr/shared-ui"
 import {
   ConsentProvider,
   LogLevel,
+  type CustomCookieBannerProps,
+  type CustomPreferencesModalProps,
   type ConsentTexts,
   setDebugLogging,
 } from "react-lgpd-consent"
@@ -63,11 +63,28 @@ const categoriesMetadata: CookieCategoryMetadata[] = [
   },
 ]
 
-function BannerComponent(props: GovBRCookieBannerProps) {
-  return <GovBRCookieBanner {...props} />
+function BannerComponent({
+  consented,
+  acceptAll,
+  rejectAll,
+  openPreferences,
+  texts,
+  blocking,
+}: CustomCookieBannerProps) {
+  return (
+    <GovBRCookieBanner
+      open={!consented}
+      onAcceptAll={acceptAll}
+      onRejectAll={rejectAll}
+      onOpenPreferences={openPreferences}
+      texts={texts}
+      showBackdrop={blocking ?? true}
+      disablePolicyLink={!texts.policyLink}
+    />
+  )
 }
 
-function PreferencesModalComponent(props: GovBRCookiePreferencesModalProps) {
+function PreferencesModalComponent(props: CustomPreferencesModalProps) {
   return (
     <GovBRCookiePreferencesModal
       {...props}
