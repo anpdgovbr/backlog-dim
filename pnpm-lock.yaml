@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@anpdgovbr/rbac-admin':
         specifier: 0.4.3
-        version: 0.4.3(@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+        version: 0.4.3(@anpdgovbr/shared-ui@0.3.12-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@anpdgovbr/rbac-core':
         specifier: ^0.2.0
         version: 0.2.0
@@ -27,11 +27,11 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@19.2.0)(swr@2.3.6(react@19.2.0))
       '@anpdgovbr/shared-types':
-        specifier: 0.3.1-beta.0
-        version: 0.3.1-beta.0(typescript@5.9.3)
+        specifier: 0.3.1-beta.1
+        version: 0.3.1-beta.1(typescript@5.9.3)
       '@anpdgovbr/shared-ui':
-        specifier: 0.3.11-beta.0
-        version: 0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
+        specifier: 0.3.12-beta.0
+        version: 0.3.12-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
@@ -273,8 +273,8 @@ packages:
       react: '>=19'
       swr: '>=2'
 
-  '@anpdgovbr/shared-types@0.3.1-beta.0':
-    resolution: {integrity: sha512-VqW6tXBTRWBMc/N1ahL5LMxCT2Z/CwN8DJT1pg8TqrgDiBe/9qKMlEw86pr7fztoz06UwnHBaR7CWYL6/KqfJg==}
+  '@anpdgovbr/shared-types@0.3.1-beta.1':
+    resolution: {integrity: sha512-6wpCFtyeHQ6qviFBG/95Y/MrrKRgzc373p1s0JKe4V55B2ElBpNNLKnlCvcfX46bEXi5g9snxzukHf6FeRFuTw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       typescript: '>=4.5.0'
@@ -282,8 +282,8 @@ packages:
       typescript:
         optional: true
 
-  '@anpdgovbr/shared-ui@0.3.11-beta.0':
-    resolution: {integrity: sha512-XSQSgtGJqK3TSsRUkGFdfODiJVW40HOaVbAgZ7D/SxwOThk7PkychTmcL6BZBXSKfqXJAe7YakJLzflkeXkcHw==}
+  '@anpdgovbr/shared-ui@0.3.12-beta.0':
+    resolution: {integrity: sha512-NuFc9iF5c3ftEObyegKNrQWYWt48pMt/h21GfFYVV6lqAWJ/qWlXiqkb2mVgqorNPyV8xJAp5R3JbcmF9fwPDQ==}
     engines: {node: '>=20.0.0', pnpm: '>=9.0.0'}
     peerDependencies:
       '@emotion/react': ^11.0.0
@@ -3926,10 +3926,10 @@ packages:
 
 snapshots:
 
-  '@anpdgovbr/rbac-admin@0.4.3(@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)':
+  '@anpdgovbr/rbac-admin@0.4.3(@anpdgovbr/shared-ui@0.3.12-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7))(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(typescript@5.9.3)':
     dependencies:
-      '@anpdgovbr/shared-types': 0.3.1-beta.0(typescript@5.9.3)
-      '@anpdgovbr/shared-ui': 0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
+      '@anpdgovbr/shared-types': 0.3.1-beta.1(typescript@5.9.3)
+      '@anpdgovbr/shared-ui': 0.3.12-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)
       '@mui/material': 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
       zod: 3.25.76
@@ -3965,11 +3965,11 @@ snapshots:
       react: 19.2.0
       swr: 2.3.6(react@19.2.0)
 
-  '@anpdgovbr/shared-types@0.3.1-beta.0(typescript@5.9.3)':
+  '@anpdgovbr/shared-types@0.3.1-beta.1(typescript@5.9.3)':
     optionalDependencies:
       typescript: 5.9.3
 
-  '@anpdgovbr/shared-ui@0.3.11-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)':
+  '@anpdgovbr/shared-ui@0.3.12-beta.0(219e93b2a4ad5c0291fa8ee6a7fd00c7)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.2)(react@19.2.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
