@@ -155,7 +155,7 @@
     "@types/json-schema": "^7.0.15",
     "@types/json5": "^2.2.0",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.9.2",
+    "@types/node": "^24.10.0",
     "@types/papaparse": "^5.3.16",
     "@types/parse-json": "^7.0.0",
     "@types/prop-types": "^15.7.15",
