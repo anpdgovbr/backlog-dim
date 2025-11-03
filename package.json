@@ -109,7 +109,7 @@
     "@anpdgovbr/rbac-provider": "^0.2.0",
     "@anpdgovbr/rbac-react": "^0.3.0",
     "@anpdgovbr/shared-types": "0.3.1-beta.0",
-    "@anpdgovbr/shared-ui": "0.3.11-beta.0",
+    "@anpdgovbr/shared-ui": "0.3.11-beta.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@govbr-ds/core": "^3.6.2",
