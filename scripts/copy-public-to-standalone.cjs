@@ -50,11 +50,16 @@ console.log("📦 Copiando arquivos para build standalone...")
 console.log()
 
 try {
-  // Verifica se a pasta standalone existe
-  if (!fs.existsSync(path.dirname(standalonePublicDir))) {
-    console.error("❌ Pasta .next/standalone não encontrada!")
-    console.error("   Execute 'npm run build' primeiro.")
-    process.exit(1)
+  const standaloneRoot = path.dirname(standalonePublicDir)
+
+  // Verifica se a pasta standalone existe (Next 16 + Turbopack pode não gerar automaticamente)
+  if (!fs.existsSync(standaloneRoot)) {
+    console.warn("⚠️  Pasta .next/standalone não encontrada.")
+    console.warn("    Builds com Turbopack (Next 16+) podem não gerar o bundle standalone automaticamente.")
+    console.warn(
+      "    Pulei a cópia de public/static. Ajuste o pipeline ou force build Webpack (NEXT_FORCE_WEBPACK_BUILD=1)",
+    )
+    process.exit(0)
   }
 
   // 1. Copia public/

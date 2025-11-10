@@ -2,188 +2,124 @@
 
 import Link from "next/link"
 
+import {
+  Homepage,
+  type HomepageFeature,
+  type HomepageHighlightCardProps,
+  type HomepageMetric,
+  type HomepageProps,
+} from "@anpdgovbr/shared-ui"
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn"
 import DashboardIcon from "@mui/icons-material/Dashboard"
 import InfoIcon from "@mui/icons-material/Info"
+import InsightsIcon from "@mui/icons-material/Insights"
 import LoginIcon from "@mui/icons-material/Login"
+import PublicIcon from "@mui/icons-material/Public"
 import SecurityIcon from "@mui/icons-material/Security"
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser"
-import Box from "@mui/material/Box"
-import { GovBRButton } from "@anpdgovbr/shared-ui"
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import Container from "@mui/material/Container"
-import Grid from "@mui/material/Grid"
-import Paper from "@mui/material/Paper"
-import Typography from "@mui/material/Typography"
-import { useTheme } from "@mui/material/styles"
 
-/**
- * Componente de página inicial (Home) do aplicativo Backlog DIM.
- *
- * Renderiza a seção de destaque (hero), grade de funcionalidades, seção de
- * informações e ações com botões de navegação para:
- * - Acessar Sistema (rota /auth/login)
- * - Dashboard Público (rota /publico)
- * - Página "Sobre" (rota /sobre)
- *
- * Utiliza o tema do MUI via useTheme para estilização responsiva e cores.
- *
- * @returns JSX.Element - Elemento React que representa a página inicial.
- */
+const features: HomepageFeature[] = [
+  {
+    icon: <AssignmentTurnedInIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+    title: "Gestão completa",
+    description:
+      "Cadastre, acompanhe e priorize processos administrativos com visibilidade ponta a ponta.",
+  },
+  {
+    icon: <SecurityIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+    title: "Acesso seguro",
+    description:
+      "Autenticação institucional via Keycloak e perfilagem por RBAC garantem controle fino de permissões.",
+  },
+  {
+    icon: <VerifiedUserIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+    title: "Transparência",
+    description:
+      "Dashboards públicos expõem indicadores oficiais e fortalecem a prestação de contas da DIM.",
+  },
+  {
+    icon: <PublicIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+    title: "Experiência GovBR",
+    description:
+      "Interface alinhada ao design system GovBR para acessibilidade e consistência em serviços públicos.",
+  },
+]
+
+const metrics: HomepageMetric[] = [
+  { label: "Processos ativos", value: "280+", helperText: "Fluxos em acompanhamento" },
+  { label: "Controladores cadastrados", value: "120" },
+  { label: "Indicadores públicos", value: "36", helperText: "Atualizados diariamente" },
+]
+
+const highlights: HomepageHighlightCardProps[] = [
+  {
+    title: "Acesso restrito a servidores da ANPD",
+    description:
+      "Use suas credenciais institucionais para entrar. Perfis são concedidos conforme atuação e necessidade.",
+    actions: [
+      {
+        label: "Política de acesso",
+        variant: "outlined",
+        startIcon: <InfoIcon />,
+        component: Link,
+        href: "/sobre#seguranca",
+      },
+    ],
+  },
+]
+
 export default function HomePage() {
-  const theme = useTheme()
+  const homepageProps: HomepageProps = {
+    hero: {
+      highlight: "Backlog DIM",
+      title: "Gestão de Processos Administrativos da Divisão de Monitoramento",
+      description:
+        "Centralize o acompanhamento de denúncias, fiscalizações e fluxos críticos da LGPD em uma única plataforma, com métricas atualizadas e visão 360° dos controladores.",
+      actions: [
+        {
+          label: "Acessar sistema",
+          startIcon: <LoginIcon />,
+          component: Link,
+          href: "/auth/login",
+        },
+        {
+          label: "Dashboard público",
+          variant: "outlined",
+          startIcon: <DashboardIcon />,
+          component: Link,
+          href: "/publico",
+        },
+      ],
+    },
+    metrics: {
+      title: "Indicadores em tempo real",
+      subtitle: "Panorama rápido das operações monitoradas pela DIM",
+      metrics,
+      dense: true,
+    },
+    features: {
+      title: "Por que usar o Backlog DIM",
+      subtitle: "Capacidades principais construídas com foco em processos regulatórios",
+      features,
+      columns: { md: 2, lg: 2 },
+    },
+    highlights,
+    footer: {
+      title: "Suporte e documentação",
+      description:
+        "Acesse a página /sobre para conhecer integrações, requisitos técnicos e processos de suporte ao time.",
+      actions: [
+        {
+          label: "Ver documentação",
+          variant: "outlined",
+          startIcon: <InsightsIcon />,
+          component: Link,
+          href: "/sobre",
+        },
+      ],
+    },
+    containerProps: { maxWidth: "lg" },
+  }
 
-  return (
-    <Container maxWidth="lg">
-      {/* Hero Section */}
-      <Box
-        sx={{
-          textAlign: "center",
-          py: { xs: 6, md: 8 },
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}15, ${theme.palette.secondary.main}15)`,
-          borderRadius: 3,
-          mb: 6,
-        }}
-      >
-        <Typography
-          variant="h2"
-          component="h1"
-          gutterBottom
-          sx={{
-            fontWeight: 700,
-            color: "primary.main",
-            fontSize: { xs: "2rem", md: "3rem" },
-          }}
-        >
-          Backlog DIM
-        </Typography>
-
-        <Typography
-          variant="h5"
-          component="h2"
-          sx={{
-            mb: 4,
-            color: "text.secondary",
-            maxWidth: "800px",
-            mx: "auto",
-            fontWeight: 400,
-          }}
-        >
-          Sistema de Gestão de Processos Administrativos da Divisão de Monitoramento
-        </Typography>
-
-        <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
-          <GovBRButton
-            variant="contained"
-            startIcon={<LoginIcon />}
-            component={Link}
-            href="/auth/login"
-          >
-            Acessar Sistema
-          </GovBRButton>
-
-          <GovBRButton
-            variant="outlined"
-            startIcon={<DashboardIcon />}
-            component={Link}
-            href="/publico"
-          >
-            Dashboard Público
-          </GovBRButton>
-        </Box>
-      </Box>
-
-      {/* Features Grid */}
-      <Grid container spacing={4} sx={{ mb: 6 }}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ height: "100%", textAlign: "center" }}>
-            <CardContent sx={{ p: 4 }}>
-              <AssignmentTurnedInIcon
-                sx={{ fontSize: 48, color: "primary.main", mb: 2 }}
-              />
-              <Typography variant="h6" gutterBottom fontWeight={600}>
-                Gestão de Processos
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Controle e acompanhamento completo dos processos administrativos da DIM na
-                ANPD.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ height: "100%", textAlign: "center" }}>
-            <CardContent sx={{ p: 4 }}>
-              <SecurityIcon sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
-              <Typography variant="h6" gutterBottom fontWeight={600}>
-                Seguro e Confiável
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Autenticação institucional via Keycloak (ANPD) e controle rigoroso de
-                permissões de acesso.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ height: "100%", textAlign: "center" }}>
-            <CardContent sx={{ p: 4 }}>
-              <VerifiedUserIcon sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
-              <Typography variant="h6" gutterBottom fontWeight={600}>
-                Transparência
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Dashboard público com estatísticas e informações de transparência sobre os
-                processos.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Information Section */}
-      <Paper
-        elevation={1}
-        sx={{
-          p: 4,
-          mb: 6,
-          backgroundColor: "grey.50",
-          borderLeft: `4px solid ${theme.palette.primary.main}`,
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <InfoIcon sx={{ color: "primary.main", mr: 2 }} />
-          <Typography variant="h6" fontWeight={600}>
-            Acesso Restrito
-          </Typography>
-        </Box>
-        <Typography variant="body1" color="text.secondary">
-          Este sistema é destinado exclusivamente a servidores e colaboradores autorizados
-          da ANPD. O acesso é realizado através de login institucional utilizando
-          Keycloak.
-        </Typography>
-      </Paper>
-
-      {/* Actions Section */}
-      <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography variant="h5" gutterBottom fontWeight={600}>
-          Precisa de Ajuda?
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          Para mais informações sobre o sistema ou suporte técnico.
-        </Typography>
-        <GovBRButton
-          variant="outlined"
-          startIcon={<InfoIcon />}
-          component={Link}
-          href="/sobre"
-        >
-          Saiba Mais
-        </GovBRButton>
-      </Box>
-    </Container>
-  )
+  return <Homepage {...homepageProps} />
 }
