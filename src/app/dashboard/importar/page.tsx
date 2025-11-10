@@ -34,6 +34,7 @@ import { DashboardLayout } from "@/components/layouts"
 import MetricCard from "@/components/ui/MetricCard"
 import { useNotification } from "@/context/NotificationProvider"
 import { withPermissao } from "@anpdgovbr/rbac-react"
+import { ParseCSV } from "@/app/dashboard/importar/import"
 
 const EXPECTED_COLUMNS = 7
 
@@ -80,11 +81,13 @@ function ImportarProcessosContent() {
     setPagina(0)
   }
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     resetState()
     const file = event.target.files?.[0]
     if (!file) return
     setFileName(file.name)
+
+    const data = await ParseCSV(file)
 
     Papa.parse(file, {
       header: false,
