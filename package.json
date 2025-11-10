@@ -115,7 +115,7 @@
     "@govbr-ds/core": "^3.6.2",
     "@hookform/resolvers": "^5.2.2",
     "@mui/icons-material": "^7.3.4",
-    "@mui/material": "^7.3.4",
+    "@mui/material": "^7.3.5",
     "@mui/material-nextjs": "^7.3.3",
     "@mui/x-data-grid": "^8.16.0",
     "@prisma/client": "6.18.0",
