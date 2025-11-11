@@ -31,7 +31,9 @@ ecosystem.config.cjs
 *.csr
 /logs/
 /infra-db/
-/.infra/
+/.infra/*
+!/.infra/scripts/
+!/.infra/scripts/**
 
 # debug
 npm-debug.log*

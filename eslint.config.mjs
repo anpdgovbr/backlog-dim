@@ -1,16 +1,18 @@
 // eslint.config.mjs
 import eslint from "@eslint/js"
 import next from "eslint-config-next"
-import tseslint from "@typescript-eslint/eslint-plugin"
 import tsparser from "@typescript-eslint/parser"
 import reactHooks from "eslint-plugin-react-hooks"
+
+const TS_FILES_GLOB = ["**/*.{ts,tsx}"]
+const JS_TS_FILES_GLOB = ["**/*.{ts,tsx,js,jsx}"]
 
 export default [
   // 1️⃣ Bases recomendadas
   eslint.configs.recommended,
   ...next,
   {
-    files: ["**/*.{ts,tsx,js,jsx}"],
+    files: TS_FILES_GLOB,
     languageOptions: {
       parser: tsparser,
       parserOptions: {
@@ -18,20 +20,8 @@ export default [
         sourceType: "module",
         project: true,
       },
-      globals: {
-        React: "readonly",
-        JSX: "readonly",
-      },
-    },
-    plugins: {
-      "@typescript-eslint": tseslint,
-      "react-hooks": reactHooks,
     },
     rules: {
-      // ---- Next & React hooks
-      ...reactHooks.configs.recommended.rules,
-
-      // ---- TypeScript
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -43,8 +33,18 @@ export default [
       ],
       "@typescript-eslint/consistent-type-imports": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
-
-      // ---- Gerais
+    },
+  },
+  {
+    files: JS_TS_FILES_GLOB,
+    languageOptions: {
+      globals: {
+        React: "readonly",
+        JSX: "readonly",
+      },
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
       "no-unused-vars": "off",
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
