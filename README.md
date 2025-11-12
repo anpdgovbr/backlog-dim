@@ -488,6 +488,7 @@ npm run build
 O projeto inclui configuração para deploy com PM2. Para configurar:
 
 1. **Copie o arquivo de exemplo:**
+
    ```bash
    cp ecosystem.config.example.cjs ecosystem.config.cjs
    ```
@@ -507,6 +508,7 @@ O projeto inclui configuração para deploy com PM2. Para configurar:
    ```
 
 **Comandos úteis do PM2:**
+
 ```bash
 pm2 status              # Ver status
 pm2 logs backlog-dim    # Ver logs

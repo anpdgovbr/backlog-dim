@@ -145,7 +145,7 @@ const MyModal = dynamic(() => import('@/components/modals/MyModal'), {
     ```ts
     const hoisted = vi.hoisted(() => ({ prisma: createPrismaMock() }))
     vi.mock("@/lib/prisma", () => ({ prisma: hoisted.prisma }))
-    hoisted.prisma.processo.findMany.mockResolvedValueOnce([ makeProcesso() ])
+    hoisted.prisma.processo.findMany.mockResolvedValueOnce([makeProcesso()])
     ```
 - Para reduzir repetição ao mockar wrappers de rota (`withApi`, `withApiForId`), use o harness em `src/test/route-harness.ts`:
   - `vi.mock("@/lib/withApi", () => withApiMockModule())`
@@ -245,4 +245,5 @@ Motivação: impedir erros por `orderBy` inválido, garantir limites razoáveis 
 - Sempre inclua comandos de validação que você executou
 
 Nota sobre numeração de processos:
+
 - A geração do número de processo (`PYYYYMM-NNNN`) está implementada em `src/app/api/processos/route.ts` como solução provisória. O padrão oficial da organização ainda será incorporado. Não altere o algoritmo sem alinhamento com a equipe e atualização de docs. Veja `doc/processo-numero.md`.

@@ -15,14 +15,14 @@ Foi implementada a regra `no-restricted-imports` para otimizar o bundle size, ev
 
 ```javascript
 // ❌ EVITAR (imports de primeiro nível)
-import { Button, Typography } from '@mui/material'
-import { Add, Delete } from '@mui/icons-material'
+import { Button, Typography } from "@mui/material"
+import { Add, Delete } from "@mui/icons-material"
 
 // ✅ RECOMENDADO (imports específicos)
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import AddIcon from "@mui/icons-material/Add"
+import DeleteIcon from "@mui/icons-material/Delete"
 ```
 
 ### 🎯 Benefícios
@@ -108,16 +108,16 @@ O script reconhece automaticamente os principais componentes MUI:
 
 ```typescript
 // ANTES
-import { Button, Typography, Box } from '@mui/material'
-import { Add, Delete, Edit } from '@mui/icons-material'
+import { Button, Typography, Box } from "@mui/material"
+import { Add, Delete, Edit } from "@mui/icons-material"
 
 // DEPOIS (automaticamente convertido)
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
+import AddIcon from "@mui/icons-material/Add"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
 ```
 
 ## 🏃‍♂️ Migração Gradual

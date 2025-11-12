@@ -8,6 +8,7 @@ Quando configuramos `output: "standalone"` no `next.config.ts`, o Next.js gera u
 2. Os arquivos estáticos da pasta `.next/static/` (JavaScript, CSS, etc.)
 
 Isso causava dois problemas críticos:
+
 - O `version.json` não estava disponível, impedindo o `BuildInfo` de exibir informações de versão
 - **Todos os arquivos JavaScript retornavam 404**, quebrando completamente a aplicação
 
@@ -137,6 +138,7 @@ Deve listar `version.json` e outros arquivos da pasta `public/`.
 ## Troubleshooting
 
 ### BuildInfo não mostra informações
+
 ## Troubleshooting
 
 ### Arquivos JavaScript retornam 404
@@ -144,6 +146,7 @@ Deve listar `version.json` e outros arquivos da pasta `public/`.
 **Causa**: Pasta `.next/static` não foi copiada para standalone
 
 **Sintomas**:
+
 ```
 webpack-xxx.js     404
 main-app-xxx.js    404
@@ -162,6 +165,7 @@ npm run build
 ```
 
 **Verificação**:
+
 ```bash
 # Deve existir e conter arquivos
 ls .next/standalone/.next/static/
@@ -182,6 +186,7 @@ npm run build
 ```
 
 **Verificação**:
+
 ```bash
 # Deve existir
 cat .next/standalone/public/version.json
@@ -218,6 +223,7 @@ O projeto inclui um arquivo de exemplo `ecosystem.config.example.cjs` para deplo
 **Passos para configurar:**
 
 1. Copie o arquivo de exemplo:
+
    ```bash
    cp ecosystem.config.example.cjs ecosystem.config.cjs
    ```
@@ -231,6 +237,7 @@ O projeto inclui um arquivo de exemplo `ecosystem.config.example.cjs` para deplo
 3. Certifique-se que o `.env.production` existe com todas as variáveis necessárias
 
 4. Inicie o processo:
+
    ```bash
    pm2 start ecosystem.config.cjs --env production
    ```
