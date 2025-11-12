@@ -21,6 +21,9 @@ ecosystem.config.cjs
 /out/
 .npmrc
 
+# turbo
+.turbo/
+
 # production
 /build
 /public/version.json

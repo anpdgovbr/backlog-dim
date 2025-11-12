@@ -100,17 +100,24 @@ Boas práticas de cache: após alterações administrativas (criar/toggle permis
 - Via contexto (quando permissões vêm do servidor) ou via endpoint:
 
 ```tsx
-import { PermissionsProvider, usePermissions, usePode, withPermissao } from "@anpdgovbr/rbac-react"
+import {
+  PermissionsProvider,
+  usePermissions,
+  usePode,
+  withPermissao,
+} from "@anpdgovbr/rbac-react"
 
 // Hidratar permissões do servidor
-<PermissionsProvider value={serverPermissions}>{children}</PermissionsProvider>
+;<PermissionsProvider value={serverPermissions}>{children}</PermissionsProvider>
 
 // Hook com fetch automático (fallback para endpoint)
 const { permissoes, loading, error } = usePermissions({ endpoint: "/api/permissoes" })
 
 // Verificação declarativa
 const { pode } = usePode()
-if (pode("Exibir", "Dashboard")) { /* ... */ }
+if (pode("Exibir", "Dashboard")) {
+  /* ... */
+}
 
 // HOC para proteger componente/página
 export default withPermissao(MyPage, "Exibir", "Relatorios")
@@ -170,4 +177,3 @@ Para casos de “editar o próprio registro”, combine RBAC com verificação d
 - Wrappers `withApi`/`withApiForId` em uso com `permissao: { acao, recurso }`.
 - Provider `@anpdgovbr/rbac-prisma` com cache TTL ativo.
 - Endpoints e UI de permissões ativos; herança opcional via `PerfilHeranca`.
-

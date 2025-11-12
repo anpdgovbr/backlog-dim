@@ -27,12 +27,14 @@ ALTER TABLE "AuditLog"
 ## Passos para aplicar em ambientes existentes
 
 1. **Atualizar dependências**
+
    ```bash
    pnpm install
    pnpm prisma generate
    ```
 
 2. **Executar a migration**
+
    ```bash
    pnpm prisma migrate deploy
    ```

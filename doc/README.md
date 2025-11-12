@@ -8,10 +8,10 @@
   - Flat config implementação
   - Regras customizadas
   - Troubleshooting
- - **[SERVER_VALIDATION.md](SERVER_VALIDATION.md)** - Validação server-side com Zod
-   - Formato padronizado de erros (HTTP 400)
-   - Helpers de validação e logging
-   - Endpoints cobertos (processos, meta, permissões)
+- **[SERVER_VALIDATION.md](SERVER_VALIDATION.md)** - Validação server-side com Zod
+  - Formato padronizado de erros (HTTP 400)
+  - Helpers de validação e logging
+  - Endpoints cobertos (processos, meta, permissões)
 
 ### 🏗️ Infraestrutura
 
