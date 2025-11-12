@@ -1,7 +1,5 @@
 "use client"
 
-import Papa from "papaparse"
-
 import { useState } from "react"
 
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
@@ -28,183 +26,30 @@ import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import Typography from "@mui/material/Typography"
 
-import { StatusInterno } from "@anpdgovbr/shared-types"
-
 import { DashboardLayout } from "@/components/layouts"
 import MetricCard from "@/components/ui/MetricCard"
-import { useNotification } from "@/context/NotificationProvider"
 import { withPermissao } from "@anpdgovbr/rbac-react"
-import { ParseCSV } from "@/app/dashboard/importar/import"
-
-const EXPECTED_COLUMNS = 7
-
-type CsvRow = string[]
-type Relatorio = { sucesso: number; falhas: string[] }
-type ResumoImportacao = {
-  totalRegistros: number
-  totalAnonimos: number
-  responsaveis: Record<string, number>
-  formasEntrada: Record<string, number>
-}
+import {
+  contarOcorrencias,
+  useImportarProcessos,
+} from "@/app/dashboard/importar/useImportarProcessos"
 
 function ImportarProcessosContent() {
-  const [cabecalho, setCabecalho] = useState<string[]>([])
-  const [dados, setDados] = useState<CsvRow[]>([])
-  const [loading, setLoading] = useState(false)
-  const [progresso, setProgresso] = useState(0)
-  const [importado, setImportado] = useState(false)
-  const [relatorio, setRelatorio] = useState<Relatorio>({ sucesso: 0, falhas: [] })
-  const [resumoImportacao, setResumoImportacao] = useState<ResumoImportacao>({
-    totalRegistros: 0,
-    totalAnonimos: 0,
-    responsaveis: {},
-    formasEntrada: {},
-  })
+  const {
+    cabecalho,
+    dados,
+    loading,
+    progresso,
+    importado,
+    relatorio,
+    resumoImportacao,
+    fileName,
+    handleFileUpload,
+    handleImport,
+  } = useImportarProcessos()
+
   const [pagina, setPagina] = useState(0)
   const [linhasPorPagina, setLinhasPorPagina] = useState(10)
-  const { notify } = useNotification()
-  const [fileName, setFileName] = useState<string>("")
-
-  // Reseta todos os estados ao carregar um novo arquivo
-  const resetState = () => {
-    setCabecalho([])
-    setDados([])
-    setImportado(false)
-    setProgresso(0)
-    setRelatorio({ sucesso: 0, falhas: [] })
-    setResumoImportacao({
-      totalRegistros: 0,
-      totalAnonimos: 0,
-      responsaveis: {},
-      formasEntrada: {},
-    })
-    setPagina(0)
-  }
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    resetState()
-    const file = event.target.files?.[0]
-    if (!file) return
-    setFileName(file.name)
-
-    const data = await ParseCSV(file)
-
-    Papa.parse(file, {
-      header: false,
-      skipEmptyLines: true,
-      delimiter: ";",
-      encoding: "ISO-8859-1",
-      complete: (result) => {
-        const data = result.data as CsvRow[]
-        if (data.length === 0) {
-          notify({ type: "error", message: "Arquivo vazio." })
-          return
-        }
-        // Validação do número de colunas
-        if (data[0].length !== EXPECTED_COLUMNS) {
-          notify({
-            type: "error",
-            message: `Número de colunas inesperado. Esperado: ${EXPECTED_COLUMNS}, encontrado: ${data[0].length}.`,
-          })
-          return
-        }
-        setCabecalho(data[0])
-        setDados(data.slice(1))
-      },
-    })
-    // Limpa o valor do input para permitir re-upload do mesmo arquivo
-    event.target.value = ""
-  }
-
-  const handleImport = async () => {
-    if (!dados.length) return
-
-    setLoading(true)
-    setProgresso(0)
-
-    const totalRows = dados.length
-    let successCount = 0
-    const failures: string[] = []
-
-    // Processa cada linha individualmente
-    for (let i = 0; i < totalRows; i++) {
-      const linha = dados[i]
-      const processo = {
-        responsavelNome: linha[0],
-        numeroProcesso: linha[1],
-        dataCriacao: linha[2],
-        situacaoNome: linha[3],
-        formaEntradaNome: linha[4],
-        anonimoStr: linha[5],
-        requerenteNome: linha[6],
-        StatusInterno: StatusInterno.IMPORTADO,
-      }
-
-      try {
-        const response = await fetch("/api/importar-processos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nomeArquivo: fileName,
-            processos: [processo],
-          }),
-        })
-
-        const resultado = await response.json()
-
-        if (response.ok) {
-          successCount += resultado.sucesso ?? 1
-        } else {
-          // Extraí somente a mensagem de erro, utilizando o campo 'falhas' se disponível.
-          if (resultado.falhas && Array.isArray(resultado.falhas)) {
-            failures.push(resultado.falhas.join(", "))
-          } else if (resultado.error) {
-            failures.push(resultado.error)
-          } else {
-            failures.push("Erro desconhecido")
-          }
-        }
-      } catch (error) {
-        let errorMessage = "Erro inesperado na importação"
-        if (error instanceof Error) {
-          errorMessage = error.message
-        }
-        console.error("Erro ao importar processo:", error)
-        failures.push(errorMessage)
-      }
-
-      // Atualiza o progresso conforme o processamento das linhas
-      setProgresso(Math.round(((i + 1) / totalRows) * 100))
-    }
-
-    setRelatorio({ sucesso: successCount, falhas: failures })
-    setResumoImportacao({
-      totalRegistros: totalRows,
-      totalAnonimos: dados.filter((l) => l[5]?.toLowerCase() === "sim").length,
-      responsaveis: contarOcorrencias(dados, 0),
-      formasEntrada: contarOcorrencias(dados, 4),
-    })
-    setImportado(true)
-    setLoading(false)
-
-    // Dispara a notificação com base no resultado:
-    if (failures.length === 0) {
-      notify({
-        type: "success",
-        message: `Importação concluída com sucesso (${successCount} processos importados)`,
-      })
-    } else if (successCount === 0) {
-      notify({
-        type: "error",
-        message: `Importação concluída com erros (0 importados, ${failures.length} erros)`,
-      })
-    } else {
-      notify({
-        type: "warning",
-        message: `Importação parcialmente concluída: ${successCount} processos importados e ${failures.length} erros`,
-      })
-    }
-  }
 
   const handleMudarPagina = (_: unknown, novaPagina: number) => setPagina(novaPagina)
 
@@ -213,34 +58,32 @@ function ImportarProcessosContent() {
     setPagina(0)
   }
 
-  const actions = (
-    <Stack direction="row" spacing={2}>
-      <GovBRButton
-        variant="outlined"
-        component="label"
-        disabled={loading}
-        startIcon={<CloudUploadIcon />}
-      >
-        Selecionar CSV
-        <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
-      </GovBRButton>
-
-      <GovBRButton
-        variant="contained"
-        onClick={handleImport}
-        disabled={loading || !dados.length || importado}
-        startIcon={loading ? undefined : <PlayArrowIcon />}
-      >
-        {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
-      </GovBRButton>
-    </Stack>
-  )
-
   return (
     <DashboardLayout
       title="Importação de Processos"
       subtitle="Importe processos em lote a partir de arquivos CSV"
-      actions={actions}
+      actions={
+        <Stack direction="row" spacing={2}>
+          <GovBRButton
+            variant="outlined"
+            component="label"
+            disabled={loading}
+            startIcon={<CloudUploadIcon />}
+          >
+            Selecionar CSV
+            <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
+          </GovBRButton>
+
+          <GovBRButton
+            variant="contained"
+            onClick={handleImport}
+            disabled={loading || !dados.length || importado}
+            startIcon={!loading && <PlayArrowIcon />}
+          >
+            {loading ? `Importando... ${progresso}%` : "Iniciar Importação"}
+          </GovBRButton>
+        </Stack>
+      }
     >
       {/* Barra de progresso */}
       {loading && (
@@ -332,14 +175,15 @@ function ImportarProcessosContent() {
         </Box>
       )}
 
-      {/* Resumos por categoria */}
       {dados.length > 0 && (
         <Grid container spacing={3} sx={{ mb: 3 }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <CategoriaResumo
               titulo={importado ? "Responsáveis Importados" : "Responsáveis no Arquivo"}
               dados={
-                importado ? resumoImportacao.responsaveis : contarOcorrencias(dados, 0)
+                importado
+                  ? resumoImportacao.responsaveis
+                  : contarOcorrencias(dados.map((d: any) => d.responsavelNome))
               }
             />
           </Grid>
@@ -348,7 +192,9 @@ function ImportarProcessosContent() {
             <CategoriaResumo
               titulo={importado ? "Formas de Entrada" : "Formas de Entrada no Arquivo"}
               dados={
-                importado ? resumoImportacao.formasEntrada : contarOcorrencias(dados, 4)
+                importado
+                  ? resumoImportacao.formasEntrada
+                  : contarOcorrencias(dados.map((d: any) => d.formaEntradaNome))
               }
               cor="secondary"
             />
@@ -512,16 +358,6 @@ const CategoriaResumo = ({
     </Box>
   </Card>
 )
-
-// Função auxiliar
-const contarOcorrencias = (dados: CsvRow[], indice: number): Record<string, number> =>
-  dados.reduce(
-    (acc, linha) => {
-      const valor = linha[indice]?.trim()
-      return valor ? { ...acc, [valor]: (acc[valor] || 0) + 1 } : acc
-    },
-    {} as Record<string, number>
-  )
 
 const ImportarProcessos = withPermissao(
   ImportarProcessosContent,
