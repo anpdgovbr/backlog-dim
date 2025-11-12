@@ -8,16 +8,16 @@
 
 ## Comparativo rápido: contratos atuais × Quarkus
 
-| Recurso | NestJS (atual) | Quarkus (novo) | Diferenças relevantes |
-| --- | --- | --- | --- |
-| Base URL | `https://dim.dev.anpd.gov.br` | `http://<host>:8082` | Novo serviço expõe todos os endpoints sob `/api/*`. |
-| Listar controladores | `GET /controladores` | `GET /api/controlador` | Novo contrato retorna `PageResponseDTO` (`totalElements`, `page`, `pageSize`). |
-| CRUD controlador | `POST /controladores`,<br>`PATCH /controladores/:id`,<br>`DELETE /controladores/:id`,<br>`GET /controladores/:id` | `POST/PUT/DELETE/GET /api/controlador`,<br>`/api/controlador/{id}` | `PUT` substitui `PATCH`; `DELETE` responde `204`; IDs agora são UUID. |
-| Campos de controlador | `nome`, `email`, `telefone`, `cnpj/cpf`, `setorId`, `cnaeId` (tipos do `shared-types`) | `nomeEmpresarial`, `nomeFantasia`, arrays `emails`/`telefones`, `tipo`, `setorId`, `cnaeId`, `esfera`, `poder`, `politicaPrivacidadeUrl` | Formularios precisam mapear; novo contrato exige pelo menos um e-mail/telefone. |
-| CNAE | `GET/POST /cnaes`, `GET /cnaes/:id` | `GET/POST/PUT/DELETE /api/cnae` | Campos `codigo`/`nome`; paginação no padrão `PageResponseDTO`. |
-| Setor | `GET/POST /setores` | `GET/POST/PUT/DELETE /api/setor` | Endpoint muda para singular; DTO inclui `active`, `exclusionDate`. |
-| Encarregado | não consumido hoje | `GET/POST/PUT/DELETE /api/encarregado` | Novos campos `emails[]`, `telefones[]`, `externo`. |
-| Autenticação | sem bearer | `bearerAuth` (JWT) | Confirmar estratégia com backend. |
+| Recurso               | NestJS (atual)                                                                                                    | Quarkus (novo)                                                                                                                           | Diferenças relevantes                                                           |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Base URL              | `https://dim.dev.anpd.gov.br`                                                                                     | `http://<host>:8082`                                                                                                                     | Novo serviço expõe todos os endpoints sob `/api/*`.                             |
+| Listar controladores  | `GET /controladores`                                                                                              | `GET /api/controlador`                                                                                                                   | Novo contrato retorna `PageResponseDTO` (`totalElements`, `page`, `pageSize`).  |
+| CRUD controlador      | `POST /controladores`,<br>`PATCH /controladores/:id`,<br>`DELETE /controladores/:id`,<br>`GET /controladores/:id` | `POST/PUT/DELETE/GET /api/controlador`,<br>`/api/controlador/{id}`                                                                       | `PUT` substitui `PATCH`; `DELETE` responde `204`; IDs agora são UUID.           |
+| Campos de controlador | `nome`, `email`, `telefone`, `cnpj/cpf`, `setorId`, `cnaeId` (tipos do `shared-types`)                            | `nomeEmpresarial`, `nomeFantasia`, arrays `emails`/`telefones`, `tipo`, `setorId`, `cnaeId`, `esfera`, `poder`, `politicaPrivacidadeUrl` | Formularios precisam mapear; novo contrato exige pelo menos um e-mail/telefone. |
+| CNAE                  | `GET/POST /cnaes`, `GET /cnaes/:id`                                                                               | `GET/POST/PUT/DELETE /api/cnae`                                                                                                          | Campos `codigo`/`nome`; paginação no padrão `PageResponseDTO`.                  |
+| Setor                 | `GET/POST /setores`                                                                                               | `GET/POST/PUT/DELETE /api/setor`                                                                                                         | Endpoint muda para singular; DTO inclui `active`, `exclusionDate`.              |
+| Encarregado           | não consumido hoje                                                                                                | `GET/POST/PUT/DELETE /api/encarregado`                                                                                                   | Novos campos `emails[]`, `telefones[]`, `externo`.                              |
+| Autenticação          | sem bearer                                                                                                        | `bearerAuth` (JWT)                                                                                                                       | Confirmar estratégia com backend.                                               |
 
 ### Diferenças de payload e tipagem
 
@@ -76,7 +76,8 @@
 
 5. **Testes e validação manual**
    - Adaptar mocks e testes existentes.
-  - Executar fluxo completo contra `quarkusDev` (listar ➜ criar ➜ atualizar ➜ excluir).
+
+- Executar fluxo completo contra `quarkusDev` (listar ➜ criar ➜ atualizar ➜ excluir).
 
 6. **Documentação & rollout**
    - Atualizar README/doc de deploy com novo serviço.
@@ -100,23 +101,27 @@
 ## Detalhamento técnico por entrega
 
 ### 1. Camada de configuração/env
+
 - [ ] Acrescentar no `.env.example` do `backlog-dim`:
   - `CONTROLADORES_API_HOST_QUARKUS=http://localhost:8082`
   - `CONTROLADORES_API_PREFIX=/api`
   - `CONTROLADORES_API_USE_QUARKUS=false` (feature flag inicial)
 - [ ] No runtime, construir a URL como:
   ```ts
-  const base = process.env.CONTROLADORES_API_USE_QUARKUS === "true"
-    ? process.env.CONTROLADORES_API_HOST_QUARKUS ?? "http://localhost:8082"
-    : process.env.CONTROLADORES_API_URL ?? "https://dim.dev.anpd.gov.br"
-  const prefix = process.env.CONTROLADORES_API_USE_QUARKUS === "true"
-    ? process.env.CONTROLADORES_API_PREFIX ?? "/api"
-    : ""
+  const base =
+    process.env.CONTROLADORES_API_USE_QUARKUS === "true"
+      ? (process.env.CONTROLADORES_API_HOST_QUARKUS ?? "http://localhost:8082")
+      : (process.env.CONTROLADORES_API_URL ?? "https://dim.dev.anpd.gov.br")
+  const prefix =
+    process.env.CONTROLADORES_API_USE_QUARKUS === "true"
+      ? (process.env.CONTROLADORES_API_PREFIX ?? "/api")
+      : ""
   const endpoint = `${base}${prefix}`
   ```
 - [ ] Documentar no README como alternar entre Nest e Quarkus (desenvolvimento vs produção).
 
 ### 2. Tipos e mapeamentos
+
 - [ ] Criar `src/types/controladores-quarkus.ts` com:
   - Interfaces `ControladorQuarkusDTO`, `EmailQuarkusDTO`, `TelefoneQuarkusDTO`, `PageResponseDTO<T>`.
   - Enums `TipoPessoaEnum`, `SetorEmpresarial`, `Esfera`, `Poder` (copiados do OpenAPI).
@@ -127,6 +132,7 @@
 - [ ] Atualizar schemas/validações que usam `@anpdgovbr/shared-types` para aceitar UUID string (talvez criar schemas zod locais).
 
 ### 3. Proxies Next (`src/app/api/**`)
+
 - **Controladores**:
   - [ ] GET: usar `${endpoint}/controlador`, repassar paginação novo formato e converter resposta para `{ data, total }`.
   - [ ] POST/PUT: enviar payload mapeado pelo utilitário; tratar validação 422 (retornar array de erros do Quarkus).
@@ -141,6 +147,7 @@
   - [ ] Garantir compatibilidade com soft delete (novo campo `active`).
 
 ### 4. Hooks e stores
+
 - [ ] `useApi` genérico: aceitar resposta com `page/pageSize/totalElements`.
 - [ ] `useControladores`:
   - Atualizar tipos (`ControladorQuarkusDTO`).
@@ -150,6 +157,7 @@
 - [ ] Considerar criar camada `services/controladores.ts` para centralizar fetch + mapping.
 
 ### 5. UI/Formulários
+
 - [ ] Revisar `RequeridoForm`:
   - Campos obrigatórios extras (esfera/poder/setorEmpresarial).
   - Suporte a múltiplos e-mails/telefones: primeiro momento → permitir um item e mapear para array `[valor]`.
@@ -158,11 +166,13 @@
 - [ ] AutoComplete: atualizar labels para `${codigo} - ${nome}` (CNAE) e `nome` (Setor).
 
 ### 6. Testes
+
 - [ ] Atualizar mocks em `src/app/api/__tests__` (se existirem) e fixtures para usar UUID.
 - [ ] Adicionar testes e2e para `controladores` (listar/criar/editar/excluir).
 - [ ] Validar wrappers `withApi/withApiForId`: garantir que audit continua populando `audit.depois` com campos relevantes (talvez apenas `id`).
 
 ### 7. Observabilidade & Auditoria
+
 - [ ] Validar logs do Quarkus com `CONTROLADORES_API_DEV_RESET_ON_START=false` (seed persistente).
 - [ ] Garantir que auditoria registre `UUID` e payloads relevantes.
 - [ ] Atualizar dashboards de erro (ex.: Sentry) caso mensagens/paths mudem.
@@ -194,12 +204,12 @@
 
 ## Cronograma sugerido
 
-| Semana | Entregas principais |
-| --- | --- |
-| S1 | Tipos & mappers, ajuste proxies (GET) com flag desativada |
-| S2 | Formularios/UI + POST/PUT/DELETE + hooks atualizados |
-| S3 | Testes, auditoria, documentação, habilitação em dev compartilhado |
-| S4 | Pré-prod + go/no-go para produção |
+| Semana | Entregas principais                                               |
+| ------ | ----------------------------------------------------------------- |
+| S1     | Tipos & mappers, ajuste proxies (GET) com flag desativada         |
+| S2     | Formularios/UI + POST/PUT/DELETE + hooks atualizados              |
+| S3     | Testes, auditoria, documentação, habilitação em dev compartilhado |
+| S4     | Pré-prod + go/no-go para produção                                 |
 
 > Ajustar conforme disponibilidade da equipe e dependências backend (auth, campos obrigatórios).
 

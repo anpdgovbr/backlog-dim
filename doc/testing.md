@@ -42,7 +42,10 @@ vi.mock("@/lib/prisma", () => ({ prisma: hoisted.prisma }))
 hoisted.prisma.processo.findMany.mockResolvedValueOnce([makeProcesso()])
 
 const tx = { processo: { findFirst: vi.fn().mockResolvedValue(null), create: vi.fn() } }
-mockTransactionOnce(hoisted.prisma as unknown as { $transaction: ReturnType<typeof vi.fn> }, tx)
+mockTransactionOnce(
+  hoisted.prisma as unknown as { $transaction: ReturnType<typeof vi.fn> },
+  tx
+)
 ```
 
 ## Harness de Rotas (withApi/withApiForId)
@@ -67,4 +70,3 @@ Esses harnesses injetam uma identidade de teste e convertem o retorno dos handle
 - Evite fixtures extensos; prefira factories com overrides pontuais.
 - Não use `any`. Em mocks, prefira `unknown` + narrowing.
 - Mantenha testes rápidos e determinísticos; sem chamadas a rede.
-

@@ -20,9 +20,7 @@ e o formato de erros aplicado nos endpoints críticos.
     ```json
     {
       "error": "Invalid input",
-      "details": [
-        { "path": "campo.subcampo", "message": "mensagem de erro" }
-      ]
+      "details": [{ "path": "campo.subcampo", "message": "mensagem de erro" }]
     }
     ```
 
