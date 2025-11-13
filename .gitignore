@@ -19,7 +19,6 @@ ecosystem.config.cjs
 # next.js
 /.next/
 /out/
-.npmrc
 
 # turbo
 .turbo/
